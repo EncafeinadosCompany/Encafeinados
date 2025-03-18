@@ -1,8 +1,12 @@
-import React from 'react';
-import AppRouter from './web/router/AppRouter';
-import './web/styles/tailwind.css';
+import './App.css'
+import { Button } from "@/components/ui/button"
 
-const App = () => {
-  return <AppRouter />;
-};
-export default App;
+function App() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-svh">
+      <Button>Click me</Button>
+    </div>
+  )
+}
+ 
+export default App
