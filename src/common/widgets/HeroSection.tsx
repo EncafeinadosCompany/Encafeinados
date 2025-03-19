@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text } from "@/common/atoms/Text";
 import { motion, AnimatePresence } from "framer-motion";
-import { CoffeeIcon, MapPinIcon, ArrowRightIcon, ChevronDownIcon } from "lucide-react";
+import { MapPinIcon, ArrowRightIcon, ChevronDownIcon } from "lucide-react";
 import logoIcon from "../../assets/images/logo.ico";
 
 export const HeroSection: React.FC = () => {
@@ -143,7 +143,6 @@ export const HeroSection: React.FC = () => {
           </motion.div>
         </motion.div>
 
-        {/* Indicador de scroll */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, y: [0, 10, 0] }}
@@ -159,7 +158,6 @@ export const HeroSection: React.FC = () => {
           </motion.div>
         </motion.div>
 
-        {/* Decoración de granos de café */}
         <motion.div
           className="absolute -left-10 top-1/4 opacity-20 hidden md:block"
           animate={{ rotate: 360 }}
@@ -185,7 +183,6 @@ export const HeroSection: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Modal para mostrar el mapa */}
       <AnimatePresence>
         {showMap && (
           <motion.div
