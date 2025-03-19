@@ -33,7 +33,6 @@ export const StoreCarousel = ({ stores }: StoreCarouselProps) => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.3 });
 
-  // Configurar el carrusel para avanzar automáticamente
   useEffect(() => {
     if (!api || !autoplay) return;
     
@@ -55,11 +54,10 @@ export const StoreCarousel = ({ stores }: StoreCarouselProps) => {
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
-
-  // Detener autoplay cuando se hacen interacciones manuales
+  
   const handleManualNavigation = () => {
     setAutoplay(false);
-    // Restaurar autoplay después de un tiempo de inactividad
+
     setTimeout(() => setAutoplay(true), 5000);
   };
 
