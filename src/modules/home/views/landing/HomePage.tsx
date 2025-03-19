@@ -1,9 +1,12 @@
+// src/modules/home/views/HomePage.tsx
 import React from 'react';
 import { HeroSection } from '@/common/widgets/HeroSection';
 import { StoreCarousel } from '@/common/widgets/StoreCarousel';
 import { TeamSection } from '@/common/widgets/TeamSection';
 import { BenefitsSection } from '@/common/widgets/BenefitsSection';
 import { AboutSection } from '@/common/widgets/AboutSection';
+import  AnimatedBackground  from '@/common/widgets/AnimatedBackground';
+
 
 const stores = [
   { id: 1, name: 'Café del Bosque', imageUrl: 'https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
@@ -14,14 +17,18 @@ const stores = [
   { id: 6, name: 'Urbania Café', imageUrl: 'https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
 ];
 
+
 export const HomePage = () => {
   return (
-    <main className="min-h-screen bg-[#FAF3E0]">
-      <HeroSection />
-      <StoreCarousel stores={stores} />
-      <BenefitsSection />
-      <TeamSection />
-      <AboutSection />
+    <main className="min-h-screen bg-[#FAF3E0] relative overflow-hidden">
+
+      <div className="relative z-5"> {/* Añade un z-index mayor aquí */}
+        <HeroSection />
+        <StoreCarousel stores={stores} />
+        <BenefitsSection />
+        <TeamSection />
+        <AboutSection />
+      </div>
     </main>
   );
 };
