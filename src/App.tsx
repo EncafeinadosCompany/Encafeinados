@@ -1,11 +1,11 @@
 import './App.css'
-import { Button } from "@/common/components/ui/button"
+import { PublicRoutes } from '@/router'
 
 function App() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-svh">
-      <Button>Click me</Button>
-    </div>
+    <div className="app">
+    <PublicRoutes />
+  </div>
   )
 }
  
