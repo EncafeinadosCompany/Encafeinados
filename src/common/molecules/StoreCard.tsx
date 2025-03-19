@@ -47,7 +47,7 @@ export const StoreCard = ({
             : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
         }}
       >
-        <CardContent className="p-0 mt-[-25px] flex flex-col h-full ">
+        <CardContent className="p-0  flex flex-col h-full ">
           {/* Contenedor de la imagen */}
           <div className="relative h-48 sm:h-52 overflow-hidden rounded-t-2xl">
             {/* Gradiente superior */}
