@@ -10,8 +10,8 @@
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
-    "cy:open": "cypress open", 
-    "cy:run": "cypress run"
+    "cy:open": "cd src/tests && cypress open", 
+    "cy:run": "cd src/tests cypress run"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.3",
@@ -68,5 +68,5 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"
-  }
+}
 }
