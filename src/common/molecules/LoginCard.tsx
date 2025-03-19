@@ -4,59 +4,27 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Link } from "react-router-dom"
 import { InputEmail } from "../atoms/Input-email"
 import { Label } from "../ui/label"
-import { Input } from "../ui/input"
 import { Separator } from "../ui/separator"
-import { useState } from "react"
+import { InputPassword } from "../atoms/input-passwork"
 
 
 type LoginCardProps = {
-
+    handleSubmit: (e: React.FormEvent) => void
+    handleGoogleSignIn: () => void
+    isLoading: boolean
+    data: { email: string; password: string }
+    setdata: React.Dispatch<React.SetStateAction<{
+        email: string;
+        password: string;
+    }>>
 }
 
-export const LoginCard = () => {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
+export const LoginCard = ({data, setdata, isLoading, handleSubmit, handleGoogleSignIn}:LoginCardProps) => {
+
   
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault()
-      setIsLoading(true)
-  
-      // Here you would implement your authentication logic
-      // For example, with Supabase:
-      // const { data, error } = await supabase.auth.signInWithPassword({
-      //   email,
-      //   password,
-      // })
-  
-      // Simulate authentication delay
-      setTimeout(() => {
-        setIsLoading(false)
-        // If successful, redirect to dashboard
-        // router.push("/dashboard")
-      }, 1000)
-    }
-  
-    const handleGoogleSignIn = () => {
-      setIsLoading(true)
-  
-      // Here you would implement Google sign-in
-      // For example, with Supabase:
-      // const { data, error } = await supabase.auth.signInWithOAuth({
-      //   provider: 'google',
-      //   options: {
-      //     redirectTo: `${window.location.origin}/auth/callback`,
-      //   },
-      // })
-  
-      // Simulate authentication delay
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 1000)
-    }
 return (
  
-    <Card className="w-full max-w-md border-gray-300 shadow-neutral-200 shadow-xl">
+    <Card className="w-full max-w-[90%] sm:max-w-md border-gray-300 shadow-neutral-200 shadow-xl mx-auto">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
         <CardDescription className="text-center">Enter your email and password to sign in</CardDescription>
@@ -64,46 +32,44 @@ return (
       <CardContent className="space-y-4">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-gray-600">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground pl-10" />
               <InputEmail
                 id="email"
                 type="email"
                 placeholder="m@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={data.email}
+                onChange={(e) => setdata({ ...data, email: e.target.value })}
                 required
               />
             </div>
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-gray-600">Password</Label>
               <Link to="/forgot-password" className="text-sm text-primary hover:underline">
                 Forgot password?
               </Link>
             </div>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
+              <InputPassword
                 id="password"
-                type="password"
-                className="pl-10"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={data.password}
+                onChange={(e) => setdata({ ...data, password: e.target.value })}
                 required
               />
             </div>
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full bg-black text-white" disabled={isLoading}>
             {isLoading ? "Signing in..." : "Sign in"}
           </Button>
         </form>
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <Separator className="w-full" />
+            <Separator className="w-full text-gray-500" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background px-2 text-muted-foreground">Or continue with</span>

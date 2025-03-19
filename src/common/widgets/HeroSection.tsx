@@ -3,6 +3,7 @@ import { Text } from "@/common/atoms/Text";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPinIcon, ArrowRightIcon, ChevronDownIcon } from "lucide-react";
 import logoIcon from "../../assets/images/logo.ico";
+import { Link } from "react-router-dom";
 
 export const HeroSection: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -134,12 +135,13 @@ export const HeroSection: React.FC = () => {
               <span className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
             </button>
 
-            <button
+            <Link
+              to="/login"
               className="px-6 py-3 border border-white/30 text-white hover:bg-white/10 rounded-full 
                 transition-all duration-300 font-medium backdrop-blur-sm"
             >
               Explorar
-            </button>
+            </Link>
           </motion.div>
         </motion.div>
 
