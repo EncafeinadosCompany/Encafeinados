@@ -23,13 +23,12 @@ export const LoginCard = ({data, setdata, isLoading, handleSubmit, handleGoogleS
 
   
 return (
- 
-    <Card className="w-full max-w-[90%] sm:max-w-md border-gray-300 shadow-neutral-200 shadow-xl mx-auto">
+    <Card className="p-2 sm:p-2 border-none shadow-md hover:shadow-lg transition-all duration-300 bg-[#faf3e0b4]">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
         <CardDescription className="text-center">Enter your email and password to sign in</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email" className="text-gray-600">Email</Label>
@@ -38,6 +37,7 @@ return (
               <InputEmail
                 id="email"
                 type="email"
+                autoComplete="email"
                 placeholder="m@example.com"
                 value={data.email}
                 onChange={(e) => setdata({ ...data, email: e.target.value })}
@@ -57,6 +57,8 @@ return (
               <InputPassword
                 id="password"
                 value={data.password}
+                autoComplete="current-password"
+                placeholder="contraseña"
                 onChange={(e) => setdata({ ...data, password: e.target.value })}
                 required
               />
@@ -102,7 +104,7 @@ return (
       <CardFooter className="flex justify-center">
         <div className="text-sm text-muted-foreground">
           Don't have an account?{" "}
-          <Link to="/register" className="text-primary hover:underline">
+          <Link to="/optionRegister" className="text-primary hover:underline">
             Register
           </Link>
         </div>

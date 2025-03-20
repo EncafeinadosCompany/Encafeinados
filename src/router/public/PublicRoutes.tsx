@@ -3,12 +3,14 @@ import { useRoutes } from 'react-router-dom'
 import { CoffeeLoverDashboard } from '@/modules/coffeelover/views/CoffeeLoverDashboard'
 import { HomePage } from '@/modules/home/views/landing/HomePage'
 import { LoginPage } from '@/modules/home/views/Login/loginPage'
+import CuestionCard from '@/common/molecules/cuestionCard'
 
 export const PublicRoutes = () => {
   const routes = useRoutes([
     { path: '/', element: <HomePage /> },
     { path: '/coffeelover', element: <CoffeeLoverDashboard /> },
     { path: '/login', element: <LoginPage /> },
+    { path: '/optionRegister', element: <CuestionCard/> },
   ])
 
   return routes

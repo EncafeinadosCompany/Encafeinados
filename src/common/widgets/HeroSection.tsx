@@ -140,7 +140,7 @@ export const HeroSection: React.FC = () => {
               className="px-6 py-3 border border-white/30 text-white hover:bg-white/10 rounded-full 
                 transition-all duration-300 font-medium backdrop-blur-sm"
             >
-              Explorar
+              Unirse
             </Link>
           </motion.div>
         </motion.div>

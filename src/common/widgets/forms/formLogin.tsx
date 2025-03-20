@@ -39,7 +39,7 @@ const Formlogin = () => {
         }, 1000)
       }
   return (
-    <div>
+    <div className="mx-4" >
       <LoginCard 
         data={data} 
         setdata={setData} 

@@ -12,12 +12,11 @@ export const LoginPage = () => {
     }
 
     return (
-    <>
-        <div className="flex min-h-screen items-center justify-center bg-gray-50 ">
-            
-        <Formlogin></Formlogin>
-     </div>
-    </>
+    
+    <div className="min-h-screen flex flex-col justify-center items-center overflow-hidden">
+        <Formlogin/>
+    </div>
+
     )
     
 }
