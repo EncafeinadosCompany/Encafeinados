@@ -5,9 +5,9 @@ import { motion } from 'framer-motion';
 const teamMembers = [
   { name: 'Santiago Florez Valencia', role: 'Frontend Developer', imageUrl: 'https://lh3.google.com/u/0/d/15gFGVknZHndepP3NwhYxrmS6U59f5Bln=w1224-h837-iv1' },
   { name: 'Valentina Cordoba', role: 'Frontend Developer', imageUrl: 'https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
-  { name: 'Crony Lopez', role: 'Backend Developer', imageUrl: 'https://lh3.google.com/u/0/d/1uS8nfm0EKUsMueZpANJ1z_buiXDiQtd1=w1224-h861-iv1' },
-  { name: 'Deisy Zapata', role: 'Backend Developer', imageUrl: 'https://lh3.google.com/u/0/d/11VAo3Q7zCoZ9n5pFc5s4YR5g5GLUlbgd=w2625-h5830-iv1?auditContext=forDisplay' },
-  { name: 'Jose 👍', role: 'Frontend Developer', imageUrl: 'https://lh3.google.com/u/0/d/1f-h7CbaHoww-OOeRKldcfONIJEEgPNUG=w2625-h5830-iv1?auditContext=forDisplay' },
+  { name: 'Crony Lopez', role: 'Backend Developer', imageUrl: 'https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
+  { name: 'Deisy Zapata', role: 'Backend Developer', imageUrl: 'https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
+  { name: 'Jose 👍', role: 'Frontend Developer', imageUrl: 'https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
   { name: 'Juan Pablo', role: 'Backend Developer', imageUrl: 'https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
   { name: 'Daniela Torres', role: 'Mobile Developer', imageUrl: 'https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' },
 ];

@@ -5,7 +5,6 @@ import { StoreCarousel } from '@/common/widgets/StoreCarousel';
 import { TeamSection } from '@/common/widgets/TeamSection';
 import { BenefitsSection } from '@/common/widgets/BenefitsSection';
 import { AboutSection } from '@/common/widgets/AboutSection';
-import  AnimatedBackground  from '@/common/widgets/AnimatedBackground';
 
 
 const stores = [
@@ -22,7 +21,7 @@ export const HomePage = () => {
   return (
     <main className="min-h-screen bg-[#FAF3E0] relative overflow-hidden">
 
-      <div className="relative z-5"> {/* Añade un z-index mayor aquí */}
+      <div className="relative z-5">
         <HeroSection />
         <StoreCarousel stores={stores} />
         <BenefitsSection />
