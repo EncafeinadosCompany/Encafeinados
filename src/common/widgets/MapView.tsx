@@ -750,9 +750,9 @@ const cafes: Cafe[] = useMemo(() => {
         }
       `}</style>
       
-      {/* Loading overlay for map or API data */}
+      {/* Loading overlay */}
       <AnimatePresence>
-        {(!mapLoaded || branchesLoading) && (
+        {!mapLoaded && (
           <motion.div 
             className="absolute inset-0 bg-white z-50 flex flex-col items-center justify-center"
             exit={{ 
@@ -776,26 +776,11 @@ const cafes: Cafe[] = useMemo(() => {
                 transition: { duration: 1.5, repeat: Infinity }
               }}
             >
-              {branchesLoading ? "Buscando cafeterías cercanas..." : "Cargando tu experiencia cafetera..."}
+              Cargando tu experiencia cafetera...
             </motion.p>
           </motion.div>
         )}
       </AnimatePresence>
-      
-      {/* Error message if API fails */}
-      {branchesError && (
-        <div className="absolute inset-0 bg-white/90 z-50 flex flex-col items-center justify-center p-6 text-center">
-          <X size={48} className="text-red-500 mb-4" />
-          <h3 className="text-xl font-bold text-[#2C1810] mb-2">No pudimos cargar las cafeterías</h3>
-          <p className="text-gray-600 mb-6">Hubo un problema al conectar con nuestro servidor. Por favor intenta nuevamente.</p>
-          <button 
-            className="bg-[#6F4E37] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#5d4230]"
-            onClick={() => window.location.reload()}
-          >
-            Reintentar
-          </button>
-        </div>
-      )}
       
       {/* Header with search and navigation */}
       <div className="absolute top-0 left-0 right-0 z-40 bg-gradient-to-b from-white/90 to-white/0 pt-4 pb-8 px-4">
@@ -818,40 +803,15 @@ const cafes: Cafe[] = useMemo(() => {
               className="w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none focus:ring-2 focus:ring-[#D4A76A] transition-all duration-300"
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
             <motion.button 
               className="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[#6F4E37] text-white p-1.5 rounded-full hover:bg-[#5d4230] transition-colors duration-300"
               whileTap={{ scale: 0.9 }}
-              onClick={() => {
-                // Show filter dropdown or modal
-                // You can implement a filter component for stores here
-              }}
             >
               <Filter size={16} />
             </motion.button>
           </motion.div>
-          
-          {/* Store filter dropdown */}
-          {availableStores.length > 0 && (
-            <div className="hidden md:block relative ml-2">
-              <select
-                className="h-11 pl-4 pr-8 rounded-full shadow-lg border-none outline-none focus:ring-2 focus:ring-[#D4A76A] bg-white"
-                value={selectedStore || ''}
-                onChange={(e) => setSelectedStore(e.target.value ? Number(e.target.value) : undefined)}
-              >
-                <option value="">Todas las tiendas</option>
-                {availableStores.map(store => (
-                  <option key={store.id} value={store.id}>{store.name}</option>
-                ))}
-              </select>
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                <Coffee size={16} className="text-[#6F4E37]" />
-              </div>
-            </div>
-          )}
           
           {/* View toggle buttons */}
           <div className="hidden md:flex bg-white/90 backdrop-blur-sm rounded-full shadow-lg overflow-hidden">
@@ -900,7 +860,7 @@ const cafes: Cafe[] = useMemo(() => {
           {/* User location marker */}
           <UserLocationMarker position={userLocation} pulsing={true} />
           
-          {/* Cafe markers from API data */}
+          {/* Cafe markers */}
           {cafePositions.map(position => (
             <Marker 
               key={position.id} 
@@ -992,11 +952,7 @@ const cafes: Cafe[] = useMemo(() => {
               <div className="p-6 pt-20 flex justify-between items-center border-b border-gray-100">
                 <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
                   <Coffee size={20} className="text-[#6F4E37]" />
-                  <span>
-                    {sortedCafes.length === 0 
-                      ? "No hay cafeterías disponibles" 
-                      : `${sortedCafes.length} cafeterías ${selectedStore ? 'filtradas' : 'cercanas'}`}
-                  </span>
+                  <span>Cafeterías cercanas</span>
                 </h2>
                 <button 
                   onClick={() => setShowSidebar(false)}
@@ -1007,39 +963,59 @@ const cafes: Cafe[] = useMemo(() => {
               </div>
               
               <div className="flex-1 overflow-y-auto p-4 pb-32">
-                {sortedCafes.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-center p-4">
-                    <Coffee size={48} className="text-gray-300 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-500">No encontramos cafeterías</h3>
-                    <p className="text-gray-400 mt-2">
-                      {searchTerm 
-                        ? "Intenta con otra búsqueda o elimina los filtros" 
-                        : "No hay cafeterías disponibles en esta zona"}
-                    </p>
-                    {(searchTerm || selectedStore) && (
-                      <button 
-                        className="mt-4 bg-[#6F4E37] text-white px-4 py-2 rounded-lg"
-                        onClick={() => {
-                          setSearchTerm('');
-                          setSelectedStore(undefined);
-                        }}
-                      >
-                        Limpiar filtros
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <motion.div className="space-y-4">
-                    {sortedCafes.map((cafe, index) => renderCafeCard(cafe, index))}
-                  </motion.div>
-                )}
+                <motion.div className="space-y-4">
+                  {sortedCafes.map((cafe, index) => renderCafeCard(cafe, index))}
+                </motion.div>
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
       
-      {/* The rest of your component remains the same */}
+      {/* Toggle sidebar button (mobile) */}
+      {!showSidebar && (
+        <motion.button
+          className="absolute bottom-6 right-6 z-30 bg-[#6F4E37] text-white p-4 rounded-full shadow-xl md:hidden"
+          onClick={() => setShowSidebar(true)}
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          whileHover={{ scale: 1.1, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Coffee size={24} />
+        </motion.button>
+      )}
+      
+      {/* Selected Cafe Popup/Details */}
+      <AnimatePresence>
+        {activeCafe && (
+          <motion.div 
+            className="absolute md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 left-0 right-0 bottom-0 md:w-96 md:h-auto bg-white md:rounded-2xl shadow-2xl z-40 overflow-hidden"
+            initial={{ y: "100%", opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: "100%", opacity: 0, scale: 0.9 }}
+            transition={{ type: 'spring', damping: 30 }}
+          >
+            {activeCafeData && renderCafeDetail(activeCafeData)}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      {/* Pulsating indicator on map for selected cafe */}
+      {activeCafe && (
+        <motion.div 
+          className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
+          variants={pulseVariants}
+          animate="pulse"
+        >
+          <div className="w-16 h-16 bg-[#6F4E37]/30 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#6F4E37]/60 rounded-full flex items-center justify-center">
+              <div className="w-4 h-4 bg-[#6F4E37] rounded-full"></div>
+            </div>
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
