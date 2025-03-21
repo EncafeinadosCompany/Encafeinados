@@ -1,19 +1,22 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { authState } from '@/common/atoms/authAtom';
+import { set } from 'cypress/types/lodash';
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAuth } from './useAuth';
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  // const { isAuthenticated, isLoading } = useAuth();
-  
-  // if (isLoading) {
-  //   return (
-  //     <div className="min-h-screen flex items-center justify-center">
-  //       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-  //     </div>
-  //   );
-  // }
-  
-  // if (!isAuthenticated) {
-  //   return <Navigate to="/login" replace />;
-  // }
-  
-  return <>{children}</>;
+
+interface ProtectedRouteProps {
+  redirectPath?: string;
+}
+
+export const ProtectedRoute= () => {
+  const { isAuthenticated } = useRecoilValue(authState);
+
+  if (!isAuthenticated) {
+    console.log('No está logueado', isAuthenticated);
+    return <Navigate to="/login" replace />; // Redirige al login si no está autenticado
+  }
+
+  return <Outlet />; // Renderiza las rutas hijas si está autenticado
 };

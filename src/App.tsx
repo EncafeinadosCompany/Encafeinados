@@ -1,11 +1,19 @@
+import { RouterProvider } from 'react-router-dom'
 import './App.css'
-import { PublicRoutes } from '@/router'
+
+import routes from './router/public/PublicRoutes'
+import { RecoilRoot } from 'recoil'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div className="app">
-    <PublicRoutes />
-  </div>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={routes} />
+      </QueryClientProvider>
+    </RecoilRoot>
   )
 }
  
