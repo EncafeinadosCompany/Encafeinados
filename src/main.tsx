@@ -12,14 +12,8 @@ import i18n from './utils/i18n/i18n'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
-    <QueryClientProvider client={queryClient}> 
-    <RecoilRoot>
       <I18nextProvider i18n={i18n}>
-        <BrowserRouter>
           <App />
-        </BrowserRouter>
       </I18nextProvider>
-    </RecoilRoot>
-    </QueryClientProvider>
   // </React.StrictMode>
 )
