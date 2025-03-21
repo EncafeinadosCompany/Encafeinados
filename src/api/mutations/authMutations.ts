@@ -1,6 +1,6 @@
 // src/api/mutations/authMutations.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { LoginFormData } from '../types/authTypes'
+import { LoginFormData, LoginResponse, User_Data } from '../types/authTypes'
 import { mockUser } from '../mocks/authMocks'
 import { useSetRecoilState } from 'recoil'
 import { authState } from '@/common/atoms/authAtom'
@@ -11,23 +11,33 @@ export const useLoginMutation = () => {
   const queryClient = useQueryClient()
   const setAuth = useSetRecoilState(authState);
 
-  return useMutation({
-   mutationFn: async (formData: LoginFormData) => {
-     const response = await AuthUsers.login(formData);
+  return useMutation<LoginResponse, Error, User_Data>({
+    mutationFn: async (formData: User_Data) => {
+      console.log('form data',formData)
+      const response = await AuthUsers.login(formData);
+      
+      
+      return response as LoginResponse; // Asegúrate de que la respuesta sea del tipo correcto
+    },
+    onSuccess: (data) => {
+      // Guarda el token y los datos del usuario en localStorage
 
-     localStorage.setItem('token', (response as any).token);
-     localStorage.setItem('user', JSON.stringify((response as any).user));
-     return response;
-   },
-   onSuccess: (data) => {
-     setAuth({
-       token: (data as any).token,
-       user: (data as any).user,
-       isAuthenticated: true,
-     });
-     queryClient.invalidateQueries({queryKey: ['user']});
-   },
-  })
+      localStorage.setItem('token', data.accessToken);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      console.log('datos', data)
+    
+
+      // Actualiza el estado de autenticación en Recoil
+      setAuth({
+        token: data.accessToken,
+        user: data,
+        isAuthenticated: true,
+      });
+
+      // Invalida las consultas relacionadas con el usuario
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+  });
 }
 
   // Register mutation
@@ -77,31 +87,6 @@ export const useLoginMutation = () => {
       })
     }
 
-    // Update profile mutation
-// export const useUpdateProfileMutation = () => {
-//   const queryClient = useQueryClient();
-//   const setAuth = useSetRecoilState(authState);
-
-//   return useMutation({
-//     mutationFn: async (userData: Partial<any>) => {
-//       const updatedUser = await AuthUsers.updateProfile(userData);
-//       return updatedUser;
-//     },
-//     onSuccess: (data) => {
-//       // Actualizar usuario en el estado global
-//       setAuth((prev) => ({
-//         ...prev,
-//         user: data
-//       }));
-      
-//       // Actualizar en localStorage
-//       localStorage.setItem('user', JSON.stringify(data));
-      
-//       // Invalidar queries relacionadas
-//       queryClient.invalidateQueries({ queryKey: ['user'] });
-//     }
-//   });
-// };
 
 // Change password mutation
 export const useChangePasswordMutation = () => {

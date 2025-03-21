@@ -1,45 +1,21 @@
 // src/router/public/PublicRoutes.tsx
-import { createBrowserRouter, Navigate, useRoutes } from 'react-router-dom'
+import {  Route, Routes} from 'react-router-dom'
 import { CoffeeLoverDashboard } from '@/modules/coffeelover/views/CoffeeLoverDashboard'
 import { HomePage } from '@/modules/home/views/landing/HomePage'
 import { LoginPage } from '@/modules/home/views/Login/loginPage'
 import CuestionCard from '@/common/molecules/cuestionCard'
 import { MapView } from '@/common/widgets/MapView';
-import { ProtectedRoute } from '@/common/molecules/hooks/useProtectedRoute'
 
 
-  
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <HomePage />, // Ruta pública
-  },
-  {
-    path: '/map',
-    element: <MapView />, // Ruta pública
-  },
-  {
-    path: '/login',
-    element: <LoginPage />, // Ruta pública
-  },
-  {
-    path: '/optionRegister',
-    element: <CuestionCard />, // Ruta pública
-  },
-  {
-    path: '/',
-    element: <ProtectedRoute />, // Ruta protegida (Layout Route)
-    children: [
-      {
-        path: 'coffeelover',
-        element: <CoffeeLoverDashboard />, // Ruta protegida
-      },
-    ],
-  },
-  {
-    path: '*',
-    element: <Navigate to="/" replace />, // Ruta de respaldo (404)
-  },
-]);
+export function AuthRoutes() {
+  return (
+  <Routes>
+    <Route path="/" element={<HomePage />} />
+    <Route path="/map" element={<MapView />} />
+    <Route path="/login" element={<LoginPage />} />
+    <Route path="/optionRegister" element={<CuestionCard />} />
+    <Route path="/coffeelover" element={<CoffeeLoverDashboard />} />
+  </Routes>
 
-export default router
+  )
+}

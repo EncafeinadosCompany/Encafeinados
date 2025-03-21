@@ -4,8 +4,18 @@ export interface User {
     email: string
     role: 'admin' | 'coffeelover' | 'store'
   }
+
+
+ export  interface LoginResponse {
+    accessToken: string;
+    user: {
+      id: number;
+      role_id: number;
+      email: string;
+    };
+  }
   
-interface User_Data {
+export interface User_Data {
   email: string,
   password: string,
   role_id: number

@@ -1,10 +1,10 @@
 // src/store/atoms/authAtom.ts
 import { atom } from 'recoil';
-import { LoginFormData, User } from '../../api/types/authTypes';
+import { LoginFormData, LoginResponse, User } from '../../api/types/authTypes';
 
 interface AuthState {
   isAuthenticated: boolean;
-  user: LoginFormData | null;
+  user: LoginResponse |null;
   token: string | null;
 }
 

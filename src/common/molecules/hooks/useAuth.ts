@@ -1,16 +1,16 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { LoginFormData } from '@/api';
+import { LoginFormData, LoginResponse } from '@/api';
 import { authState } from '@/common/atoms/authAtom';
 
 export const useAuth = () => {
   const [auth, setAuth] = useRecoilState(authState);
 
-  const login = (user: LoginFormData, token: string) => {
+  const login = (user: LoginResponse, token: string) => {
     // Guardar en localStorage
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
-    
+
     // Actualizar estado Recoil
     setAuth({
       isAuthenticated: true,
@@ -23,7 +23,7 @@ export const useAuth = () => {
     // Limpiar localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    
+
     // Actualizar estado Recoil
     setAuth({
       isAuthenticated: false,
@@ -34,12 +34,12 @@ export const useAuth = () => {
 
   const updateUser = (userData: Partial<LoginFormData>) => {
     if (!auth.user) return;
-    
+
     const updatedUser = { ...auth.user, ...userData };
-    
+
     // Actualizar localStorage
     localStorage.setItem('user', JSON.stringify(updatedUser));
-    
+
     // Actualizar estado Recoil
     setAuth({
       ...auth,

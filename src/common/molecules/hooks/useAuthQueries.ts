@@ -19,15 +19,3 @@ export const useCurrentUser = (options = {}) => {
   });
 };
 
-// Hook para verificar si el token es válido
-export const useVerifyToken = () => {
-  const auth = useRecoilValue(authState);
-  
-  return useQuery({
-    queryKey: ['verifyToken'],
-    queryFn: AuthUsers.verifyToken,
-    enabled: !!auth.token,
-    staleTime: 60 * 1000, // 1 minuto
-    retry: false
-  });
-};

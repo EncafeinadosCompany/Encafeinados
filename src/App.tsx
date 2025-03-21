@@ -1,7 +1,6 @@
-import { RouterProvider } from 'react-router-dom'
+import { BrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.css'
-
-import routes from './router/public/PublicRoutes'
+import { AuthRoutes } from './router/public/PublicRoutes'
 import { RecoilRoot } from 'recoil'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -11,7 +10,9 @@ function App() {
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={routes} />
+      <BrowserRouter>
+      <AuthRoutes />
+    </BrowserRouter>
       </QueryClientProvider>
     </RecoilRoot>
   )

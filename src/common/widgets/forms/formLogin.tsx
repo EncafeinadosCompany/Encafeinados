@@ -1,23 +1,46 @@
+import { LoginFormData, useLoginMutation, User_Data } from "@/api";
+import { authState } from "@/common/atoms/authAtom";
 import { InputEmail } from "@/common/atoms/Input-email";
 import { LoginCard } from "@/common/molecules/LoginCard";
+import { use } from "chai";
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
 
 
 const Formlogin = () => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState<{ email: string; password: string }>({ email: '', password: '' })    
+  const  useLogin = useLoginMutation()
   
   const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsLoading(true)
         console.log(data)
+
+      const form: LoginFormData = {
+        userData: {
+          email: data.email,
+          password: data.password,
+          role_id: 3
+        },
+        PersonData: {
+          firstName: 'John',
+          lastName: 'Doe',
+          phone: '1234567890',
+          address: '123 Main St',
+        }
+      }
+
+        useLogin.mutateAsync(data as User_Data)
+
+        if(useLogin.error){
+          console.log(useLogin.error)
+        }
       
-        // Simulate authentication delay
         setTimeout(() => {
           setIsLoading(false)
-          // If successful, redirect to dashboard
-          // router.push("/dashboard")
+     
         }, 1000)
       }
     
