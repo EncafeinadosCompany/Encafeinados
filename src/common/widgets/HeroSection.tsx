@@ -124,8 +124,9 @@ export const HeroSection: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
           >
-            <button
-              onClick={() => setShowMap(true)}
+            <Link
+            to="/login"
+             
               className="group relative px-6 py-3 bg-[#D4A76A] hover:bg-[#C19559] text-[#0F0F0F] rounded-full 
                 transition-all duration-300 font-medium flex items-center justify-center gap-2 
                 shadow-lg shadow-[#D4A76A]/20 hover:shadow-[#D4A76A]/30 overflow-hidden"
@@ -133,15 +134,8 @@ export const HeroSection: React.FC = () => {
               <span className="relative z-10">Comenzar</span>
               <ArrowRightIcon className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
               <span className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
-            </button>
-
-            <Link
-              to="/login"
-              className="px-6 py-3 border border-white/30 text-white hover:bg-white/10 rounded-full 
-                transition-all duration-300 font-medium backdrop-blur-sm"
-            >
-              Unirse
             </Link>
+
           </motion.div>
         </motion.div>
 
@@ -185,58 +179,6 @@ export const HeroSection: React.FC = () => {
         </motion.div>
       </div>
 
-      <AnimatePresence>
-        {showMap && (
-          <motion.div
-            className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="bg-white rounded-xl w-full max-w-4xl max-h-[80vh] overflow-hidden"
-              initial={{ scale: 0.8, y: 50 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.8, y: 50 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            >
-              <div className="p-4 flex justify-between items-center border-b border-gray-200">
-                <h3 className="font-semibold text-lg text-gray-800">
-                  Mapa de Cafeterías
-                </h3>
-                <button
-                  onClick={() => setShowMap(false)}
-                  className="p-2 rounded-full hover:bg-gray-100 transition-colors"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="h-[60vh] bg-gray-100 flex items-center justify-center">
-                <div className="text-center p-4">
-                  <p className="text-lg text-gray-600">
-                    Aquí se cargará el mapa de cafeterías
-                  </p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Estamos trabajando en esta funcionalidad
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 };

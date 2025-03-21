@@ -53,6 +53,12 @@ export const BenefitsSection = () => {
       description: 'Accede a ofertas especiales y descuentos disponibles solo para usuarios',
       icon: <Gift className="h-8 w-8" />,
       imageSrc: 'https://images.unsplash.com/photo-1512034400317-de97d7d6c3ed?w=500&h=500&fit=crop'
+    },
+    {
+      title: 'Comunidad Cafetera',
+      description: 'Conecta con otros amantes del café y comparte tus descubrimientos favoritos',
+      icon: <Coffee className="h-8 w-8" />,
+      imageSrc: 'https://images.unsplash.com/photo-1517231925375-bf2cb42917a5?w=500&h=500&fit=crop'
     }
   ];
 
@@ -165,7 +171,7 @@ export const BenefitsSection = () => {
         </motion.div>
         
         {/* Botón de CTA */}
-        <motion.div
+        {/* <motion.div
           className="mt-16 text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -175,7 +181,7 @@ export const BenefitsSection = () => {
             <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
             <span className="relative">Descubre Todos los Beneficios</span>
           </button>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );
