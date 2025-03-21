@@ -12,19 +12,19 @@ import { ProtectedRoute } from '@/common/molecules/hooks/useProtectedRoute'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />, // Ruta pública
+    element: <HomePage />, 
   },
   {
     path: '/map',
-    element: <MapView />, // Ruta pública
+    element: <MapView />, 
   },
   {
     path: '/login',
-    element: <LoginPage />, // Ruta pública
+    element: <LoginPage />, 
   },
   {
     path: '/optionRegister',
-    element: <CuestionCard />, // Ruta pública
+    element: <CuestionCard />, 
   },
   {
     path: '/',
