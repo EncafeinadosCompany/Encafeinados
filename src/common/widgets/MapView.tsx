@@ -5,6 +5,10 @@ import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useBranches } from '../../api/queries/branchesQueries';
+import { useStores, useBranchesByStore } from '../../api/queries/storesQueries';
+import { Branch, BranchesResponse } from '../../api/types/branchesTypes';
+import { Store, StoresResponse } from '../../api/types/storesTypes';
 
 // ==============================
 // TYPE DEFINITIONS
@@ -29,7 +33,7 @@ interface MarkerPosition {
  */
 interface MapFocusProps {
   cafeId: number | null;
-  positions: MarkerPosition[];
+  positions: Array<{id: number, lat: number, lng: number}>;
   userLocation: LatLngTuple | null;
 }
 
@@ -40,7 +44,6 @@ interface UserLocationMarkerProps {
   position: LatLngTuple | null;
   pulsing?: boolean;
 }
-
 /**
  * Props for RouteLine component
  */
@@ -56,17 +59,19 @@ interface Cafe {
   id: number;
   name: string;
   rating: number;
-  reviewCount: number;
-  openTime: string;
-  image: string;
-  tags: string[];
+  reviewCount: number; 
+  openTime: string; 
+  image: string; 
+  tags: string[]; 
   latitude: number;
   longitude: number;
-  isOpen: boolean;
+  isOpen: boolean; 
   phone: string;
   address: string;
   distance: string;
   distanceValue: number;
+  storeId: number; 
+  storeName: string; 
 }
 
 /**
@@ -283,20 +288,118 @@ export const MapView: React.FC = () => {
   const [showDirections, setShowDirections] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [favorites, setFavorites] = useState<number[]>(getFavoritesFromStorage());
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedStore, setSelectedStore] = useState<number | undefined>(undefined);
+  
+   // ==============================
+  // API DATA FETCHING
+  // ==============================
+  
+  const { data: branchesData, isLoading: branchesLoading, error: branchesError } = useBranches();
+  
+  // Fetch all stores (for filtering)
+  const { data: storesData, isLoading: storesLoading } = useStores();
+  
+  // Fetch branches filtered by store (if a store is selected)
+  const { data: filteredBranchesData } = useBranchesByStore(selectedStore);
   
   // ==============================
-  // CONSTANTS
+  // DERIVED STATE / COMPUTED VALUES
   // ==============================
   
   // Center of the map (Medellín by default)
   const defaultCenter: LatLngTuple = [6.2476, -75.5658];
 
-  // Sample cafe position data
-  const cafePositions: MarkerPosition[] = [
-    { id: 1, lat: 6.2476 + 0.015, lng: -75.5658 - 0.010 },
-    { id: 2, lat: 6.2476 - 0.008, lng: -75.5658 + 0.015 },
-    { id: 3, lat: 6.2476 + 0.005, lng: -75.5658 + 0.008 }
-  ];
+// Map branches from API to our cafe data structure
+const cafes: Cafe[] = useMemo(() => {
+  if (!branchesData) return [];
+
+  // Determine which branches data to use (filtered or all)
+  const branches = filteredBranchesData?.branch || branchesData.branch || [];
+  
+  return branches.map(branch => {
+    // Skip branches with missing location data
+    if (!branch.location) return null;
+    
+    const baseData = {
+      id: branch.id,
+      name: branch.name,
+      rating: branch.average_rating || 4.5, // Default rating if none provided
+      reviewCount: Math.floor(Math.random() * 100) + 50, // Random review count (50-150)
+      openTime: "7:00 AM - 8:00 PM", // Default opening hours
+      image: branch.store?.logo || "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // Use logo or default
+      tags: ["Coffee", "Specialty"], // Default tags
+      latitude: branch.location.latitude,
+      longitude: branch.location.longitude,
+      isOpen: branch.status,
+      phone: branch.phone_number,
+      address: branch.location.address,
+      storeId: branch.store_id,
+      storeName: branch.store?.name || 'Unknown',
+    };
+    
+    // Calculate distance if user location is available
+    if (userLocation) {
+      const distanceKm = calculateDistance(
+        userLocation[0], userLocation[1], 
+        branch.location.latitude, branch.location.longitude
+      );
+      return {
+        ...baseData,
+        distance: `${distanceKm} km`,
+        distanceValue: parseFloat(distanceKm)
+      };
+    }
+    
+    // Default distance when user location is not available
+    return {
+      ...baseData,
+      distance: "Unknown distance",
+      distanceValue: 999 // High value to sort to the end
+    };
+  }).filter(Boolean) as Cafe[]; // Filter out null values and type cast
+}, [branchesData, filteredBranchesData, userLocation]);
+
+  // Create marker positions from cafe data
+  const cafePositions = useMemo(() => 
+    cafes.map(cafe => ({
+      id: cafe.id,
+      lat: cafe.latitude,
+      lng: cafe.longitude
+    })), 
+  [cafes]);
+
+  const filteredCafes = useMemo(() => {
+    if (!searchTerm) return cafes;
+    
+    const lowerSearch = searchTerm.toLowerCase();
+    return cafes.filter(cafe => 
+      cafe.name.toLowerCase().includes(lowerSearch) || 
+      cafe.address.toLowerCase().includes(lowerSearch) ||
+      cafe.storeName.toLowerCase().includes(lowerSearch)
+    );
+  }, [cafes, searchTerm]);
+  
+  // Sort cafes by distance
+  const sortedCafes = useMemo(() => 
+    [...filteredCafes].sort((a, b) => a.distanceValue - b.distanceValue), 
+  [filteredCafes]);
+  
+  // Get data for the currently active cafe
+  const activeCafeData = useMemo(() => 
+    activeCafe ? cafes.find(cafe => cafe.id === activeCafe) : null,
+  [activeCafe, cafes]);
+  
+  // Extract available stores for the filter
+  const availableStores = useMemo(() => {
+    if (!storesData?.stores?.store) return [];
+    
+    return storesData.stores.store.map(store => ({
+      id: store.id,
+      name: store.name
+    }));
+  }, [storesData]);
+  
   
   // Custom marker icon
   const customIcon = useMemo(() => new L.Icon({
@@ -389,66 +492,8 @@ export const MapView: React.FC = () => {
   // ==============================
   
   // Generate cafe data with dynamically calculated distances
-  const cafes: Cafe[] = useMemo(() => {
-    return cafePositions.map(pos => {
-      const baseData = {
-        id: pos.id,
-        name: ["Pergamino Café", "Velvet Café", "Café Revolución"][pos.id - 1],
-        rating: [4.8, 4.6, 4.5][pos.id - 1],
-        reviewCount: [124, 98, 76][pos.id - 1],
-        openTime: ["7:00 AM - 8:00 PM", "8:00 AM - 6:00 PM", "7:30 AM - 7:00 PM"][pos.id - 1],
-        image: [
-          "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-          "https://images.pexels.com/photos/894695/pexels-photo-894695.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-          "https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-        ][pos.id - 1],
-        tags: [
-          ["Specialty", "Brunch"],
-          ["Pastries", "Quiet"],
-          ["Workspace", "Local"]
-        ][pos.id - 1],
-        latitude: pos.lat,
-        longitude: pos.lng,
-        isOpen: new Date().getHours() >= 7 && new Date().getHours() < 20,
-        phone: ["+57 4 283 6915", "+57 4 413 8997", "+57 4 557 2346"][pos.id - 1],
-        address: [
-          "Cra. 37 #8A-37, Medellín",
-          "Calle 10B #35-8, Medellín",
-          "Cra. 45 #5-31, Medellín"
-        ][pos.id - 1]
-      };
-      
-      // Calculate distance if user location is available
-      if (userLocation) {
-        const distanceKm = calculateDistance(
-          userLocation[0], userLocation[1], 
-          pos.lat, pos.lng
-        );
-        return {
-          ...baseData,
-          distance: `${distanceKm} km`,
-          distanceValue: parseFloat(distanceKm)
-        };
-      }
-      
-      // Default distances when user location is not available
-      return {
-        ...baseData,
-        distance: ["0.3 km", "0.5 km", "0.8 km"][pos.id - 1],
-        distanceValue: [0.3, 0.5, 0.8][pos.id - 1]
-      };
-    });
-  }, [cafePositions, userLocation]);
-  
-  // Sort cafes by distance
-  const sortedCafes = useMemo(() => 
-    [...cafes].sort((a, b) => a.distanceValue - b.distanceValue), 
-  [cafes]);
-  
-  // Get data for the currently active cafe
-  const activeCafeData = useMemo(() => 
-    activeCafe ? cafes.find(cafe => cafe.id === activeCafe) : null,
-  [activeCafe, cafes]);
+ 
+
   
   // ==============================
   // RENDER FUNCTIONS
