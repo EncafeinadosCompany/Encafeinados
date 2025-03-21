@@ -2,9 +2,12 @@
 import React from 'react';
 import { HeroSection } from '@/common/widgets/HeroSection';
 import { StoreCarousel } from '@/common/widgets/StoreCarousel';
-import { TeamSection } from '@/common/widgets/TeamSection';
+// import { TeamSection } from '@/common/widgets/TeamSection';
 import { BenefitsSection } from '@/common/widgets/BenefitsSection';
 import { AboutSection } from '@/common/widgets/AboutSection';
+import { Footer } from '@/common/widgets/Footer';
+import { MapTeaser } from '@/common/molecules/MapTeaser';
+
 
 
 const stores = [
@@ -23,10 +26,14 @@ export const HomePage = () => {
 
       <div className="relative z-5">
         <HeroSection />
+        <MapTeaser totalCafes={45} city="Medellín" />
+        
         <StoreCarousel stores={stores} />
         <BenefitsSection />
-        <TeamSection />
-        <AboutSection />
+        {/* <TeamSection /> */}
+        {/* <AboutSection /> */}
+        <Footer />
+        
       </div>
     </main>
   );
