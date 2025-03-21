@@ -5,7 +5,20 @@ export interface User {
     role: 'admin' | 'coffeelover' | 'store'
   }
   
-  export interface LoginFormData {
-    email: string
-    password: string
-  }
+interface User_Data {
+  email: string,
+  password: string,
+  role_id: number
+}
+
+interface PersonData {
+  firstName: string,
+  lastName: string,
+  phone:string,
+  address:string
+}
+
+export interface LoginFormData {
+    userData: User_Data,
+    PersonData: PersonData
+}
