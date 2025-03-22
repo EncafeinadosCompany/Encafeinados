@@ -1,6 +1,7 @@
 import { Coffee, Store } from "lucide-react"
 import { Link } from "react-router-dom"
 
+
 export default function CuestionCard() {
   return (
     <div className=" bg-white flex flex-col items-center justify-center p-4 ">

@@ -800,7 +800,7 @@ const cafes: Cafe[] = useMemo(() => {
             <input 
               type="text" 
               placeholder="Buscar cafeterías..." 
-              className="w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none focus:ring-2 focus:ring-[#D4A76A] transition-all duration-300"
+              className="w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none focus:ring-2 focus:ring-[#D4A76A] transition-all duration-300 bg-white border-black/10"
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
             />

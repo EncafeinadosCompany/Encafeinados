@@ -1,12 +1,10 @@
 export interface User {
-    id: string
-    name: string
-    email: string
-    role: 'admin' | 'coffeelover' | 'store'
-  }
+    email: string,
+    password: string,
+}
 
 
- export  interface LoginResponse {
+ export interface LoginResponse {
     accessToken: string;
     user: {
       id: number;

@@ -6,28 +6,34 @@ import { InputEmail } from "../atoms/Input-email"
 import { Label } from "../ui/label"
 import { Separator } from "../ui/separator"
 import { InputPassword } from "../atoms/input-passwork"
-import { ButtonGoogle } from "../atoms/button-google"
+import { UseFormRegister } from "react-hook-form"
+import { User } from "@/api"
 
 
 type LoginCardProps = {
-    handleSubmit: (e: React.FormEvent) => void
-    handleGoogleSignIn: () => void
+    register: UseFormRegister<User>
     isLoading: boolean
-    data: { email: string; password: string }
-    setdata: React.Dispatch<React.SetStateAction<{
-        email: string;
-        password: string;
-    }>>
+    errors: any
+    onSubmit: (e: React.FormEvent) => void
+    onGoogleSignIn: () => void
+
 }
 
-export const LoginCard = ({data, setdata, isLoading, handleSubmit, handleGoogleSignIn}:LoginCardProps) => {
+export const LoginCard = (
+  { 
+    register, 
+    isLoading,
+    errors,
+    onSubmit, 
+    onGoogleSignIn}
+  :LoginCardProps) => {
 
   
 return (
   <div className="flex flex-col gap-6">
   <Card className="overflow-hidden rounded-xl border border-amber-200/50 shadow-lg backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 dark:border-amber-800/50">
     <CardContent className="grid p-0 md:grid-cols-2">
-      <form className="p-6 md:p-8" onSubmit={handleSubmit}>
+      <form className="p-6 md:p-8" onSubmit={onSubmit}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center text-center">
             
@@ -41,9 +47,9 @@ return (
               autoComplete="email" 
               placeholder="m@example.com" 
               required 
-              value={data.email}
-              onChange={(e) => setdata({...data, email: e.target.value})}
+              {...register("email")}
             />
+            {errors.email && <p className="text-red-500">{errors.email.message}</p>}
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
@@ -56,9 +62,9 @@ return (
               id="password" 
               autoComplete="current-password" 
               required 
-              value={data.password}
-              onChange={(e) => setdata({...data, password: e.target.value})}
+              {...register("password")}
             />
+              {errors.password && <p className="text-red-500">{errors.password.message}</p>}
           </div>
           <Button type="submit" className="w-full rounded-full bg-amber-600 hover:bg-amber-700 border border-amber-800 text-white font-medium shadow-md transition-all duration-200 hover:shadow-lg" disabled={isLoading}>
             {isLoading ? "Cargando..." : "Login"}

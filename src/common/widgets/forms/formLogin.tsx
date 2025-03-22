@@ -1,48 +1,49 @@
-import { LoginFormData, useLoginMutation, User_Data } from "@/api";
-import { authState } from "@/common/atoms/authAtom";
-import { InputEmail } from "@/common/atoms/Input-email";
+import { LoginFormData, useLoginMutation, User, User_Data } from "@/api";
 import { LoginCard } from "@/common/molecules/LoginCard";
-import { use } from "chai";
-import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { loginShema } from "@/common/utils/schemas/loginShema";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 
 const Formlogin = () => {
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState<{ email: string; password: string }>({ email: '', password: '' })    
+  const [isLoading, setIsLoading] = useState(false)  
   const  useLogin = useLoginMutation()
+  const navigate = useNavigate(); 
+  const {register, handleSubmit, formState:{errors}, reset} = useForm<User>({resolver:zodResolver(loginShema)})
+
+  const onSubmit = async (data:User) => {
+    try {
+      setIsLoading(true);
   
-  const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsLoading(true)
-        console.log(data)
+      const response = await useLogin.mutateAsync(data as User_Data);
 
-      const form: LoginFormData = {
-        userData: {
-          email: data.email,
-          password: data.password,
-          role_id: 3
-        },
-        PersonData: {
-          firstName: 'John',
-          lastName: 'Doe',
-          phone: '1234567890',
-          address: '123 Main St',
+      toast.success("Inicio de sesión exitoso");
+
+      if (response?.user) {
+
+        const roleId = response.user.role_id;
+
+        if (roleId === Number(import.meta.env.VITE_ROLE_COFFEELOVER)) {
+          navigate("/coffeelover");
+        } else if (roleId === Number(import.meta.env.VITE_ROLE_STORE)) {
+          navigate("/store");
+        } else {
+          navigate("/"); 
         }
       }
 
-        useLogin.mutateAsync(data as User_Data)
-
-        if(useLogin.error){
-          console.log(useLogin.error)
-        }
-      
-        setTimeout(() => {
-          setIsLoading(false)
-     
-        }, 1000)
-      }
+    } catch (error) {
+      console.error("Error en el login:", error);
+      toast.error("Error al iniciar sesión");
+    } finally {
+      setIsLoading(false);
+      reset();
+    }
+}
     
   const handleGoogleSignIn = () => {
         setIsLoading(true)
@@ -64,11 +65,11 @@ const Formlogin = () => {
   return (
     <div className="mx-4" >
       <LoginCard 
-        data={data} 
-        setdata={setData} 
+        register={register}
+        errors={errors}
         isLoading={isLoading} 
-        handleSubmit={handleSubmit} 
-        handleGoogleSignIn={handleGoogleSignIn}>
+        onSubmit={handleSubmit(onSubmit)} 
+        onGoogleSignIn={handleGoogleSignIn}>
       </LoginCard>
     </div>
   )
