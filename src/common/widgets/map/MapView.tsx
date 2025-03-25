@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useBranches } from '../../api/queries/branchesQueries';
-import { useStores, useBranchesByStore } from '../../api/queries/storesQueries';
-import { Branch, BranchesResponse } from '../../api/types/branchesTypes';
-import { Store, StoresResponse } from '../../api/types/storesTypes';
+import { useBranches } from '@/api/queries/branchesQueries';
+import { useStores, useBranchesByStore } from '@/api/queries/storesQueries';
+import { Branch, BranchesResponse } from '@/api/types/branchesTypes';
+import { Store, StoresResponse } from '@/api/types/storesTypes';
 
 // ==============================
 // TYPE DEFINITIONS

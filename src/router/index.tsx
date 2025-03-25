@@ -3,11 +3,11 @@ import { CoffeeLoverDashboard } from '@/modules/coffeelover/views/CoffeeLoverDas
 import { HomePage } from '@/modules/home/views/landing/HomePage'
 import { LoginPage } from '@/modules/home/views/Login/loginPage'
 import CuestionCard from '@/common/molecules/auth/cuestionCard'
-import { MapView } from '@/common/widgets/MapView';
+import { MapView } from '@/common/widgets/map/MapView';
 import PrivateRoute from './PrivateRouter'
 import RoleRoute from './RouleRoute'
 import UnauthorizedPage from '@/modules/settings/authorizationPage'
-import NotFoundPage from '@/modules/settings/404Page'
+import NotFound from '@/modules/settings/404'
 import CoffeeloversLayout from '@/modules/coffeelover/components/coffeeloversLayout'
 import ButtonLanguages from '@/common/molecules/settings/button-languages'
 import { useTranslation } from 'react-i18next'
@@ -31,7 +31,7 @@ const AuthRoutes = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path='/register' element={<CuestionCard/>}/>
         <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage/>} />
-        <Route path="/404" element={<NotFoundPage />} />
+        <Route path="/404" element={<NotFound />} />
 
 
         <Route element={<PrivateRoute />}>
