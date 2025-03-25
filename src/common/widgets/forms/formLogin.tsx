@@ -1,6 +1,6 @@
 import { useLoginMutation, User, User_Data } from "@/api";
 import { LoginCard } from "@/common/molecules/auth/LoginCard";
-import { loginSchema } from "@/common/utils/schemas/loginShema";
+import { loginSchema } from "@/common/utils/schemas/auth/loginShema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,9 +36,6 @@ const Formlogin = () => {
         pagesPermissions(roleId, navigate);
       }
 
-    } catch (error) {
-      console.error("Error en el login:", error);
-      toast.error("Error al iniciar sesión");
     } finally {
       setIsLoading(false);
       reset();

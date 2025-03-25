@@ -21,7 +21,7 @@ export interface User_Data {
 
 interface PersonData {
   full_name: string,
-  type_document_id: string | number,
+  type_document_id: number,
   number_document:string,
   phone_number: string
 }

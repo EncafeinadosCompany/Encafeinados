@@ -1,39 +1,40 @@
-// src/api/mutations/authMutations.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { RegisterCoffelover, LoginResponse, User_Data } from '../types/authTypes'
-import { mockUser } from '../mocks/authMocks'
 import { useSetRecoilState } from 'recoil'
 import { authState } from '@/common/atoms/authAtom'
 import AuthUsers from '../queries/authQueries'
-import { useAuth } from '@/common/molecules/hooks/useAuth'
+import { useError } from '@/common/molecules/hooks/useErrors'
 
 
 export const useLoginMutation = () => {
   const queryClient = useQueryClient()
   const setAuth = useSetRecoilState(authState);
+  const useErros = useError('login')
 
   return useMutation<LoginResponse, Error, User_Data>({
     mutationFn: async (formData: User_Data) => {
       console.log('form data',formData)
       const response = await AuthUsers.login(formData);
-      return response as LoginResponse; // Asegúrate de que la respuesta sea del tipo correcto
+      return response as LoginResponse; 
     },
     onSuccess: (data) => {
-      // Guarda el token y los datos del usuario en localStorage
-
+     
       localStorage.setItem('token', data.accessToken);
       localStorage.setItem('user', JSON.stringify(data.user));
       console.log('datos', data)
+
       // Actualiza el estado de autenticación en Recoil
       setAuth({
         token: data.accessToken,
         user: data,
         isAuthenticated: true,
       });
-
       // Invalida las consultas relacionadas con el usuario
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
+    onError: (error: any)=>{
+      useErros(error)
+    }
   });
 }
 
@@ -41,6 +42,7 @@ export const useLoginMutation = () => {
   export const useRegisterCoffeloverMutation = () => {
     const queryClient = useQueryClient()
     const setAuth = useSetRecoilState(authState);
+    const useErrors = useError("registeCoffelover")
 
     return useMutation ({
       mutationFn: async (formData: RegisterCoffelover) => {
@@ -59,6 +61,9 @@ export const useLoginMutation = () => {
 
        // Invalidar queries relacionadas
        queryClient.invalidateQueries({ queryKey: ['user'] });
+      },
+      onError: (error:any) => {
+        useErrors(error);
       }
     })
   }

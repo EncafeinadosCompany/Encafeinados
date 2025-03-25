@@ -43,8 +43,9 @@ public async post<T>(url:string, data:any, config?:AxiosRequestConfig):Promise<T
     const response: AxiosResponse<T> = await this.client.post(url, data, config)
     return response.data;
   }catch(error){
-    throw new Error(`POST ${url} failed: ${(error as Error).message}`);
-  }
+    console.log(`POST ${url}`)
+    throw error
+}
 }
 
 public async put<T>(url:string, data?:any, config?:AxiosRequestConfig):Promise<T>{

@@ -1,6 +1,8 @@
 
 import { RegisterCoffelover, LoginResponse, User_Data } from '../types/authTypes'
 import AuthClient from '../client/axios'
+import { number } from 'zod';
+import { handleApiError } from '@/common/utils/errors/handleApiError';
 
 const authClient = new AuthClient()
 
@@ -12,8 +14,8 @@ const AuthUsers = {
       const response = await authClient.post('/auth/login', data);
       return response;
       
-    }catch(error){
-      throw new Error(`POST /auth/login failed: ${(error as Error).message}`); 
+    }catch (error: any) {
+      throw handleApiError(error)
     }
   },
 
@@ -23,8 +25,8 @@ const AuthUsers = {
       const response = await authClient.post<RegisterCoffelover>('/auth/register-client', data);
       console.log('AQUI',response)
       return response;
-    }catch(error){
-      throw new Error(`POST /register failed: ${(error as Error).message}`);
+    }catch (error: any) {
+      throw handleApiError(error)
     }
   },
 
