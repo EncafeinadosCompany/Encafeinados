@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Text } from "@/common/atoms/Text";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPinIcon, ArrowRightIcon, ChevronDownIcon } from "lucide-react";
-import logoIcon from "../../assets/images/logo.ico";
+import logoIcon from "@/assets/images/logo.ico";
 import { Link } from "react-router-dom";
 
 export const HeroSection: React.FC = () => {

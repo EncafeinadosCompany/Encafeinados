@@ -1,11 +1,11 @@
 // src/modules/home/views/HomePage.tsx
 import React from 'react';
-import { HeroSection } from '@/common/widgets/HeroSection';
-import { StoreCarousel } from '@/common/widgets/StoreCarousel';
+import { HeroSection } from '@/common/widgets/home/HeroSection';
+import { StoreCarousel } from '@/common/widgets/home/StoreCarousel';
 // import { TeamSection } from '@/common/widgets/TeamSection';
-import { BenefitsSection } from '@/common/widgets/BenefitsSection';
-import { AboutSection } from '@/common/widgets/AboutSection';
-import { Footer } from '@/common/widgets/Footer';
+import { BenefitsSection } from '@/common/widgets/home/BenefitsSection';
+import { AboutSection } from '@/common/widgets/home/AboutSection';
+import { Footer } from '@/common/widgets/home/Footer';
 import { MapTeaser } from '@/common/molecules/home/MapTeaser';
 
 
