@@ -1,19 +1,27 @@
-import { LoginFormData, useLoginMutation, User, User_Data } from "@/api";
-import { LoginCard } from "@/common/molecules/LoginCard";
-import { loginShema } from "@/common/utils/schemas/loginShema";
-import { useEffect, useState } from "react";
+import { useLoginMutation, User, User_Data } from "@/api";
+import { LoginCard } from "@/common/molecules/auth/LoginCard";
+import { loginSchema } from "@/common/utils/schemas/loginShema";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "@/common/molecules/hooks/useAuth";
 
 const Formlogin = () => {
-
+  
   const [isLoading, setIsLoading] = useState(false)  
   const  useLogin = useLoginMutation()
-  const navigate = useNavigate(); 
-  const {register, handleSubmit, formState:{errors}, reset} = useForm<User>({resolver:zodResolver(loginShema)})
+  const navigate = useNavigate()
+  const {pagesPermissions} = useAuth()
+  
+  const {register, handleSubmit, formState:{errors}, reset} = useForm({
+  resolver: zodResolver(loginSchema),
+  defaultValues: {
+    email: '',
+    password: ''
+  }
+})
 
   const onSubmit = async (data:User) => {
     try {
@@ -24,16 +32,8 @@ const Formlogin = () => {
       toast.success("Inicio de sesión exitoso");
 
       if (response?.user) {
-
         const roleId = response.user.role_id;
-
-        if (roleId === Number(import.meta.env.VITE_ROLE_COFFEELOVER)) {
-          navigate("/coffeelover");
-        } else if (roleId === Number(import.meta.env.VITE_ROLE_STORE)) {
-          navigate("/store");
-        } else {
-          navigate("/"); 
-        }
+        pagesPermissions(roleId, navigate);
       }
 
     } catch (error) {
@@ -56,12 +56,16 @@ const Formlogin = () => {
         //     redirectTo: `${window.location.origin}/auth/callback`,
         //   },
         // })
-    
+        
         // Simulate authentication delay
         setTimeout(() => {
           setIsLoading(false)
         }, 1000)
       }
+
+
+
+   
   return (
     <div className="mx-4" >
       <LoginCard 

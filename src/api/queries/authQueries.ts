@@ -1,5 +1,5 @@
-// src/api/queries/authQueries.ts
-import { LoginFormData, LoginResponse, User_Data } from '../types/authTypes'
+
+import { RegisterCoffelover, LoginResponse, User_Data } from '../types/authTypes'
 import AuthClient from '../client/axios'
 
 const authClient = new AuthClient()
@@ -17,11 +17,12 @@ const AuthUsers = {
     }
   },
 
-  register: async( data: LoginFormData):
-  Promise<LoginFormData> => {
+  registerCoffelover: async( data: RegisterCoffelover):
+  Promise<RegisterCoffelover> => {
     try{
-      const response = await authClient.post<LoginFormData>('/register', data);
-      return (response as any).data;
+      const response = await authClient.post<RegisterCoffelover>('/auth/register-client', data);
+      console.log('AQUI',response)
+      return response;
     }catch(error){
       throw new Error(`POST /register failed: ${(error as Error).message}`);
     }

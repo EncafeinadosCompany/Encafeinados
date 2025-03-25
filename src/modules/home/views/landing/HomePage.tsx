@@ -6,7 +6,7 @@ import { StoreCarousel } from '@/common/widgets/StoreCarousel';
 import { BenefitsSection } from '@/common/widgets/BenefitsSection';
 import { AboutSection } from '@/common/widgets/AboutSection';
 import { Footer } from '@/common/widgets/Footer';
-import { MapTeaser } from '@/common/molecules/MapTeaser';
+import { MapTeaser } from '@/common/molecules/home/MapTeaser';
 
 
 

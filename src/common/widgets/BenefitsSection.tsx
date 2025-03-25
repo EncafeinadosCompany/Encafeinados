@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Text } from '@/common/atoms/Text';
-import { BenefitCard } from '@/common/molecules/BenefitCard';
+import { BenefitCard } from '@/common/molecules/home/BenefitCard';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 

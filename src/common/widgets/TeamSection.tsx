@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { TeamCard } from '@/common/molecules/TeamCard';
+import { TeamCard } from '@/common/molecules/home/TeamCard';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 const teamMembers = [

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Text } from "@/common/atoms/Text";
-import { StoreCard } from "@/common/molecules/StoreCard";
+import { StoreCard } from "@/common/molecules/home/StoreCard";
 import {
   Carousel,
   CarouselContent,

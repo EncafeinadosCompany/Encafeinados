@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 
 const LanguageSwitcher: React.FC = () => {
+  
   const { i18n } = useTranslation();
   
   const toggleLanguage = () => {

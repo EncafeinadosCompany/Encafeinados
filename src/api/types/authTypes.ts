@@ -20,13 +20,13 @@ export interface User_Data {
 }
 
 interface PersonData {
-  firstName: string,
-  lastName: string,
-  phone:string,
-  address:string
+  full_name: string,
+  type_document_id: string | number,
+  number_document:string,
+  phone_number: string
 }
 
-export interface LoginFormData {
+export interface RegisterCoffelover {
     userData: User_Data,
-    PersonData: PersonData
+    personData: PersonData
 }

@@ -1,7 +1,24 @@
-import { Input } from "../ui/input"
+import { useState } from "react";
+import { Input } from "../ui/input";
+import { Eye, EyeOff } from "lucide-react"; // Usa Lucide para los iconos
 
-export const InputPassword =  ({...props}:React.ComponentProps<"input">)=>{
-    return (
-      <Input type="password"  className="pl-5 rounded-full border-gray-500 focus-visible:ring-amber-900" {...props} />
-    )
-}
+export const InputPassword = ({ ...props }: React.ComponentProps<"input">) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  return (
+    <div className="relative">
+      <Input
+        type={isVisible ? "text" : "password"}
+        className="pl-5 pr-10  px-4 py-2 border  bg-gray-100 rounded-full border-gray-400 focus-visible:ring-amber-900"
+        {...props}
+      />
+      <button
+        type="button"
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+        onClick={() => setIsVisible(!isVisible)}
+      >
+        {isVisible ? <EyeOff size={22} /> : <Eye size={22} />}
+      </button>
+    </div>
+  );
+};

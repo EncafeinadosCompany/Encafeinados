@@ -1,10 +1,11 @@
 // src/api/mutations/authMutations.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { LoginFormData, LoginResponse, User_Data } from '../types/authTypes'
+import { RegisterCoffelover, LoginResponse, User_Data } from '../types/authTypes'
 import { mockUser } from '../mocks/authMocks'
 import { useSetRecoilState } from 'recoil'
 import { authState } from '@/common/atoms/authAtom'
 import AuthUsers from '../queries/authQueries'
+import { useAuth } from '@/common/molecules/hooks/useAuth'
 
 
 export const useLoginMutation = () => {
@@ -15,8 +16,6 @@ export const useLoginMutation = () => {
     mutationFn: async (formData: User_Data) => {
       console.log('form data',formData)
       const response = await AuthUsers.login(formData);
-      
-      
       return response as LoginResponse; // Asegúrate de que la respuesta sea del tipo correcto
     },
     onSuccess: (data) => {
@@ -25,8 +24,6 @@ export const useLoginMutation = () => {
       localStorage.setItem('token', data.accessToken);
       localStorage.setItem('user', JSON.stringify(data.user));
       console.log('datos', data)
-    
-
       // Actualiza el estado de autenticación en Recoil
       setAuth({
         token: data.accessToken,
@@ -41,13 +38,13 @@ export const useLoginMutation = () => {
 }
 
   // Register mutation
-  export const useRegisterMutation = () => {
+  export const useRegisterCoffeloverMutation = () => {
     const queryClient = useQueryClient()
     const setAuth = useSetRecoilState(authState);
 
     return useMutation ({
-      mutationFn: async (formData: LoginFormData) => {
-        const response = await AuthUsers.register(formData);
+      mutationFn: async (formData: RegisterCoffelover) => {
+        const response = await AuthUsers.registerCoffelover(formData);
 
         localStorage.setItem('token', (response as any).token);
         localStorage.setItem('user', JSON.stringify((response as any).user));
