@@ -11,11 +11,12 @@ export const useBranches = () => {
       const response = await authClient.get<BranchesResponse>('/branches')
       return response
     },
+    
   })
 }
 
 export const useBranch = (branchId: number | undefined) => {
-  return useQuery<BranchesResponse>({
+  return useQuery<BranchesResponse, Error>({
     queryKey: ['branches', branchId],
     queryFn: async () => {
       const response = await authClient.get<BranchesResponse>(`/branches/${branchId}`)

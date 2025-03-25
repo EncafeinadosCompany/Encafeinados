@@ -9,11 +9,10 @@ import RoleRoute from './RouleRoute'
 import UnauthorizedPage from '@/modules/settings/authorizationPage'
 import NotFound from '@/modules/settings/404'
 import CoffeeloversLayout from '@/modules/coffeelover/components/coffeeloversLayout'
-import ButtonLanguages from '@/common/molecules/settings/button-languages'
-import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from '@/common/molecules/settings/button-languages'
-import CoffeeLoverRegistration from '@/common/molecules/auth/Coffelover/registerCoffeloverStep1'
 import RegisterCoffeloverPage from '@/modules/home/views/Login/registerCoffeloverPage'
+import RegisterStorePage from '@/modules/home/views/Login/registerStoresPage'
+
 
 
 
@@ -21,9 +20,9 @@ const AuthRoutes = () => {
   return (
 
    <>
-   <div className='fixed  bottom-4 right-4 z-50'>
+   {/* <div className='fixed  bottom-4 right-4 z-50'>
     <LanguageSwitcher />
-   </div>
+   </div> */}
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -31,6 +30,7 @@ const AuthRoutes = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path='/register' element={<CuestionCard/>}/>
         <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage/>} />
+        <Route path= "/store-registration" element= {<RegisterStorePage/>}/>
         <Route path="/404" element={<NotFound />} />
 
 

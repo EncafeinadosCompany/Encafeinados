@@ -1,4 +1,4 @@
-import FormRegisterCoffeelover from "@/common/widgets/forms/formRegisterCoffelovers"
+import FormRegisterCoffeelover from "@/common/widgets/forms/auth/formRegisterCoffelovers"
 
 const RegisterCoffeloverPage = () => {
   return (

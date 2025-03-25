@@ -25,4 +25,4 @@ export const useBranchesByStore = (storeId: number | undefined) => {
       },
       enabled: !!storeId, // Only run the query when storeId is available
     })
-  }
+}

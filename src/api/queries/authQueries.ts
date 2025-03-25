@@ -1,17 +1,15 @@
 
 import { RegisterCoffelover, LoginResponse, User_Data } from '../types/authTypes'
 import AuthClient from '../client/axios'
-import { number } from 'zod';
 import { handleApiError } from '@/common/utils/errors/handleApiError';
 
 const authClient = new AuthClient()
 
 const AuthUsers = {
 
-  login: async (data: User_Data):
-  Promise<any> => {
+  login: async (data: User_Data):Promise<LoginResponse> => {
     try{
-      const response = await authClient.post('/auth/login', data);
+      const response = await authClient.post<LoginResponse>('/auth/login', data);
       return response;
       
     }catch (error: any) {
@@ -19,12 +17,12 @@ const AuthUsers = {
     }
   },
 
-  registerCoffelover: async( data: RegisterCoffelover):
-  Promise<RegisterCoffelover> => {
+  registerCoffelover: async( data: RegisterCoffelover):Promise<LoginResponse> => {
     try{
-      const response = await authClient.post<RegisterCoffelover>('/auth/register-client', data);
+      const response = await authClient.post<LoginResponse>('/auth/register-client', data);
       console.log('AQUI',response)
       return response;
+      
     }catch (error: any) {
       throw handleApiError(error)
     }
@@ -54,10 +52,6 @@ const AuthUsers = {
     }
   },
 
-   logout: (): void => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  },
 
   // Actualizar información del usuario
   // updateProfile: async (data: Partial<User>): Promise<User> => {

@@ -12,6 +12,8 @@ import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/register
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
+import { LinkReturn } from "@/common/molecules/auth/LinkReturn";
+import { TitleForm } from "@/common/atoms/auth/titleForm";
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(1);
@@ -146,39 +148,22 @@ const FormRegisterCoffeelover = () => {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-orange-50 to-orange-200" translate="no">
             {/* Replace the fixed positioning with a responsive approach */}
-            <div className="w-full max-w-2xl mb-4 self-start">
-                <Link to="/register" className="inline-flex items-center text-gray-800 hover:text-gray-700 transition-colors">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Volver
-                </Link>
-            </div>
-
+            <LinkReturn link="/register" >
+            </LinkReturn>
             <motion.div
                 className="max-w-2xl w-full"
-                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.5 }}
             >
                 <div>
-                    <div className="mt-8">
-                        <motion.h1
-                            className="text-2xl font-medium text-amber-900"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.2 }}
+                    <div className="mt-8 mb-2">
+                        <TitleForm
+                            title="Conviértete en un verdadero Coffelover"
+                            subtitle=" Descubre un mundo de aromas y sabores. Únete a la comunidad donde el café es más que una bebida, es una pasión."
                         >
-                            Conviértete en un verdadero Coffelover
-                        </motion.h1>
-                        <motion.p
-                            className="text-gray-500 mt-3"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3 }}
-                        >
-                            Descubre un mundo de aromas y sabores. Únete a la comunidad donde el café es más que una bebida, es una pasión.
-                        </motion.p>
+                        </TitleForm>
                     </div>
-
                     {/* Progress indicator */}
                     <ProgressIndicator step={step} totalSteps={totalSteps}></ProgressIndicator>
                 </div>

@@ -2,15 +2,20 @@ import { Coffee, Store } from "lucide-react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import CardRegister from "@/common/atoms/auth/cardRegister"
+import { LinkReturn } from "./LinkReturn"
 
 export default function CuestionCard() {
     return (
+   <div
+   className="bg-gradient-to-b from-orange-100 to-orange-200">
+     
       <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-b from-orange-100 to-orange-200 flex flex-col items-center justify-center p-4 sm:p-6"
+      className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-4"
     >
+       <LinkReturn link="/login" className="mb-10"></LinkReturn>
     <div className="w-full max-w-sm sm:max-w-md ">
       {/* Header con animación sutil */}
       <motion.div 
@@ -41,7 +46,7 @@ export default function CuestionCard() {
       {/* Tarjetas con diseño inspirado en la imagen */}
       <div className="grid gap-6">
         <CardRegister 
-        link="/coffee-lover-registration"
+        link="/store-registration"
         title="Tienda"
         subtitle="Cafetería de Especialidad"
         description="Para baristas, tostadores y amantes del café de origen"
@@ -65,6 +70,7 @@ export default function CuestionCard() {
       </motion.div>
     </div>
   </motion.div>
+   </div>
     )
   
 }

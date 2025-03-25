@@ -1,4 +1,4 @@
-import { Input } from "@/common/ui/input"
+import { InputForm } from "@/common/atoms/auth/inputs-form"
 import { Label } from "@/common/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
 import { HelpCircle, X } from "lucide-react"
@@ -86,12 +86,11 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                     <Label htmlFor="document_number" className="text-sm items-end font-medium">
                         Número de Documento
                     </Label>
-                    <Input
+                    <InputForm
                         id="number_document"
                         type="number"
                         {...register("personData.number_document")}
                         placeholder="Ingres tu número de documento"
-                        className=" appearance-none text-gray-500 bg-white/60 shadow-sm focus:shadow-md border focus:border-amber-500 border-gray-300"
                     />
                     {errors?.personData?.number_document && <p className="text-red-500">{errors.personData.number_document.message}</p>}
                 </div>
@@ -100,12 +99,11 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                         Teléfono / Celular
                     </Label>
 
-                    <Input
+                    <InputForm
                         id="phone_number"
                         type="tel"
                         {...register("personData.phone_number")}
                         placeholder="Número de teléfono"
-                        className="text-gray-500 bg-white/60 shadow-sm focus:shadow-md border focus:border-amber-500 border-gray-300"
                     />
                     {errors?.personData?.phone_number && <p className="text-red-500">{errors.personData.phone_number.message}</p>}
                 </div>
