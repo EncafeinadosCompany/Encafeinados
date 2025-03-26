@@ -1,4 +1,5 @@
 import { InputForm } from "@/common/atoms/auth/inputs-form"
+import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument"
 import { Label } from "@/common/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
 import { HelpCircle, X } from "lucide-react"
@@ -60,22 +61,10 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                                 <Label htmlFor="documentType" className="text-sm font-medium">
                                     Tipo de Documento
                                 </Label>
-
-                                <Select onValueChange={field.onChange} value={field.value} >
-                                    <SelectTrigger
-                                        id="type_document"
-                                        className="w-full text-gray-500 bg-white/60 shadow-sm focus:shadow-md border focus:border-amber-500 border-gray-300"
-                                    >
-                                        <SelectValue placeholder="Selecciona tipo" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="0">Selecciona tipo</SelectItem>
-                                        <SelectItem value="1">Cédula de Ciudadanía (CC)</SelectItem>
-                                        <SelectItem value="2">NIT</SelectItem>
-                                        <SelectItem value="3">Tarjeta de Identidad (TI)</SelectItem>
-                                    </SelectContent>
-                                </Select>
-
+                                <SelectTypeDocument
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                />
                             </div>
                         )} />
                     {errors?.personData?.type_document_id && <p className="text-red-500">{errors.personData.type_document_id.message}</p>}

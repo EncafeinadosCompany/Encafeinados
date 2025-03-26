@@ -23,7 +23,7 @@ const FormRegisterCoffeelover = () => {
     const [passwordsMatch, setPasswordsMatch] = useState(true)
     const navegate = useNavigate();
     const totalSteps = 3
- 
+
 
     const toggleInfo = () => {
         setShowInfo(!showInfo)
