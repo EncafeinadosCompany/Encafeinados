@@ -1,8 +1,6 @@
-import { RegisterCoffelover } from "@/api";
 import { InputPassword } from "@/common/atoms/input-passwork";
 import { Label } from "@radix-ui/react-label";
-import { useEffect, useState } from "react";
-import { UseFormGetValues, UseFormRegister } from "react-hook-form";
+import {UseFormRegister } from "react-hook-form";
 
 interface RegisterCoffeloverStep3Props {
   register: UseFormRegister<any>;
@@ -11,12 +9,9 @@ interface RegisterCoffeloverStep3Props {
 
 const RegisterCoffeloverStep3 = ({ register, errors }: RegisterCoffeloverStep3Props) => {
 
-
   return (
-
     <div className="space-y-4 m-3">
       <div className="space-y-2">
-        {/* Input de contraseña */}
         <Label htmlFor="password">Crea tu contraseña</Label>
         <InputPassword
           id="password"
@@ -31,7 +26,6 @@ const RegisterCoffeloverStep3 = ({ register, errors }: RegisterCoffeloverStep3Pr
       </div>
 
       <div className="space-y-2">
-        {/* Input de confirmación */}
         <Label htmlFor="confirmPassword">Confirma tu contraseña</Label>
         <InputPassword
           id="confirmPassword"

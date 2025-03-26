@@ -16,7 +16,7 @@ const registerCoffeeloverSchema = z.object({
         confirmPassword: z.string()
             .min(4, { message: "La confirmación debe tener al menos 4 caracteres" })
             .max(10, {message:"La contraseña es muy larga"})
-            .regex(/[0-9]/, { message: "La contraseña es muy larga" }),
+            .regex(/[0-9]/, { message: "Debe contener al menos un número" }),
         role_id: z.number().default(3)
     }),
     personData: personalDataSchema,

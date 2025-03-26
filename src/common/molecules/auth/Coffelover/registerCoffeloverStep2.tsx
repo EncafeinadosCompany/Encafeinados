@@ -1,11 +1,8 @@
 import { InputForm } from "@/common/atoms/auth/inputs-form"
 import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument"
 import { Label } from "@/common/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
 import { HelpCircle, X } from "lucide-react"
 import { Controller, UseFormRegister } from "react-hook-form"
-
-
 
 interface RegisterCoffeloverStep2Props {
     toggleInfo: () => void
@@ -16,7 +13,6 @@ interface RegisterCoffeloverStep2Props {
 }
 
 const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, control }: RegisterCoffeloverStep2Props) => {
-
     return (
         <div className="space-y-6 m-3">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -79,7 +75,7 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                         id="number_document"
                         type="number"
                         {...register("personData.number_document")}
-                        placeholder="Ingres tu número de documento"
+                        placeholder="Ingresa tu número de documento"
                     />
                     {errors?.personData?.number_document && <p className="text-red-500">{errors.personData.number_document.message}</p>}
                 </div>
