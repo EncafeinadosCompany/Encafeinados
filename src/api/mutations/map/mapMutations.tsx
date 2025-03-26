@@ -1,51 +1,5 @@
+import { getCurrentLocationProps, handleSearchProps, recentSearchesProps } from "@/api/types/mapTypes";
 import { formatAddress } from "@/common/utils/map/formatAddress";
-// import { saveRecentSearch } from "@/common/utils/map/saveRecentSearch";
-
-
-// const [searchQuery, setSearchQuery] = useState("");
-// const [suggestions, setSuggestions] = useState<{ display_name: string; lat: string; lon: string; address: any }[]>([]);
-// const [recentSearches, setRecentSearches] = useState<{ display_name: string; lat: string; lon: string }[]>([]);
-// const [selectedPosition, setSelectedPosition] = useState<[number, number] | null>(null);
-// const [currentPosition, setCurrentPosition] = useState<[number, number] | null>(null);
-// const [isSearching, setIsSearching] = useState(false);
-// const [isLocating, setIsLocating] = useState(false);
-// const [currentAddress, setCurrentAddress] = useState("");
-// const [showSuggestions, setShowSuggestions] = useState(false);
-// const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-// const mapRef = useRef<L.Map | null>(null);
-// const searchInputRef = useRef<HTMLInputElement>(null);
-
-export interface handleSearchProps {
-  setSearchQuery: (query: string) => void;
-  setSuggestions: (suggestions: any[]) => void;
-  setShowSuggestions: (show: boolean) => void;
-  setIsSearching: (isSearching: boolean) => void;
-  onLocationSelect: (lat: number, lng: number, address: string) => void;
-  searchTimeoutRef: React.RefObject<NodeJS.Timeout | null>;
-}
-
-
-export interface MapSearchProps {
-  onLocationSelect: (lat: number, lng: number, address: string) => void;
-}
-
-
-export interface getCurrentLocationProps {
-  onLocationSelect: (lat: number, lng: number, address: string) => void;
-  setIsLocating: (isLocating: boolean) => void;
-  setCurrentPosition: (position: [number, number] | null) => void;
-  setCurrentAddress: (address: string) => void;
-  setSearchQuery: (query: string) => void;
-  setSelectedPosition: (position: [number, number] | null) => void;
-  setSuggestions: (suggestions: any[]) => void;
-  setShowSuggestions: (show: boolean) => void;
-}
-
-export interface recentSearchesProps  {
-  recentSearches: { display_name: string; lat: string; lon: string; }[],
-  setRecentSearches: (searches: { display_name: string; lat: string; lon: string }[]) => void;
-};
-
 
 const MapSettings = {
   getCurrentLocation: async({onLocationSelect, setCurrentAddress, setIsLocating, setCurrentPosition, setSelectedPosition , setSearchQuery}:getCurrentLocationProps) => {
@@ -100,8 +54,6 @@ const MapSettings = {
     setRecentSearches(updatedSearches);
     localStorage.setItem('recentMapSearches', JSON.stringify(updatedSearches));
   },
-
-  
 
   handleSearch: async (query: string, {setSearchQuery, setShowSuggestions, setSuggestions,setIsSearching, searchTimeoutRef}:handleSearchProps) => {
     setSearchQuery(query);

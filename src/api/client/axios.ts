@@ -48,12 +48,12 @@ export default class AuthClient {
     }
   }
 
-  public async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  public async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
     try {
-      const response: AxiosResponse<T> = await this.client.put(url, data, config)
+      const response: AxiosResponse<T> = await this.client.patch(url, data, config)
       return response.data;
     } catch (error) {
-      console.log(`PUT ${url}`)
+      console.log(`PATCH ${url}`)
       throw error
     }
   }
