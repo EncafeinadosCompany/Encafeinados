@@ -42,48 +42,61 @@ const MapController = ({ position }: { position: [number, number] | null }) => {
 
 // Format address to be more readable and Google-like
 const formatAddress = (addressData: any): string => {
-  if (!addressData) return "";
+    if (!addressData) return "";
+    
+    try {
+      const address = addressData.address || {};
+      const parts = new Set<string>(); // 🔹 Usamos un Set para evitar repeticiones
   
-  try {
-    const address = addressData.address || {};
-    
-    // Build a more structured address like Google Maps
-    const parts = [];
-    
-    // Street address
-    if (address.road) {
-      let streetAddress = address.road;
-      if (address.house_number) {
-        streetAddress += ` #${address.house_number}`;
+      // 📍 Dirección exacta
+      if (address.road) {
+        let streetAddress = address.road;
+        if (address.house_number) {
+          streetAddress += ` #${address.house_number}`;
+        }
+        parts.add(streetAddress);
       }
-      parts.push(streetAddress);
+  
+      // 📌 Zona residencial o vereda (más precisión)
+      if (address.residential || address.hamlet) {
+        parts.add(address.residential || address.hamlet);
+      }
+  
+      // 🏙 Barrio o sector (en orden de más preciso a menos)
+      if (address.borough) {
+        parts.add(address.borough);
+      }
+      if (address.quarter) {
+        parts.add(address.quarter);
+      }
+      if (address.city_district) {
+        parts.add(address.city_district);
+      }
+      if (address.suburb || address.neighbourhood) {
+        parts.add(address.suburb || address.neighbourhood);
+      }
+  
+      // 🏛 Ciudad
+      if (address.city || address.town || address.village) {
+        parts.add(address.city || address.town || address.village);
+      }
+  
+      // 🌎 Estado o departamento
+      if (address.state) {
+        parts.add(address.state);
+      }
+  
+      // ❌ Eliminar duplicados en caso de que se repitan valores
+      const formattedAddress = Array.from(parts).join(", ");
+  
+      // 🔹 Si la dirección es muy corta, usamos `display_name`
+      return formattedAddress.length > 10 ? formattedAddress : addressData.display_name;
+    } catch (error) {
+      console.error("Error formateando dirección:", error);
+      return addressData.display_name || "Dirección no disponible";
     }
-    
-    // Neighborhood/suburb
-    if (address.suburb || address.neighbourhood) {
-      parts.push(address.suburb || address.neighbourhood);
-    }
-    
-    // City
-    if (address.city || address.town || address.village) {
-      parts.push(address.city || address.town || address.village);
-    }
-    
-    // State/province and country
-    if (address.state) {
-      parts.push(address.state);
-    }
-    
-    if (address.country) {
-      parts.push(address.country);
-    }
-    
-    return parts.join(", ");
-  } catch (error) {
-    console.error("Error formatting address:", error);
-    return addressData.display_name || "";
-  }
-};
+  };
+  
 
 const LocationMarker = ({ onLocationSelect }: MapSearchProps) => {
   const [position, setPosition] = useState<[number, number] | null>(null);
@@ -247,60 +260,50 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
     setShowSuggestions(true);
-
+    
     if (query.length < 2) {
-        setSuggestions([]);
-        return;
+      setSuggestions([]);
+      return;
     }
 
-    // Limpiar timeout previo antes de hacer una nueva búsqueda
+    // Clear previous timeout
     if (searchTimeoutRef.current) {
-        clearTimeout(searchTimeoutRef.current);
+      clearTimeout(searchTimeoutRef.current);
     }
 
+    // Set new timeout for debounce
     searchTimeoutRef.current = setTimeout(async () => {
-        setIsSearching(true);
-        try {
-            // Optimización de dirección
-            const enhancedQuery = `${query}, Medellín, Colombia`;
-
-            const response = await fetch(
-                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(enhancedQuery)}&addressdetails=1&limit=3&countrycodes=co&namedetails=1&accept-language=es&bounded=1&dedupe=1&extratags=1`,
-                {
-                    headers: {
-                        'User-Agent': 'EncafeinadosApp/1.0',
-                        'Accept-Language': 'es'
-                    }
-                }
-            );
-
-            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-
-            const data = await response.json();
-
-            // Verificar si hay resultados
-            if (data.length === 0) {
-                console.warn("No se encontraron resultados.");
-                setSuggestions([]);
-                return;
+      setIsSearching(true);
+      try {
+        // Add city/region to improve search accuracy
+        const enhancedQuery = `${query}, Medellin, Colombia`;
+        
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(enhancedQuery)}&addressdetails=1&limit=5&countrycodes=co&namedetails=1&accept-language=es`,
+          {
+            headers: {
+              'User-Agent': 'EncafeinadosApp/1.0',
+              'Accept-Language': 'es'
             }
+          }
+        );
+        const data = await response.json();
+        
+        // Process and format the suggestions
+        const formattedSuggestions = data.map((item: any) => ({
+          ...item,
+          display_name: formatAddress(item)
+        }));
+        
+        setSuggestions(formattedSuggestions);
+      } catch (error) {
+        console.error("Error searching for address:", error);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300); // Reduced debounce time for more responsive feel
+  };
 
-            // Transformar los resultados para mejorar su formato
-            const formattedSuggestions = data.map((item: any) => ({
-                lat: item.lat,
-                lon: item.lon,
-                display_name: formatAddress(item) // <- Usa una función que limpie y formatee bien la dirección
-            }));
-
-            setSuggestions(formattedSuggestions);
-        } catch (error) {
-            console.error("Error buscando dirección:", error);
-            setSuggestions([]);
-        } finally {
-            setIsSearching(false);
-        }
-    }, 300); // Debounce de 300ms
-};
   // Seleccionar dirección
   const handleSelectAddress = (lat: string, lon: string, name: string) => {
     const latitude = parseFloat(lat);
@@ -453,7 +456,7 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
       {/* Mapa con mejor estilo */}
       <div className="mt-4 h-[200px] w-full rounded-lg overflow-hidden shadow-md border border-gray-300">
         <MapContainer
-          center={selectedPosition || currentPosition || [6.2442, -75.5812]} // Default to Bogotá, Colombia
+          center={selectedPosition || currentPosition || [4.6097, -74.0817]} // Default to Bogotá, Colombia
           zoom={selectedPosition || currentPosition ? 17 : 12} // Higher zoom for better precision
           style={{ height: "100%", width: "100%" }}
           zoomControl={false}
@@ -464,11 +467,6 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
             url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
             maxZoom={19}
-          />
-           <TileLayer
-            url="https://tiles.stadiamaps.com/tiles/stamen_terrain_labels/{z}/{x}/{y}{r}.png"
-            attribution="&copy; <a href='https://stadiamaps.com/'>Stadia Maps</a>"
-            maxZoom={20}
           />
           <ZoomControl position="bottomright" />
           
