@@ -46,7 +46,7 @@ const formatAddress = (addressData: any): string => {
   
   try {
     const address = addressData.address || {};
-    const parts = new Set<string>(); // 🔹 Usamos un Set para evitar repeticiones
+    const parts = new Set<string>();
 
     // 📍 Dirección exacta en formato colombiano
     if (address.road) {
@@ -54,11 +54,19 @@ const formatAddress = (addressData: any): string => {
       
       // Formato colombiano: Calle/Carrera/Avenida + número
       if (address.house_number) {
-        // Si es una dirección con nomenclatura colombiana
-        if (/^(calle|carrera|avenida|diagonal|transversal|circular|autopista)/i.test(streetAddress)) {
-          streetAddress += ` ${address.house_number}`;
+        // Detectar formato colombiano y asegurar consistencia
+        const isColombianStreet = /^(calle|carrera|avenida|diagonal|transversal|circular|autopista)/i.test(streetAddress);
+        
+        if (isColombianStreet) {
+          // Normalizar formato para calles colombianas
+          const streetType = streetAddress.match(/^(calle|carrera|avenida|diagonal|transversal|circular|autopista)/i)?.[0] || '';
+          const streetRest = streetAddress.replace(/^(calle|carrera|avenida|diagonal|transversal|circular|autopista)/i, '').trim();
           
-          // Agregar complemento si existe (ej: Apto, Torre, etc.)
+          // Formatear según convención: "Calle 10 # 43-15"
+          streetAddress = `${streetType.charAt(0).toUpperCase() + streetType.slice(1).toLowerCase()} ${streetRest}`;
+          streetAddress += ` # ${address.house_number}`;
+          
+          // Agregar complemento si existe
           if (address.unit || address.door || address.floor) {
             streetAddress += ` ${address.unit || address.door || address.floor}`;
           }
@@ -85,44 +93,141 @@ const formatAddress = (addressData: any): string => {
       parts.add(address.borough || address.quarter || address.city_district);
     }
 
-    // 🏛 Ciudad o municipio
+    // 🏛 Ciudad o municipio - asegurar que Medellín tenga tilde
     if (address.city || address.town || address.village || address.municipality) {
-      parts.add(address.city || address.town || address.village || address.municipality);
+      let cityName = address.city || address.town || address.village || address.municipality;
+      // Asegurar que Medellín tenga tilde
+      if (cityName.toLowerCase() === 'medellin') {
+        cityName = 'Medellín';
+      }
+      parts.add(cityName);
     }
 
-    // 🌎 Departamento (equivalente a estado/provincia en Colombia)
+    // 🌎 Departamento - asegurar que Antioquia esté bien escrito
     if (address.state || address.region) {
-      parts.add(address.state || address.region);
+      let stateName = address.state || address.region;
+      // Normalizar Antioquia
+      if (stateName.toLowerCase() === 'antioquia') {
+        stateName = 'Antioquia';
+      }
+      parts.add(stateName);
     }
     
     // Agregar "Colombia" si no está ya incluido y estamos en Colombia
-    if (address.country === "Colombia" && !parts.has("Colombia")) {
+    if ((address.country === "Colombia" || address.country_code === "co") && !parts.has("Colombia")) {
       parts.add("Colombia");
     }
 
-    // ❌ Eliminar duplicados en caso de que se repitan valores
+    // ❌ Eliminar duplicados y formatear
     const formattedAddress = Array.from(parts).join(", ");
 
-    // 🔹 Si la dirección es muy corta o no tiene sentido, usamos `display_name`
+    // 🔹 Si la dirección es muy corta o no tiene sentido, usar alternativas
     if (formattedAddress.length < 10 || parts.size < 2) {
-      // Intentar limpiar el display_name para hacerlo más legible
+      // Opción 1: Usar nombre de visualización limpio
       const cleanDisplayName = addressData.display_name
         ?.replace(/,\s*Colombia$/, ", Colombia")
-        ?.replace(/,\s*,/g, ",");
-      return cleanDisplayName || "Dirección no disponible";
+        ?.replace(/,\s*,/g, ",")
+        ?.replace(/medellin/i, "Medellín")
+        ?.replace(/antioquia/i, "Antioquia");
+      
+      // Opción 2: Construir una dirección simplificada
+      const simplifiedAddress = [
+        address.road,
+        address.suburb || address.neighbourhood,
+        "Medellín",
+        "Colombia"
+      ].filter(Boolean).join(", ");
+      
+      return cleanDisplayName || simplifiedAddress || "Dirección no disponible";
     }
     
     return formattedAddress;
   } catch (error) {
     console.error("Error formateando dirección:", error);
-    // Intentar limpiar el display_name como último recurso
+    // Fallback: intentar usar display_name limpio
     const cleanDisplayName = addressData.display_name
       ?.replace(/,\s*Colombia$/, ", Colombia")
-      ?.replace(/,\s*,/g, ",");
+      ?.replace(/,\s*,/g, ",")
+      ?.replace(/medellin/i, "Medellín")
+      ?.replace(/antioquia/i, "Antioquia");
     return cleanDisplayName || "Dirección no disponible";
   }
 };
   
+const normalizeColombianAddress = (query: string): string => {
+  // Normaliza abreviaturas comunes
+  return query
+    .replace(/\bcl\.?\b/i, "calle")
+    .replace(/\bcra\.?\b/i, "carrera")
+    .replace(/\bcr\.?\b/i, "carrera")
+    .replace(/\bav\.?\b/i, "avenida")
+    .replace(/\bdiag\.?\b/i, "diagonal")
+    .replace(/\btrans\.?\b/i, "transversal")
+    .replace(/\bcir\.?\b/i, "circular")
+    // Normalizar el símbolo "#" y espacios alrededor
+    .replace(/\s*#\s*/g, " # ")
+    // Normalizar guiones "-" y espacios alrededor
+    .replace(/\s*-\s*/g, "-")
+    // Normalizar espacios múltiples
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+// Función para parsear direcciones colombianas
+const parseColombianAddress = (query: string): {
+  streetType: string;
+  streetNumber: string;
+  streetLetter: string;
+  houseNumber: string;
+  houseLetter: string;
+  additionalNumber: string;
+  isValid: boolean;
+} => {
+  // Normalizar primero
+  const normalized = normalizeColombianAddress(query);
+  
+  // Patrones más detallados para direcciones colombianas
+  const fullPattern = /^(calle|carrera|avenida|diagonal|transversal|circular|autopista)\s+(\d+)([a-z]*)(?:\s*#\s*|\s+)(\d+)([a-z]*)(?:\s*-\s*|\s+)?(\d*)$/i;
+  const shortPattern = /^(calle|carrera|avenida|diagonal|transversal|circular|autopista)\s+(\d+)([a-z]*)$/i;
+
+  let match = normalized.match(fullPattern);
+  
+  if (match) {
+    return {
+      streetType: match[1].toLowerCase(),
+      streetNumber: match[2],
+      streetLetter: match[3],
+      houseNumber: match[4],
+      houseLetter: match[5],
+      additionalNumber: match[6],
+      isValid: true
+    };
+  }
+  
+  // Intenta con el formato simplificado (solo tipo de vía y número)
+  match = normalized.match(shortPattern);
+  if (match) {
+    return {
+      streetType: match[1].toLowerCase(),
+      streetNumber: match[2],
+      streetLetter: match[3] || "",
+      houseNumber: "",
+      houseLetter: "",
+      additionalNumber: "",
+      isValid: true
+    };
+  }
+  
+  return {
+    streetType: "",
+    streetNumber: "",
+    streetLetter: "",
+    houseNumber: "",
+    houseLetter: "",
+    additionalNumber: "",
+    isValid: false
+  };
+};
 
 const LocationMarker = ({ onLocationSelect }: MapSearchProps) => {
   const [position, setPosition] = useState<[number, number] | null>(null);
@@ -163,7 +268,13 @@ const LocationMarker = ({ onLocationSelect }: MapSearchProps) => {
   const fetchAddress = async (lat: number, lng: number) => {
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&namedetails=1`
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&namedetails=1&accept-language=es`,
+        {
+          headers: {
+            'User-Agent': 'EncafeinadosApp/1.0',
+            'Accept-Language': 'es'
+          }
+        }
       );
       const data = await response.json();
       const formattedAddress = formatAddress(data);
@@ -171,6 +282,10 @@ const LocationMarker = ({ onLocationSelect }: MapSearchProps) => {
       onLocationSelect(lat, lng, formattedAddress);
     } catch (error) {
       console.error("Error fetching address:", error);
+      // Fallback simple: coordenadas
+      const fallbackAddress = `Ubicación (${lat.toFixed(6)}, ${lng.toFixed(6)})`;
+      setAddress(fallbackAddress);
+      onLocationSelect(lat, lng, fallbackAddress);
     }
   };
 
@@ -291,45 +406,77 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
       setSuggestions([]);
       return;
     }
-
+  
     // Clear previous timeout
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
-
+  
     // Set new timeout for debounce
     searchTimeoutRef.current = setTimeout(async () => {
       setIsSearching(true);
       try {
-        // Preparar la consulta para direcciones colombianas
-        let enhancedQuery = query;
+        // Normalizar y analizar la consulta primero
+        const normalizedQuery = normalizeColombianAddress(query);
+        const parsedAddress = parseColombianAddress(query);
         
-        // Detectar formato de dirección colombiana (Cra, Calle, Av, etc.)
-        const colombianAddressPattern = /^(cra\.?|carrera|calle|cl\.?|av\.?|avenida|diag\.?|diagonal|trans\.?|transversal)\s*\d+\s*[a-z]?\s*#?\s*\d+\s*[a-z]?(-|\s)\d+/i;
+        // Estrategias de búsqueda según el tipo de entrada
+        let results = [];
         
-        if (colombianAddressPattern.test(query)) {
-          // Si es una dirección colombiana, añadir Medellín, Colombia para mejorar resultados
-          enhancedQuery = `${query}, Medellín, Colombia`;
-        } else {
-          // Para búsquedas generales, añadir contexto de Colombia
-          enhancedQuery = `${query}, Colombia`;
+        // Estrategia 1: Dirección colombiana estructurada
+        if (parsedAddress.isValid) {
+          // Construir consulta estructurada para Nominatim
+          let structuredQuery = "";
+          
+          if (parsedAddress.houseNumber) {
+            // Formato completo: Tipo vía + Número + # + Número casa
+            structuredQuery = `${parsedAddress.streetType} ${parsedAddress.streetNumber}${parsedAddress.streetLetter} # ${parsedAddress.houseNumber}${parsedAddress.houseLetter}${parsedAddress.additionalNumber ? '-' + parsedAddress.additionalNumber : ''}`;
+          } else {
+            // Formato simplificado: Tipo vía + Número
+            structuredQuery = `${parsedAddress.streetType} ${parsedAddress.streetNumber}${parsedAddress.streetLetter}`;
+          }
+          
+          // Búsqueda estructurada específica para Medellín
+          const structResponse = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&street=${encodeURIComponent(structuredQuery)}&city=Medellín&state=Antioquia&country=Colombia&addressdetails=1&limit=5&namedetails=1&accept-language=es`,
+            {
+              headers: {
+                'User-Agent': 'EncafeinadosApp/1.0',
+                'Accept-Language': 'es'
+              }
+            }
+          );
+          const structData = await structResponse.json();
+          
+          if (structData.length > 0) {
+            results = structData;
+          }
         }
         
-        // Primera búsqueda con contexto específico de Medellín
-        let response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(enhancedQuery)}&addressdetails=1&limit=5&countrycodes=co&namedetails=1&accept-language=es`,
-          {
-            headers: {
-              'User-Agent': 'EncafeinadosApp/1.0',
-              'Accept-Language': 'es'
+        // Estrategia 2: Búsqueda por texto libre con contexto Medellín
+        if (results.length === 0) {
+          // Preparar la consulta para direcciones colombianas
+          let enhancedQuery = `${normalizedQuery}, Medellín, Colombia`;
+          
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(enhancedQuery)}&addressdetails=1&limit=5&countrycodes=co&namedetails=1&accept-language=es`,
+            {
+              headers: {
+                'User-Agent': 'EncafeinadosApp/1.0',
+                'Accept-Language': 'es'
+              }
             }
+          );
+          const data = await response.json();
+          
+          if (data.length > 0) {
+            results = data;
           }
-        );
-        let data = await response.json();
+        }
         
-        // Si no hay resultados, intentar con la consulta original sin modificar
-        if (data.length === 0) {
-          response = await fetch(
+        // Estrategia 3: Búsqueda por texto libre sin restricciones
+        if (results.length === 0) {
+          const response = await fetch(
             `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=5&countrycodes=co&namedetails=1&accept-language=es`,
             {
               headers: {
@@ -338,35 +485,41 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
               }
             }
           );
-          data = await response.json();
-        }
-        
-        // Si aún no hay resultados, intentar búsqueda estructurada para direcciones colombianas
-        if (data.length === 0 && colombianAddressPattern.test(query)) {
-          // Extraer componentes de la dirección colombiana
-          const addressParts = query.match(colombianAddressPattern);
-          if (addressParts) {
-            const structuredQuery = {
-              street: query,
-              city: "Medellín",
-              country: "Colombia"
-            };
-            
-            response = await fetch(
-              `https://nominatim.openstreetmap.org/search?format=json&street=${encodeURIComponent(structuredQuery.street)}&city=${encodeURIComponent(structuredQuery.city)}&country=${encodeURIComponent(structuredQuery.country)}&addressdetails=1&limit=5&namedetails=1&accept-language=es`,
-              {
-                headers: {
-                  'User-Agent': 'EncafeinadosApp/1.0',
-                  'Accept-Language': 'es'
-                }
-              }
-            );
-            data = await response.json();
+          const data = await response.json();
+          
+          if (data.length > 0) {
+            results = data;
           }
         }
         
+        // Mejorar los resultados: priorizar los que estén en Medellín
+        interface OSMAddressResult {
+          address?: {
+            city?: string;
+            municipality?: string;
+            [key: string]: any;  // For other address properties
+          };
+          lat: string;
+          lon: string;
+          display_name: string;
+          [key: string]: any;  // For other properties in the result
+        }
+
+        results = results.sort((a: OSMAddressResult, b: OSMAddressResult) => {
+          const aInMedellin: boolean = !!a.address && 
+            !!(a.address.city?.toLowerCase() === 'medellín' || 
+             a.address.municipality?.toLowerCase() === 'medellín');
+          const bInMedellin: boolean = !!b.address && 
+            !!(b.address.city?.toLowerCase() === 'medellín' || 
+             b.address.municipality?.toLowerCase() === 'medellín');
+          
+          if (aInMedellin && !bInMedellin) return -1;
+          if (!aInMedellin && bInMedellin) return 1;
+          return 0;
+        });
+        
         // Process and format the suggestions
-        const formattedSuggestions = data.map((item: any) => ({
+        const formattedSuggestions = results.map((item: any) => ({
           ...item,
           display_name: formatAddress(item)
         }));
@@ -377,8 +530,9 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
       } finally {
         setIsSearching(false);
       }
-    }, 300); // Reduced debounce time for more responsive feel
+    }, 300); // 300ms debounce
   };
+
   // Seleccionar dirección
   const handleSelectAddress = (lat: string, lon: string, name: string) => {
     const latitude = parseFloat(lat);
@@ -497,23 +651,51 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
           
           {/* Current suggestions */}
           {suggestions.length > 0 ? (
-            suggestions.map((item, index) => (
-              <div
-                key={index}
-                onClick={() => handleSelectAddress(item.lat, item.lon, item.display_name)}
-                className="p-3 cursor-pointer hover:bg-gray-100 border-b last:border-b-0 flex items-start"
-              >
-                <div className="bg-gray-100 rounded-full p-1 mr-2">
-                  <MapPin className="h-4 w-4 text-gray-500" />
-                </div>
-                <span className="text-sm">{item.display_name}</span>
-              </div>
-            ))
-          ) : searchQuery.length >= 2 && !isSearching ? (
-            <div className="p-4 text-center text-gray-500">
-              No se encontraron resultados para "{searchQuery}"
+  suggestions.map((item, index) => {
+    // Determinar el tipo de lugar para mostrar icono apropiado
+    let placeType = "location";
+    if (item.address) {
+      if (item.address.road) placeType = "address";
+      else if (item.address.building || item.address.amenity) placeType = "building";
+      else if (item.address.suburb || item.address.neighbourhood) placeType = "neighborhood";
+    }
+    
+    return (
+      <div
+        key={index}
+        onClick={() => handleSelectAddress(item.lat, item.lon, item.display_name)}
+        className="p-3 cursor-pointer hover:bg-gray-100 border-b last:border-b-0 flex items-start"
+      >
+        <div className={`rounded-full p-1 mr-2 ${
+          placeType === 'address' ? 'bg-blue-100' : 
+          placeType === 'building' ? 'bg-green-100' : 
+          placeType === 'neighborhood' ? 'bg-amber-100' : 'bg-gray-100'
+        }`}>
+          <MapPin className={`h-4 w-4 ${
+            placeType === 'address' ? 'text-blue-500' : 
+            placeType === 'building' ? 'text-green-500' : 
+            placeType === 'neighborhood' ? 'text-amber-500' : 'text-gray-500'
+          }`} />
+        </div>
+        <div>
+          <span className="text-sm font-medium">{item.display_name}</span>
+          {item.address && item.address.city && (
+            <div className="text-xs text-gray-500">
+              {[
+                item.address.suburb || item.address.neighbourhood,
+                item.address.city === 'Medellín' ? 'Medellín' : item.address.city
+              ].filter(Boolean).join(", ")}
             </div>
-          ) : null}
+          )}
+        </div>
+      </div>
+    );
+  })
+) : searchQuery.length >= 2 && !isSearching ? (
+  <div className="p-4 text-center text-gray-500">
+    No se encontraron resultados para "{searchQuery}"
+  </div>
+) : null}
           
           {/* Use current location option in suggestions */}
           <div
