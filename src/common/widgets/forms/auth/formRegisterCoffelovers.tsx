@@ -1,7 +1,7 @@
 import { useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import registerCoffeeloverSchema from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
-import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
+import ProgressIndicator from "@/common/atoms/auth/progressIndicator";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";

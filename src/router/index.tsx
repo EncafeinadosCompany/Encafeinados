@@ -12,9 +12,7 @@ import CoffeeloversLayout from '@/modules/coffeelover/components/coffeeloversLay
 import LanguageSwitcher from '@/common/molecules/settings/button-languages'
 import RegisterCoffeloverPage from '@/modules/home/views/Login/registerCoffeloverPage'
 import RegisterStorePage from '@/modules/home/views/Login/registerStoresPage'
-
-
-
+import { ROLES } from '@/common/utils/lists/roles'
 
 const AuthRoutes = () => {
   return (
@@ -35,13 +33,13 @@ const AuthRoutes = () => {
 
 
         <Route element={<PrivateRoute />}>
-          <Route element={<RoleRoute allowedRoles={import.meta.env.VITE_ROLE_COFFEELOVER} />}>
+          <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
             <Route element={<CoffeeloversLayout />}>
             <Route path="/coffeelover" element={<CoffeeLoverDashboard />} />
             </Route>
           </Route>
 
-          <Route element={<RoleRoute allowedRoles={import.meta.env.VITE_ROLE_STORE} />}>
+          <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
             <Route path="/coffeelover" element={<CoffeeLoverDashboard />} />
           </Route>
 

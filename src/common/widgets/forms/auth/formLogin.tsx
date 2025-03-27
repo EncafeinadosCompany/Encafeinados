@@ -33,8 +33,8 @@ const Formlogin = () => {
       toast.success("Inicio de sesión exitoso");
 
       if (response?.user) {
-        const roleId = response.user.role_id;
-        pagesPermissions(roleId, navigate);
+        // const roleId = response.user.role.name;
+        // pagesPermissions(roleId, navigate);
       }
 
     } finally {
