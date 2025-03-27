@@ -1,6 +1,6 @@
 // src/modules/coffeelover/components/CoffeeList.tsx
 import { useCoffees } from '@/api'
-import { LoadingSpinner } from '../../../common/atoms/LoadingSpinner'
+import { LoadingSpinner } from '../../../common/atoms/loadingSpinner'
 
 export const CoffeeList = () => {
   const { data: coffees, isLoading } = useCoffees()

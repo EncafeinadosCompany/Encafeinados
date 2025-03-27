@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { NewsletterForm } from '@/common/molecules/home/NewsletterForm';
-import { SocialIcon } from '@/common/atoms/SocialIcon';
+import { SocialIcon } from '@/common/atoms/socialIcon';
 import { 
   Instagram,  
   ArrowUp,

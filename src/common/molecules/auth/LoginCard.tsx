@@ -1,5 +1,5 @@
 import { Button } from "@/common/ui/button"
-import { Card, CardContent} from "@/common/ui/card"
+import { Card, CardContent } from "@/common/ui/card"
 import { Link } from "react-router-dom"
 import { InputEmail } from "@/common/atoms/Input-email"
 import { Label } from "@/common/ui/label"
@@ -7,6 +7,7 @@ import { InputPassword } from "@/common/atoms/input-passwork"
 import { UseFormRegister } from "react-hook-form"
 import { User } from "@/api"
 import { useTranslation } from "react-i18next"
+import { ButtonGoogle } from "@/common/atoms/button-google"
 
 
 type LoginCardProps = {
@@ -71,14 +72,14 @@ export const LoginCard = (
               <Button type="submit" className="w-full rounded-full bg-amber-600 hover:bg-amber-700 border border-amber-800 text-white font-medium shadow-md transition-all duration-200 hover:shadow-lg" disabled={isLoading}>
                 {isLoading ? "Cargando..." : t("Ingresar")}
               </Button>
-              {/* <ButtonGoogle 
-            variant="outline" 
-            onClick={handleGoogleSignIn}
-            disabled={isLoading}
-            className="border-amber-200 hover:bg-amber-50 text-amber-900"
-          >
-            Continua con Google
-          </ButtonGoogle> */}
+              <ButtonGoogle
+                variant="outline"
+                onClick={onGoogleSignIn}
+                disabled={isLoading}
+                className="border-amber-200 hover:bg-amber-50 text-amber-900"
+              >
+                Continua con Google
+              </ButtonGoogle>
               <div className="text-center text-sm text-amber-800">
                 ¿Ya tienes una cuenta?{" "}
                 <Link to="/register" className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700">
