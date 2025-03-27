@@ -4,15 +4,17 @@ import { BranchesResponse } from '../types/branchesTypes'
 import AuthClient from '../client/axios'
 const authClient = new AuthClient()
 
+
 export const useStores = () => {
-  return useQuery({
+  return useQuery<StoresResponse>({
     queryKey: ['stores'],
     queryFn: async () => {
       const response = await authClient.get<StoresResponse>('/stores')
-      return response.stores.store // Accedemos directamente al array de tiendas
-    }
+      return response
+    },
   })
 }
+
 
 export const useBranchesByStore = (storeId: number | undefined) => {
     return useQuery<BranchesResponse>({
