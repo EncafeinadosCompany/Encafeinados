@@ -24,11 +24,11 @@ import { useMapData } from '@/common/hooks/map/useMapData';
 import { useSearchFilter } from '@/common/hooks/map/useSearchFilter';
 
 // Components
-import UserLocationMarker from '@/common/atoms/map/userLocationMarker';
+import UserLocationMarker from '@/common/atoms/map/UserLocationMarker';
 import MapFocus from '@/common/molecules/map/MapFocus';
 import RouteLine from '@/common/molecules/map/RouteLine';
 import FilterModal from '@/common/molecules/map/filterModal';
-import HighlightText from '@/common/atoms/common/highlightText';
+import HighlightText from '@/common/atoms/common/HighlightText';
 
 // Animations
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
@@ -621,13 +621,7 @@ export const MapView: React.FC = () => {
           </div>
         )}
       </div>
-
-      {/* Sidebar with cafe list */}
       <AnimatePresence>
-        {/* Mostrar sidebar si: 
-            1. Es modo móvil y showSidebar es true, O
-            2. Es modo escritorio y viewMode es 'list' 
-        */}
         {(
           (showSidebar && window.innerWidth < 768) ||
           (viewMode === 'list' && window.innerWidth >= 768)

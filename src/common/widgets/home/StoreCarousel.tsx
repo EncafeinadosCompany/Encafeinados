@@ -17,33 +17,28 @@ import {
   Star,
   Filter,
   ChevronRight,
+  Loader2,
 } from "lucide-react";
+import { useStores } from "@/api/queries/storesQueries";
+import { useGeolocation } from "@/common/hooks/map/useGeolocation";
+import { calculateDistance } from "@/common/utils/map/mapUtils";
+import L from 'leaflet';
+import { useBranches } from "@/api/queries/branchesQueries";
 
-interface Store {
+// Mantenemos la estructura para StoreCard pero adaptada a los datos reales de la API
+interface StoreCardProps {
   id: number;
   name: string;
   imageUrl: string;
-  rating?: number;
   distance?: string;
-  openTime?: string;
+  email: string;
+  phone: string;
   description?: string;
-  specialties?: string[];
-}
-
-interface StoreCarouselProps {
-  stores: Store[];
 }
 
 // Constantes para mejorar la legibilidad y mantenimiento
 const AUTOPLAY_DELAY = 4000;
 const INTERACTION_PAUSE = 5000;
-const CATEGORIES = [
-  { name: "Todos", icon: Coffee },
-  { name: "Cercanos", icon: MapPin },
-  { name: "Mejor valorados", icon: Star },
-  { name: "Orgánicos", icon: Coffee },
-  { name: "Artesanales", icon: Filter },
-];
 
 // Variantes de animación extraídas para mejor organización
 const animations = {
@@ -76,7 +71,15 @@ const animations = {
   },
 };
 
-export const StoreCarousel = ({ stores }: StoreCarouselProps) => {
+// Descripción genérica para tiendas
+const GENERIC_DESCRIPTIONS = [
+  "Café de especialidad con granos seleccionados de las mejores regiones productoras.",
+  "Experiencia única con métodos de preparación artesanales y ambiente acogedor.",
+  "Del grano a la taza, cuidamos cada detalle para ofrecerte el mejor sabor.",
+  "Sabores auténticos de Colombia, con un compromiso por la calidad y sostenibilidad."
+];
+
+export const StoreCarousel = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -84,6 +87,13 @@ export const StoreCarousel = ({ stores }: StoreCarouselProps) => {
   const [lastInteraction, setLastInteraction] = useState(0);
   const [searchFocused, setSearchFocused] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Todos");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [mapInstanceDummy, setMapInstanceDummy] = useState<L.Map | null>(null);
+
+  const { data: storesData, isLoading, error } = useStores();
+  const { data: branchesData, isLoading: branchesLoading } = useBranches();
+  
+  const { userLocation } = useGeolocation(mapInstanceDummy);
 
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
@@ -100,24 +110,110 @@ export const StoreCarousel = ({ stores }: StoreCarouselProps) => {
     [0.3, 1, 1, 0.3]
   );
 
+  // Procesar los datos de las tiendas
+  const stores: StoreCardProps[] = React.useMemo(() => {
+    if (!storesData?.stores?.store) return [];
+
+    return storesData.stores.store.map((store) => {
+      // Encontrar todas las sucursales para esta tienda
+      const storeBranches = branchesData?.branches?.branches?.filter(
+        branch => branch.store_name === store.name
+      ) || [];
+      
+      let nearestDistance = "No disponible";
+      let nearestBranchName = "";
+      
+      // Si tenemos la ubicación del usuario y hay sucursales
+      if (userLocation && storeBranches.length > 0) {
+        let minDistance = Number.MAX_VALUE;
+        let closestBranch = null;
+        
+        // Encontrar la sucursal más cercana
+        storeBranches.forEach(branch => {
+          if (branch.latitude && branch.longitude) {
+            const distKm = calculateDistance(
+              userLocation[0],
+              userLocation[1],
+              branch.latitude,
+              branch.longitude
+            );
+            
+            const distValue = parseFloat(distKm);
+            if (distValue < minDistance) {
+              minDistance = distValue;
+              closestBranch = branch;
+            }
+          }
+        });
+        
+        if (closestBranch) {
+          nearestDistance = `${minDistance.toFixed(1)} km`;
+        }
+      } else if (!userLocation) {
+        nearestDistance = "Ubicación no disponible";
+      } else if (storeBranches.length === 0) {
+        nearestDistance = "Sin sucursales cercanas";
+      }
+      
+      return {
+        id: store.id,
+        name: store.name,
+        imageUrl: store.logo || "https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg",
+        distance: nearestDistance,
+        nearestBranch: nearestBranchName, // Nueva propiedad 
+        email: store.email,
+        phone: store.phone_number,
+        description: GENERIC_DESCRIPTIONS[Math.floor(Math.random() * GENERIC_DESCRIPTIONS.length)]
+      };
+    });
+  }, [storesData, userLocation, branchesData]);
+
+  const filteredStores = React.useMemo(() => {
+    if (!stores.length) return [];
+    
+    let result = stores;
+    
+    // Filtrar por término de búsqueda
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter(store => 
+        store.name.toLowerCase().includes(term) || 
+        store.description?.toLowerCase().includes(term)
+      );
+    }
+    
+    // Filtrar por categoría
+    if (selectedCategory !== "Todos") {
+      if (selectedCategory === "Cercanos") {
+        // Ordenar por distancia
+        result = [...result].sort((a, b) => {
+          const distA = a.distance ? parseFloat(a.distance.split(' ')[0]) : 9999;
+          const distB = b.distance ? parseFloat(b.distance.split(' ')[0]) : 9999;
+          return distA - distB;
+        });
+      }
+     
+    }
+    
+    return result;
+  }, [stores, searchTerm, selectedCategory]);
+
   // Manejar la interacción del usuario
   const handleUserInteraction = useCallback(() => {
     setLastInteraction(Date.now());
     setAutoplay(false);
   }, []);
 
-  // Mejorado: Autoplay con pausa por interacción
   useEffect(() => {
     if (!api) return;
 
     const interval = setInterval(() => {
       const now = Date.now();
-      // Reanuda el autoplay después del tiempo de pausa por interacción
+
       if (!autoplay && now - lastInteraction > INTERACTION_PAUSE) {
         setAutoplay(true);
       }
 
-      // Avanza el carrusel solo si el autoplay está activo
       if (autoplay) {
         api.scrollNext();
       }
@@ -126,7 +222,6 @@ export const StoreCarousel = ({ stores }: StoreCarouselProps) => {
     return () => clearInterval(interval);
   }, [api, autoplay, lastInteraction]);
 
-  // Sincronizar estado con el API del carrusel
   useEffect(() => {
     if (!api) return;
 
@@ -137,24 +232,13 @@ export const StoreCarousel = ({ stores }: StoreCarouselProps) => {
 
     updateState();
     api.on("select", updateState);
-
-    // Detectar interacción del usuario con el carrusel
     api.on("pointerDown", handleUserInteraction);
-
     return () => {
       api.off("select", updateState);
       api.off("pointerDown", handleUserInteraction);
     };
   }, [api, handleUserInteraction]);
 
-  // Seleccionar categoría con interrupción de autoplay
-  const handleCategorySelect = useCallback(
-    (category: string) => {
-      setSelectedCategory(category);
-      handleUserInteraction();
-    },
-    [handleUserInteraction]
-  );
 
   return (
     <section
@@ -198,186 +282,161 @@ export const StoreCarousel = ({ stores }: StoreCarouselProps) => {
           </motion.div>
         </motion.div>
 
-        {/* Barra de búsqueda optimizada */}
-        <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-            {/* Barra de búsqueda con animación */}
-            <div className="relative w-full sm:w-64 md:w-80">
-              <motion.div
-                className={`flex items-center bg-white rounded-full shadow-md transition-all duration-300 border ${
-                  searchFocused
-                    ? "border-[#6F4E37] ring-2 ring-[#6F4E37]/20"
-                    : "border-transparent"
-                }`}
-                animate={{
-                  boxShadow: searchFocused
-                    ? "0 4px 12px rgba(166, 124, 82, 0.15)"
-                    : "0 2px 6px rgba(166, 124, 82, 0.1)",
-                }}
-              >
-                <Search className="w-4 h-4 ml-4 text-[#6F4E37]" />
-                <input
-                  type="text"
-                  placeholder="Buscar cafeterías..."
-                  className="py-2 px-3 w-full bg-transparent focus:outline-none text-sm placeholder-[#6F4E37]/50"
-                  onFocus={() => {
-                    setSearchFocused(true);
-                    handleUserInteraction();
-                  }}
-                  onBlur={() => setSearchFocused(false)}
-                />
-              </motion.div>
-            </div>
 
-            {/* Filtros de categorías optimizados */}
-            <div className="w-full sm:w-auto overflow-x-auto no-scrollbar">
-              <div className="flex items-center space-x-2 py-1 min-w-max">
-                {CATEGORIES.map(({ name, icon: Icon }) => (
-                  <motion.button
-                    key={name}
-                    className={`px-4 py-2 rounded-full whitespace-nowrap text-xs font-medium flex items-center gap-1 ${
-                      selectedCategory === name
-                        ? "bg-[#6F4E37] text-white shadow-md"
-                        : "bg-white text-[#6F4E37] hover:bg-[#FAF3E0] shadow-sm"
-                    }`}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => handleCategorySelect(name)}
-                  >
-                    <Icon className="w-3 h-3" />
-                    {name}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
+        {/* Estado de carga */}
+        {isLoading && (
+          <div className="flex flex-col items-center justify-center py-16">
+            <Loader2 className="h-12 w-12 text-[#6F4E37] animate-spin mb-4" />
+            <p className="text-[#6F4E37] font-medium">Cargando tiendas...</p>
           </div>
-        </motion.div>
+        )}
+
+        {/* Mensaje de error */}
+        {error && (
+          <div className="flex flex-col items-center justify-center py-16 text-red-600">
+            <p className="font-medium">Error al cargar las tiendas</p>
+            <p className="text-sm mt-2">Por favor, intenta nuevamente más tarde</p>
+          </div>
+        )}
+
+        {/* Sin resultados */}
+        {!isLoading && !error && filteredStores.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16">
+            <Coffee className="h-12 w-12 text-[#6F4E37] mb-4" />
+            <p className="text-[#6F4E37] font-medium">No se encontraron tiendas</p>
+            {searchTerm && (
+              <button 
+                className="mt-4 text-sm text-[#6F4E37] underline"
+                onClick={() => setSearchTerm("")}
+              >
+                Limpiar búsqueda
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Carrusel optimizado */}
-        <div className="relative">
-          <Carousel
-            setApi={setApi}
-            opts={{
-              align: "start",
-              loop: true,
-              dragFree: true,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-2 md:-ml-4 pt-1 pb-0.5">
-              {stores.map((store, index) => (
-                <CarouselItem
-                  key={store.id}
-                  className="pl-2 md:pl-4 basis-full xs:basis-4/5 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-                >
-                  <motion.div
-                    custom={index}
-                    initial="hidden"
-                    animate={isInView ? "visible" : "hidden"}
-                    variants={animations.item}
-                    transition={{
-                      delay: Math.min(index * 0.05, 0.3), // Limitar el delay máximo
-                      duration: 0.4,
-                    }}
+        {!isLoading && !error && filteredStores.length > 0 && (
+          <div className="relative">
+            <Carousel
+              setApi={setApi}
+              opts={{
+                align: "start",
+                loop: true,
+                dragFree: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2 md:-ml-4 pt-1 pb-0.5">
+                {filteredStores.map((store, index) => (
+                  <CarouselItem
+                    key={store.id}
+                    className="pl-2 md:pl-4 basis-full xs:basis-4/5 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                   >
-                    <StoreCard
-                      name={store.name}
-                      imageUrl={store.imageUrl}
-                      rating={store.rating}
-                      distance={store.distance}
-                      openTime={store.openTime}
-                      description={store.description}
-                      specialties={store.specialties}
+                    <motion.div
+                      custom={index}
+                      initial="hidden"
+                      animate={isInView ? "visible" : "hidden"}
+                      variants={animations.item}
+                      transition={{
+                        delay: Math.min(index * 0.05, 0.3), // Limitar el delay máximo
+                        duration: 0.4,
+                      }}
+                    >
+                      <StoreCard
+                        id={store.id}
+                        name={store.name}
+                        imageUrl={store.imageUrl}
+                        distance={store.distance}
+                        email={store.email}
+                        phone={store.phone}
+                        description={store.description}
+                      />
+                    </motion.div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+
+              {/* Controles de navegación optimizados */}
+              <div className="flex flex-col items-center justify-center mt-8 gap-5">
+                <div className="flex items-center justify-center">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <CarouselPrevious
+                      onClick={() => {
+                        api?.scrollPrev();
+                        handleUserInteraction(); // Pausar autoplay al interactuar manualmente
+                      }}
+                      className="relative h-10 w-10 bg-white border-2 border-[#D4A76A] text-[#6F4E37] hover:bg-[#D4A76A] hover:text-white transition-all duration-300 shadow-md mr-2"
                     />
                   </motion.div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
 
-            {/* Controles de navegación optimizados */}
-            <div className="flex flex-col items-center justify-center mt-8 gap-5">
-              <div className="flex items-center justify-center">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <CarouselPrevious
-                    onClick={() => {
-                      api?.scrollPrev();
-                      handleUserInteraction(); // Pausar autoplay al interactuar manualmente
-                    }}
-                    className="relative h-10 w-10 bg-white border-2 border-[#D4A76A] text-[#6F4E37] hover:bg-[#D4A76A] hover:text-white transition-all duration-300 shadow-md mr-2"
-                  />
-                </motion.div>
+                  <div className="flex space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm">
+                    {Array.from({ length: Math.min(count, 5) }).map((_, i) => (
+                      <motion.button
+                        key={i}
+                        className={`transition-all duration-300 rounded-full ${
+                          i === current % 5
+                            ? "bg-[#6F4E37] w-6 h-2"
+                            : "bg-[#D4A76A]/40 hover:bg-[#D4A76A]/60 w-2 h-2"
+                        }`}
+                        whileHover={{ scale: 1.2 }}
+                        whileTap={{ scale: 0.8 }}
+                        onClick={() => {
+                          api?.scrollTo(i);
+                          handleUserInteraction();
+                        }}
+                        aria-label={`Ir a la tienda ${i + 1}`}
+                      />
+                    ))}
+                  </div>
 
-                <div className="flex space-x-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm">
-                  {Array.from({ length: Math.min(count, 5) }).map((_, i) => (
-                    <motion.button
-                      key={i}
-                      className={`transition-all duration-300 rounded-full ${
-                        i === current % 5
-                          ? "bg-[#6F4E37] w-6 h-2"
-                          : "bg-[#D4A76A]/40 hover:bg-[#D4A76A]/60 w-2 h-2"
-                      }`}
-                      whileHover={{ scale: 1.2 }}
-                      whileTap={{ scale: 0.8 }}
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <CarouselNext
                       onClick={() => {
-                        api?.scrollTo(i);
+                        api?.scrollNext();
                         handleUserInteraction();
                       }}
-                      aria-label={`Ir a la tienda ${i + 1}`}
+                      className="relative h-10 w-10 bg-white border-2 border-[#D4A76A] text-[#6F4E37] hover:bg-[#D4A76A] hover:text-white transition-all duration-300 shadow-md ml-2"
                     />
-                  ))}
+                  </motion.div>
                 </div>
 
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <CarouselNext
-                    onClick={() => {
-                      api?.scrollNext();
-                      handleUserInteraction();
-                    }}
-                    className="relative h-10 w-10 bg-white border-2 border-[#D4A76A] text-[#6F4E37] hover:bg-[#D4A76A] hover:text-white transition-all duration-300 shadow-md ml-2"
-                  />
-                </motion.div>
-              </div>
-
-              {/* Botón "Ver todas" optimizado */}
-              <motion.button
-                whileHover={{
-                  scale: 1.03,
-                  boxShadow: "0 8px 20px -5px rgba(111, 78, 55, 0.3)",
-                }}
-                whileTap={{ scale: 0.97 }}
-                className="px-8 py-3 bg-gradient-to-r from-[#6F4E37] to-[#A67C52] rounded-full text-white font-medium text-sm shadow-lg transition-all flex items-center"
-                onClick={handleUserInteraction}
-              >
-                <span>Ver todas las tiendas</span>
-                <motion.span
-                  className="inline-block ml-2"
-                  animate={{
-                    x: [0, 4, 0],
-                    transition: {
-                      duration: 1.5,
-                      repeat: Infinity,
-                      repeatType: "loop",
-                      ease: "easeInOut",
-                    },
+                {/* Botón "Ver todas" optimizado */}
+                <motion.button
+                  whileHover={{
+                    scale: 1.03,
+                    boxShadow: "0 8px 20px -5px rgba(111, 78, 55, 0.3)",
                   }}
+                  whileTap={{ scale: 0.97 }}
+                  className="px-8 py-3 bg-gradient-to-r from-[#6F4E37] to-[#A67C52] rounded-full text-white font-medium text-sm shadow-lg transition-all flex items-center"
+                  onClick={handleUserInteraction}
                 >
-                  <ChevronRight className="w-4 h-4" />
-                </motion.span>
-              </motion.button>
-            </div>
-          </Carousel>
-        </div>
+                  <span>Ver todas las tiendas</span>
+                  <motion.span
+                    className="inline-block ml-2"
+                    animate={{
+                      x: [0, 4, 0],
+                      transition: {
+                        duration: 1.5,
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        ease: "easeInOut",
+                      },
+                    }}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </motion.span>
+                </motion.button>
+              </div>
+            </Carousel>
+          </div>
+        )}
       </div>
 
       {/* Elementos decorativos simplificados */}

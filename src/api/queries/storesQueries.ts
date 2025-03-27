@@ -12,6 +12,7 @@ export const useStores = () => {
       const response = await authClient.get<StoresResponse>('/stores')
       return response
     },
+    staleTime: 5 * 60 * 1000, 
   })
 }
 
