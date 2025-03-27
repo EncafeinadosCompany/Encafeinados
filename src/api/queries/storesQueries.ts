@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { StoresResponse } from '../types/storesTypes'
 import { BranchesResponse } from '../types/branchesTypes'
-
 import AuthClient from '../client/axios'
-
 const authClient = new AuthClient()
 
 export const useStores = () => {
