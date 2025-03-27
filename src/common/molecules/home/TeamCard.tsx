@@ -8,7 +8,7 @@ import { Coffee, Linkedin, Mail, Twitter, Sparkles, Star } from 'lucide-react';
 interface TeamMember {
   name: string;
   role: string;
-  imageUrl: string;
+  imagenUrl?: string;
   social?: {
     twitter?: string;
     linkedin?: string;
@@ -157,7 +157,7 @@ export const TeamCard = ({ members }: TeamCardProps) => {
                   <div className="relative p-0.5 rounded-full bg-gradient-to-br from-[#D4A76A] to-[#6F4E37]">
                     <Avatar className="w-16 h-16 md:w-20 md:h-20 border-2 border-white dark:border-[#2C1810] overflow-hidden rounded-full">
                       <motion.img 
-                        src={member.imageUrl} 
+                        src={member.imagenUrl} 
                         alt={member.name}
                         className="object-cover w-full h-full"
                         initial={{ scale: 1 }}

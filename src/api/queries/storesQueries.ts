@@ -5,12 +5,12 @@ import AuthClient from '../client/axios'
 const authClient = new AuthClient()
 
 export const useStores = () => {
-  return useQuery<StoresResponse>({
+  return useQuery({
     queryKey: ['stores'],
     queryFn: async () => {
       const response = await authClient.get<StoresResponse>('/stores')
-      return response
-    },
+      return response.stores.store // Accedemos directamente al array de tiendas
+    }
   })
 }
 
@@ -21,6 +21,6 @@ export const useBranchesByStore = (storeId: number | undefined) => {
         const response = await authClient.get<BranchesResponse>(`/stores/${storeId}/branches`)
         return response
       },
-      enabled: !!storeId, // Only run the query when storeId is available
+      enabled: !!storeId, 
     })
 }

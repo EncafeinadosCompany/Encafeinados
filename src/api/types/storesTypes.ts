@@ -3,7 +3,7 @@ export interface Store {
   name: string;
   type_document: string;
   number_document: string;
-  logo: string;
+  imagenUrl: string;
   email: string;
   phone_number: string;
   status: string;
