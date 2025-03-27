@@ -95,7 +95,7 @@ export const MapTeaser = ({ totalCafes, city = "Medellín" }: MapTeaserProps) =>
             
             <motion.button
               onClick={handleOpenMap}
-              className="group flex items-center gap-2 bg-[#6F4E37] text-white px-6 py-3 rounded-full font-medium transition-all duration-300 hover:bg-[#5a3e2c] w-fit"
+              className="group flex items-center gap-2 bg-[#6F4E37] text-white px-6 py-3 rounded-full font-medium transition-all duration-300 hover:bg-[#5a3e2c] w-fit cursor-pointer"
               variants={itemVariants}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
@@ -239,7 +239,8 @@ export const MapTeaser = ({ totalCafes, city = "Medellín" }: MapTeaserProps) =>
                 initial={{ opacity: 0 }}
               >
                 <motion.span 
-                  className="bg-[#6F4E37] text-white px-4 py-2 rounded-full font-medium shadow-lg"
+                  onClick={handleOpenMap}
+                  className="bg-[#6F4E37] text-white px-4 py-2 rounded-full font-medium shadow-lg cursor-pointer"
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileHover={{ opacity: 1, scale: 1 }}
                 >

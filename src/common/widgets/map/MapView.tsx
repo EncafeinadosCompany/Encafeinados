@@ -1,274 +1,37 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { ArrowLeft, Search, Filter, Coffee, Star, Clock, MapPin, Heart, Share2, Navigation, X, Route } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+
+//   COMMENTS FOR EACH SECTION ARE NECESSARY IN THIS MODULE BECAUSE I GET LOST :(
+
+// API imports
 import { useBranches } from '@/api/queries/branchesQueries';
 import { useStores, useBranchesByStore } from '@/api/queries/storesQueries';
-import { Branch, BranchesResponse } from '@/api/types/branchesTypes';
-import { Store, StoresResponse } from '@/api/types/storesTypes';
+// Types
+import { LatLngTuple, Cafe } from '@/common/types/map/mapTypes';
 
-// ==============================
-// TYPE DEFINITIONS
-// ==============================
+// Utils
+import { calculateDistance } from '@/common/utils/map/mapUtils';
 
-/**
- * Geographic coordinates as [latitude, longitude]
- */
-type LatLngTuple = [number, number];
+// Hooks
+import { useFavorites } from '@/common/hooks/map/useFavorites';
+import { useGeolocation } from '@/common/hooks/map/useGeolocation';
+import { useMapData } from '@/common/hooks/map/useMapData';
+import { useSearchFilter } from '@/common/hooks/map/useSearchFilter';
 
-/**
- * Marker position with ID
- */
-interface MarkerPosition {
-  id: number;
-  lat: number;
-  lng: number;
-}
+// Components
+import UserLocationMarker from '@/common/atoms/map/UserLocationMarker';
+import MapFocus from '@/common/molecules/map/MapFocus';
+import RouteLine from '@/common/molecules/map/RouteLine';
+import FilterModal from '@/common/molecules/map/filterModal';
+import HighlightText from '@/common/atoms/common/HighlightText';
 
-/**
- * Props for MapFocus component
- */
-interface MapFocusProps {
-  cafeId: number | null;
-  positions: Array<{id: number, lat: number, lng: number}>;
-  userLocation: LatLngTuple | null;
-}
-
-/**
- * Props for UserLocationMarker component
- */
-interface UserLocationMarkerProps {
-  position: LatLngTuple | null;
-  pulsing?: boolean;
-}
-/**
- * Props for RouteLine component
- */
-interface RouteLineProps {
-  from: LatLngTuple | null;
-  to: LatLngTuple | null;
-}
-
-/**
- * Cafe data structure
- */
-interface Cafe {
-  id: number;
-  name: string;
-  rating: number;
-  reviewCount: number; 
-  openTime: string; 
-  image: string; 
-  tags: string[]; 
-  latitude: number;
-  longitude: number;
-  isOpen: boolean; 
-  phone: string;
-  address: string;
-  distance: string;
-  distanceValue: number;
-  storeId: number; 
-  storeName: string; 
-}
-
-/**
- * Animation variants for card animations
- */
-interface CardVariants {
-  hidden: {
-    opacity: number;
-    y: number;
-  };
-  visible: (i: number) => {
-    opacity: number;
-    y: number;
-    transition: {
-      delay: number;
-      duration: number;
-    };
-  };
-  [key: string]: any;
-}
-
-// ==============================
-// UTILITY FUNCTIONS
-// ==============================
-
-/**
- * Calculates the distance between two geographic points using the Haversine formula
- * @param lat1 Latitude of the first point
- * @param lon1 Longitude of the first point
- * @param lat2 Latitude of the second point
- * @param lon2 Longitude of the second point
- * @returns Distance in kilometers (as a string with 1 decimal place)
- */
-const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): string => {
-  const R: number = 6371; // Earth's radius in km
-  const dLat: number = (lat2 - lat1) * Math.PI / 180;
-  const dLon: number = (lon2 - lon1) * Math.PI / 180;
-  const a: number = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c: number = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  const distance: number = R * c;
-  
-  return distance.toFixed(1);
-};
-
-/**
- * Get saved cafe IDs from localStorage
- * @returns Array of favorite cafe IDs
- */
-const getFavoritesFromStorage = (): number[] => {
-  const favorites = localStorage.getItem('favoriteCafes');
-  return favorites ? JSON.parse(favorites) : [];
-};
-
-/**
- * Creates a simulated route between two points
- * @param from Starting coordinates
- * @param to Ending coordinates
- * @returns Array of route coordinates
- */
-const simulateRoute = (from: LatLngTuple, to: LatLngTuple): LatLngTuple[] => {
-  const numPoints = 5;
-  const points: LatLngTuple[] = [];
-  
-  for (let i = 0; i <= numPoints; i++) {
-    const fraction = i / numPoints;
-    const lat = from[0] + (to[0] - from[0]) * fraction;
-    const lng = from[1] + (to[1] - from[1]) * fraction;
-    
-    // Add some variation for a more natural route
-    const jitter = i > 0 && i < numPoints ? (Math.random() - 0.5) * 0.005 : 0;
-    
-    points.push([lat + jitter, lng + jitter]);
-  }
-  
-  return points;
-};
-
-// ==============================
-// ANIMATION VARIANTS
-// ==============================
-
-/**
- * Container animation variants
- */
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1,
-    transition: { duration: 0.5 }
-  }
-};
-
-/**
- * Card animation variants
- */
-const cardVariants: CardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({ 
-    opacity: 1, 
-    y: 0,
-    transition: { 
-      delay: i * 0.1,
-      duration: 0.5
-    }
-  })
-};
-
-/**
- * Pulse animation variants
- */
-const pulseVariants = {
-  pulse: {
-    scale: [1, 1.1, 1],
-    opacity: [0.7, 1, 0.7],
-    transition: {
-      duration: 2,
-      repeat: Infinity,
-      repeatType: "reverse" as const
-    }
-  }
-};
-
-// ==============================
-// SUB-COMPONENTS
-// ==============================
-
-/**
- * Component to center the map on the selected café or user location
- */
-const MapFocus: React.FC<MapFocusProps> = ({ cafeId, positions, userLocation }) => {
-  const map = useMap();
-  
-  useEffect(() => {
-    if (cafeId) {
-      const position = positions.find(pos => pos.id === cafeId);
-      if (position) {
-        map.flyTo([position.lat, position.lng], 15, {
-          duration: 2
-        });
-      }
-    } else if (userLocation) {
-      map.flyTo(userLocation, 15, {
-        duration: 2
-      });
-    }
-  }, [cafeId, map, positions, userLocation]);
-  
-  return null;
-};
-
-/**
- * Component to show the user's location on the map
- */
-const UserLocationMarker: React.FC<UserLocationMarkerProps> = ({ position, pulsing = false }) => {
-  if (!position) return null;
-  
-  return (
-    <Marker 
-      position={position}
-      icon={L.divIcon({
-        className: 'user-location-marker',
-        html: `<div class="user-marker ${pulsing ? 'pulsing' : ''}">
-                <div class="user-marker-inner"></div>
-              </div>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 12]
-      })}
-    />
-  );
-};
-
-/**
- * Component to draw a route line between two points
- */
-const RouteLine: React.FC<RouteLineProps> = ({ from, to }) => {
-  const [routePoints, setRoutePoints] = useState<LatLngTuple[]>([]);
-  
-  useEffect(() => {
-    if (!from || !to) return;
-    setRoutePoints(simulateRoute(from, to));
-  }, [from, to]);
-  
-  if (!routePoints.length) return null;
-  
-  return (
-    <Polyline 
-      positions={routePoints}
-      color="#6F4E37"
-      weight={4}
-      opacity={0.7}
-      dashArray="10, 10"
-    />
-  );
-};
+// Animations
+import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
 
 // ==============================
 // MAIN COMPONENT
@@ -283,183 +46,86 @@ export const MapView: React.FC = () => {
   const [showSidebar, setShowSidebar] = useState<boolean>(false);
   const [activeCafe, setActiveCafe] = useState<number | null>(null);
   const [searchFocused, setSearchFocused] = useState<boolean>(false);
-  const [userLocation, setUserLocation] = useState<LatLngTuple | null>(null);
-  const [locatingUser, setLocatingUser] = useState<boolean>(false);
   const [showDirections, setShowDirections] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
-  const [favorites, setFavorites] = useState<number[]>(getFavoritesFromStorage());
-  const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedStore, setSelectedStore] = useState<number | undefined>(undefined);
-  
-   // ==============================
+  // Declaramos searchTerm aquí para que esté disponible antes de pasarlo a useMapData
+  const [searchTerm, setSearchTermLocal] = useState<string>('');
+
+  // Custom hooks
+  const { favorites, toggleFavorite } = useFavorites();
+  const { 
+    userLocation, 
+    locatingUser, 
+    accuracy,
+    errorMessage,
+    getUserLocation 
+  } = useGeolocation(mapInstance);
+
+  // ==============================
   // API DATA FETCHING
   // ==============================
-  
   const { data: branchesData, isLoading: branchesLoading, error: branchesError } = useBranches();
-  
-  // Fetch all stores (for filtering)
   const { data: storesData, isLoading: storesLoading } = useStores();
-  
-  // Fetch branches filtered by store (if a store is selected)
   const { data: filteredBranchesData } = useBranchesByStore(selectedStore);
-  
+
   // ==============================
-  // DERIVED STATE / COMPUTED VALUES
+  // DERIVED STATE / COMPUTED VALUES 
   // ==============================
-  
-  // Center of the map (Medellín by default)
-  const defaultCenter: LatLngTuple = [6.2476, -75.5658];
+  const {
+    defaultCenter,
+    cafes,
+    cafePositions,
+    filteredCafes,
+    sortedCafes: mapDataSortedCafes, // Renombramos para evitar conflicto
+    activeCafeData,
+    availableStores,
+    customIcon
+  } = useMapData(
+    branchesData,
+    filteredBranchesData,
+    userLocation,
+    activeCafe,
+    storesData
+  );
 
-// Map branches from API to our cafe data structure
-const cafes: Cafe[] = useMemo(() => {
-  if (!branchesData) return [];
+  // ==============================
+  // SEARCH AND FILTER
+  // ==============================
+ 
+  const availableTags = useMemo(() => {
+    const allTags = cafes.flatMap(cafe => cafe.tags);
+    return [...new Set(allTags)];
+  }, [cafes]);
+  
+  // Usar nuestro nuevo hook para búsqueda y filtrado
+  const {
+    searchTerm: filterSearchTerm,
+    setSearchTerm: setFilterSearchTerm,
+    filterOptions,
+    updateFilterOptions,
+    resetFilters,
+    sortedCafes,
+    isFilterModalOpen,
+    toggleFilterModal
+  } = useSearchFilter(cafes);
 
-  // Determine which branches data to use (filtered or all)
-  const branches = filteredBranchesData?.branch || branchesData.branch || [];
-  
-  return branches.map(branch => {
-    // Skip branches with missing location data
-    if (!branch.location) return null;
-    
-    const baseData = {
-      id: branch.id,
-      name: branch.name,
-      rating: branch.average_rating || 4.5, // Default rating if none provided
-      reviewCount: Math.floor(Math.random() * 100) + 50, // Random review count (50-150)
-      openTime: "7:00 AM - 8:00 PM", // Default opening hours
-      image: branch.store?.logo || "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // Use logo or default
-      tags: ["Coffee", "Specialty"], // Default tags
-      latitude: branch.location.latitude,
-      longitude: branch.location.longitude,
-      isOpen: branch.status,
-      phone: branch.phone_number,
-      address: branch.location.address,
-      storeId: branch.store_id,
-      storeName: branch.store?.name || 'Unknown',
-    };
-    
-    // Calculate distance if user location is available
-    if (userLocation) {
-      const distanceKm = calculateDistance(
-        userLocation[0], userLocation[1], 
-        branch.location.latitude, branch.location.longitude
-      );
-      return {
-        ...baseData,
-        distance: `${distanceKm} km`,
-        distanceValue: parseFloat(distanceKm)
-      };
-    }
-    
-    // Default distance when user location is not available
-    return {
-      ...baseData,
-      distance: "Unknown distance",
-      distanceValue: 999 // High value to sort to the end
-    };
-  }).filter(Boolean) as Cafe[]; // Filter out null values and type cast
-}, [branchesData, filteredBranchesData, userLocation]);
+  // Sincronizar los dos estados de búsqueda
+  useEffect(() => {
+    setFilterSearchTerm(searchTerm);
+  }, [searchTerm, setFilterSearchTerm]);
 
-  // Create marker positions from cafe data
-  const cafePositions = useMemo(() => 
-    cafes.map(cafe => ({
-      id: cafe.id,
-      lat: cafe.latitude,
-      lng: cafe.longitude
-    })), 
-  [cafes]);
+  // Función para actualizar la búsqueda en ambos lugares
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchTermLocal(value);
+    setFilterSearchTerm(value);
+  }, [setFilterSearchTerm]);
 
-  const filteredCafes = useMemo(() => {
-    if (!searchTerm) return cafes;
-    
-    const lowerSearch = searchTerm.toLowerCase();
-    return cafes.filter(cafe => 
-      cafe.name.toLowerCase().includes(lowerSearch) || 
-      cafe.address.toLowerCase().includes(lowerSearch) ||
-      cafe.storeName.toLowerCase().includes(lowerSearch)
-    );
-  }, [cafes, searchTerm]);
-  
-  // Sort cafes by distance
-  const sortedCafes = useMemo(() => 
-    [...filteredCafes].sort((a, b) => a.distanceValue - b.distanceValue), 
-  [filteredCafes]);
-  
-  // Get data for the currently active cafe
-  const activeCafeData = useMemo(() => 
-    activeCafe ? cafes.find(cafe => cafe.id === activeCafe) : null,
-  [activeCafe, cafes]);
-  
-  // Extract available stores for the filter
-  const availableStores = useMemo(() => {
-    if (!storesData?.stores?.store) return [];
-    
-    return storesData.stores.store.map(store => ({
-      id: store.id,
-      name: store.name
-    }));
-  }, [storesData]);
-  
-  
-  // Custom marker icon
-  const customIcon = useMemo(() => new L.Icon({
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    shadowSize: [41, 41]
-  }), []);
-  
   // ==============================
   // CALLBACKS
   // ==============================
-  
-  /**
-   * Gets the user's current geolocation
-   */
-  const getUserLocation = useCallback(() => {
-    if (!navigator.geolocation) {
-      alert("Tu navegador no soporta geolocalización");
-      return;
-    }
-    
-    setLocatingUser(true);
-    
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setUserLocation([latitude, longitude]);
-        if (mapInstance) {
-          mapInstance.flyTo([latitude, longitude], 15);
-        }
-        setLocatingUser(false);
-      },
-      (error) => {
-        console.error("Error obteniendo ubicación:", error);
-        alert("No pudimos obtener tu ubicación. Por favor, verifica los permisos de ubicación.");
-        setLocatingUser(false);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-      }
-    );
-  }, [mapInstance]);
-  
-  /**
-   * Toggles the favorite status of a cafe
-   */
-  const toggleFavorite = useCallback((cafeId: number): void => {
-    const newFavorites: number[] = favorites.includes(cafeId)
-      ? favorites.filter((id: number) => id !== cafeId)
-      : [...favorites, cafeId];
-    
-    setFavorites(newFavorites);
-    localStorage.setItem('favoriteCafes', JSON.stringify(newFavorites));
-  }, [favorites]);
-  
+
+
   /**
    * Starts navigation to a cafe
    */
@@ -468,42 +134,34 @@ const cafes: Cafe[] = useMemo(() => {
       getUserLocation();
       return;
     }
-    
+
     setActiveCafe(cafeId);
     setShowDirections(true);
   }, [getUserLocation, userLocation]);
-  
+
   // ==============================
   // EFFECTS
   // ==============================
-  
+
   // Load map and get user location when component mounts
   useEffect(() => {
     const timer = setTimeout(() => {
       setMapLoaded(true);
       getUserLocation();
     }, 800);
-    
+
     return () => clearTimeout(timer);
   }, [getUserLocation]);
-  
-  // ==============================
-  // DERIVED STATE / COMPUTED VALUES
-  // ==============================
-  
-  // Generate cafe data with dynamically calculated distances
- 
 
-  
   // ==============================
   // RENDER FUNCTIONS
   // ==============================
-  
+
   /**
    * Renders a cafe card for the sidebar
    */
   const renderCafeCard = (cafe: Cafe, index: number) => (
-    <motion.div 
+    <motion.div
       key={cafe.id}
       custom={index}
       variants={cardVariants}
@@ -513,9 +171,9 @@ const cafes: Cafe[] = useMemo(() => {
       onClick={() => setActiveCafe(cafe.id)}
     >
       <div className="relative">
-        <img 
-          src={cafe.image} 
-          alt={cafe.name} 
+        <img
+          src={cafe.image}
+          alt={cafe.name}
           className="w-full h-36 object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
@@ -526,7 +184,7 @@ const cafes: Cafe[] = useMemo(() => {
             </span>
           ))}
         </div>
-        <motion.button 
+        <motion.button
           className="absolute top-3 right-3 bg-white/90 rounded-full p-1.5"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -535,23 +193,25 @@ const cafes: Cafe[] = useMemo(() => {
             toggleFavorite(cafe.id);
           }}
         >
-          <Heart 
-            size={16} 
-            className={`${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : 'text-[#6F4E37]'}`} 
+          <Heart
+            size={16}
+            className={`${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : 'text-[#6F4E37]'}`}
           />
         </motion.button>
       </div>
-      
+
       <div className="p-4 bg-white">
         <div className="flex justify-between items-start">
-          <h3 className="font-bold text-lg text-[#2C1810] line-clamp-1">{cafe.name}</h3>
+          <h3 className="font-bold text-lg text-[#2C1810] line-clamp-1">
+            <HighlightText text={cafe.name} highlight={searchTerm} />
+          </h3>
           <div className="flex items-center gap-1 text-amber-500">
             <Star size={16} className="fill-amber-500" />
             <span className="font-medium">{cafe.rating}</span>
             <span className="text-xs text-gray-500">({cafe.reviewCount})</span>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
           <div className="flex items-center gap-1">
             <MapPin size={14} className="text-[#6F4E37]" />
@@ -562,16 +222,16 @@ const cafes: Cafe[] = useMemo(() => {
             <span>{cafe.openTime}</span>
           </div>
         </div>
-        
+
         <div className="flex gap-2 mt-3">
-          <motion.button 
+          <motion.button
             className="flex-1 bg-[#6F4E37] text-white py-2 rounded-lg font-medium hover:bg-[#5d4230] transition-colors"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             Ver detalles
           </motion.button>
-          <motion.button 
+          <motion.button
             className="w-10 h-10 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-lg hover:bg-[#6F4E37] hover:text-white transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -586,29 +246,29 @@ const cafes: Cafe[] = useMemo(() => {
       </div>
     </motion.div>
   );
-  
+
   /**
    * Renders the cafe detail popup/sheet
    */
   const renderCafeDetail = (cafe: Cafe) => (
-    <div key={cafe.id} className="relative">
-      <div className="relative h-48 w-full">
-        <img 
-          src={cafe.image} 
-          alt={cafe.name} 
+    <div key={cafe.id} className="relative md:flex md:flex-col md:max-h-[80vh] overflow-auto">
+      <div className="relative h-48 md:h-64 w-full">
+        <img
+          src={cafe.image}
+          alt={cafe.name}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-        
-        <button 
+
+        <button
           onClick={() => setActiveCafe(null)}
-          className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md"
+          className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors"
         >
           <ArrowLeft size={20} className="text-[#6F4E37] transform rotate-45" />
         </button>
-        
+
         <div className="absolute bottom-0 left-0 p-4 w-full">
-          <h3 className="font-bold text-2xl text-white">{cafe.name}</h3>
+          <h3 className="font-bold text-2xl md:text-3xl text-white">{cafe.name}</h3>
           <div className="flex items-center justify-between mt-1">
             <div className="flex items-center gap-1 text-amber-400">
               <Star size={18} className="fill-amber-400" />
@@ -624,41 +284,58 @@ const cafes: Cafe[] = useMemo(() => {
                 toggleFavorite(cafe.id);
               }}
             >
-              <Heart 
-                size={18} 
-                className={`${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : 'text-white'}`} 
+              <Heart
+                size={18}
+                className={`${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : 'text-white'}`}
               />
             </motion.button>
           </div>
         </div>
       </div>
-      
-      <div className="p-4">
-        <div className="flex justify-between items-center py-3 border-b border-gray-100">
-          <div className="flex items-center gap-2 text-[#6F4E37]">
-            <Clock size={18} />
-            <span className="font-medium">{cafe.openTime}</span>
-            <span className="text-xs py-0.5 px-2 bg-green-50 text-green-600 rounded-full font-medium">
+
+      <div className="p-4 md:p-6">
+        {/* Información de la tienda */}
+        <div className="md:mb-3 text-[#6F4E37]/80 text-sm md:text-base">
+          <span className="font-medium">{cafe.storeName}</span>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-4 mb-4">
+          <div className="flex justify-between items-center py-3 border-b border-gray-100">
+            <div className="flex items-center gap-2 text-[#6F4E37]">
+              <Clock size={18} />
+              <span className="font-medium">{cafe.openTime}</span>
+            </div>
+            <span className={`text-xs py-0.5 px-2 rounded-full font-medium ${
+              cafe.isOpen 
+                ? 'bg-green-50 text-green-600' 
+                : 'bg-red-50 text-red-600'
+            }`}>
               {cafe.isOpen ? 'Abierto ahora' : 'Cerrado'}
             </span>
           </div>
-        </div>
-        
-        <div className="flex justify-between items-center py-3 border-b border-gray-100">
-          <div className="flex items-center gap-2 text-[#6F4E37]">
-            <MapPin size={18} />
-            <span className="font-medium">{cafe.distance} de distancia</span>
+
+          <div className="flex justify-between items-center py-3 border-b border-gray-100">
+            <div className="flex items-center gap-2 text-[#6F4E37]">
+              <MapPin size={18} />
+              <span className="font-medium">{cafe.distance} de distancia</span>
+            </div>
+            <motion.button
+              className="text-[#6F4E37] bg-[#FAF3E0] p-2 rounded-lg hover:bg-[#FAF3E0]/70 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigateToCafe(cafe.id)}
+            >
+              <Navigation size={18} />
+            </motion.button>
           </div>
-          <motion.button 
-            className="text-[#6F4E37] bg-[#FAF3E0] p-2 rounded-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => navigateToCafe(cafe.id)}
-          >
-            <Navigation size={18} />
-          </motion.button>
         </div>
-        
+
+        {/* Dirección completa - solo visible en desktop */}
+        <div className="hidden md:block mb-5 bg-gray-50 p-3 rounded-lg">
+          <h4 className="font-medium text-[#2C1810] mb-1">Dirección</h4>
+          <p className="text-gray-700">{cafe.address}</p>
+        </div>
+
         <div className="py-3">
           <h4 className="font-medium text-[#2C1810] mb-2">Características</h4>
           <div className="flex flex-wrap gap-2">
@@ -675,9 +352,15 @@ const cafes: Cafe[] = useMemo(() => {
             </span>
           </div>
         </div>
-        
-        <div className="flex gap-3 py-4">
-          <motion.button 
+
+        {/* Información de contacto - visible en desktop */}
+        <div className="hidden md:block py-3 border-t border-gray-100">
+          <h4 className="font-medium text-[#2C1810] mb-2">Contacto</h4>
+          <p className="text-[#6F4E37]">{cafe.phone}</p>
+        </div>
+
+        <div className="flex gap-3 py-4 md:py-5 md:mt-2">
+          <motion.button
             className="flex-1 bg-[#6F4E37] text-white py-3 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-2"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -685,7 +368,7 @@ const cafes: Cafe[] = useMemo(() => {
             <Coffee size={18} />
             <span>Ver menú</span>
           </motion.button>
-          <motion.button 
+          <motion.button
             className="w-12 h-12 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-xl hover:bg-[#6F4E37] hover:text-white transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -696,13 +379,13 @@ const cafes: Cafe[] = useMemo(() => {
       </div>
     </div>
   );
-  
+
   // ==============================
   // COMPONENT RENDER
   // ==============================
-  
+
   return (
-    <motion.div 
+    <motion.div
       className="h-screen w-full relative bg-gray-50 overflow-hidden font-sans"
       variants={containerVariants}
       initial="hidden"
@@ -749,29 +432,29 @@ const cafes: Cafe[] = useMemo(() => {
           }
         }
       `}</style>
-      
+
       {/* Loading overlay */}
       <AnimatePresence>
         {!mapLoaded && (
-          <motion.div 
+          <motion.div
             className="absolute inset-0 bg-white z-50 flex flex-col items-center justify-center"
-            exit={{ 
+            exit={{
               opacity: 0,
               transition: { duration: 0.7, ease: "easeInOut" }
             }}
           >
-            <motion.div 
+            <motion.div
               className="w-16 h-16 text-[#6F4E37]"
-              animate={{ 
+              animate={{
                 rotate: 360,
                 transition: { duration: 2, repeat: Infinity, ease: "linear" }
               }}
             >
               <Coffee size={64} />
             </motion.div>
-            <motion.p 
+            <motion.p
               className="mt-4 text-[#6F4E37] font-medium"
-              animate={{ 
+              animate={{
                 opacity: [0.5, 1, 0.5],
                 transition: { duration: 1.5, repeat: Infinity }
               }}
@@ -781,52 +464,57 @@ const cafes: Cafe[] = useMemo(() => {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       {/* Header with search and navigation */}
       <div className="absolute top-0 left-0 right-0 z-40 bg-gradient-to-b from-white/90 to-white/0 pt-4 pb-8 px-4">
         <div className="flex items-center justify-between">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg flex items-center gap-2 hover:bg-white transition-all duration-300 group"
           >
             <ArrowLeft size={20} className="text-[#6F4E37] group-hover:-translate-x-1 transition-transform duration-300" />
             <span className="pr-2 text-[#6F4E37] font-medium hidden md:inline">Volver</span>
           </Link>
-          
-          <motion.div 
+
+          <motion.div
             className={`relative transition-all duration-300 ${searchFocused ? 'w-full md:w-96' : 'w-48 md:w-64'}`}
             layout
           >
-            <input 
-              type="text" 
-              placeholder="Buscar cafeterías..." 
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="Buscar cafeterías..."
               className="w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none focus:ring-2 focus:ring-[#D4A76A] transition-all duration-300 bg-white border-black/10"
               onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
+              onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
-            <motion.button 
+            <motion.button
               className="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[#6F4E37] text-white p-1.5 rounded-full hover:bg-[#5d4230] transition-colors duration-300"
               whileTap={{ scale: 0.9 }}
+              onClick={toggleFilterModal}
             >
               <Filter size={16} />
             </motion.button>
           </motion.div>
-          
+
+          {/* View toggle buttons */}
           {/* View toggle buttons */}
           <div className="hidden md:flex bg-white/90 backdrop-blur-sm rounded-full shadow-lg overflow-hidden">
-            <button 
-              className={`px-4 py-2 transition-colors duration-300 ${
-                viewMode === 'map' ? 'bg-[#6F4E37] text-white' : 'text-[#6F4E37] hover:bg-gray-100'
-              }`}
-              onClick={() => setViewMode('map')}
+            <button
+              className={`px-4 py-2 transition-colors duration-300 ${viewMode === 'map' ? 'bg-[#6F4E37] text-white' : 'text-[#6F4E37] hover:bg-gray-100'
+                }`}
+              onClick={() => {
+                setViewMode('map');
+                setShowSidebar(false); // Añadir esta línea para ocultar la barra lateral
+              }}
             >
               Mapa
             </button>
-            <button 
-              className={`px-4 py-2 transition-colors duration-300 ${
-                viewMode === 'list' ? 'bg-[#6F4E37] text-white' : 'text-[#6F4E37] hover:bg-gray-100'
-              }`}
+            <button
+              className={`px-4 py-2 transition-colors duration-300 ${viewMode === 'list' ? 'bg-[#6F4E37] text-white' : 'text-[#6F4E37] hover:bg-gray-100'
+                }`}
               onClick={() => {
                 setViewMode('list');
                 setShowSidebar(true);
@@ -835,16 +523,15 @@ const cafes: Cafe[] = useMemo(() => {
               Lista
             </button>
           </div>
-          
           <div className="w-10 md:hidden"></div> {/* Spacer for mobile layout */}
         </div>
       </div>
-      
+
       {/* Map Container */}
       <div className={`absolute inset-0 z-10 ${viewMode === 'list' && window.innerWidth >= 768 ? 'md:w-1/2' : 'w-full'}`}>
-        <MapContainer 
+        <MapContainer
           center={defaultCenter}
-          zoom={14} 
+          zoom={14}
           zoomControl={false}
           style={{ height: '100%', width: '100%' }}
           className="z-10"
@@ -856,14 +543,14 @@ const cafes: Cafe[] = useMemo(() => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          
+
           {/* User location marker */}
           <UserLocationMarker position={userLocation} pulsing={true} />
-          
+
           {/* Cafe markers */}
           {cafePositions.map(position => (
-            <Marker 
-              key={position.id} 
+            <Marker
+              key={position.id}
               position={[position.lat, position.lng]}
               icon={customIcon}
               eventHandlers={{
@@ -875,40 +562,29 @@ const cafes: Cafe[] = useMemo(() => {
                 },
               }}
             >
-              <Popup className="cafe-popup">
-                <div className="p-1">
-                  <p className="font-bold text-[#2C1810]">{cafes.find(cafe => cafe.id === position.id)?.name}</p>
-                  <p className="text-sm text-gray-600">{cafes.find(cafe => cafe.id === position.id)?.distance}</p>
-                  <button 
-                    className="mt-2 w-full bg-[#6F4E37] text-white text-sm py-1 rounded"
-                    onClick={() => navigateToCafe(position.id)}
-                  >
-                    Cómo llegar
-                  </button>
-                </div>
-              </Popup>
+             
             </Marker>
           ))}
-          
+
           {/* Route line between user location and selected cafe */}
           {showDirections && userLocation && activeCafeData && (
-            <RouteLine 
-              from={userLocation} 
-              to={[activeCafeData.latitude, activeCafeData.longitude]} 
+            <RouteLine
+              from={userLocation}
+              to={[activeCafeData.latitude, activeCafeData.longitude]}
             />
           )}
-          
+
           {/* Component to manage map focus */}
-          <MapFocus 
-            cafeId={activeCafe} 
-            positions={cafePositions} 
-            userLocation={userLocation} 
+          <MapFocus
+            cafeId={activeCafe}
+            positions={cafePositions}
+            userLocation={userLocation}
           />
         </MapContainer>
-        
+
         {/* Map controls */}
         <div className="absolute top-24 right-4 z-30 flex flex-col gap-3">
-          <motion.button 
+          <motion.button
             className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -916,7 +592,7 @@ const cafes: Cafe[] = useMemo(() => {
           >
             <span className="text-xl font-bold text-[#6F4E37]">+</span>
           </motion.button>
-          <motion.button 
+          <motion.button
             className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -925,9 +601,9 @@ const cafes: Cafe[] = useMemo(() => {
             <span className="text-xl font-bold text-[#6F4E37]">−</span>
           </motion.button>
         </div>
-        
+
         {/* User location button */}
-        <motion.button 
+        <motion.button
           className="absolute bottom-28 right-4 z-30 bg-white rounded-full p-3 shadow-lg"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -936,42 +612,88 @@ const cafes: Cafe[] = useMemo(() => {
         >
           <Navigation size={20} className={`${locatingUser ? 'animate-pulse' : ''} text-[#6F4E37]`} />
         </motion.button>
+
+
+        {/* Para mostrar errores de ubicación (opcional) */}
+        {errorMessage && (
+          <div className="absolute bottom-44 right-4 left-4 md:left-auto md:w-72 z-30 bg-red-50 text-red-700 p-3 rounded-lg shadow-lg">
+            <p className="text-sm">{errorMessage}</p>
+          </div>
+        )}
       </div>
-      
+
       {/* Sidebar with cafe list */}
       <AnimatePresence>
-        {(showSidebar || (viewMode === 'list' && window.innerWidth >= 768)) && (
-          <motion.div 
-            className={`absolute top-0 bottom-0 ${viewMode === 'list' && window.innerWidth >= 768 ? 'right-0 w-1/2 md:block' : 'right-0 w-full md:w-96'} bg-white z-20 shadow-2xl rounded-l-3xl md:rounded-l-3xl overflow-hidden`}
-            initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-          >
-            <div className="h-full flex flex-col">
-              <div className="p-6 pt-20 flex justify-between items-center border-b border-gray-100">
-                <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
-                  <Coffee size={20} className="text-[#6F4E37]" />
-                  <span>Cafeterías cercanas</span>
-                </h2>
-                <button 
-                  onClick={() => setShowSidebar(false)}
-                  className="text-[#6F4E37] md:hidden bg-gray-50 rounded-full p-2 hover:bg-gray-100 transition-colors"
-                >
-                  <ArrowLeft size={20} />
-                </button>
+        {/* Mostrar sidebar si: 
+            1. Es modo móvil y showSidebar es true, O
+            2. Es modo escritorio y viewMode es 'list' 
+        */}
+        {(
+          (showSidebar && window.innerWidth < 768) ||
+          (viewMode === 'list' && window.innerWidth >= 768)
+        ) && (
+            <motion.div
+              className={`absolute top-0 bottom-0 ${viewMode === 'list' && window.innerWidth >= 768
+                  ? 'right-0 w-1/2'
+                  : 'right-0 w-full md:w-96'
+                } bg-white z-20 shadow-2xl rounded-l-3xl md:rounded-l-3xl overflow-hidden`}
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            >
+              <div className="h-full flex flex-col">
+                <div className="p-6 pt-20 flex justify-between items-center border-b border-gray-100">
+                  <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
+                    <Coffee size={20} className="text-[#6F4E37]" />
+                    <span>Cafeterías cercanas</span>
+                    {sortedCafes.length > 0 && (
+                      <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
+                        {sortedCafes.length}
+                      </span>
+                    )}
+                  </h2>
+                  <button
+                    onClick={() => setShowSidebar(false)}
+                    className="text-[#6F4E37] md:hidden bg-gray-50 rounded-full p-2 hover:bg-gray-100 transition-colors"
+                  >
+                    <ArrowLeft size={20} />
+                  </button>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-4 pb-32">
+                  {sortedCafes.length > 0 ? (
+                    <motion.div className="space-y-4">
+                      {sortedCafes.map((cafe, index) => renderCafeCard(cafe, index))}
+                    </motion.div>
+                  ) : (
+                    <div className="mt-8 text-center">
+                      <Coffee size={48} className="mx-auto text-gray-300" />
+                      <p className="mt-4 text-gray-500">No se encontraron cafeterías con los filtros actuales</p>
+                      <button 
+                        className="mt-2 text-[#6F4E37] underline"
+                        onClick={resetFilters}
+                      >
+                        Limpiar filtros
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
-              
-              <div className="flex-1 overflow-y-auto p-4 pb-32">
-                <motion.div className="space-y-4">
-                  {sortedCafes.map((cafe, index) => renderCafeCard(cafe, index))}
-                </motion.div>
-              </div>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
       </AnimatePresence>
-      
+
+      {/* Filter Modal */}
+      <FilterModal 
+        isOpen={isFilterModalOpen}
+        onClose={toggleFilterModal}
+        filterOptions={filterOptions}
+        updateFilterOptions={updateFilterOptions}
+        resetFilters={resetFilters}
+        availableTags={availableTags}
+      />
+
       {/* Toggle sidebar button (mobile) */}
       {!showSidebar && (
         <motion.button
@@ -986,12 +708,12 @@ const cafes: Cafe[] = useMemo(() => {
           <Coffee size={24} />
         </motion.button>
       )}
-      
+
       {/* Selected Cafe Popup/Details */}
       <AnimatePresence>
         {activeCafe && (
-          <motion.div 
-            className="absolute md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 left-0 right-0 bottom-0 md:w-96 md:h-auto bg-white md:rounded-2xl shadow-2xl z-40 overflow-hidden"
+          <motion.div
+            className="absolute left-0 right-0 bottom-0 md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[500px] md:h-auto md:max-h-[80vh] lg:w-[650px] xl:w-[700px] bg-white md:rounded-2xl shadow-2xl z-40 overflow-hidden"
             initial={{ y: "100%", opacity: 0, scale: 0.9 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: "100%", opacity: 0, scale: 0.9 }}
@@ -1001,10 +723,10 @@ const cafes: Cafe[] = useMemo(() => {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       {/* Pulsating indicator on map for selected cafe */}
       {activeCafe && (
-        <motion.div 
+        <motion.div
           className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
           variants={pulseVariants}
           animate="pulse"
