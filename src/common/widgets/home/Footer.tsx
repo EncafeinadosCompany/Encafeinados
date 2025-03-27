@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { NewsletterForm } from '@/common/molecules/home/NewsletterForm';
-import { SocialIcon } from '@/common/atoms/socialIcon';
 import { 
   Instagram,  
   ArrowUp,
@@ -11,6 +10,7 @@ import {
   Music2,
   Mail
 } from 'lucide-react';
+import { SocialIcon } from '@/common/atoms/SocialIcon';
 
 export const Footer = () => {
   // Para animación al hacer scroll
