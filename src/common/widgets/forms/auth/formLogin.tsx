@@ -33,8 +33,8 @@ const Formlogin = () => {
       toast.success("Inicio de sesión exitoso");
 
       if (response?.user) {
-        // const roleId = response.user.role.name;
-        // pagesPermissions(roleId, navigate);
+        const roleId = response.user.role.name;
+        pagesPermissions(roleId, navigate);
       }
 
     } finally {
@@ -53,7 +53,7 @@ const Formlogin = () => {
         //   options: {
         //     redirectTo: `${window.location.origin}/auth/callback`,
         //   },
-        // })
+        //  })
         
         // Simulate authentication delay
         setTimeout(() => {

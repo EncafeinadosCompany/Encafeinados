@@ -1,12 +1,14 @@
+import { ROLES } from '@/common/utils/lists/roles';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 export const useAuth = () => {
 
   const pagesPermissions = (rol: string,  navigate: (path: string) => void) => {
 
-    if (rol === import.meta.env.VITE_ROLE_COFFEELOVER) {
+    if (rol === ROLES.COFFEE_LOVER) {
+      console.log("coffeelover");
       return navigate("/coffeelover");
-    } else if (rol === import.meta.env.VITE_ROLE_STORE) {
+    } else if (rol === ROLES.STORE) {
       return navigate("/store");
     } else {
       navigate("/"); 
