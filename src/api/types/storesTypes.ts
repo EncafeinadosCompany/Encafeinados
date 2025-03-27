@@ -3,10 +3,12 @@ export interface Store {
   name: string;
   type_document: string;
   number_document: string;
-  imagenUrl: string;
+  logo: string;
   email: string;
   phone_number: string;
   status: string;
+  latitude?: number; // Agregamos para cálculo de distancia
+  longitude?: number; // Agregamos para cálculo de distancia
 }
 
 export interface StoresResponse {
