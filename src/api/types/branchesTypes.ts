@@ -11,7 +11,7 @@ export interface Location {
     id: number
     user_id: number
     name: string
-    type_document_id: number
+    type_document: string
     number_document: string
     logo: string
     email: string

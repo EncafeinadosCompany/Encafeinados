@@ -1,9 +1,9 @@
 export interface Store {
     id: number
     name: string
-    type_document_id: number
+    type_document: number
     number_document: string
-    logo: string
+    imagenUrl?: string
     email: string
     phone_number: string
     status: boolean
