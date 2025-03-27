@@ -354,9 +354,9 @@ export const MapView: React.FC = () => {
         </div>
 
         {/* Información de contacto - visible en desktop */}
-        <div className="hidden md:block py-3 border-t border-gray-100">
+        <div className="py-3 border-t border-gray-100">
           <h4 className="font-medium text-[#2C1810] mb-2">Contacto</h4>
-          <p className="text-[#6F4E37]">{cafe.phone}</p>
+          <p className="text-[#6F4E37]">{cafe.phone || 'No disponible'}</p>
         </div>
 
         <div className="flex gap-3 py-4 md:py-5 md:mt-2">

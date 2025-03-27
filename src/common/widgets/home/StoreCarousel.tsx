@@ -18,9 +18,23 @@ import {
   Filter,
   ChevronRight,
 } from "lucide-react";
-import { useStores } from "@/api/queries/storesQueries";
 
-// Constantes
+interface Store {
+  id: number;
+  name: string;
+  imageUrl: string;
+  rating?: number;
+  distance?: string;
+  openTime?: string;
+  description?: string;
+  specialties?: string[];
+}
+
+interface StoreCarouselProps {
+  stores: Store[];
+}
+
+// Constantes para mejorar la legibilidad y mantenimiento
 const AUTOPLAY_DELAY = 4000;
 const INTERACTION_PAUSE = 5000;
 const CATEGORIES = [
@@ -31,7 +45,7 @@ const CATEGORIES = [
   { name: "Artesanales", icon: Filter },
 ];
 
-// Variantes de animación
+// Variantes de animación extraídas para mejor organización
 const animations = {
   title: {
     hidden: { opacity: 0, y: -20 },
@@ -62,7 +76,7 @@ const animations = {
   },
 };
 
-export const StoreCarousel = () => {
+export const StoreCarousel = ({ stores }: StoreCarouselProps) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -70,18 +84,11 @@ export const StoreCarousel = () => {
   const [lastInteraction, setLastInteraction] = useState(0);
   const [searchFocused, setSearchFocused] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Todos");
-  const [isReady, setIsReady] = useState(false);
 
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { 
-    once: false, 
-    amount: 0.2,
-    margin: "100px" // Añadir margen para evitar falsos negativos
-  });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
 
-  const { data: stores, isLoading, error } = useStores();
-
-  // Efecto de parallax
+  // Efecto de parallax optimizado
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -93,20 +100,24 @@ export const StoreCarousel = () => {
     [0.3, 1, 1, 0.3]
   );
 
+  // Manejar la interacción del usuario
   const handleUserInteraction = useCallback(() => {
     setLastInteraction(Date.now());
     setAutoplay(false);
   }, []);
 
+  // Mejorado: Autoplay con pausa por interacción
   useEffect(() => {
     if (!api) return;
 
     const interval = setInterval(() => {
       const now = Date.now();
+      // Reanuda el autoplay después del tiempo de pausa por interacción
       if (!autoplay && now - lastInteraction > INTERACTION_PAUSE) {
         setAutoplay(true);
       }
 
+      // Avanza el carrusel solo si el autoplay está activo
       if (autoplay) {
         api.scrollNext();
       }
@@ -115,6 +126,7 @@ export const StoreCarousel = () => {
     return () => clearInterval(interval);
   }, [api, autoplay, lastInteraction]);
 
+  // Sincronizar estado con el API del carrusel
   useEffect(() => {
     if (!api) return;
 
@@ -125,6 +137,8 @@ export const StoreCarousel = () => {
 
     updateState();
     api.on("select", updateState);
+
+    // Detectar interacción del usuario con el carrusel
     api.on("pointerDown", handleUserInteraction);
 
     return () => {
@@ -133,11 +147,7 @@ export const StoreCarousel = () => {
     };
   }, [api, handleUserInteraction]);
 
-  useEffect(() => {
-    // Asegurarse de que el componente esté listo después de la hidratación
-    setIsReady(true);
-  }, []);
-
+  // Seleccionar categoría con interrupción de autoplay
   const handleCategorySelect = useCallback(
     (category: string) => {
       setSelectedCategory(category);
@@ -145,10 +155,6 @@ export const StoreCarousel = () => {
     },
     [handleUserInteraction]
   );
-
-  if (isLoading) return <div className="text-center py-10">Cargando tiendas...</div>;
-  if (error) return <div className="text-center py-10 text-red-500">Error al cargar tiendas</div>;
-  if (!isReady) return null; // Evitar renderizado inicial en el servidor
 
   return (
     <section
@@ -158,7 +164,7 @@ export const StoreCarousel = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial="hidden"
-          animate={isInView || !isReady ? "visible" : "hidden"}
+          animate={isInView ? "visible" : "hidden"}
           variants={animations.container}
           className="mb-12"
           style={{ opacity }}
@@ -192,13 +198,15 @@ export const StoreCarousel = () => {
           </motion.div>
         </motion.div>
 
+        {/* Barra de búsqueda optimizada */}
         <motion.div
           className="mb-8"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: (isInView || !isReady) ? 1 : 0, y: (isInView || !isReady) ? 0 : 20 }}
+          animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
+            {/* Barra de búsqueda con animación */}
             <div className="relative w-full sm:w-64 md:w-80">
               <motion.div
                 className={`flex items-center bg-white rounded-full shadow-md transition-all duration-300 border ${
@@ -226,6 +234,7 @@ export const StoreCarousel = () => {
               </motion.div>
             </div>
 
+            {/* Filtros de categorías optimizados */}
             <div className="w-full sm:w-auto overflow-x-auto no-scrollbar">
               <div className="flex items-center space-x-2 py-1 min-w-max">
                 {CATEGORIES.map(({ name, icon: Icon }) => (
@@ -249,6 +258,7 @@ export const StoreCarousel = () => {
           </div>
         </motion.div>
 
+        {/* Carrusel optimizado */}
         <div className="relative">
           <Carousel
             setApi={setApi}
@@ -260,7 +270,7 @@ export const StoreCarousel = () => {
             className="w-full"
           >
             <CarouselContent className="-ml-2 md:-ml-4 pt-1 pb-0.5">
-              {stores?.map((store, index) => (
+              {stores.map((store, index) => (
                 <CarouselItem
                   key={store.id}
                   className="pl-2 md:pl-4 basis-full xs:basis-4/5 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
@@ -268,26 +278,28 @@ export const StoreCarousel = () => {
                   <motion.div
                     custom={index}
                     initial="hidden"
-                    animate={(isInView || !isReady) ? "visible" : "hidden"}
+                    animate={isInView ? "visible" : "hidden"}
                     variants={animations.item}
                     transition={{
-                      delay: Math.min(index * 0.05, 0.3),
+                      delay: Math.min(index * 0.05, 0.3), // Limitar el delay máximo
                       duration: 0.4,
                     }}
                   >
                     <StoreCard
-                      id={store.id}
                       name={store.name}
-                      imagenUrl={store.imagenUrl}
-                      phone_number={store.phone_number}
-                      email={store.email}
-                      status={store.status ? "APROBADO" : "PENDIENTE"}
+                      imageUrl={store.imageUrl}
+                      rating={store.rating}
+                      distance={store.distance}
+                      openTime={store.openTime}
+                      description={store.description}
+                      specialties={store.specialties}
                     />
                   </motion.div>
                 </CarouselItem>
               ))}
             </CarouselContent>
 
+            {/* Controles de navegación optimizados */}
             <div className="flex flex-col items-center justify-center mt-8 gap-5">
               <div className="flex items-center justify-center">
                 <motion.div
@@ -297,7 +309,7 @@ export const StoreCarousel = () => {
                   <CarouselPrevious
                     onClick={() => {
                       api?.scrollPrev();
-                      handleUserInteraction();
+                      handleUserInteraction(); // Pausar autoplay al interactuar manualmente
                     }}
                     className="relative h-10 w-10 bg-white border-2 border-[#D4A76A] text-[#6F4E37] hover:bg-[#D4A76A] hover:text-white transition-all duration-300 shadow-md mr-2"
                   />
@@ -337,6 +349,7 @@ export const StoreCarousel = () => {
                 </motion.div>
               </div>
 
+              {/* Botón "Ver todas" optimizado */}
               <motion.button
                 whileHover={{
                   scale: 1.03,
@@ -367,6 +380,7 @@ export const StoreCarousel = () => {
         </div>
       </div>
 
+      {/* Elementos decorativos simplificados */}
       <motion.div
         className="absolute top-20 right-2 w-20 h-20 md:w-32 md:h-32 rounded-full bg-[#D4A76A]/10 -z-10"
         animate={{

@@ -9,12 +9,12 @@ interface CafeInfoCardProps {
   id: string;
   name: string;
   address: string;
-  rating_average: number;
-  type_document: string
-  number_document: string
-  email: string
-  phone_number: string
-  imagenUrl?: string;
+  distance: string;
+  rating: number;
+  openingHours: string;
+  phoneNumber: string;
+  specialty: string;
+  imageUrl: string;
   onNavigate: () => void;
   onClose: () => void;
 }
@@ -22,9 +22,12 @@ interface CafeInfoCardProps {
 export const CafeInfoCard: React.FC<CafeInfoCardProps> = ({
   name,
   address,
-  email,
-  phone_number,
-  imagenUrl,
+  distance,
+  rating,
+  openingHours,
+  phoneNumber,
+  specialty,
+  imageUrl,
   onNavigate,
   onClose
 }) => {
@@ -39,7 +42,7 @@ export const CafeInfoCard: React.FC<CafeInfoCardProps> = ({
       <Card className="bg-white shadow-xl overflow-hidden">
         <div className="relative h-48">
           <img 
-            src={imagenUrl || '/api/placeholder/400/300'} 
+            src={imageUrl || '/api/placeholder/400/300'} 
             alt={name} 
             className="w-full h-full object-cover" 
           />
@@ -51,7 +54,7 @@ export const CafeInfoCard: React.FC<CafeInfoCardProps> = ({
           </button>
           <div className="absolute top-2 left-2 bg-white rounded-full px-2 py-1 shadow-md flex items-center">
             <Star size={16} className="text-amber-500 mr-1" />
-           
+            <span className="text-sm font-medium">{rating.toFixed(1)}</span>
           </div>
         </div>
         
@@ -63,17 +66,23 @@ export const CafeInfoCard: React.FC<CafeInfoCardProps> = ({
               <div className="mr-2 mt-1 text-[#A67C52]"><MapPin size={16} /></div>
               <div>
                 <p className="text-sm text-gray-700">{address}</p>
+                <p className="text-xs text-gray-500">{distance}</p>
               </div>
             </div>
             
             <div className="flex items-center">
               <div className="mr-2 text-[#A67C52]"><Clock size={16} /></div>
-              <p className="text-sm text-gray-700">{email}</p>
+              <p className="text-sm text-gray-700">{openingHours}</p>
             </div>
             
             <div className="flex items-center">
               <div className="mr-2 text-[#A67C52]"><Phone size={16} /></div>
-              <p className="text-sm text-gray-700">{phone_number}</p>
+              <p className="text-sm text-gray-700">{phoneNumber}</p>
+            </div>
+            
+            <div className="flex items-center">
+              <div className="mr-2 text-[#A67C52]"><Coffee size={16} /></div>
+              <p className="text-sm text-gray-700">Especialidad: {specialty}</p>
             </div>
           </div>
         </CardContent>
