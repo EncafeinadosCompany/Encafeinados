@@ -3,7 +3,7 @@ export interface Store {
   name: string;
   type_document: string;
   number_document: string;
-  imagenUrl: string;
+  logo: string;  // Asegúrate de que el campo 'logo' exista
   email: string;
   phone_number: string;
   status: string;
