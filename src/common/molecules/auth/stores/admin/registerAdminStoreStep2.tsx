@@ -6,8 +6,9 @@ import { Label } from "@radix-ui/react-label"
 
 import { Select, SelectItem, SelectTrigger, SelectContent, SelectValue } from "@/common/ui/select"
 import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument"
-import MapSearch from "../../mapSearch"
+
 import { useState } from "react"
+import MapSearch from "@/common/molecules/mapSearch"
 
 interface registerStoreProps {
     register: UseFormRegister<any>
@@ -17,9 +18,7 @@ interface registerStoreProps {
 
 }
 
-
-const RegisterStoreStep2 = ({ register, errors, direction, control }: registerStoreProps) => {
-
+const RegisterAdminStoreStep2 = ({ register, errors, direction, control }: registerStoreProps) => {
 
     const [location, setLocation] = useState({ lat: 0, lng: 0, address: "" });
 
@@ -63,4 +62,4 @@ const RegisterStoreStep2 = ({ register, errors, direction, control }: registerSt
     )
 }
 
-export default RegisterStoreStep2
+export default RegisterAdminStoreStep2

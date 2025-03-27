@@ -7,14 +7,13 @@ export const personalDataSchema = z.object({
         .min(3, { message: 'Tu nombre debe tener al menos 3 letras, como un buen café debe tener su esencia' })
         .max(30, { message: 'Wow, tu nombre es más largo que una charla con un barista sobre granos de especialidad' })
         .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, { message: "Tu nombre no puede contener números ni caracteres especiales, solo letras y espacios" }),
+
     lastname: z.string()
-        .min(2, { message: 'Tu apellido debe tener al menos 2 letras, como un espresso bien corto' })
-        .max(30, { message: 'Parece que tu apellido es tan extenso como la historia del café' })
-        .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, { message: "Tu apellido no puede contener números ni caracteres especiales, solo letras y espacios" }),
-    type_document_id:z
+       .nonempty({ message: '¿Y tu apellido?' }),
+
+    type_document:z
         .string({message:'Por favor ingresa tu tipo de documento'})
-        .nonempty({ message: "El tipo de documento es esencial, como el café en la mañana" })
-        .transform((val) => Number(val)),
+        .nonempty({ message: "El tipo de documento es esencial, como el café en la mañana" }),
     number_document: z.string()
         .nonempty({ message: 'Necesitamos tu número de documento, como un barista necesita su molino' })
         .min(6, { message: 'Tu número de documento debe tener al menos 6 caracteres, como los ingredientes básicos de una buena receta' })

@@ -1,20 +1,21 @@
-import { DocumentType } from "../types/documentTypes";
+import { DocumentType } from "@/api/types/documentTypes";
 
-export const documentTypeMocks: DocumentType[] = [
+
+export const documentTypeList: DocumentType[] = [
     {
-        clave: 1,
+        clave: 'NIT',
         description: 'NIT',
     },
     {
-        clave: 2,
+        clave: 'CC',
         description: 'Cédula de Ciudadanía (CC)',
     },
     {
-        clave: 3,
+        clave: 'TI',
         description: 'Tarjeta de Identidad (TI)',
     },
     {
-        clave: 4,
+        clave: 'CE',
         description: 'Cédula de Extranjería (CE)',
     }
 ]

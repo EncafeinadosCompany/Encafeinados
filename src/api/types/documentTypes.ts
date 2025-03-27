@@ -1,5 +1,5 @@
 export interface DocumentType {
-    clave: number
+    clave: string
     description: string
   }
 

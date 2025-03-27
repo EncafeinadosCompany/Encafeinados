@@ -51,7 +51,7 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
 
                     <Controller
                         control={control}
-                        name="personData.type_document_id"
+                        name="personData.type_document"
                         render={({ field }) => (
                             <div>
                                 <Label htmlFor="documentType" className="text-sm font-medium">
@@ -63,7 +63,7 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                                 />
                             </div>
                         )} />
-                    {errors?.personData?.type_document_id && <p className="text-red-500">{errors.personData.type_document_id.message}</p>}
+                    {errors?.personData?.type_document && <p className="text-red-500">{errors.personData.type_document.message}</p>}
                 </div>
 
                 <div>

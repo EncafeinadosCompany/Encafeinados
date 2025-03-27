@@ -1,16 +1,11 @@
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
+import { documentTypeList } from "@/common/utils/lists/typeDocument"
 import { Select } from "@radix-ui/react-select"
-import { documentTypeMocks } from "@/api/mocks/typeDocumentMocks"
-
-
-
 
 interface selectTypeDocumentProps {
     onValueChange?: (value: string) => void | undefined
     value: string | undefined
 }
-
-
 const SelectTypeDocument = ({onValueChange, value, ...props}: selectTypeDocumentProps) => {
 
     console.log(value)
@@ -26,7 +21,7 @@ const SelectTypeDocument = ({onValueChange, value, ...props}: selectTypeDocument
         <SelectValue placeholder="Selecciona tipo" />
     </SelectTrigger>
     <SelectContent>
-        {documentTypeMocks.map((documentType) => {
+        {documentTypeList.map((documentType) => {
             return (
                 <SelectItem key={documentType.clave} value={documentType.clave.toString()}>
                     {documentType.description}

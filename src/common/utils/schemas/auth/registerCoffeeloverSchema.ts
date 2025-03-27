@@ -1,7 +1,7 @@
 import { DefaultValue } from 'recoil'
 import { z } from 'zod'
 import { loginSchema } from './loginShema'
-import { personalDataSchema } from './personalDataSchema.'
+import { personalDataSchema } from './personalDataSchema'
 
 const registerCoffeeloverSchema = z.object({
     userData: z.object({

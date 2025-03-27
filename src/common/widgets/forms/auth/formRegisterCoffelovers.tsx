@@ -6,13 +6,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/common/ui/button";
-import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
+import RegisterCoffeloverStep1 from "@/common/molecules/auth/coffelover/registerCoffeloverStep1";
 import { RegisterCoffelover, useRegisterCoffeloverMutation } from "@/api";
-import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
-import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
+import RegisterCoffeloverStep2 from "@/common/molecules/auth/coffelover/registerCoffeloverStep2";
+import RegisterCoffeloverStep3 from "@/common/molecules/auth/coffelover/registerCoffeloverStep3";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
-import { LinkReturn } from "@/common/molecules/auth/LinkReturn";
+import { LinkReturn } from "@/common/molecules/auth/linkReturn";
 import { TitleForm } from "@/common/atoms/auth/titleForm";
 import { pageVariants } from "@/common/atoms/auth/pageVariants";
 
@@ -40,8 +40,8 @@ const FormRegisterCoffeelover = () => {
         defaultValues: {
             personData: {
                 name: "Valentina",
-                lastname: "Perez",
-                type_document_id: 0,
+                lastname: "Gutierrez",
+                type_document: "",
                 number_document: "",
                 phone_number: ""
             },

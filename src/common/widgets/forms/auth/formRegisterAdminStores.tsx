@@ -5,55 +5,43 @@ import { ArrowLeft, ArrowRight } from "lucide-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { TitleForm } from "@/common/atoms/auth/titleForm"
-import { LinkReturn } from "@/common/molecules/auth/linkReturn"
 import ProgressIndicator1 from "@/common/atoms/auth/ProgressIndicator1"
+import { RegisterAdminStoreSchema } from "@/common/utils/schemas/auth/registerAdminStoreSchema"
+import RegisterAdminStoreStep1 from "@/common/molecules/auth/stores/admin/registerAdminStoreStep1"
 import RegisterAdminStoreStep2 from "@/common/molecules/auth/stores/admin/registerAdminStoreStep2"
-import RegisterStoreStep1 from "@/common/molecules/auth/stores/store/registerStoreStep1"
-
-import RegisterStoreStep2 from "@/common/molecules/auth/stores/store/registerStoreStep2"
-import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
-import ImagenB from "@/common/molecules/auth/stores/store/imagen"
-import { error } from "console"
-import errorMap from "zod/lib/locales/en"
+import { LinkReturn } from "@/common/molecules/auth/linkReturn"
 
 
-
-const FormRegisterStores = () => {
+const FormRegisterAdminStores = () => {
     const [direction, setDirection] = useState(0);
+
     const [step, setStep] = useState(0)
-    const [formData, setFormData] = useState({});
-    const methods = useForm<CurrentSchema>({
-        resolver: zodResolver(RegisterStoreSchema[step] as any),
+    const methods = useForm({
+        resolver: zodResolver(RegisterAdminStoreSchema[step] as any),
         defaultValues: {
-            email: "",
             name: "",
+            email: "",
             type_document: "",
             number_document: "",
             phone_number: "",
-            
         }
     })
 
     const onNext = () => {
         methods.trigger().then((isValid) => {
             if (isValid) {
-                console.log("paso siguiente", direction);
-                setFormData(prev => ({ ...prev, ...methods.getValues() })); // Guardar datos actuales
-                setStep(step + 1);
-                setDirection(1);
-            }
+                setStep(step + 1)
+                console.log("paso siguiente", direction)
+                setDirection(1)
+            };
         });
+
     };
 
     const onSubmit = (data: any) => {
-        const finalData = { ...formData, ...data }; // Combinar datos de todos los pasos
-        console.log("Formulario enviado:", finalData);
+        console.log("Formulario enviado:", data);
     };
 
-
-    
-
-    const errors = methods.formState.errors as Partial<CurrentSchema>;
     return (
         <div >
             <LinkReturn link="/register" >
@@ -73,7 +61,7 @@ const FormRegisterStores = () => {
                         </TitleForm>
                     </div>
                     {/* Progress indicator */}
-                    <ProgressIndicator1 step={step} totalSteps={RegisterStoreSchema.length}></ProgressIndicator1>
+                    <ProgressIndicator1 step={step} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator1>
                 </div>
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4 relative overflow-hidden">
@@ -82,46 +70,41 @@ const FormRegisterStores = () => {
                             <AnimatePresence initial={false} custom={direction} mode="wait">
 
                                 {step === 0 && (
-                                    <RegisterStoreStep1
+                                    <RegisterAdminStoreStep1
                                         direction={direction}
-                                        register={methods.register}
+                                        register={methods.register} 
                                         control={methods.control}
                                         errors={methods.formState.errors}>
-                                    </RegisterStoreStep1>
+                                    </RegisterAdminStoreStep1>
                                 )}
                                 {
                                     step === 1 && (
-                                        <RegisterStoreStep2
-                                            direction={direction}
-                                            register={methods.register}
-                                            control={methods.control}
-                                            errors={methods.formState.errors}
-                                        ></RegisterStoreStep2>
-
+                                       <RegisterAdminStoreStep2
+                                       direction={direction}
+                                       register={methods.register}
+                                       errors={methods.formState.errors}
+                                       control={methods.control}
+                                       >
+                                       </RegisterAdminStoreStep2>
                                     )
                                 }
                                 {
-                                    step === 2 && (
-                                        <>
-                                            <p>Condiciones</p>
-                                            <div>
-                                                <p>
-                                                    Política de privacidad
-                                                    <br />
-                                                    Términos y condiciones
-                                                </p>
-                                            </div>
-                                            <input type="checkbox" {...methods.register("conditions")} />
-                                            {step === 2 && "conditions" in methods.formState.errors && (
-                                                <p className=" text-red-500">{methods.formState.errors.conditions?.message}</p>
-                                            )}
-
-                                        </>
-
+                                    step === 3 && (
+                                        <div>
+                                            <label>
+                                                Nombre
+                                                <input type="text" {...methods.register("name")} />
+                                            </label>
+                                            <label>
+                                                Email
+                                                <input type="email" {...methods.register("email")} />
+                                            </label>
+                                        </div>
                                     )
                                 }
                             </AnimatePresence>
                         </div>
+
                         <div>
                             <motion.div
                                 className="pt-2 m-2 flex justify-between"
@@ -131,7 +114,7 @@ const FormRegisterStores = () => {
                             >
                                 {step > 0 ? (
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button type="button" variant="outline" onClick={() => { setStep(step - 1), setDirection(-1) }} className="border-gray-200 bg-amber-50/50">
+                                        <Button type="button" variant="outline" onClick={() => {setStep(step - 1), setDirection(-1)}} className="border-gray-200 bg-amber-50/50">
                                             <ArrowLeft className="w-4 h-4 mr-2" />
                                             Previous
                                         </Button>
@@ -139,7 +122,7 @@ const FormRegisterStores = () => {
                                 ) : (
                                     <div></div>
                                 )}
-                                {step < RegisterStoreSchema.length - 1 ? (
+                                {step < RegisterAdminStoreSchema.length - 1 ? (
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                         <Button type="button" onClick={onNext} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
                                             Siguiente
@@ -150,10 +133,8 @@ const FormRegisterStores = () => {
                                     <motion.div>
                                         <Button
                                             type="submit"
-                                            disabled={!methods.formState.isValid}
-                                            className={`rounded-lg px-6 py-2 ${!methods.formState.isValid
-                                                ? "bg-gray-400 text-gray-200 cursor-not-allowed"
-                                                : "bg-gray-900 hover:bg-gray-800 text-white"
+                                            disabled={!!methods.formState.errors.email}
+                                            className={`rounded-lg px-6 py-2 ${methods.formState.errors.email ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800 text-white"
                                                 }`}
                                         >
                                             Complete Registration
@@ -172,4 +153,4 @@ const FormRegisterStores = () => {
     )
 }
 
-export default FormRegisterStores
+export default FormRegisterAdminStores

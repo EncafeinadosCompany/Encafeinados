@@ -1,4 +1,4 @@
-import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
+import { LinkReturn } from "@/common/molecules/auth/linkReturn"
 import Formlogin from "@/common/widgets/forms/auth/formLogin"
 
 export const LoginPage = () => {
