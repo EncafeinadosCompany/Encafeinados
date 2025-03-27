@@ -2,6 +2,7 @@
 import { RegisterCoffelover, LoginResponse, User_Data } from '../types/authTypes'
 import AuthClient from '../client/axios'
 import { handleApiError } from '@/common/utils/errors/handleApiError';
+import { RegisterStoreSchemaType } from '../types/storeTypes';
 
 const authClient = new AuthClient()
 
@@ -20,6 +21,18 @@ const AuthUsers = {
   registerCoffelover: async( data: RegisterCoffelover):Promise<LoginResponse> => {
     try{
       const response = await authClient.post<LoginResponse>('/auth/register-client', data);
+      console.log('AQUI',response)
+      return response;
+      
+    }catch (error: any) {
+      throw handleApiError(error)
+    }
+  },
+
+
+  registerStores: async( data: RegisterStoreSchemaType):Promise<LoginResponse> => {
+    try{
+      const response = await authClient.post<LoginResponse>('/stores', data);
       console.log('AQUI',response)
       return response;
       

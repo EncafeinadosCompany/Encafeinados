@@ -4,6 +4,7 @@ import { useSetRecoilState } from 'recoil'
 import AuthUsers from '../queries/authQueries'
 import { useError } from '@/common/molecules/hooks/useErrors'
 import { clearAuthStorage, setAuthStorage } from '@/common/utils/authStorage'
+import { RegisterStoreSchemaType } from '../types/storeTypes'
 
 
 export const useLoginMutation = () => {
@@ -39,6 +40,28 @@ export const useRegisterCoffeloverMutation = () => {
   return useMutation<LoginResponse, Error, RegisterCoffelover>({
     mutationFn: async (formData: RegisterCoffelover): Promise<LoginResponse> => {
       const response = await AuthUsers.registerCoffelover(formData);
+      return response;
+    },
+    onSuccess: (data) => {
+
+      setAuthStorage(data.accessToken, data.user)
+
+      // Invalidar queries relacionadas
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+    onError: (error: any) => {
+      useErrors(error);
+    }
+  })
+}
+
+export const useRegisterStoreMutation = () => {
+  const queryClient = useQueryClient()
+  const useErrors = useError("registeCoffelover")
+
+  return useMutation<LoginResponse, Error, RegisterStoreSchemaType>({
+    mutationFn: async (formData: RegisterStoreSchemaType): Promise<LoginResponse> => {
+      const response = await AuthUsers.registerStores(formData);
       return response;
     },
     onSuccess: (data) => {

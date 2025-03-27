@@ -1,5 +1,4 @@
 import { ROLES } from '@/common/utils/lists/roles';
-import { useRecoilState, useRecoilValue } from 'recoil';
 
 export const useAuth = () => {
 
@@ -9,19 +8,13 @@ export const useAuth = () => {
       console.log("coffeelover");
       return navigate("/coffeelover");
     } else if (rol === ROLES.STORE) {
-      return navigate("/store");
+      return navigate("/");
     } else {
       navigate("/"); 
     }
   }
 
   return {
-    // user: auth.user,
-    // isAuthenticated: auth.isAuthenticated,
-    // token: auth.token,
-    // login,
-    // logout,
-    // updateUser,
     pagesPermissions
   };
 };

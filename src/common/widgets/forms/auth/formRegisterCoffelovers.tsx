@@ -1,8 +1,8 @@
 import { useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import registerCoffeeloverSchema from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
-import ProgressIndicator from "@/common/atoms/auth/progressIndicator";
-import { useState } from "react";
+
+import { use, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/common/ui/button";
@@ -15,6 +15,9 @@ import toast from "react-hot-toast";
 import { LinkReturn } from "@/common/molecules/auth/linkReturn";
 import { TitleForm } from "@/common/atoms/auth/titleForm";
 import { pageVariants } from "@/common/atoms/auth/pageVariants";
+import { ButtonGoogle } from "@/common/atoms/button-google";
+import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
+import { signInWithGoogle } from "@/api/firebase";
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(1);
@@ -22,6 +25,7 @@ const FormRegisterCoffeelover = () => {
     const [showInfo, setShowInfo] = useState(false)
     const [passwordsMatch, setPasswordsMatch] = useState(true)
     const navegate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false)  
     const totalSteps = 3
 
 
@@ -96,7 +100,7 @@ const FormRegisterCoffeelover = () => {
         const dataCoffeelover: RegisterCoffelover = {
             personData: {
                 full_name: `${data.personData.name} ${data.personData.lastname}`,
-                type_document_id: Number(data.personData.type_document_id),
+                type_document: Number(data.personData.type_document_id),
                 number_document: (data.personData.number_document),
                 phone_number: data.personData.phone_number,
             },
@@ -117,6 +121,49 @@ const FormRegisterCoffeelover = () => {
             console.log(error);
         }
     };
+
+
+    const handleGoogleSignIn = async() => {
+        
+          try {
+            setIsLoading(true)
+            const user = await signInWithGoogle().then((userCredential) => {
+                // Signed in
+                const user = userCredential.providerData;
+                const userData: RegisterCoffelover = {
+                    userData:{
+                        id_google: user[0].uid,
+                        email: user[0].email||"",
+                        password: "",
+                        role_id: 3
+                    },
+                    personData:{
+                        full_name: user[0].displayName||"",
+                        type_document: 1,
+                        number_document: user[0].uid,
+                        phone_number: user[0].uid
+                    }
+                }
+               
+
+                useRegisterCoffeelover.mutateAsync(userData).then((response) => {
+                    toast.success("Coffelover creado exitosamente.¡Bienvenido!");      
+                }).catch((error) => {
+                    setIsLoading(false)
+                    // toast.error("Error al crear el coffelover");
+                })
+                console.log("Usuario creado:", userData);
+                console.log("Usuario logueado:", user);
+                return user
+            });
+          } catch (error) {
+            console.error("Error en el login:", error);
+       
+        setTimeout(() => {
+          setIsLoading(false)
+        }, 1000)
+      }
+    }
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-orange-50 to-orange-200" translate="no">
@@ -159,6 +206,8 @@ const FormRegisterCoffeelover = () => {
                                     style={{ perspective: "1000px" }}
                                 >
                                     <RegisterCoffeloverStep1
+                                        onGoogleSignIn={handleGoogleSignIn}
+                                        isLoading={isLoading}
                                         register={register as UseFormRegister<any>}
                                         errors={errors}
                                     />
@@ -224,10 +273,12 @@ const FormRegisterCoffeelover = () => {
                             <div></div>
                         )}
 
+                      
+
                         {step <= totalSteps ? (
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                 <Button type="button" onClick={nextStepValidated} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
-                                    Siguiente
+                                    {isLoading ? "Cargando..." : "Siguiente"}
                                     <ArrowRight className="w-4 h-4 ml-2" />
                                 </Button>
                             </motion.div>

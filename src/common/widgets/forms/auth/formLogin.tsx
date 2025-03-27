@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/common/molecules/hooks/useAuth";
 import { LinkReturn } from "@/common/molecules/auth/linkReturn";
+import { signInWithGoogle } from "@/api/firebase";
 
 const Formlogin = () => {
   
@@ -33,7 +34,7 @@ const Formlogin = () => {
       toast.success("Inicio de sesión exitoso");
 
       if (response?.user) {
-        const roleId = response.user.role.name;
+        const roleId = response.user.role;
         pagesPermissions(roleId, navigate);
       }
 
@@ -43,23 +44,20 @@ const Formlogin = () => {
     }
 }
     
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async() => {
         setIsLoading(true)
     
-        // Here you would implement Google sign-in
-        // For example, with Supabase:
-        // const { data, error } = await supabase.auth.signInWithOAuth({
-        //   provider: 'google',
-        //   options: {
-        //     redirectTo: `${window.location.origin}/auth/callback`,
-        //   },
-        //  })
-        
-        // Simulate authentication delay
+          try {
+            const user = await signInWithGoogle();
+            console.log("Usuario logueado:", user);
+          } catch (error) {
+            console.error("Error en el login:", error);
+       
         setTimeout(() => {
           setIsLoading(false)
         }, 1000)
       }
+    }
 
 
 

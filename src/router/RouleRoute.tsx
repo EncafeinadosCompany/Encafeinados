@@ -10,7 +10,7 @@ const RoleRoute = ({allowedRoles}: RouteProps) => {
     const user = JSON.parse(localStorage.getItem('user') || '{}')
     console.log(user)
     if(!token) return <Navigate to="/login" replace />
-    if(!allowedRoles.includes(user.role.name)) return <Navigate to="/unauthorized" replace />
+    if(!allowedRoles.includes(user.role)) return <Navigate to="/unauthorized" replace />
 
     return <Outlet/> 
 }

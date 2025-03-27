@@ -81,7 +81,7 @@ export const LoginCard = (
                 Continua con Google
               </ButtonGoogle>
               <div className="text-center text-sm text-amber-800">
-                ¿Ya tienes una cuenta?{" "}
+                ¿No tienes una cuenta?{" "}
                 <Link to="/register" className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700">
                   Registrate
                 </Link>

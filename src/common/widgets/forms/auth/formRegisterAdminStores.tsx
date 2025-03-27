@@ -5,11 +5,12 @@ import { ArrowLeft, ArrowRight } from "lucide-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { TitleForm } from "@/common/atoms/auth/titleForm"
-import ProgressIndicator1 from "@/common/atoms/auth/progressIndicator1"
+
 import { RegisterAdminStoreSchema } from "@/common/utils/schemas/auth/registerAdminStoreSchema"
 import RegisterAdminStoreStep1 from "@/common/molecules/auth/stores/admin/registerAdminStoreStep1"
 import RegisterAdminStoreStep2 from "@/common/molecules/auth/stores/admin/registerAdminStoreStep2"
 import { LinkReturn } from "@/common/molecules/auth/linkReturn"
+import ProgressIndicator1 from "@/common/atoms/auth/ProgressIndicator1"
 
 
 const FormRegisterAdminStores = () => {

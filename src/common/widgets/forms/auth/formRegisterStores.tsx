@@ -6,7 +6,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { TitleForm } from "@/common/atoms/auth/titleForm"
 import { LinkReturn } from "@/common/molecules/auth/linkReturn"
-import ProgressIndicator1 from "@/common/atoms/auth/progressIndicator1"
+
 import RegisterAdminStoreStep2 from "@/common/molecules/auth/stores/admin/registerAdminStoreStep2"
 import RegisterStoreStep1 from "@/common/molecules/auth/stores/store/registerStoreStep1"
 
@@ -15,6 +15,12 @@ import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/
 import ImagenB from "@/common/molecules/auth/stores/store/imagen"
 import { error } from "console"
 import errorMap from "zod/lib/locales/en"
+import { useRegisterStoreMutation } from "@/api"
+import { RegisterStoreSchemaType } from "@/api/types/storeTypes"
+import ProgressIndicator1 from "@/common/atoms/auth/ProgressIndicator1"
+import { useAuth } from "@/common/molecules/hooks/useAuth"
+import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 
 
@@ -22,6 +28,9 @@ const FormRegisterStores = () => {
     const [direction, setDirection] = useState(0);
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
+    const useRegiterStore = useRegisterStoreMutation();
+    const {pagesPermissions} = useAuth();
+    const navigate = useNavigate();
     const methods = useForm<CurrentSchema>({
         resolver: zodResolver(RegisterStoreSchema[step] as any),
         defaultValues: {
@@ -48,6 +57,36 @@ const FormRegisterStores = () => {
     const onSubmit = (data: any) => {
         const finalData = { ...formData, ...data }; // Combinar datos de todos los pasos
         console.log("Formulario enviado:", finalData);
+
+        try{
+            const data: RegisterStoreSchemaType = {
+                email: finalData.email,
+                name: finalData.name,
+                type_document: finalData.type_document,
+                number_document: finalData.number_document,
+                phone_number: finalData.phone_number,
+                logo: 'https://th.bing.com/th/id/R.ent%d=ImgRaw&r=0',
+                role_id:2
+            }
+
+            const response = useRegiterStore.mutateAsync(data).then((response) => {
+                toast.success("Registro exitoso, por favor revisa tu correo eléctronico");
+
+                navigate("/");
+
+                // if (response?.user) {
+                //     const roleId = response.user.role;
+                //     pagesPermissions(roleId, navigate);
+                // }
+            })
+
+            .catch((error) => {
+                console.log("error", error);
+            })
+        }catch(error){
+            console.log("error", error);
+
+        }
     };
 
 

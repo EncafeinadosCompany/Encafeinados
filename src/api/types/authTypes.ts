@@ -3,19 +3,16 @@ export interface User {
     password: string,
 }
 
-
- export interface LoginResponse {
+export interface LoginResponse {
     accessToken: string;
     user: {
       email: string;
-      role: {
-        id: number;
-        name: string;
-      };
+      role: string;
     };
   }
   
 export interface User_Data {
+  id_google?: string,
   email: string,
   password: string,
   role_id: number
@@ -23,7 +20,7 @@ export interface User_Data {
 
 interface PersonData {
   full_name: string,
-  type_document_id: number,
+  type_document: number,
   number_document:string,
   phone_number: string
 }
