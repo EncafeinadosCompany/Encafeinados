@@ -21,11 +21,14 @@ import { calculateDistance } from '@/common/utils/map/mapUtils';
 import { useFavorites } from '@/common/hooks/map/useFavorites';
 import { useGeolocation } from '@/common/hooks/map/useGeolocation';
 import { useMapData } from '@/common/hooks/map/useMapData';
+import { useSearchFilter } from '@/common/hooks/map/useSearchFilter';
 
 // Components
 import UserLocationMarker from '@/common/atoms/map/UserLocationMarker';
 import MapFocus from '@/common/molecules/map/MapFocus';
 import RouteLine from '@/common/molecules/map/RouteLine';
+import FilterModal from '@/common/molecules/map/filterModal';
+import HighlightText from '@/common/atoms/common/HighlightText';
 
 // Animations
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
@@ -45,8 +48,9 @@ export const MapView: React.FC = () => {
   const [searchFocused, setSearchFocused] = useState<boolean>(false);
   const [showDirections, setShowDirections] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
-  const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedStore, setSelectedStore] = useState<number | undefined>(undefined);
+  // Declaramos searchTerm aquí para que esté disponible antes de pasarlo a useMapData
+  const [searchTerm, setSearchTermLocal] = useState<string>('');
 
   // Custom hooks
   const { favorites, toggleFavorite } = useFavorites();
@@ -73,7 +77,7 @@ export const MapView: React.FC = () => {
     cafes,
     cafePositions,
     filteredCafes,
-    sortedCafes,
+    sortedCafes: mapDataSortedCafes, // Renombramos para evitar conflicto
     activeCafeData,
     availableStores,
     customIcon
@@ -82,10 +86,40 @@ export const MapView: React.FC = () => {
     filteredBranchesData,
     userLocation,
     activeCafe,
-    searchTerm,
     storesData
   );
 
+  // ==============================
+  // SEARCH AND FILTER
+  // ==============================
+ 
+  const availableTags = useMemo(() => {
+    const allTags = cafes.flatMap(cafe => cafe.tags);
+    return [...new Set(allTags)];
+  }, [cafes]);
+  
+  // Usar nuestro nuevo hook para búsqueda y filtrado
+  const {
+    searchTerm: filterSearchTerm,
+    setSearchTerm: setFilterSearchTerm,
+    filterOptions,
+    updateFilterOptions,
+    resetFilters,
+    sortedCafes,
+    isFilterModalOpen,
+    toggleFilterModal
+  } = useSearchFilter(cafes);
+
+  // Sincronizar los dos estados de búsqueda
+  useEffect(() => {
+    setFilterSearchTerm(searchTerm);
+  }, [searchTerm, setFilterSearchTerm]);
+
+  // Función para actualizar la búsqueda en ambos lugares
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchTermLocal(value);
+    setFilterSearchTerm(value);
+  }, [setFilterSearchTerm]);
 
   // ==============================
   // CALLBACKS
@@ -168,7 +202,9 @@ export const MapView: React.FC = () => {
 
       <div className="p-4 bg-white">
         <div className="flex justify-between items-start">
-          <h3 className="font-bold text-lg text-[#2C1810] line-clamp-1">{cafe.name}</h3>
+          <h3 className="font-bold text-lg text-[#2C1810] line-clamp-1">
+            <HighlightText text={cafe.name} highlight={searchTerm} />
+          </h3>
           <div className="flex items-center gap-1 text-amber-500">
             <Star size={16} className="fill-amber-500" />
             <span className="font-medium">{cafe.rating}</span>
@@ -215,8 +251,8 @@ export const MapView: React.FC = () => {
    * Renders the cafe detail popup/sheet
    */
   const renderCafeDetail = (cafe: Cafe) => (
-    <div key={cafe.id} className="relative">
-      <div className="relative h-48 w-full">
+    <div key={cafe.id} className="relative md:flex md:flex-col md:max-h-[80vh] overflow-auto">
+      <div className="relative h-48 md:h-64 w-full">
         <img
           src={cafe.image}
           alt={cafe.name}
@@ -226,13 +262,13 @@ export const MapView: React.FC = () => {
 
         <button
           onClick={() => setActiveCafe(null)}
-          className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md"
+          className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors"
         >
           <ArrowLeft size={20} className="text-[#6F4E37] transform rotate-45" />
         </button>
 
         <div className="absolute bottom-0 left-0 p-4 w-full">
-          <h3 className="font-bold text-2xl text-white">{cafe.name}</h3>
+          <h3 className="font-bold text-2xl md:text-3xl text-white">{cafe.name}</h3>
           <div className="flex items-center justify-between mt-1">
             <div className="flex items-center gap-1 text-amber-400">
               <Star size={18} className="fill-amber-400" />
@@ -257,30 +293,47 @@ export const MapView: React.FC = () => {
         </div>
       </div>
 
-      <div className="p-4">
-        <div className="flex justify-between items-center py-3 border-b border-gray-100">
-          <div className="flex items-center gap-2 text-[#6F4E37]">
-            <Clock size={18} />
-            <span className="font-medium">{cafe.openTime}</span>
-            <span className="text-xs py-0.5 px-2 bg-green-50 text-green-600 rounded-full font-medium">
+      <div className="p-4 md:p-6">
+        {/* Información de la tienda */}
+        <div className="md:mb-3 text-[#6F4E37]/80 text-sm md:text-base">
+          <span className="font-medium">{cafe.storeName}</span>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-4 mb-4">
+          <div className="flex justify-between items-center py-3 border-b border-gray-100">
+            <div className="flex items-center gap-2 text-[#6F4E37]">
+              <Clock size={18} />
+              <span className="font-medium">{cafe.openTime}</span>
+            </div>
+            <span className={`text-xs py-0.5 px-2 rounded-full font-medium ${
+              cafe.isOpen 
+                ? 'bg-green-50 text-green-600' 
+                : 'bg-red-50 text-red-600'
+            }`}>
               {cafe.isOpen ? 'Abierto ahora' : 'Cerrado'}
             </span>
           </div>
+
+          <div className="flex justify-between items-center py-3 border-b border-gray-100">
+            <div className="flex items-center gap-2 text-[#6F4E37]">
+              <MapPin size={18} />
+              <span className="font-medium">{cafe.distance} de distancia</span>
+            </div>
+            <motion.button
+              className="text-[#6F4E37] bg-[#FAF3E0] p-2 rounded-lg hover:bg-[#FAF3E0]/70 transition-colors"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigateToCafe(cafe.id)}
+            >
+              <Navigation size={18} />
+            </motion.button>
+          </div>
         </div>
 
-        <div className="flex justify-between items-center py-3 border-b border-gray-100">
-          <div className="flex items-center gap-2 text-[#6F4E37]">
-            <MapPin size={18} />
-            <span className="font-medium">{cafe.distance} de distancia</span>
-          </div>
-          <motion.button
-            className="text-[#6F4E37] bg-[#FAF3E0] p-2 rounded-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => navigateToCafe(cafe.id)}
-          >
-            <Navigation size={18} />
-          </motion.button>
+        {/* Dirección completa - solo visible en desktop */}
+        <div className="hidden md:block mb-5 bg-gray-50 p-3 rounded-lg">
+          <h4 className="font-medium text-[#2C1810] mb-1">Dirección</h4>
+          <p className="text-gray-700">{cafe.address}</p>
         </div>
 
         <div className="py-3">
@@ -300,7 +353,13 @@ export const MapView: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex gap-3 py-4">
+        {/* Información de contacto - visible en desktop */}
+        <div className="hidden md:block py-3 border-t border-gray-100">
+          <h4 className="font-medium text-[#2C1810] mb-2">Contacto</h4>
+          <p className="text-[#6F4E37]">{cafe.phone}</p>
+        </div>
+
+        <div className="flex gap-3 py-4 md:py-5 md:mt-2">
           <motion.button
             className="flex-1 bg-[#6F4E37] text-white py-3 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-2"
             whileHover={{ scale: 1.02 }}
@@ -423,15 +482,18 @@ export const MapView: React.FC = () => {
           >
             <input
               type="text"
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Buscar cafeterías..."
               className="w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none focus:ring-2 focus:ring-[#D4A76A] transition-all duration-300 bg-white border-black/10"
               onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
+              onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
             <motion.button
               className="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[#6F4E37] text-white p-1.5 rounded-full hover:bg-[#5d4230] transition-colors duration-300"
               whileTap={{ scale: 0.9 }}
+              onClick={toggleFilterModal}
             >
               <Filter size={16} />
             </motion.button>
@@ -500,18 +562,7 @@ export const MapView: React.FC = () => {
                 },
               }}
             >
-              <Popup className="cafe-popup">
-                <div className="p-1">
-                  <p className="font-bold text-[#2C1810]">{cafes.find(cafe => cafe.id === position.id)?.name}</p>
-                  <p className="text-sm text-gray-600">{cafes.find(cafe => cafe.id === position.id)?.distance}</p>
-                  <button
-                    className="mt-2 w-full bg-[#6F4E37] text-white text-sm py-1 rounded"
-                    onClick={() => navigateToCafe(position.id)}
-                  >
-                    Cómo llegar
-                  </button>
-                </div>
-              </Popup>
+             
             </Marker>
           ))}
 
@@ -596,6 +647,11 @@ export const MapView: React.FC = () => {
                   <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
                     <Coffee size={20} className="text-[#6F4E37]" />
                     <span>Cafeterías cercanas</span>
+                    {sortedCafes.length > 0 && (
+                      <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
+                        {sortedCafes.length}
+                      </span>
+                    )}
                   </h2>
                   <button
                     onClick={() => setShowSidebar(false)}
@@ -606,14 +662,37 @@ export const MapView: React.FC = () => {
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 pb-32">
-                  <motion.div className="space-y-4">
-                    {sortedCafes.map((cafe, index) => renderCafeCard(cafe, index))}
-                  </motion.div>
+                  {sortedCafes.length > 0 ? (
+                    <motion.div className="space-y-4">
+                      {sortedCafes.map((cafe, index) => renderCafeCard(cafe, index))}
+                    </motion.div>
+                  ) : (
+                    <div className="mt-8 text-center">
+                      <Coffee size={48} className="mx-auto text-gray-300" />
+                      <p className="mt-4 text-gray-500">No se encontraron cafeterías con los filtros actuales</p>
+                      <button 
+                        className="mt-2 text-[#6F4E37] underline"
+                        onClick={resetFilters}
+                      >
+                        Limpiar filtros
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
           )}
       </AnimatePresence>
+
+      {/* Filter Modal */}
+      <FilterModal 
+        isOpen={isFilterModalOpen}
+        onClose={toggleFilterModal}
+        filterOptions={filterOptions}
+        updateFilterOptions={updateFilterOptions}
+        resetFilters={resetFilters}
+        availableTags={availableTags}
+      />
 
       {/* Toggle sidebar button (mobile) */}
       {!showSidebar && (
@@ -634,7 +713,7 @@ export const MapView: React.FC = () => {
       <AnimatePresence>
         {activeCafe && (
           <motion.div
-            className="absolute md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 left-0 right-0 bottom-0 md:w-96 md:h-auto bg-white md:rounded-2xl shadow-2xl z-40 overflow-hidden"
+            className="absolute left-0 right-0 bottom-0 md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[500px] md:h-auto md:max-h-[80vh] lg:w-[650px] xl:w-[700px] bg-white md:rounded-2xl shadow-2xl z-40 overflow-hidden"
             initial={{ y: "100%", opacity: 0, scale: 0.9 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: "100%", opacity: 0, scale: 0.9 }}

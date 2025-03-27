@@ -13,7 +13,6 @@ export const useMapData = (
   filteredBranchesData: BranchesResponse | undefined,
   userLocation: LatLngTuple | null,
   activeCafe: number | null,
-  searchTerm: string,
   storesData: StoresResponse | undefined
 ) => {
   // Centro predeterminado del mapa (Medellín)
@@ -40,7 +39,7 @@ export const useMapData = (
         name: branch.name,
         rating: parseFloat(branch.average_rating) || 4.5, // Convertir string a número
         reviewCount: Math.floor(Math.random() * 100) + 50, // Recuento de reseñas aleatorio (50-150)
-        openTime: "7:00 AM - 8:00 PM", // Horario de apertura predeterminado
+        openTime: "7:00 AM - 6:00 PM", // Horario de apertura predeterminado
         image: storeLogo,
         tags: ["Coffee", "Specialty"], // Etiquetas predeterminadas
         latitude: branch.latitude,
@@ -83,22 +82,11 @@ export const useMapData = (
     })), 
   [cafes]);
 
-  // Filtrar cafés por término de búsqueda
-  const filteredCafes = useMemo(() => {
-    if (!searchTerm) return cafes;
-    
-    const lowerSearch = searchTerm.toLowerCase();
-    return cafes.filter(cafe => 
-      cafe.name.toLowerCase().includes(lowerSearch) || 
-      cafe.address.toLowerCase().includes(lowerSearch) ||
-      cafe.storeName.toLowerCase().includes(lowerSearch)
-    );
-  }, [cafes, searchTerm]);
+  // Ya no necesitamos filtrar por searchTerm aquí
+  const filteredCafes = cafes;
   
   // Ordenar cafés por distancia
-  const sortedCafes = useMemo(() => 
-    [...filteredCafes].sort((a, b) => a.distanceValue - b.distanceValue), 
-  [filteredCafes]);
+  const sortedCafes = useMemo(() => cafes, [cafes]);
   
   // Obtener datos para el café actualmente activo
   const activeCafeData = useMemo(() => 
