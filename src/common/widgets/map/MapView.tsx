@@ -24,11 +24,11 @@ import { useMapData } from '@/common/hooks/map/useMapData';
 import { useSearchFilter } from '@/common/hooks/map/useSearchFilter';
 
 // Components
-import UserLocationMarker from '@/common/atoms/map/UserLocationMarker';
+import UserLocationMarker from '@/common/atoms/map/userLocationMarker';
 import MapFocus from '@/common/molecules/map/MapFocus';
 import RouteLine from '@/common/molecules/map/RouteLine';
 import FilterModal from '@/common/molecules/map/filterModal';
-import HighlightText from '@/common/atoms/common/HighlightText';
+import HighlightText from '@/common/atoms/common/highlightText';
 
 // Animations
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';

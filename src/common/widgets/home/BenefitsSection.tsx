@@ -26,40 +26,41 @@ export const BenefitsSection = () => {
   const benefits = [
     {
       title: 'Descubre Cafeterías',
-      description: 'Encuentra las mejores cafeterías de la ciudad con opiniones y experiencias reales',
+      description: 'Encuentra las mejores cafeterías de especialidad de la ciudad, con opiniones y experiencias reales.',
       icon: <Coffee className="h-8 w-8" />,
       imageSrc: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&h=500&fit=crop'
     },
     {
+      title: 'Talleres y catas guiadas por expertos',
+      description: 'Aprende de baristas y expertos en café con talleres interactivos, donde descubrirás métodos de filtrado, notas de sabor y la ciencia detrás de cada taza.',
+      icon: <Coffee className="h-8 w-8" />,
+      imageSrc: 'https://images.unsplash.com/photo-1517231925375-bf2cb42917a5?w=500&h=500&fit=crop'
+    },
+    {
       title: 'Ubicación Precisa',
-      description: 'Navega fácilmente hasta la cafetería de tu elección con direcciones precisas',
+      description: 'Navega fácilmente en el mapa hasta la cafetería de tu elección con direcciones precisas.',
       icon: <MapPin className="h-8 w-8" />,
       imageSrc: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=500&h=500&fit=crop'
     },
     {
-      title: 'Ahorra Tiempo',
-      description: 'Haz pedidos anticipados para recoger al instante y evitar largas esperas',
+      title: 'Pasaporte cafetero',
+      description: 'Descubre, prueba y colecciona. Explora las mejores cafeterías de especialidad y recibe sellos digitales por cada visita desbloqueando recompensas.',
       icon: <Clock className="h-8 w-8" />,
       imageSrc: 'https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?w=500&h=500&fit=crop'
     },
     {
-      title: 'Acumula Puntos',
-      description: 'Sistema de lealtad que premia cada visita con beneficios exclusivos',
+      title: 'Acceso a cafés exclusivos',
+      description: 'Accede a cafés únicos y de edición limitada, con la posibilidad de recibir recomendaciones personalizadas según tu perfil de sabor.',
       icon: <Star className="h-8 w-8" />,
       imageSrc: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&h=500&fit=crop'
     },
     {
-      title: 'Promociones Exclusivas',
-      description: 'Accede a ofertas especiales y descuentos disponibles solo para usuarios',
+      title: 'Promociones',
+      description: 'Accede a ofertas especiales, disfruta de descuentos y promociones solo para miembros de la plataforma.',
       icon: <Gift className="h-8 w-8" />,
       imageSrc: 'https://images.unsplash.com/photo-1512034400317-de97d7d6c3ed?w=500&h=500&fit=crop'
     },
-    {
-      title: 'Comunidad Cafetera',
-      description: 'Conecta con otros amantes del café y comparte tus descubrimientos favoritos',
-      icon: <Coffee className="h-8 w-8" />,
-      imageSrc: 'https://images.unsplash.com/photo-1517231925375-bf2cb42917a5?w=500&h=500&fit=crop'
-    }
+    
   ];
 
   // Variantes para animación 

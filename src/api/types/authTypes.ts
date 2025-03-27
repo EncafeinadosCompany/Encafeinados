@@ -7,9 +7,11 @@ export interface User {
  export interface LoginResponse {
     accessToken: string;
     user: {
-      id: number;
-      role_id: number;
       email: string;
+      role: {
+        id: number;
+        name: string;
+      };
     };
   }
   

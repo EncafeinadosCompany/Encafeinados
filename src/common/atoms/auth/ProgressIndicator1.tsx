@@ -20,7 +20,8 @@ const ProgressIndicator1 = ({step, totalSteps}:ProgressIndicatorProps) => {
                       : "border-2 border-gray-900 text-gray-900"
                 }`}
               >
-                {step >= index + 1 ? <Check className="w-4 h-4" /> : index + 1}
+              
+              {step >= index + 1 ? <Check className="w-4 h-4" /> : index + 1}
               </div>
               {index < totalSteps - 1 && (
                 <div className={`flex-1 h-0.5 ${step > index + 1 ? "bg-amber-600 text-white" : "bg-gray-500"}`} />

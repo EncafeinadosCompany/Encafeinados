@@ -2,7 +2,7 @@ import { all } from "cypress/types/bluebird";
 import { Navigate , Outlet } from "react-router-dom";
 
 type RouteProps = {
-    allowedRoles: number[]
+    allowedRoles: string[]
 }
 
 const RoleRoute = ({allowedRoles}: RouteProps) => {
@@ -10,7 +10,7 @@ const RoleRoute = ({allowedRoles}: RouteProps) => {
     const user = JSON.parse(localStorage.getItem('user') || '{}')
     console.log(user)
     if(!token) return <Navigate to="/login" replace />
-    if(!allowedRoles.includes(user.role_id)) return <Navigate to="/unauthorized" replace />
+    if(!allowedRoles.includes(user.role.name)) return <Navigate to="/unauthorized" replace />
 
     return <Outlet/> 
 }

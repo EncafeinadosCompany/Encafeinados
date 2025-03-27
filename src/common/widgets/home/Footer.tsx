@@ -2,16 +2,13 @@ import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { NewsletterForm } from '@/common/molecules/home/NewsletterForm';
-import { SocialIcon } from '@/common/atoms/SocialIcon';
+import { SocialIcon } from '@/common/atoms/socialIcon';
 import { 
-  Instagram, 
-  Facebook, 
-  Twitter, 
-  Linkedin, 
+  Instagram,  
   ArrowUp,
   Coffee,
   MapPin,
-  Phone,
+  Music2,
   Mail
 } from 'lucide-react';
 
@@ -107,24 +104,14 @@ export const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <SocialIcon 
-                icon={<Instagram size={20} />} 
-                href="https://instagram.com" 
-                label="Instagram"
+              icon={<Instagram size={20} />} 
+              href="https://www.instagram.com/encafeinados_tienda/" 
+              label="Instagram"
               />
               <SocialIcon 
-                icon={<Facebook size={20} />} 
-                href="https://facebook.com" 
-                label="Facebook" 
-              />
-              <SocialIcon 
-                icon={<Twitter size={20} />} 
-                href="https://twitter.com" 
-                label="Twitter" 
-              />
-              <SocialIcon 
-                icon={<Linkedin size={20} />} 
-                href="https://linkedin.com" 
-                label="LinkedIn" 
+              icon={<Music2 size={20}/>} 
+              href="https://www.tiktok.com/@encafeinados.comp" 
+              label="TikTok"
               />
             </div>
           </motion.div>
@@ -164,13 +151,13 @@ export const Footer = () => {
                 <MapPin size={18} className="text-[#D4A76A] mr-2 mt-0.5" />
                 <span className="text-white/70">Calle 10 #43-12, Medellín, Colombia</span>
               </li>
-              <li className="flex items-center">
+              {/* <li className="flex items-center">
                 <Phone size={18} className="text-[#D4A76A] mr-2" />
                 <span className="text-white/70">+57 (604) 123-4567</span>
-              </li>
+              </li> */}
               <li className="flex items-center">
                 <Mail size={18} className="text-[#D4A76A] mr-2" />
-                <span className="text-white/70">info@encafeinados.com</span>
+                <span className="text-white/70">encafeinadoscompany@gmail.com</span>
               </li>
             </ul>
           </motion.div>
@@ -195,6 +182,7 @@ export const Footer = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center text-white/60 text-sm">
           <motion.p variants={itemVariants}>
             © {new Date().getFullYear()} Encafeinados. Todos los derechos reservados.
+            
           </motion.p>
           
           <motion.div 
@@ -229,6 +217,7 @@ export const Footer = () => {
           ></path>
         </svg>
       </div>
+      
     </footer>
   );
 };
