@@ -1,8 +1,8 @@
 import { HeroSection } from '@/common/widgets/home/HeroSection';
 import { StoreCarousel } from '@/common/widgets/home/StoreCarousel';
-// import { TeamSection } from '@/common/widgets/TeamSection';
+import { TeamSection } from '@/common/widgets/home/TeamSection';
 import { BenefitsSection } from '@/common/widgets/home/BenefitsSection';
-import { AboutSection } from '@/common/widgets/home/AboutSection';
+
 import { Footer } from '@/common/widgets/home/Footer';
 import { MapTeaser } from '@/common/molecules/home/MapTeaser';
 
@@ -16,7 +16,7 @@ const HomePage = () => {
         
         <StoreCarousel />
         <BenefitsSection />
-        {/* <TeamSection /> */}
+        <TeamSection />
         {/* <AboutSection /> */}
         <Footer />
         
