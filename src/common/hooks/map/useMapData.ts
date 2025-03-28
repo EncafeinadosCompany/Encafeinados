@@ -30,7 +30,7 @@ export const useMapData = (
       if (!branch.latitude || !branch.longitude) return null;
       
       // Buscar el logo de la tienda correspondiente
-      const storeLogo = storesData?.stores?.store?.find(
+      const storeLogo = storesData?.stores?.stores?.find(
         store => store.name === branch.store_name
       )?.logo || "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
       
@@ -95,9 +95,9 @@ export const useMapData = (
   
   // Extraer tiendas disponibles para el filtro
   const availableStores = useMemo(() => {
-    if (!storesData?.stores?.store) return [];
+    if (!storesData?.stores?.stores) return [];
     
-    return storesData.stores.store.map((store: Store) => ({
+    return storesData.stores.stores.map((store: Store) => ({
       id: store.id,
       name: store.name
     }));

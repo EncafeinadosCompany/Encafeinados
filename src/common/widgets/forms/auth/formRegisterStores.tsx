@@ -7,18 +7,17 @@ import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 
 import { TitleForm } from "@/common/atoms/auth/titleForm"
-import { LinkReturn } from "@/common/molecules/auth/linkReturn"
+
 
 import RegisterStoreStep1 from "@/common/molecules/auth/stores/store/registerStoreStep1"
 import RegisterStoreStep2 from "@/common/molecules/auth/stores/store/registerStoreStep2"
 
 import ProgressIndicator1 from "@/common/atoms/auth/ProgressIndicator1"
-
-import { useAuth } from "@/common/molecules/hooks/useAuth"
 import { useNavigate } from "react-router-dom"
 import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
 import { useRegisterStoreMutation } from "@/api"
 import { RegisterStoreSchemaType } from "@/api/types/storeTypes"
+import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
 
 const FormRegisterStores = () => {
     const [direction, setDirection] = useState(0);

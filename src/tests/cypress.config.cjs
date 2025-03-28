@@ -1,10 +1,10 @@
-const { defineConfig } = require('cypress');
-const browserify = require('@cypress/browserify-preprocessor');
+const  { defineConfig } = require ('cypress');
 
-module.exports = defineConfig({
+module.exports =  defineConfig({
   e2e: {
-    setupNodeEvents(on, config) {
-      on('file:preprocessor', browserify());
+    baseUrl:"http://localhost:5173",
+    setupNodeEvents(_on,_config) {
+      // implement node event listeners here
     },
   },
 });

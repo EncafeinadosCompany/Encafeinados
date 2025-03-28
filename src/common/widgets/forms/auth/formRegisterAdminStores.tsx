@@ -11,7 +11,8 @@ import RegisterAdminStoreStep1 from "@/common/molecules/auth/stores/admin/regist
 import RegisterAdminStoreStep2 from "@/common/molecules/auth/stores/admin/registerAdminStoreStep2"
 
 import ProgressIndicator1 from "@/common/atoms/auth/ProgressIndicator1"
-import { LinkReturn } from "@/common/molecules/auth/linkReturn"
+import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
+
 
 
 const FormRegisterAdminStores = () => {

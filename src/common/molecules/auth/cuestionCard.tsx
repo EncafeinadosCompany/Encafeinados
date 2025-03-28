@@ -2,9 +2,7 @@ import { Coffee, Store } from "lucide-react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import CardRegister from "@/common/atoms/auth/cardRegister"
-import { LinkReturn } from "@/common/molecules/auth/linkReturn"
-
-
+import { LinkReturn } from "./LinkReturn"
 
 
 export default function CuestionCard() {

@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { RegisterCoffelover, LoginResponse, User_Data } from '../types/authTypes'
-import { useSetRecoilState } from 'recoil'
 import AuthUsers from '../queries/authQueries'
 import { useError } from '@/common/molecules/hooks/useErrors'
 import { clearAuthStorage, setAuthStorage } from '@/common/utils/authStorage'
