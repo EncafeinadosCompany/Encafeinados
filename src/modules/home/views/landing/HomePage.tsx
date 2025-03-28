@@ -1,6 +1,6 @@
 import { HeroSection } from '@/common/widgets/home/HeroSection';
 import { StoreCarousel } from '@/common/widgets/home/StoreCarousel';
-import { TeamSection } from '@/common/widgets/home/TeamSection';
+// import { TeamSection } from '@/common/widgets/home/TeamSection';
 import { BenefitsSection } from '@/common/widgets/home/BenefitsSection';
 
 import { Footer } from '@/common/widgets/home/Footer';
@@ -16,7 +16,7 @@ const HomePage = () => {
         
         <StoreCarousel />
         <BenefitsSection />
-        <TeamSection />
+        {/* <TeamSection /> */}
         {/* <AboutSection /> */}
         <Footer />
         
