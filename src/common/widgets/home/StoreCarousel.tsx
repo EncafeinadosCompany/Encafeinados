@@ -112,9 +112,11 @@ export const StoreCarousel = () => {
 
   // Procesar los datos de las tiendas
   const stores: StoreCardProps[] = React.useMemo(() => {
-    if (!storesData?.stores?.store) return [];
-
-    return storesData.stores.store.map((store) => {
+    if (!storesData?.stores?.stores) {
+      return [];
+    }
+  
+    return storesData.stores.stores.map((store) => {
       // Encontrar todas las sucursales para esta tienda
       const storeBranches = branchesData?.branches?.branches?.filter(
         branch => branch.store_name === store.name
@@ -160,7 +162,7 @@ export const StoreCarousel = () => {
         name: store.name,
         imageUrl: store.logo || "https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg",
         distance: nearestDistance,
-        nearestBranch: nearestBranchName, // Nueva propiedad 
+        nearestBranch: nearestBranchName,
         email: store.email,
         phone: store.phone_number,
         description: GENERIC_DESCRIPTIONS[Math.floor(Math.random() * GENERIC_DESCRIPTIONS.length)]

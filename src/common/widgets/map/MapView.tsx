@@ -77,7 +77,7 @@ const MapView: React.FC = () => {
     cafes,
     cafePositions,
     filteredCafes,
-    sortedCafes: mapDataSortedCafes, // Renombramos para evitar conflicto
+    sortedCafes: mapDataSortedCafes,
     activeCafeData,
     availableStores,
     customIcon
