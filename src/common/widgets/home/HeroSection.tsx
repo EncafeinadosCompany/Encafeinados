@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Text } from "@/common/atoms/Text";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPinIcon, ArrowRightIcon, ChevronDownIcon } from "lucide-react";
-import logoIcon from "@/assets/images/logo.ico";
+import { ArrowRightIcon, ChevronDownIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Navbar } from "@/common/molecules/home/navbar"; // Ajusta la ruta si es necesario
 
 export const HeroSection: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrollPosition(window.scrollY);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const [showMobileLocation, setShowMobileLocation] = useState(false);
 
   return (
     <section className="relative w-full h-screen overflow-hidden bg-[#0F0F0F]">
@@ -37,52 +33,10 @@ export const HeroSection: React.FC = () => {
 
       <div className="absolute inset-0 bg-[url('/api/placeholder/100/100')] bg-repeat opacity-5" />
 
-      {/* Contenido principal */}
+
+      {/* HeroSection Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 md:px-8">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="absolute top-0 left-0 right-0 p-4 md:p-8 flex justify-between items-center"
-        >
-          <div className="flex items-center space-x-2">
-            <img
-              src={logoIcon}
-              alt="Encafeinados logo"
-              className="h-8 w-8 object-contain"
-            />
-            <span className="text-white font-bold text-xl">Encafeinados</span>
-          </div>
-            <div className="flex items-center space-x-3">
-            <motion.div
-              onClick={() => setShowMobileLocation((prev) => !prev)}
-              className="cursor-pointer"
-            >
-              <MapPinIcon className="text-[#D4A76A] h-5 w-5" />
-            </motion.div>
-
-            <span className="text-white/80 text-sm hidden md:inline-block">
-              Medellín, Colombia
-            </span>
-
-            <AnimatePresence>
-              {showMobileLocation && (
-              <motion.span
-                variants={{
-                hidden: { opacity: 0, x: -10 },
-                visible: { opacity: 1, x: 0 }
-                }}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                transition={{ duration: 0.3 }}
-                className="text-white/80 text-sm md:hidden"
-              >
-                Medellín, Colombia
-              </motion.span>
-              )}
-            </AnimatePresence>
-            </div>
-        </motion.div>
+       
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
