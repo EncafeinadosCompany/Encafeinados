@@ -17,6 +17,7 @@ const NotFound = lazy(() => import("@/modules/settings/404"));
 const CoffeeloversLayout = lazy(() => import("@/modules/coffeelover/components/coffeeloversLayout"));
 const CoffeeLoverDashboard = lazy(() => import("@/modules/coffeelover/views/CoffeeLoverDashboard"));
 const MapCoffelover = lazy(() => import("@/modules/coffeelover/components/mapCoffelover"));
+const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
 
 const MapView = lazy(() => import("@/common/widgets/map/MapView"));
 // const LanguageSwitcher = lazy(() => import("@/common/molecules/settings/button-languages"));
@@ -33,6 +34,7 @@ const AuthRoutes = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/map" element={<MapView />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path='/register' element={<CuestionCard/>}/>
         <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage/>} />
