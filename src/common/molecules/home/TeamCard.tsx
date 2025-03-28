@@ -130,7 +130,7 @@ export const TeamCard = ({ members }: TeamCardProps) => {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 md:gap-4 relative z-10"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-4 relative z-10"
         >
           {members.map((member, index) => (
             <motion.div
@@ -199,27 +199,6 @@ export const TeamCard = ({ members }: TeamCardProps) => {
                       transition={{ duration: 0.3 }}
                       className="flex space-x-1 mt-3 justify-center overflow-hidden"
                     >
-                      <motion.button 
-                        whileHover={{ scale: 1.2, backgroundColor: '#D4A76A' }} 
-                        whileTap={{ scale: 0.9 }} 
-                        className="p-1.5 rounded-full bg-[#6F4E37] text-white transition-colors duration-300 shadow-sm"
-                      >
-                        <Linkedin size={12} />
-                      </motion.button>
-                      <motion.button 
-                        whileHover={{ scale: 1.2, backgroundColor: '#D4A76A' }} 
-                        whileTap={{ scale: 0.9 }} 
-                        className="p-1.5 rounded-full bg-[#6F4E37] text-white transition-colors duration-300 shadow-sm"
-                      >
-                        <Twitter size={12} />
-                      </motion.button>
-                      <motion.button 
-                        whileHover={{ scale: 1.2, backgroundColor: '#D4A76A' }} 
-                        whileTap={{ scale: 0.9 }} 
-                        className="p-1.5 rounded-full bg-[#6F4E37] text-white transition-colors duration-300 shadow-sm"
-                      >
-                        <Mail size={12} />
-                      </motion.button>
                     </motion.div>
                   )}
                 </AnimatePresence>
