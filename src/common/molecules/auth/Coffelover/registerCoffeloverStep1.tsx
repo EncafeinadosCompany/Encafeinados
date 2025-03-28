@@ -48,7 +48,7 @@ export default function RegisterCoffeloverStep1({ register, errors, onGoogleSign
           {errors?.userData?.email && <p className="text-red-500">{errors.userData.email.message}</p>}
         </div>
 
-        <div className="mt-8 space-y-4">
+        {/* <div className="mt-8 space-y-4">
           <div className="relative flex items-center justify-center">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-900"></div>
@@ -73,7 +73,7 @@ export default function RegisterCoffeloverStep1({ register, errors, onGoogleSign
           <div className="text-center text-xs text-gray-500 mt-10">
             Al registrarte, aceptas nuestros <a href="#" className="text-amber-700 hover:underline">Términos de servicio</a> y <a href="#" className="text-amber-700 hover:underline">Política de privacidad</a>
           </div>
-        </div>
+        </div> */}
       </div>
 
     </div>

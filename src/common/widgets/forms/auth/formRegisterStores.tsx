@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { TitleForm } from "@/common/atoms/auth/titleForm"
-import { LinkReturn } from "@/common/molecules/auth/linkReturn"
+import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
 
 import RegisterAdminStoreStep2 from "@/common/molecules/auth/stores/admin/registerAdminStoreStep2"
 import RegisterStoreStep1 from "@/common/molecules/auth/stores/store/registerStoreStep1"
