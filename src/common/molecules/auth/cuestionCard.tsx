@@ -2,7 +2,7 @@ import { Coffee, Store } from "lucide-react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import CardRegister from "@/common/atoms/auth/cardRegister"
-import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
+import { LinkReturn } from "@/common/molecules/auth/linkReturn"
 
 
 
@@ -15,8 +15,8 @@ export default function CuestionCard() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
         className="min-h-screen">
-        <LinkReturn link="/login" className="m-10"></LinkReturn>
-        <div className="flex flex-col items-center justify-center p-4 sm:p-4">
+        <LinkReturn link="/login" className="m-2 xl:m-10"></LinkReturn>
+        <div className="flex flex-col items-center justify-center p-4 sm:p-3">
           <div className="w-full max-w-sm sm:max-w-md ">
             {/* Header con animación sutil */}
             <motion.div

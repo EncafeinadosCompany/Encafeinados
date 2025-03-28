@@ -17,7 +17,7 @@ import { pageVariants } from "@/common/atoms/auth/pageVariants";
 import { ButtonGoogle } from "@/common/atoms/button-google";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { signInWithGoogle } from "@/api/firebase";
-import { LinkReturn } from "@/common/molecules/auth/LinkReturn";
+import { LinkReturn } from "@/common/molecules/auth/linkReturn";
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
@@ -169,9 +169,11 @@ const FormRegisterCoffeelover = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-orange-50 to-orange-200" translate="no">
-            <LinkReturn link="/register" >
+        <div className="min-h-screen  bg-gradient-to-b from-orange-50 to-orange-200" translate="no">
+            <LinkReturn link="/register" className="m-2 xl:m-10" >
             </LinkReturn>
+            
+            <div className="flex flex-col items-center justify-center p-4">
             <motion.div
                 className="max-w-2xl w-full"
                 animate={{ opacity: 1, y: 0 }}
@@ -195,7 +197,7 @@ const FormRegisterCoffeelover = () => {
                     handleSubmit(onSubmit)();
                 }}>
                     {/* Animated form steps */}
-                    <div className="relative" style={{ minHeight: "350px" }}>
+                    <div className="relative" style={{ minHeight: "300px" }}>
                         <AnimatePresence initial={false} custom={direction} mode="wait">
                             {step === 1 && (
                                 <motion.div
@@ -300,6 +302,7 @@ const FormRegisterCoffeelover = () => {
                     </motion.div>
                 </form>
             </motion.div>
+            </div>
         </div>
     )
 }
