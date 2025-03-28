@@ -195,7 +195,7 @@ const FormRegisterCoffeelover = () => {
                     handleSubmit(onSubmit)();
                 }}>
                     {/* Animated form steps */}
-                    <div className="relative" style={{ minHeight: "400px" }}>
+                    <div className="relative" style={{ minHeight: "350px" }}>
                         <AnimatePresence initial={false} custom={direction} mode="wait">
                             {step === 1 && (
                                 <motion.div

@@ -1,6 +1,4 @@
-import { DefaultValue } from 'recoil'
 import { z } from 'zod'
-import { loginSchema } from './loginShema'
 import { personalDataSchema } from './personalDataSchema'
 
 const registerCoffeeloverSchema = z.object({
@@ -10,13 +8,11 @@ const registerCoffeeloverSchema = z.object({
             .nonempty({ message: "El correo electrónico es obligatorio" })
             .email({ message: "El formato del correo electrónico no es válido" }),
         password: z.string()
-            .min(4, { message: "La contraseña debe tener al menos 4 caracteres" })
-            .max(10, {message:"La contraseña es muy larga"})
-            .regex(/[0-9]/, { message: "Debe contener al menos un número" }),
+            .length(4, { message: "La contraseña debe tener exactamente 4 dígitos" })
+            .regex(/^\d{4}$/, { message: "La contraseña solo debe contener números" }),
         confirmPassword: z.string()
-            .min(4, { message: "La confirmación debe tener al menos 4 caracteres" })
-            .max(10, {message:"La contraseña es muy larga"})
-            .regex(/[0-9]/, { message: "Debe contener al menos un número" }),
+            .length(4, { message: "La confirmación de la contraseña debe tener exactamente 4 dígitos" })
+            .regex(/^\d{4}$/, { message: "La confirmación de la contraseña solo debe contener números" }),
         role_id: z.number().default(3)
     }),
     personData: personalDataSchema,
