@@ -1,17 +1,123 @@
-// src/api/mutations/authMutations.ts
-import { useMutation } from '@tanstack/react-query'
-import { LoginFormData } from '../types/authTypes'
-import { mockUser } from '../mocks/authMocks'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { RegisterCoffelover, LoginResponse, User_Data } from '../types/authTypes'
+import { useSetRecoilState } from 'recoil'
+import AuthUsers from '../queries/authQueries'
+import { useError } from '@/common/molecules/hooks/useErrors'
+import { clearAuthStorage, setAuthStorage } from '@/common/utils/authStorage'
+import { RegisterStoreSchemaType } from '../types/storeTypes'
 
-// Simular un login
+
 export const useLoginMutation = () => {
+  const queryClient = useQueryClient()
+  const useErros = useError('login')
+
+  return useMutation<LoginResponse, Error, User_Data>({
+    mutationFn: async (formData: User_Data) => {
+      console.log('form data', formData)
+      const response = await AuthUsers.login(formData);
+      return response as LoginResponse;
+    },
+    onSuccess: (data) => {
+
+      setAuthStorage(data.accessToken, data.user)
+
+      console.log('datos', data)
+
+      // Invalida las consultas relacionadas con el usuario
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+    onError: (error: any) => {
+      useErros(error)
+    }
+  });
+}
+
+// Register mutation
+export const useRegisterCoffeloverMutation = () => {
+  const queryClient = useQueryClient()
+  const useErrors = useError("registeCoffelover")
+
+  return useMutation<LoginResponse, Error, RegisterCoffelover>({
+    mutationFn: async (formData: RegisterCoffelover): Promise<LoginResponse> => {
+      const response = await AuthUsers.registerCoffelover(formData);
+      return response;
+    },
+    onSuccess: (data) => {
+
+      setAuthStorage(data.accessToken, data.user)
+
+      // Invalidar queries relacionadas
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+    onError: (error: any) => {
+      useErrors(error);
+    }
+  })
+}
+
+export const useRegisterStoreMutation = () => {
+  const queryClient = useQueryClient()
+  const useErrors = useError("registeCoffelover")
+
+  return useMutation<LoginResponse, Error, RegisterStoreSchemaType>({
+    mutationFn: async (formData: RegisterStoreSchemaType): Promise<LoginResponse> => {
+      const response = await AuthUsers.registerStores(formData);
+      return response;
+    },
+    onSuccess: (data) => {
+
+      setAuthStorage(data.accessToken, data.user)
+
+      // Invalidar queries relacionadas
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+    onError: (error: any) => {
+      useErrors(error);
+    }
+  })
+}
+
+// Logout mutation
+export const useLogoutMutation = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
-    mutationKey: ['login'],
-    mutationFn: async (formData: LoginFormData) => {
-      // Simular una llamada a la API
-      return new Promise((resolve) => {
-        setTimeout(() => resolve(mockUser), 1000)
-      })
+    mutationFn: async () => {
+       clearAuthStorage()
+    },
+    onSuccess: () => {
+      // Invalidar y resetear queries
+      queryClient.clear();
     },
   })
 }
+
+
+// Change password mutation
+export const useChangePasswordMutation = () => {
+  return useMutation({
+    mutationFn: async ({ oldPassword, newPassword }: { oldPassword: string; newPassword: string }) => {
+      await AuthUsers.changePassword(oldPassword, newPassword);
+    }
+  });
+};
+
+// Request password reset mutation
+export const useRequestPasswordResetMutation = () => {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      await AuthUsers.requestPasswordReset(email);
+    }
+  });
+};
+
+// Reset password mutation
+export const useResetPasswordMutation = () => {
+  return useMutation({
+    mutationFn: async ({ token, newPassword }: { token: string; newPassword: string }) => {
+      await AuthUsers.resetPassword(token, newPassword);
+    }
+  });
+};
+
+

@@ -7,7 +7,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "types": ["node", "jest", "@testing-library/jest-dom"], // Añade @testing-library/jest-dom
+    "types": ["node", "jest", "mapbox-gl", "@testing-library/jest-dom"], // Añade @testing-library/jest-dom
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

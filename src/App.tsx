@@ -1,11 +1,18 @@
+import { BrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.css'
-import { PublicRoutes } from '@/router'
+import { RecoilRoot } from 'recoil'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {Toaster} from 'react-hot-toast';
+import AuthRoutes from './router';
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div className="app">
-    <PublicRoutes />
-  </div>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <AuthRoutes />
+      </QueryClientProvider>
+    </RecoilRoot>
   )
 }
  

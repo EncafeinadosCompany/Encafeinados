@@ -6,4 +6,4 @@ export * from './types/coffeeTypes'
 
 
 
-export { api } from './client/axios'
+

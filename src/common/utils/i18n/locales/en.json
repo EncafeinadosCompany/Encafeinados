@@ -1,0 +1,16 @@
+{
+    "no encontrado":"not found",
+
+    "_comment":"LOGIN",
+        "¡Bienvenido!":"Welcome!",
+        "Iniciar sesión":"Sign In",
+        "Correo electrónico":"Email",
+        "Contraseña":"Password",
+        "Ingresar":"  Sign Up",
+        "¿No tienes cuenta?":"  Don&apos;t have an account?",
+        "iniciar sesión":"Sign In",
+        "¿Olvidaste tu contraseña?":"Forgot your password?",
+        "La contraseña debe tener al menos 4 caracteres":"Password must be at least 4 characters",
+        "Back to selection":"volver"
+    
+}

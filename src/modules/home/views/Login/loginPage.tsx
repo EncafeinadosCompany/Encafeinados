@@ -1,22 +1,23 @@
-import { ButtonSubmit } from "@/common/atoms/button-submit"
-import { InputEmail } from "@/common/atoms/Input-email"
-import { Input } from "@/common/ui/input"
-import Formlogin from "@/common/widgets/forms/formLogin"
-import { useState } from "react"
 
-export const LoginPage = () => {
 
-    const [data, setData] = useState("")
-    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setData(event.target.value);
-    }
+import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
+import Formlogin from "@/common/widgets/forms/auth/formLogin"
 
-    return (
-    
-    <div className="min-h-screen flex flex-col justify-center items-center overflow-hidden">
-        <Formlogin/>
+const LoginPage = () => {
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-orange-200 flex flex-col">
+      <LinkReturn link="/" className="m-10"></LinkReturn>
+      <div className="flex-1 flex flex-col items-center justify-center p-2 md:p-10">
+        <div className="w-full max-w-sm md:max-w-3xl">
+          <Formlogin />
+        </div>
+      </div>
     </div>
 
-    )
-    
+
+  )
+
 }
+
+export default LoginPage
