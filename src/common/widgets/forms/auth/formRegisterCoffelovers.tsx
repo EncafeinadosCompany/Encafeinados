@@ -2,22 +2,25 @@ import { useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import registerCoffeeloverSchema from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
 
-import { use, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/common/ui/button";
-import RegisterCoffeloverStep1 from "@/common/molecules/auth/coffelover/registerCoffeloverStep1";
+
 import { RegisterCoffelover, useRegisterCoffeloverMutation } from "@/api";
-import RegisterCoffeloverStep2 from "@/common/molecules/auth/coffelover/registerCoffeloverStep2";
-import RegisterCoffeloverStep3 from "@/common/molecules/auth/coffelover/registerCoffeloverStep3";
+
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
-import { LinkReturn } from "@/common/molecules/auth/linkReturn";
+
 import { TitleForm } from "@/common/atoms/auth/titleForm";
 import { pageVariants } from "@/common/atoms/auth/pageVariants";
 import { ButtonGoogle } from "@/common/atoms/button-google";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { signInWithGoogle } from "@/api/firebase";
+import { LinkReturn } from "@/common/molecules/auth/linkReturn";
+import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
+import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
+import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(1);
@@ -43,8 +46,8 @@ const FormRegisterCoffeelover = () => {
         resolver: zodResolver(registerCoffeeloverSchema),
         defaultValues: {
             personData: {
-                name: "Valentina",
-                lastname: "Gutierrez",
+                name: "",
+                lastname: "",
                 type_document: "",
                 number_document: "",
                 phone_number: ""
@@ -100,7 +103,7 @@ const FormRegisterCoffeelover = () => {
         const dataCoffeelover: RegisterCoffelover = {
             personData: {
                 full_name: `${data.personData.name} ${data.personData.lastname}`,
-                type_document: Number(data.personData.type_document_id),
+                type_document: data.personData.type_document,
                 number_document: (data.personData.number_document),
                 phone_number: data.personData.phone_number,
             },
@@ -166,9 +169,11 @@ const FormRegisterCoffeelover = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-orange-50 to-orange-200" translate="no">
-            <LinkReturn link="/register" >
+        <div className="min-h-screen  bg-gradient-to-b from-orange-50 to-orange-200" translate="no">
+            <LinkReturn link="/register" className="m-2 xl:m-10" >
             </LinkReturn>
+            
+            <div className="flex flex-col items-center justify-center p-4">
             <motion.div
                 className="max-w-2xl w-full"
                 animate={{ opacity: 1, y: 0 }}
@@ -192,7 +197,7 @@ const FormRegisterCoffeelover = () => {
                     handleSubmit(onSubmit)();
                 }}>
                     {/* Animated form steps */}
-                    <div className="relative" style={{ minHeight: "400px" }}>
+                    <div className="relative" style={{ minHeight: "300px" }}>
                         <AnimatePresence initial={false} custom={direction} mode="wait">
                             {step === 1 && (
                                 <motion.div
@@ -297,6 +302,7 @@ const FormRegisterCoffeelover = () => {
                     </motion.div>
                 </form>
             </motion.div>
+            </div>
         </div>
     )
 }

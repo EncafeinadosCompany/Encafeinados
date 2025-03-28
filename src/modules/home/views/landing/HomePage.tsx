@@ -6,7 +6,7 @@ import { AboutSection } from '@/common/widgets/home/AboutSection';
 import { Footer } from '@/common/widgets/home/Footer';
 import { MapTeaser } from '@/common/molecules/home/MapTeaser';
 
-export const HomePage = () => {
+const HomePage = () => {
   return (
     <main className="min-h-screen bg-[#FAF3E0] relative overflow-hidden">
 
@@ -24,3 +24,5 @@ export const HomePage = () => {
     </main>
   );
 };
+
+export default HomePage;

@@ -7,7 +7,6 @@ export const loginSchema = z.object({
     .email({ message: "El formato del correo electrónico no es válido" }),
 
   password: z.string()
-    .min(4, { message: "La confirmación debe tener al menos 4 caracteres" })
-    .max(10, { message: "La contraseña es muy larga" })
-    .regex(/[0-9]/, { message: "La contraseña es muy larga" }),
+  .length(4, { message: "La contraseña debe tener exactamente 4 dígitos" })
+  .regex(/^\d{4}$/, { message: "La contraseña solo debe contener números" })
 });

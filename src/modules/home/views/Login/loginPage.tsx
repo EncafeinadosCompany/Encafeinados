@@ -1,7 +1,9 @@
-import { LinkReturn } from "@/common/molecules/auth/linkReturn"
+
+
+import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
 import Formlogin from "@/common/widgets/forms/auth/formLogin"
 
-export const LoginPage = () => {
+const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-orange-200 flex flex-col">
@@ -17,3 +19,5 @@ export const LoginPage = () => {
   )
 
 }
+
+export default LoginPage

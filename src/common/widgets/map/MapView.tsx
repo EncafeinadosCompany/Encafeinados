@@ -37,7 +37,7 @@ import { containerVariants, cardVariants, pulseVariants } from './mapAnimations'
 // MAIN COMPONENT
 // ==============================
 
-export const MapView: React.FC = () => {
+const MapView: React.FC = () => {
   // ==============================
   // STATE MANAGEMENT
   // ==============================
@@ -735,3 +735,5 @@ export const MapView: React.FC = () => {
     </motion.div>
   );
 };
+
+export default MapView
