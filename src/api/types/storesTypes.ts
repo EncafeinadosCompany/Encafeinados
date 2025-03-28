@@ -7,13 +7,13 @@ export interface Store {
   email: string;
   phone_number: string;
   status: string;
-  latitude?: number; // Agregamos para cálculo de distancia
-  longitude?: number; // Agregamos para cálculo de distancia
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface StoresResponse {
   message: string;
   stores: {
-    store: Store[];
+    stores: Store[];
   };
 }
