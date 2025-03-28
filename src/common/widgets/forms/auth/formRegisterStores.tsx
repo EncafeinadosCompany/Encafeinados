@@ -1,35 +1,30 @@
+import toast from "react-hot-toast"
 import { useState } from "react"
 import { Button } from "@/common/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
+
 import { TitleForm } from "@/common/atoms/auth/titleForm"
-import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
+import { LinkReturn } from "@/common/molecules/auth/linkReturn"
 
-import RegisterAdminStoreStep2 from "@/common/molecules/auth/stores/admin/registerAdminStoreStep2"
 import RegisterStoreStep1 from "@/common/molecules/auth/stores/store/registerStoreStep1"
-
 import RegisterStoreStep2 from "@/common/molecules/auth/stores/store/registerStoreStep2"
-import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
-import ImagenB from "@/common/molecules/auth/stores/store/imagen"
-import { error } from "console"
-import errorMap from "zod/lib/locales/en"
-import { useRegisterStoreMutation } from "@/api"
-import { RegisterStoreSchemaType } from "@/api/types/storeTypes"
+
 import ProgressIndicator1 from "@/common/atoms/auth/ProgressIndicator1"
+
 import { useAuth } from "@/common/molecules/hooks/useAuth"
 import { useNavigate } from "react-router-dom"
-import toast from "react-hot-toast"
-
-
+import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
+import { useRegisterStoreMutation } from "@/api"
+import { RegisterStoreSchemaType } from "@/api/types/storeTypes"
 
 const FormRegisterStores = () => {
     const [direction, setDirection] = useState(0);
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
     const useRegiterStore = useRegisterStoreMutation();
-    const {pagesPermissions} = useAuth();
     const navigate = useNavigate();
     const methods = useForm<CurrentSchema>({
         resolver: zodResolver(RegisterStoreSchema[step] as any),
@@ -89,10 +84,6 @@ const FormRegisterStores = () => {
         }
     };
 
-
-    
-
-    const errors = methods.formState.errors as Partial<CurrentSchema>;
     return (
         <div >
             <LinkReturn link="/register" >

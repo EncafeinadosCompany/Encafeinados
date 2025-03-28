@@ -54,12 +54,12 @@ const MapView: React.FC = () => {
 
   // Custom hooks
   const { favorites, toggleFavorite } = useFavorites();
-  const { 
-    userLocation, 
-    locatingUser, 
+  const {
+    userLocation,
+    locatingUser,
     accuracy,
     errorMessage,
-    getUserLocation 
+    getUserLocation
   } = useGeolocation(mapInstance);
 
   // ==============================
@@ -92,12 +92,12 @@ const MapView: React.FC = () => {
   // ==============================
   // SEARCH AND FILTER
   // ==============================
- 
+
   const availableTags = useMemo(() => {
     const allTags = cafes.flatMap(cafe => cafe.tags);
     return [...new Set(allTags)];
   }, [cafes]);
-  
+
   // Usar nuestro nuevo hook para búsqueda y filtrado
   const {
     searchTerm: filterSearchTerm,
@@ -298,18 +298,17 @@ const MapView: React.FC = () => {
         <div className="md:mb-3 text-[#6F4E37]/80 text-sm md:text-base">
           <span className="font-medium">{cafe.storeName}</span>
         </div>
-        
+
         <div className="grid md:grid-cols-2 gap-4 mb-4">
           <div className="flex justify-between items-center py-3 border-b border-gray-100">
             <div className="flex items-center gap-2 text-[#6F4E37]">
               <Clock size={18} />
               <span className="font-medium">{cafe.openTime}</span>
             </div>
-            <span className={`text-xs py-0.5 px-2 rounded-full font-medium ${
-              cafe.isOpen 
-                ? 'bg-green-50 text-green-600' 
+            <span className={`text-xs py-0.5 px-2 rounded-full font-medium ${cafe.isOpen
+                ? 'bg-green-50 text-green-600'
                 : 'bg-red-50 text-red-600'
-            }`}>
+              }`}>
               {cafe.isOpen ? 'Abierto ahora' : 'Cerrado'}
             </span>
           </div>
@@ -562,7 +561,7 @@ const MapView: React.FC = () => {
                 },
               }}
             >
-             
+
             </Marker>
           ))}
 
@@ -628,8 +627,8 @@ const MapView: React.FC = () => {
         ) && (
             <motion.div
               className={`absolute top-0 bottom-0 ${viewMode === 'list' && window.innerWidth >= 768
-                  ? 'right-0 w-1/2'
-                  : 'right-0 w-full md:w-96'
+                ? 'right-0 w-1/2'
+                : 'right-0 w-full md:w-96'
                 } bg-white z-20 shadow-2xl rounded-l-3xl md:rounded-l-3xl overflow-hidden`}
               initial={{ x: '100%', opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -664,7 +663,7 @@ const MapView: React.FC = () => {
                     <div className="mt-8 text-center">
                       <Coffee size={48} className="mx-auto text-gray-300" />
                       <p className="mt-4 text-gray-500">No se encontraron cafeterías con los filtros actuales</p>
-                      <button 
+                      <button
                         className="mt-2 text-[#6F4E37] underline"
                         onClick={resetFilters}
                       >
@@ -679,7 +678,7 @@ const MapView: React.FC = () => {
       </AnimatePresence>
 
       {/* Filter Modal */}
-      <FilterModal 
+      <FilterModal
         isOpen={isFilterModalOpen}
         onClose={toggleFilterModal}
         filterOptions={filterOptions}
@@ -691,15 +690,15 @@ const MapView: React.FC = () => {
       {/* Toggle sidebar button (mobile) */}
       {!showSidebar && (
         <motion.button
-          className="absolute bottom-6 right-6 z-30 bg-[#6F4E37] text-white p-4 rounded-full shadow-xl md:hidden"
+          className="absolute bottom-42 right-4 z-30 text-white bg-[#6F4E37] p-3 rounded-full shadow-lg md:hidden"
           onClick={() => setShowSidebar(true)}
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          whileHover={{ scale: 1.1, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+          whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
-          <Coffee size={24} />
+          <Coffee size={20} className="text-white" />
         </motion.button>
       )}
 

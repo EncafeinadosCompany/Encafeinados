@@ -74,10 +74,6 @@ export default function ResponsiveNavigation() {
     },
   ]
 
-  // ... existing code ...
-
- // ... existing code ...
-
   return (
     <div className="flex min-h-screen w-full">
       {/* Mobile Bottom Navigation */}
