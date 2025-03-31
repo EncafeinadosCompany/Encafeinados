@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 
 import { TitleForm } from "@/common/atoms/auth/titleForm";
 import { pageVariants } from "@/common/atoms/auth/pageVariants";
-import { ButtonGoogle } from "@/common/atoms/button-google";
+import { ButtonGoogle } from "@/common/atoms/buttonGoogle";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { signInWithGoogle } from "@/api/firebase";
 import { LinkReturn } from "@/common/molecules/auth/linkReturn";
