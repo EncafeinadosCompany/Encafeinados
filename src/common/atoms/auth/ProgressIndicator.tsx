@@ -1,5 +1,5 @@
+import React from "react";
 import { Check } from "lucide-react";
-
 interface ProgressIndicatorProps {
   step: number;
   totalSteps: number;
@@ -10,7 +10,7 @@ const ProgressIndicator = ({step, totalSteps}:ProgressIndicatorProps) => {
     return (
         <div className="flex mb-8">
           {Array.from({ length: totalSteps }).map((_, index) => (
-            <div key={index} className="flex-1 flex items-center">
+            <div key={index} className="flex-1 flex items-center" role="listitem">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   step > index + 1

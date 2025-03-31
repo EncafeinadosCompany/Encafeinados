@@ -1,7 +1,7 @@
 import { pageVariants } from "@/common/atoms/auth/pageVariants"
 import { Controller, UseFormRegister } from "react-hook-form"
 import { motion } from "framer-motion"
-import { InputForm } from "@/common/atoms/auth/inputs-form"
+import { InputForm } from "@/common/atoms/auth/inputForm"
 import { Label } from "@radix-ui/react-label"
 
 import { Select, SelectItem, SelectTrigger, SelectContent, SelectValue } from "@/common/ui/select"

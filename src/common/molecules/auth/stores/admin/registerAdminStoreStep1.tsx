@@ -1,4 +1,4 @@
-import { InputForm } from "@/common/atoms/auth/inputs-form"
+import { InputForm } from "@/common/atoms/auth/inputForm"
 import { pageVariants } from "@/common/atoms/auth/pageVariants"
 import { Label } from "@radix-ui/react-label"
 import { Controller, UseFormRegister } from "react-hook-form"

@@ -7,7 +7,7 @@ import { InputPassword } from "@/common/atoms/input-passwork"
 import { UseFormRegister } from "react-hook-form"
 import { User } from "@/api"
 import { useTranslation } from "react-i18next"
-import { ButtonGoogle } from "@/common/atoms/button-google"
+import { ButtonGoogle } from "@/common/atoms/buttonGoogle"
 
 
 type LoginCardProps = {
