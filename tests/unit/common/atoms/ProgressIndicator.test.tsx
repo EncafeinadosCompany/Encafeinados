@@ -11,9 +11,13 @@ describe("ProgressIndicator", () => {
     });
 
     test("Muestra un check en los pasos completados",()=>{
-        render(<ProgressIndicator step={2} totalSteps={3} />)
-        expect(screen.getAllByRole("listitem")[0]).toBeInTheDocument();
-        expect(screen.getAllByRole("listitem")[1]).toBeInTheDocument();
-        expect(screen.getAllByRole("listitem")[2]).toBeInTheDocument();
+        render(<ProgressIndicator step={2} totalSteps={3} />);
+        
+        const listItems = screen.getAllByRole("listitem");
+        expect(listItems).toHaveLength(3);
+        
+        expect(listItems[0].querySelector("svg")).toBeInTheDocument(); 
+        expect(listItems[1].querySelector("svg")).not.toBeInTheDocument();
+        expect(listItems[2].querySelector("svg")).not.toBeInTheDocument();
     })
 })
