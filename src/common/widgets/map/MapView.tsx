@@ -12,10 +12,7 @@ import 'leaflet/dist/leaflet.css';
 import { useBranches } from '@/api/queries/branchesQueries';
 import { useStores, useBranchesByStore } from '@/api/queries/storesQueries';
 // Types
-import { LatLngTuple, Cafe } from '@/common/types/map/mapTypes';
-
-// Utils
-import { calculateDistance } from '@/common/utils/map/mapUtils';
+import {  Cafe } from '@/common/types/map/mapTypes';
 
 // Hooks
 import { useFavorites } from '@/common/hooks/map/useFavorites';
