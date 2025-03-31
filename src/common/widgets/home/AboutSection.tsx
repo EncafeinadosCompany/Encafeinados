@@ -19,12 +19,11 @@ export const AboutSection = () => {
           <Separator className="mx-auto w-24 h-1 bg-[#D4A76A] mb-6" />
           
           <Text variant="p" className="mb-6">
-            En Encafeinados, nuestra misión es conectar a los amantes del café con las mejores cafeterías locales de Medellín. 
-            Creemos en apoyar a los productores locales y promover la rica cultura cafetera de Colombia.
+          Coffeelovers apasionados que disfrutan creando soluciones para todo el ecosistema de café: conectamos, soñamos y cocreamos parches alrededor del café.
           </Text>
           
           <Text variant="p">
-            Nuestra visión es convertirnos en la plataforma de referencia para descubrir, valorar y disfrutar de las experiencias cafeteras más auténticas, 
+            Queremos convertirnos en la plataforma de referencia para descubrir, valorar y disfrutar de las experiencias cafeteras más auténticas, 
             mientras creamos una comunidad apasionada por el buen café.
           </Text>
         </motion.div>

@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
-    "cy:open": "cypress open --project ./src/tests/",
+    "cy:open": "cypress open --project .",
     "cy:run": "cypress run"
   },
   "dependencies": {
