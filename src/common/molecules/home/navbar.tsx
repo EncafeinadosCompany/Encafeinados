@@ -165,25 +165,7 @@ export const Navbar: React.FC = () => {
                 </motion.div>
               ))}
               
-              {/* Elemento adicional */}
-              <motion.div
-                variants={mobileItemVariants}
-                className="w-full text-center border-t border-white/20 pt-4"
-              >
-                <Link
-                  to="/cafes"
-                  onClick={toggleMobileMenu}
-                  className="text-white/80 hover:text-[#D4A76A] 
-                  transition-colors flex items-center justify-center 
-                  space-x-3 py-3 w-full group"
-                >
-                  <CoffeeIcon className="w-5 h-5" />
-                  <span className="group-hover:text-[#D4A76A] 
-                  transition-colors text-lg tracking-wider">
-                    Nuestros Cafés
-                  </span>
-                </Link>
-              </motion.div>
+          
             </div>
           </motion.div>
         )}
