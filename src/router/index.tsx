@@ -19,6 +19,7 @@ const MapCoffelover = lazy(() => import("@/modules/coffeelover/components/mapCof
 const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
 
 const MapView = lazy(() => import("@/common/widgets/map/MapView"));
+
 // const LanguageSwitcher = lazy(() => import("@/common/molecules/settings/button-languages"));
 
 const AuthRoutes = () => {
