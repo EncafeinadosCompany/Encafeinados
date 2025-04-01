@@ -5,11 +5,14 @@ import AuthUsers from '../queries/authQueries'
 import { useError } from '@/common/molecules/hooks/useErrors'
 import { clearAuthStorage, setAuthStorage } from '@/common/utils/authStorage'
 import { RegisterStoreSchemaType } from '../types/storeTypes'
+import { useAuth } from '@/common/hooks/authContext'
+import { set } from 'cypress/types/lodash'
 
 
 export const useLoginMutation = () => {
   const queryClient = useQueryClient()
   const useErros = useError('login')
+
 
   return useMutation<LoginResponse, Error, User_Data>({
     mutationFn: async (formData: User_Data) => {
