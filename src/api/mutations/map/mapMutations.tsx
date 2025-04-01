@@ -9,9 +9,7 @@ const MapSettings = {
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
         setCurrentPosition([lat, lng]);
-        setSelectedPosition([lat, lng]);
-        
-        // Obtener dirección de la ubicación actual usando API más actual
+        setSelectedPosition([lat, lng]);       
         try {
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&namedetails=1&accept-language=es`,

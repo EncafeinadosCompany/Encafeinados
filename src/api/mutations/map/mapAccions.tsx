@@ -9,8 +9,6 @@ export const handleSelectAddress = ({onLocationSelect, setSearchQuery, setSelect
     setSuggestions([]);
     setShowSuggestions(false);
     onLocationSelect(latitude, longitude, name);
-    
-    // Save to recent searches
     MapSettings.saveRecentSearch({ display_name: name, lat, lon }, {recentSearches: resentRecentSearches.recentSearches, setRecentSearches: resentRecentSearches.setRecentSearches});
     
     // Blur input to hide keyboard on mobile
