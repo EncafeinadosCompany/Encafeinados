@@ -1,8 +1,8 @@
 //import { User } from '../types/authTypes'
 
-export const mockUser: any = {
-  id: "1",
-  name: "John Doe",
+import { User } from "../types/authTypes";
+
+export const mockUser: User = {
   email: "john@example.com",
-  role: "admin",
+  password: "admin",
 };

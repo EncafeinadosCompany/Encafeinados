@@ -13,7 +13,7 @@ export default {
 
   // Mapeo de alias para importaciones (si usas alias como @/)
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/$1",
+      "^@/(.*)$": "<rootDir>/src/$1"
   },
 
   // Transforma archivos TypeScript y JavaScript usando Babel
@@ -23,7 +23,7 @@ export default {
 
   // Patrones para buscar archivos de prueba
   testMatch: [
-    "<rootDir>/src/tests/unit/**/*.test.(js|jsx|ts|tsx)", // Pruebas unitarias
+    "<rootDir>/tests/unit/**/*.test.(js|jsx|ts|tsx)", // Pruebas unitarias
   ],
 
   // Ignorar estas carpetas al buscar pruebas

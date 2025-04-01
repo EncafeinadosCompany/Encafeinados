@@ -1,4 +1,4 @@
-import { InputForm } from "@/common/atoms/auth/inputs-form"
+import { InputForm } from "@/common/atoms/auth/inputForm"
 import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument"
 import { Label } from "@/common/ui/label"
 import { HelpCircle, X } from "lucide-react"

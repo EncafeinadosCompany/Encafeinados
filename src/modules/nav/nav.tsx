@@ -54,12 +54,12 @@ export default function ResponsiveNavigation() {
     },
     {
       title: "Buscar",
-      href: "/login",
+      href: "/coffeelover",
       icon: <Search className="h-5 w-5" />,
     },
     {
       title: "Notificaciones",
-      href: "/notifications",
+      href: "/coffeelover",
       icon: <Bell className="h-5 w-5" />,
     },
     {

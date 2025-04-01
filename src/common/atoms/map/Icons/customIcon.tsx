@@ -1,3 +1,4 @@
+
 import L from "leaflet";
 
 // Custom Google-like marker icon
@@ -7,4 +8,3 @@ export const customIcon = new L.Icon({
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
   });
-  
