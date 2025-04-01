@@ -39,3 +39,12 @@ jobs:
 
       - name: Run Cypress E2E tests
         run: npm run cy:run
+
+      - name: Verify E2E Coverage
+        run: npm run cy:verify-coverage
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-e2e-coverage
+          path: coverage
