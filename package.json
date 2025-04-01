@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
+    "test:cov": "jest --coverage",
     "test:watch": "jest --watch",
     "cy:open": "cypress open --project .",
     "cy:run": "cypress run",
@@ -60,6 +61,7 @@
     "@babel/preset-typescript": "^7.26.0",
     "@cypress/code-coverage": "^3.14.0",
     "@eslint/js": "^9.21.0",
+    "@istanbuljs/nyc-config-babel": "^3.0.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
@@ -92,12 +94,14 @@
     "vite": "^6.2.0",
     "vite-plugin-istanbul": "^7.0.0"
   },
-  "extends": "@istanbuljs/nyc-config-babel",
-  "all": true,
-  "report-dir": "./coverage",
-  "reporter": [
-    "lcov",
-    "text",
-    "text-summary"
-  ]
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-babel",
+    "all": true,
+    "report-dir": "./coverage",
+    "reporter": [
+      "lcov",
+      "text",
+      "text-summary"
+    ]
+  }
 }
