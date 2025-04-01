@@ -7,8 +7,6 @@ import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument"
 import { CurrentSchema } from "@/common/utils/schemas/auth/registerStoreShema"
 
 
-
-
 interface registerStoreProps {
     register: UseFormRegister<CurrentSchema>
     errors: any

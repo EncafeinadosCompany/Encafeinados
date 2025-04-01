@@ -3,7 +3,6 @@ import { Marker } from 'react-leaflet';
 import L from 'leaflet';
 import { UserLocationMarkerProps } from '@/common/types/map/mapTypes';
 
-
 const UserLocationMarker: React.FC<UserLocationMarkerProps> = ({ position, pulsing = false }) => {
   if (!position) return null;
   

@@ -2,7 +2,7 @@ import { currentLocationIcon } from "@/common/atoms/map/Icons/currentLocationIco
 import { customIcon } from "@/common/atoms/map/Icons/customIcon";
 import { formatAddress } from "@/common/utils/map/formatAddress";
 import { MapController } from "@/common/utils/map/MapController";
-import { Loader2, MapPin, Navigation, Search, X } from "lucide-react";
+import { Loader2, MapPin, Navigation, Search, X } from "@/common/ui/icons";
 import { MapContainer, Marker, TileLayer, ZoomControl } from "react-leaflet";
 interface SearchProps {
     mapRef: React.RefObject<L.Map | null>;
@@ -51,7 +51,6 @@ export const CardMapStore = ({
 }: SearchProps) => {
     return (
         <div className="relative p-4 bg-white rounded-lg shadow-md">
-            {/* Buscador con estilo Google Maps */}
             <div className="relative mb-2">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Search className="h-5 w-5 text-gray-400" />
@@ -82,7 +81,6 @@ export const CardMapStore = ({
                 </div>
             </div>
 
-            {/* Botón de ubicación actual */}
             <button
                 onClick={UseCurrentLocation}
                 className="mb-3 flex items-center text-blue-600 hover:text-blue-800 transition-colors"
@@ -92,10 +90,8 @@ export const CardMapStore = ({
                 {isLocating && <Loader2 className="h-4 w-4 ml-1 animate-spin" />}
             </button>
 
-            {/* Sugerencias con mejor estilo */}
             {showSuggestions && (
                 <div className="relative bg-white text-yellow-950 w-full left-0 right-0 mx-4 border rounded-lg shadow-lg mt-1 z-10 max-h-80 overflow-auto">
-                    {/* Recent searches */}
                     {searchQuery.length < 2 && recentSearches.length > 0 && (
                         <div className="p-2">
                             <div className="text-xs font-medium text-gray-500 px-3 py-1">Búsquedas recientes</div>

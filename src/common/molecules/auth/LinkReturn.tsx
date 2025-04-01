@@ -1,5 +1,4 @@
-
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft } from "@/common/ui/icons"
 import { Link } from "react-router-dom"
 
 interface LinkReturnProps {

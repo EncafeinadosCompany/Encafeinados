@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/common/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, ArrowRight } from "@/common/ui/icons"
 import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 import { TitleForm } from "@/common/atoms/auth/titleForm"
@@ -74,20 +74,20 @@ const FormRegisterAdminStores = () => {
                                 {step === 0 && (
                                     <RegisterAdminStoreStep1
                                         direction={direction}
-                                        register={methods.register} 
+                                        register={methods.register}
                                         control={methods.control}
                                         errors={methods.formState.errors}>
                                     </RegisterAdminStoreStep1>
                                 )}
                                 {
                                     step === 1 && (
-                                       <RegisterAdminStoreStep2
-                                       direction={direction}
-                                       register={methods.register}
-                                       errors={methods.formState.errors}
-                                       control={methods.control}
-                                       >
-                                       </RegisterAdminStoreStep2>
+                                        <RegisterAdminStoreStep2
+                                            direction={direction}
+                                            register={methods.register}
+                                            errors={methods.formState.errors}
+                                            control={methods.control}
+                                        >
+                                        </RegisterAdminStoreStep2>
                                     )
                                 }
                                 {
@@ -116,7 +116,7 @@ const FormRegisterAdminStores = () => {
                             >
                                 {step > 0 ? (
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button type="button" variant="outline" onClick={() => {setStep(step - 1), setDirection(-1)}} className="border-gray-200 bg-amber-50/50">
+                                        <Button type="button" variant="outline" onClick={() => { setStep(step - 1), setDirection(-1) }} className="border-gray-200 bg-amber-50/50">
                                             <ArrowLeft className="w-4 h-4 mr-2" />
                                             Previous
                                         </Button>

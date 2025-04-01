@@ -40,7 +40,6 @@ export const mockStores: StoresResponse = {
   }
 };
 
-// Datos mock para las sucursales
 export const mockBranches: BranchesResponse = {
   message: "Branches retrieved successfully",
   branches: {
@@ -82,7 +81,6 @@ export const mockBranches: BranchesResponse = {
   }
 };
 
-// Ubicación mock del usuario
 export const mockUserLocation = {
   coords: {
     latitude: 4.654335,
@@ -96,7 +94,7 @@ export const mockUserLocation = {
   timestamp: Date.now()
 };
 
-// Estados de API para pruebas específicas
+
 export const apiStates = {
   emptyStores: {
     message: "Stores retrieved successfully",

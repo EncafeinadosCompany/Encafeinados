@@ -1,5 +1,5 @@
 import React from "react"
-import { MapPin, Search, SlidersHorizontal } from "lucide-react"
+import { MapPin, Search, SlidersHorizontal } from "@/common/ui/icons"
 import { Input } from "../ui/input"
 import { Link } from "react-router-dom"
 
