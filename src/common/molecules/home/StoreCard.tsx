@@ -77,15 +77,20 @@ export const StoreCard = memo(({
             
             {/* Imagen con animación optimizada */}
             <motion.img 
+              loading="lazy"
+              decoding="async"
               src={imageUrl} 
               alt={`Tienda ${name}`}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
               variants={imageVariants}
               animate={isHovered ? "hover" : "normal"}
               transition={{ duration: 0.5, ease: "easeOut" }}
               onError={(e) => {
                 // Imagen de respaldo si la original falla
                 e.currentTarget.src = "https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg";
+              }}
+              onLoad={(e) => {
+                e.currentTarget.classList.add('loaded');
               }}
             />
             
@@ -210,3 +215,4 @@ export const StoreCard = memo(({
     </motion.div>
   );
 });
+
