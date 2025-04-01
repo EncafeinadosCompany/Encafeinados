@@ -5,8 +5,10 @@ import RoleRoute from "./RouleRoute";
 import { ROLES } from "@/common/utils/lists/roles";
 import  LoadingSpinner  from "@/common/atoms/LoadingSpinner";
 import NavbarGeneral from "@/common/widgets/nav/nav";
-import { CoffeloverItems } from "@/common/utils/lists/nav/CoffeeloverItems";
+import { CoffeloverItems } from "@/common/utils/lists/nav/coffeeloverItems";
 import { PendingStoresView } from "@/modules/adminStores/components/PendingStoresList";
+import FinishAdminRegistration from "@/modules/adminStores/views/FinishAdminRegistration";
+
 
 
 
