@@ -7,7 +7,7 @@ on:
     branches: [main, QA, Development]
 
 jobs:
-  cypress-e2e:
+  CI:
     runs-on: ubuntu-latest
 
     strategy:
@@ -44,7 +44,7 @@ jobs:
         run: npm run cy:verify-coverage
 
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-e2e-coverage
           path: coverage
