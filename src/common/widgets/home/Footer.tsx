@@ -4,6 +4,7 @@ import { useInView } from 'react-intersection-observer';
 import { NewsletterForm } from '@/common/molecules/home/NewsletterForm';
 import { Instagram, ArrowUp, Coffee, MapPin, Music2, Mail } from '@/common/ui/icons';
 import { SocialIcon } from '@/common/atoms/SocialIcon';
+import logoIcon from "@/assets/images/logo.ico";
 
 export const Footer = () => {
 
@@ -89,7 +90,7 @@ export const Footer = () => {
             className="md:col-span-4"
           >
             <div className="flex items-center mb-6">
-              <Coffee size={32} className="text-[#D4A76A] mr-2" />
+              <img src={logoIcon} alt="Encafeinados Logo" className="h-8 w-8 mr-2" />
               <h2 className="text-2xl font-bold tracking-tight">Encafeinados</h2>
             </div>
             <p className="text-white/80 mb-6">
