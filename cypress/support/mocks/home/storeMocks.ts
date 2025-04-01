@@ -1,7 +1,6 @@
 import { StoresResponse } from '../../../../src/api/types/storesTypes';
 import { BranchesResponse } from '../../../../src/api/types/branchesTypes';
 
-// Datos mock para las tiendas
 export const mockStores: StoresResponse = {
   message: "Stores retrieved successfully",
   stores: {

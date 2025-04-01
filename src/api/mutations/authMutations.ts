@@ -26,7 +26,6 @@ export const useLoginMutation = () => {
 
       console.log('datos', data)
 
-      // Invalida las consultas relacionadas con el usuario
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error: any) => {
@@ -35,7 +34,6 @@ export const useLoginMutation = () => {
   });
 }
 
-// Register mutation
 export const useRegisterCoffeloverMutation = () => {
   const queryClient = useQueryClient()
   const useErrors = useError("registeCoffelover")
@@ -71,7 +69,6 @@ export const useRegisterStoreMutation = () => {
 
       setAuthStorage(data.accessToken, data.user)
 
-      // Invalidar queries relacionadas
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error: any) => {
@@ -80,7 +77,6 @@ export const useRegisterStoreMutation = () => {
   })
 }
 
-// Logout mutation
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient()
 
@@ -89,14 +85,12 @@ export const useLogoutMutation = () => {
        clearAuthStorage()
     },
     onSuccess: () => {
-      // Invalidar y resetear queries
       queryClient.clear();
     },
   })
 }
 
 
-// Change password mutation
 export const useChangePasswordMutation = () => {
   return useMutation({
     mutationFn: async ({ oldPassword, newPassword }: { oldPassword: string; newPassword: string }) => {
@@ -105,7 +99,6 @@ export const useChangePasswordMutation = () => {
   });
 };
 
-// Request password reset mutation
 export const useRequestPasswordResetMutation = () => {
   return useMutation({
     mutationFn: async (email: string) => {
@@ -113,8 +106,6 @@ export const useRequestPasswordResetMutation = () => {
     }
   });
 };
-
-// Reset password mutation
 export const useResetPasswordMutation = () => {
   return useMutation({
     mutationFn: async ({ token, newPassword }: { token: string; newPassword: string }) => {
