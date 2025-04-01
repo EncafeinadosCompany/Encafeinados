@@ -11,7 +11,6 @@ describe('Coffee Lover Registration', () => {
 
    it('should mock the API request and handle success', () => {
 
-
     // Step 1: Fill personal data
     cy.get('input[name="personData.name"]').type('John');
     cy.get('input[name="personData.lastname"]').type('Doe');
