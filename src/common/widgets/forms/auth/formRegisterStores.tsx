@@ -33,7 +33,7 @@ const FormRegisterStores = () => {
             type_document: "",
             number_document: "",
             phone_number: "",
-            
+
         }
     })
 
@@ -52,7 +52,7 @@ const FormRegisterStores = () => {
         const finalData = { ...formData, ...data }; // Combinar datos de todos los pasos
         console.log("Formulario enviado:", finalData);
 
-        try{
+        try {
             const data: RegisterStoreSchemaType = {
                 email: finalData.email,
                 name: finalData.name,
@@ -60,7 +60,7 @@ const FormRegisterStores = () => {
                 number_document: finalData.number_document,
                 phone_number: finalData.phone_number,
                 logo: 'https://th.bing.com/th/id/R.ent%d=ImgRaw&r=0',
-                role_id:2
+                role_id: 2
             }
 
             const response = useRegiterStore.mutateAsync(data).then((response) => {
@@ -74,10 +74,10 @@ const FormRegisterStores = () => {
                 // }
             })
 
-            .catch((error) => {
-                console.log("error", error);
-            })
-        }catch(error){
+                .catch((error) => {
+                    console.log("error", error);
+                })
+        } catch (error) {
             console.log("error", error);
 
         }
@@ -96,10 +96,9 @@ const FormRegisterStores = () => {
                 <div>
                     <div className="mt-8 mb-2">
                         <TitleForm
-                            title="Conviértete en un verdadero Coffelover"
-                            subtitle=" Descubre un mundo de aromas y sabores. Únete a la comunidad donde el café es más que una bebida, es una pasión."
-                        >
-                        </TitleForm>
+                            title="Registra tu cafetería de especialidad"
+                            subtitle="Forma parte de nuestra comunidad y da a conocer tu pasión por el café. Conéctate con amantes del buen café y haz crecer tu negocio."
+                        />
                     </div>
                     {/* Progress indicator */}
                     <ProgressIndicator1 step={step} totalSteps={RegisterStoreSchema.length}></ProgressIndicator1>

@@ -60,7 +60,7 @@ const Formlogin = () => {
   }
 
   return (
-    <div className="mx-4" >
+    <div className="" >
       <LoginCard
         register={register}
         errors={errors}

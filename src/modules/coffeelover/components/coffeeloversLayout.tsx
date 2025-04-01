@@ -1,10 +1,12 @@
+import { CoffeloverItems } from "@/common/utils/lists/nav/CoffeeloverItems";
+import NavbarGeneral from "@/common/widgets/nav/nav";
 
-import ResponsiveNavigation from "@/modules/nav/nav";
 
 const CoffeeloversLayout = () => {
     return (
-        <ResponsiveNavigation>
-        </ResponsiveNavigation>
+        <NavbarGeneral
+        navItems={CoffeloverItems}>
+        </NavbarGeneral>
     )
 }
 
