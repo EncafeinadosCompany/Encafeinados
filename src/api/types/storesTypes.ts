@@ -17,3 +17,4 @@ export interface StoresResponse {
     stores: Store[];
   };
 }
+

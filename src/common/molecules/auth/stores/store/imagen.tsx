@@ -2,10 +2,9 @@ import { CurrentSchema } from "@/common/utils/schemas/auth/registerStoreShema"
 import { Controller, UseFormRegister } from "react-hook-form"
 import { motion } from "framer-motion"
 import { pageVariants } from "@/common/atoms/auth/pageVariants"
-import { Label } from "@/common/ui/label"
 import { TitleForm } from "@/common/atoms/auth/titleForm"
 import { useState, useRef } from "react"
-import { Coffee, Upload, X, Check } from "lucide-react"
+import { Coffee, Upload, X, Check } from "@/common/ui/icons"
 
 interface registerStoreProps {
     register: UseFormRegister<CurrentSchema>

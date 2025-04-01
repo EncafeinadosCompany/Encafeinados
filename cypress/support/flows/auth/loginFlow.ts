@@ -1,3 +1,6 @@
+/// <reference types="cypress" />
+
+
 export function doLogin(email = "admin@example.com", password = "123456") {
   cy.get("input[name=email]").type(email);
   cy.get("input[name=password]").type(password);

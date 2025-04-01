@@ -1,7 +1,7 @@
 import { InputForm } from "@/common/atoms/auth/inputForm"
 import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument"
 import { Label } from "@/common/ui/label"
-import { HelpCircle, X } from "lucide-react"
+import { HelpCircle, X } from "@/common/ui/icons"
 import { Controller, UseFormRegister } from "react-hook-form"
 
 interface RegisterCoffeloverStep2Props {

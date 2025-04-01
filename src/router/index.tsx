@@ -3,11 +3,10 @@ import { lazy, Suspense } from "react";
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 import { ROLES } from "@/common/utils/lists/roles";
-import CuestionCard from "@/common/molecules/auth/cuestionCard";
 import  LoadingSpinner  from "@/common/atoms/LoadingSpinner";
 
 
-
+const CuestionCard = lazy(()=>import("@/common/molecules/auth/cuestionCard"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
 const LoginPage = lazy(() => import("@/modules/home/views/Login/loginPage"));
 const RegisterCoffeloverPage = lazy(() => import("@/modules/home/views/Login/registerCoffeloverPage"));

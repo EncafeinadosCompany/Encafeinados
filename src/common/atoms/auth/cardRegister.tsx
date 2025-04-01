@@ -1,6 +1,6 @@
 import React from "react"
 import { motion } from "framer-motion"
-import { Store } from "lucide-react"
+import { Store } from "@/common/ui/icons"
 import { Link } from "react-router-dom"
 
 interface CartProps {

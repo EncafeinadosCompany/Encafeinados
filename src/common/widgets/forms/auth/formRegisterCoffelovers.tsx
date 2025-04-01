@@ -1,30 +1,29 @@
-import { useForm, UseFormRegister } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import registerCoffeeloverSchema from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
-
+import toast from "react-hot-toast";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/common/ui/button";
 
-import { RegisterCoffelover, useRegisterCoffeloverMutation } from "@/api";
+import { useForm, UseFormRegister } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ArrowRight } from "@/common/ui/icons";
 import { motion, AnimatePresence } from "framer-motion";
-import toast from "react-hot-toast";
 
+import { RegisterCoffelover, useRegisterCoffeloverMutation } from "@/api";
+import registerCoffeeloverSchema from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
 import { TitleForm } from "@/common/atoms/auth/titleForm";
 import { pageVariants } from "@/common/atoms/auth/pageVariants";
-import { ButtonGoogle } from "@/common/atoms/buttonGoogle";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { signInWithGoogle } from "@/api/firebase";
 import { LinkReturn } from "@/common/molecules/auth/LinkReturn";
+
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(1);
-    const [direction, setDirection] = useState(0); // -1 for left, 1 for right
+    const [direction, setDirection] = useState(0); 
     const [showInfo, setShowInfo] = useState(false)
     const [passwordsMatch, setPasswordsMatch] = useState(true)
     const navegate = useNavigate();
@@ -131,7 +130,6 @@ const FormRegisterCoffeelover = () => {
           try {
             setIsLoading(true)
             const user = await signInWithGoogle().then((userCredential) => {
-                // Signed in
                 const user = userCredential.providerData;
                 const userData: RegisterCoffelover = {
                     userData:{
@@ -282,7 +280,7 @@ const FormRegisterCoffeelover = () => {
 
                         {step <= totalSteps ? (
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Button type="button" onClick={nextStepValidated} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
+                                <Button type="button" data-testid="next-button" onClick={nextStepValidated} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
                                     {isLoading ? "Cargando..." : "Siguiente"}
                                     <ArrowRight className="w-4 h-4 ml-2" />
                                 </Button>
@@ -291,6 +289,7 @@ const FormRegisterCoffeelover = () => {
                             <motion.div whileHover={passwordsMatch ? { scale: 1.05 } : {}} whileTap={passwordsMatch ? { scale: 0.95 } : {}}>
                                 <Button
                                     type="submit"
+                                    data-testid="submit-button"
                                     disabled={!!errors.userData?.confirmPassword}
                                     className={`rounded-lg px-6 py-2 ${errors.userData?.confirmPassword ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800 text-white"
                                         }`}

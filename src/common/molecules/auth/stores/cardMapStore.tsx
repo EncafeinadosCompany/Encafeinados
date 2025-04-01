@@ -2,7 +2,7 @@ import { currentLocationIcon } from "@/common/atoms/map/Icons/currentLocationIco
 import { customIcon } from "@/common/atoms/map/Icons/customIcon";
 import { formatAddress } from "@/common/utils/map/formatAddress";
 import { MapController } from "@/common/utils/map/MapController";
-import { Loader2, MapPin, Navigation, Search, X } from "lucide-react";
+import { Loader2, MapPin, Navigation, Search, X } from "@/common/ui/icons";
 import { MapContainer, Marker, TileLayer, ZoomControl } from "react-leaflet";
 interface SearchProps {
     mapRef: React.RefObject<L.Map | null>;

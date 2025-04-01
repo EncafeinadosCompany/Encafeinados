@@ -2,7 +2,7 @@ import toast from "react-hot-toast"
 import { useState } from "react"
 import { Button } from "@/common/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, ArrowRight } from "@/common/ui/icons"
 import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 
@@ -14,7 +14,6 @@ import RegisterStoreStep2 from "@/common/molecules/auth/stores/store/registerSto
 
 import ProgressIndicator1 from "@/common/atoms/auth/ProgressIndicator1"
 
-import { useAuth } from "@/common/molecules/hooks/useAuth"
 import { useNavigate } from "react-router-dom"
 import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
 import { useRegisterStoreMutation } from "@/api"
