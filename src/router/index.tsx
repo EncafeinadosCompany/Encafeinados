@@ -4,6 +4,10 @@ import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 import { ROLES } from "@/common/utils/lists/roles";
 import  LoadingSpinner  from "@/common/atoms/LoadingSpinner";
+import NavbarGeneral from "@/common/widgets/nav/nav";
+import { CoffeloverItems } from "@/common/utils/lists/nav/CoffeeloverItems";
+
+
 
 const CuestionCard = lazy(()=>import("@/common/molecules/auth/cuestionCard"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
@@ -17,7 +21,7 @@ const CoffeeloversLayout = lazy(() => import("@/modules/coffeelover/components/c
 const CoffeeLoverDashboard = lazy(() => import("@/modules/coffeelover/views/CoffeeLoverDashboard"));
 const MapCoffelover = lazy(() => import("@/modules/coffeelover/components/mapCoffelover"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
-
+const HomeAdminStores = lazy(()=> import ("@/modules/adminStores/views/homeAdmin"));
 const MapView = lazy(() => import("@/common/widgets/map/MapView"));
 
 // const LanguageSwitcher = lazy(() => import("@/common/molecules/settings/button-languages"));
@@ -39,7 +43,8 @@ const AuthRoutes = () => {
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
             <Route path="/404" element={<NotFound />} />
-
+            <Route path="/mar" element={<NavbarGeneral navItems={CoffeloverItems}/>} />
+            <Route path="/admin" element={<HomeAdminStores />} />
 
             <Route element={<PrivateRoute />}>
               <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
@@ -50,7 +55,11 @@ const AuthRoutes = () => {
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
-                <Route path="/coffeelover" element={<CoffeeLoverDashboard />} />
+                <Route path="/store/dashboard" element={<CoffeeLoverDashboard />} />
+              </Route>
+
+              <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
+              
               </Route>
 
             </Route>

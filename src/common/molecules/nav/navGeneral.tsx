@@ -1,82 +1,25 @@
-"use client"
-
-import type React from "react"
-
-import { useState, useEffect } from "react"
 import { Link, Outlet, useLocation } from "react-router-dom"
-import { Home, Search, Bell, Settings, User, ChevronRight, ChevronLeft } from "@/common/ui/icons"
+import {ChevronRight, ChevronLeft } from "@/common/ui/icons"
 import { Button } from "@/common/ui/button"
+import { NavItemType } from "@/common/types/navTypes"
 
-// Utility function for class names
+interface NavGeneralProps  {
+    isMobile: boolean
+    isExpanded: boolean
+    navItems: NavItemType[]
+    setIsExpanded: (isExpanded: boolean) => void
+}
+
 const cn = (...classes: string[]) => {
-  return classes.filter(Boolean).join(" ")
-}
+    return classes.filter(Boolean).join(" ")
+  }
+  
 
-interface NavItem {
-  title: string
-  href: string
-  icon: React.ReactNode
-}
-
-export default function ResponsiveNavigation() {
-  const [isExpanded, setIsExpanded] = useState(true)
-  const location = useLocation()
-
-  // Check if we're on mobile based on screen width
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-      // On larger screens, we can start with the menu expanded
-      if (window.innerWidth >= 768) {
-        setIsExpanded(false)
-      } else {
-        setIsExpanded(true)
-      }
-    }
-
-    // Check initially
-    checkIfMobile()
-
-    // Add event listener for window resize
-    window.addEventListener("resize", checkIfMobile)
-
-    // Clean up
-    return () => window.removeEventListener("resize", checkIfMobile)
-  }, [])
-
-  const navItems: NavItem[] = [
-    {
-      title: "Inicio",
-      href: "/coffeelover",
-      icon: <Home className="h-5 w-5" />,
-    },
-    {
-      title: "Buscar",
-      href: "/coffeelover",
-      icon: <Search className="h-5 w-5" />,
-    },
-    {
-      title: "Notificaciones",
-      href: "/coffeelover",
-      icon: <Bell className="h-5 w-5" />,
-    },
-    {
-      title: "Configuración",
-      href: "/settings",
-      icon: <Settings className="h-5 w-5" />,
-    },
-    {
-      title: "Perfil",
-      href: "/profile",
-      icon: <User className="h-5 w-5" />,
-    },
-  ]
-
-  return (
-    <div className="flex min-h-screen w-full">
-      {/* Mobile Bottom Navigation */}
+export const NavGeneral = ({isMobile, isExpanded, navItems, setIsExpanded}:NavGeneralProps) => {
+    const location = useLocation();
+    return (
+       <>
+         {/* Mobile Bottom Navigation */}
       {isMobile ? (
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-xl border-t border-amber-100 z-[100] rounded-t-xl">
           <nav className="flex justify-around items-center h-16">
@@ -153,9 +96,6 @@ export default function ResponsiveNavigation() {
           <Outlet />
         </div>
       </main>
-    </div>
-  )
+       </>
+    )
 }
-
-
-
