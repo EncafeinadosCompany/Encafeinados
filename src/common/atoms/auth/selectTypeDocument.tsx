@@ -1,3 +1,4 @@
+import React from "react";
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
 import { documentTypeList } from "@/common/utils/lists/typeDocument"
 import { Select } from "@radix-ui/react-select"
@@ -7,8 +8,6 @@ interface selectTypeDocumentProps {
     value: string | undefined
 }
 const SelectTypeDocument = ({onValueChange, value, ...props}: selectTypeDocumentProps) => {
-
-    console.log(value)
    return(
     <Select
     onValueChange={onValueChange}
@@ -23,7 +22,7 @@ const SelectTypeDocument = ({onValueChange, value, ...props}: selectTypeDocument
     <SelectContent>
         {documentTypeList.map((documentType) => {
             return (
-                <SelectItem key={documentType.clave} value={documentType.clave.toString()}>
+                <SelectItem role="option" key={documentType.clave} value={documentType.clave.toString()}>
                     {documentType.description}
                 </SelectItem>
             )
@@ -32,6 +31,5 @@ const SelectTypeDocument = ({onValueChange, value, ...props}: selectTypeDocument
 </Select>
    )
 }
-
 
 export default SelectTypeDocument

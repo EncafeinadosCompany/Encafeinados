@@ -5,7 +5,7 @@ interface LoadingSpinnerProps {
   className?: string
 }
 
-export const LoadingSpinner = ({ message, className }: LoadingSpinnerProps) => {
+ const LoadingSpinner = ({ message, className }: LoadingSpinnerProps) => {
   function cn(base: string, className?: string): string {
 
     return [base, className].filter(Boolean).join(" ");
@@ -18,3 +18,5 @@ export const LoadingSpinner = ({ message, className }: LoadingSpinnerProps) => {
     </div>
   )
 }
+
+export default LoadingSpinner;

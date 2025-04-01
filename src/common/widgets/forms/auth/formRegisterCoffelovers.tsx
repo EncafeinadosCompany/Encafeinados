@@ -17,7 +17,7 @@ import { pageVariants } from "@/common/atoms/auth/pageVariants";
 import { ButtonGoogle } from "@/common/atoms/buttonGoogle";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { signInWithGoogle } from "@/api/firebase";
-import { LinkReturn } from "@/common/molecules/auth/linkReturn";
+import { LinkReturn } from "@/common/molecules/auth/LinkReturn";
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";

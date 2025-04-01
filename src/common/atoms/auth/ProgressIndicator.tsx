@@ -6,7 +6,6 @@ interface ProgressIndicatorProps {
 }
 
 const ProgressIndicator = ({step, totalSteps}:ProgressIndicatorProps) => {
-   console.log(step, totalSteps);
     return (
         <div className="flex mb-8">
           {Array.from({ length: totalSteps }).map((_, index) => (
@@ -20,7 +19,7 @@ const ProgressIndicator = ({step, totalSteps}:ProgressIndicatorProps) => {
                       : "border-2 border-gray-900 text-gray-900"
                 }`}
               >
-                {step > index + 1 ? <Check className="w-4 h-4" /> : index + 1}
+                {step > index + 1 ? <Check className="w-4 h-4" role="svg" /> : index + 1}
               </div>
               {index < totalSteps - 1 && (
                 <div className={`flex-1 h-0.5 ${step > index + 1 ? "bg-amber-600 text-white" : "bg-gray-500"}`} />
