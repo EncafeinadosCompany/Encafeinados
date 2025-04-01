@@ -23,18 +23,17 @@ import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/register
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(1);
-    const [direction, setDirection] = useState(0); 
+    const [direction, setDirection] = useState(0);
     const [showInfo, setShowInfo] = useState(false)
     const [passwordsMatch, setPasswordsMatch] = useState(true)
     const navegate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false)  
+    const [isLoading, setIsLoading] = useState(false)
     const totalSteps = 3
 
 
     const toggleInfo = () => {
         setShowInfo(!showInfo)
 
-        // Auto-hide after 5 seconds if showing
         if (!showInfo) {
             setTimeout(() => {
                 setShowInfo(false)
@@ -82,7 +81,7 @@ const FormRegisterCoffeelover = () => {
         const isValid = await trigger(fieldsToValidate as any);
 
         if (isValid) {
-            setDirection(1); // Moving forward
+            setDirection(1);
             setStep((prev) => prev + 1);
         }
     };
@@ -90,7 +89,7 @@ const FormRegisterCoffeelover = () => {
 
     const prevStep = () => {
         if (step > 1) {
-            setDirection(-1); // Moving backward
+            setDirection(-1);
             setStep(step - 1);
         }
     }
@@ -125,182 +124,179 @@ const FormRegisterCoffeelover = () => {
     };
 
 
-    const handleGoogleSignIn = async() => {
-        
-          try {
+    const handleGoogleSignIn = async () => {
+
+        try {
             setIsLoading(true)
             const user = await signInWithGoogle().then((userCredential) => {
                 const user = userCredential.providerData;
                 const userData: RegisterCoffelover = {
-                    userData:{
+                    userData: {
                         id_google: user[0].uid,
-                        email: user[0].email||"",
+                        email: user[0].email || "",
                         password: "",
                         role_id: 3
                     },
-                    personData:{
-                        full_name: user[0].displayName||"",
+                    personData: {
+                        full_name: user[0].displayName || "",
                         type_document: 1,
                         number_document: user[0].uid,
                         phone_number: user[0].uid
                     }
                 }
-               
+
 
                 useRegisterCoffeelover.mutateAsync(userData).then((response) => {
-                    toast.success("Coffelover creado exitosamente.¡Bienvenido!");      
+                    toast.success("Coffelover creado exitosamente.¡Bienvenido!");
                 }).catch((error) => {
                     setIsLoading(false)
-                    // toast.error("Error al crear el coffelover");
                 })
                 console.log("Usuario creado:", userData);
                 console.log("Usuario logueado:", user);
                 return user
             });
-          } catch (error) {
+        } catch (error) {
             console.error("Error en el login:", error);
-       
-        setTimeout(() => {
-          setIsLoading(false)
-        }, 1000)
-      }
+
+            setTimeout(() => {
+                setIsLoading(false)
+            }, 1000)
+        }
     }
 
     return (
         <div className="min-h-screen  bg-gradient-to-b from-orange-50 to-orange-200" translate="no">
             <LinkReturn link="/register" className="m-2 xl:m-10" >
             </LinkReturn>
-            
+
             <div className="flex flex-col items-center justify-center p-4">
-            <motion.div
-                className="max-w-2xl w-full"
-                animate={{ opacity: 1, y: 0 }}
-                initial={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.5 }}
-            >
-                <div>
-                    <div className="mt-8 mb-2">
-                        <TitleForm
-                            title="Conviértete en un verdadero Coffelover"
-                            subtitle=" Descubre un mundo de aromas y sabores. Únete a la comunidad donde el café es más que una bebida, es una pasión."
-                        >
-                        </TitleForm>
-                    </div>
-                    {/* Progress indicator */}
-                    <ProgressIndicator step={step} totalSteps={totalSteps}></ProgressIndicator>
-                </div>
-
-                <form className="space-y-4 relative overflow-hidden" onSubmit={(e) => {
-                    e.preventDefault(); // Evita la recarga de página
-                    handleSubmit(onSubmit)();
-                }}>
-                    {/* Animated form steps */}
-                    <div className="relative" style={{ minHeight: "300px" }}>
-                        <AnimatePresence initial={false} custom={direction} mode="wait">
-                            {step === 1 && (
-                                <motion.div
-                                    key="step1"
-                                    custom={direction}
-                                    variants={pageVariants}
-                                    initial="enter"
-                                    animate="center"
-                                    exit="exit"
-                                    className="absolute w-full"
-                                    style={{ perspective: "1000px" }}
-                                >
-                                    <RegisterCoffeloverStep1
-                                        onGoogleSignIn={handleGoogleSignIn}
-                                        isLoading={isLoading}
-                                        register={register as UseFormRegister<any>}
-                                        errors={errors}
-                                    />
-                                </motion.div>
-                            )}
-
-                            {step === 2 && (
-                                <motion.div
-                                    key="step2"
-                                    custom={direction}
-                                    variants={pageVariants}
-                                    initial="enter"
-                                    animate="center"
-                                    exit="exit"
-                                    className="absolute w-full"
-                                    style={{ perspective: "1000px" }}
-                                >
-                                    <RegisterCoffeloverStep2
-                                        showInfo={showInfo}
-                                        toggleInfo={toggleInfo}
-                                        register={register as UseFormRegister<any>}
-                                        errors={errors}
-                                        control={control}
-                                    />
-                                </motion.div>
-                            )}
-
-                            {step === 3 && (
-                                <motion.div
-                                    key="step3"
-                                    custom={direction}
-                                    variants={pageVariants}
-                                    initial="enter"
-                                    animate="center"
-                                    exit="exit"
-                                    className="absolute w-full"
-                                    style={{ perspective: "1000px" }}
-                                >
-                                    <RegisterCoffeloverStep3
-                                        register={register as UseFormRegister<any>}
-                                        errors={errors}
-                                    />
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-
-                    {/* Navigation buttons */}
-                    <motion.div
-                        className="pt-2 m-2 flex justify-between"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.4 }}
+                <motion.div
+                    className="max-w-2xl w-full"
+                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.5 }}
                     >
-                        {step > 1 ? (
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Button type="button" variant="outline" onClick={prevStep} className="border-gray-200 bg-amber-50/50">
-                                    <ArrowLeft className="w-4 h-4 mr-2" />
-                                    Previous
-                                </Button>
-                            </motion.div>
-                        ) : (
-                            <div></div>
-                        )}
+                    <div>
+                        <div className="mt-8 mb-2">
+                            <TitleForm
+                                title="Conviértete en un verdadero Coffelover"
+                                subtitle=" Descubre un mundo de aromas y sabores. Únete a la comunidad donde el café es más que una bebida, es una pasión."
+                            >
+                            </TitleForm>
+                        </div>
+                        {/* Progress indicator */}
+                        <ProgressIndicator step={step} totalSteps={totalSteps}></ProgressIndicator>
+                    </div>
 
-                      
+                    <form className="space-y-4 relative overflow-hidden" onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSubmit(onSubmit)();
+                    }}>
+                        {/* Animated form steps */}
+                        <div className="relative" style={{ minHeight: "300px" }}>
+                            <AnimatePresence initial={false} custom={direction} mode="wait">
+                                {step === 1 && (
+                                    <motion.div
+                                        key="step1"
+                                        custom={direction}
+                                        variants={pageVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        className="absolute w-full"
+                                        style={{ perspective: "1000px" }}
+                                    >
+                                        <RegisterCoffeloverStep1
+                                            onGoogleSignIn={handleGoogleSignIn}
+                                            isLoading={isLoading}
+                                            register={register as UseFormRegister<any>}
+                                            errors={errors}
+                                        />
+                                    </motion.div>
+                                )}
 
-                        {step <= totalSteps ? (
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                <Button type="button" data-testid="next-button" onClick={nextStepValidated} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
-                                    {isLoading ? "Cargando..." : "Siguiente"}
-                                    <ArrowRight className="w-4 h-4 ml-2" />
-                                </Button>
-                            </motion.div>
-                        ) : (
-                            <motion.div whileHover={passwordsMatch ? { scale: 1.05 } : {}} whileTap={passwordsMatch ? { scale: 0.95 } : {}}>
-                                <Button
-                                    type="submit"
-                                    data-testid="submit-button"
-                                    disabled={!!errors.userData?.confirmPassword}
-                                    className={`rounded-lg px-6 py-2 ${errors.userData?.confirmPassword ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800 text-white"
-                                        }`}
-                                >
-                                    Complete Registration
-                                </Button>
-                            </motion.div>
-                        )}
-                    </motion.div>
-                </form>
-            </motion.div>
+                                {step === 2 && (
+                                    <motion.div
+                                        key="step2"
+                                        custom={direction}
+                                        variants={pageVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        className="absolute w-full"
+                                        style={{ perspective: "1000px" }}
+                                    >
+                                        <RegisterCoffeloverStep2
+                                            showInfo={showInfo}
+                                            toggleInfo={toggleInfo}
+                                            register={register as UseFormRegister<any>}
+                                            errors={errors}
+                                            control={control}
+                                        />
+                                    </motion.div>
+                                )}
+
+                                {step === 3 && (
+                                    <motion.div
+                                        key="step3"
+                                        custom={direction}
+                                        variants={pageVariants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        className="absolute w-full"
+                                        style={{ perspective: "1000px" }}
+                                    >
+                                        <RegisterCoffeloverStep3
+                                            register={register as UseFormRegister<any>}
+                                            errors={errors}
+                                        />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Navigation buttons */}
+                        <motion.div
+                            className="pt-2 m-2 flex justify-between"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.4 }}
+                        >
+                            {step > 1 ? (
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                    <Button type="button" variant="outline" onClick={prevStep} className="border-gray-200 bg-amber-50/50">
+                                        <ArrowLeft className="w-4 h-4 mr-2" />
+                                        Previous
+                                    </Button>
+                                </motion.div>
+                            ) : (
+                                <div></div>
+                            )}
+
+                            {step <= totalSteps ? (
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                    <Button type="button" data-testid="next-button" onClick={nextStepValidated} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
+                                        {isLoading ? "Cargando..." : "Siguiente"}
+                                        <ArrowRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                </motion.div>
+                            ) : (
+                                <motion.div whileHover={passwordsMatch ? { scale: 1.05 } : {}} whileTap={passwordsMatch ? { scale: 0.95 } : {}}>
+                                    <Button
+                                        type="submit"
+                                        data-testid="submit-button"
+                                        disabled={!!errors.userData?.confirmPassword}
+                                        className={`rounded-lg px-6 py-2 ${errors.userData?.confirmPassword ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800 text-white"
+                                            }`}
+                                    >
+                                        Complete Registration
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </motion.div>
+                    </form>
+                </motion.div>
             </div>
         </div>
     )

@@ -34,15 +34,9 @@ const buttonVariants = {
   tap: { scale: 0.97 }
 };
 
-export const StoreCard = memo(({
-  id,
-  name,
-  imageUrl,
-  distance,
-  email,
-  phone,
-  description = "Descubre sabores excepcionales y momentos únicos en nuestro espacio."
-}: StoreCardProps) => {
+export const StoreCard = memo(({ id,name,imageUrl,distance,email,phone, description = "Descubre sabores excepcionales y momentos únicos en nuestro espacio."}:
+  
+  StoreCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -51,7 +45,7 @@ export const StoreCard = memo(({
     setIsFavorite(prev => !prev);
   };
 
-  // Especialidades genéricas para mantener la personalidad
+
   const specialties = ["Café de origen", "Métodos artesanales", "Pasteles caseros"];
 
   return (
@@ -75,16 +69,21 @@ export const StoreCard = memo(({
             <div className="absolute top-0 left-0 w-full h-16 bg-gradient-to-b from-black/40 to-transparent z-10"></div>
 
             {/* Imagen con animación optimizada */}
-            <motion.img
-              src={imageUrl}
+            <motion.img 
+              loading="lazy"
+              decoding="async"
+              src={imageUrl} 
               alt={`Tienda ${name}`}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
               variants={imageVariants}
               animate={isHovered ? "hover" : "normal"}
               transition={{ duration: 0.5, ease: "easeOut" }}
               onError={(e) => {
                 // Imagen de respaldo si la original falla
                 e.currentTarget.src = "https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg";
+              }}
+              onLoad={(e) => {
+                e.currentTarget.classList.add('loaded');
               }}
             />
 
@@ -110,14 +109,13 @@ export const StoreCard = memo(({
             )}
           </div>
 
-          {/* Contenido de la card */}
+            {/* Card container */}
+
           <div className="p-4 flex-grow flex flex-col">
-            {/* Nombre de la tienda */}
             <div className="flex justify-between items-start mb-2">
               <Text variant="h3" className="font-bold text-lg sm:text-xl text-[#2C1810] truncate">{name}</Text>
             </div>
 
-            {/* Información adicional */}
             <div className="flex flex-col space-y-2 mt-1">
               <div className="flex items-center text-gray-600">
                 <Mail className="w-4 h-4 mr-2 text-[#A67C52] flex-shrink-0" />
@@ -129,7 +127,6 @@ export const StoreCard = memo(({
               </div>
             </div>
 
-            {/* Línea divisoria animada */}
             <motion.div
               className="my-3 w-full"
               initial={{ scaleX: 0 }}
@@ -139,7 +136,6 @@ export const StoreCard = memo(({
               <div className="h-px bg-gradient-to-r from-[#D4A76A] to-[#6F4E37]"></div>
             </motion.div>
 
-            {/* Contenido expandido al hacer hover - con optimización de renderizado */}
             <AnimatePresence>
               {isHovered && (
                 <motion.div
@@ -173,9 +169,8 @@ export const StoreCard = memo(({
               )}
             </AnimatePresence>
 
-            {/* Contenedor para los botones */}
             <div className="mt-auto pt-2 flex gap-2">
-              {/* Botón "Ver sucursales" animado */}
+
               <motion.div
                 className="flex-grow"
                 initial={{ opacity: 0, y: 10 }}
@@ -209,3 +204,4 @@ export const StoreCard = memo(({
     </motion.div>
   );
 });
+

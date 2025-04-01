@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserIcon, HomeIcon, InfoIcon, MenuIcon, XIcon} from '@/common/ui/icons';
+import { UserIcon, HomeIcon, InfoIcon, MenuIcon, XIcon } from '@/common/ui/icons';
 import logoIcon from "@/assets/images/logo.ico";
 
 export const Navbar: React.FC = () => {
@@ -17,17 +17,16 @@ export const Navbar: React.FC = () => {
     { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-5 h-5" /> }
   ];
 
-  // Variantes de animación para la navegación móvil
   const mobileMenuVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: -50,
       transition: {
         when: "afterChildren"
       }
     },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: {
         staggerChildren: 0.1,
@@ -46,9 +45,8 @@ export const Navbar: React.FC = () => {
       bg-gradient-to-r from-[#2C1810]/90 to-[#6F4E37]/90 
       backdrop-blur-md shadow-lg">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Logo con animación */}
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className="flex items-center space-x-3 group"
         >
           <motion.img
@@ -59,7 +57,7 @@ export const Navbar: React.FC = () => {
             transition={{ duration: 0.5 }}
             className="h-10 w-10 object-contain group-hover:scale-110 transition-transform"
           />
-          <motion.span 
+          <motion.span
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
@@ -84,7 +82,7 @@ export const Navbar: React.FC = () => {
                 transition-colors flex items-center space-x-2 
                 group relative overflow-hidden py-1"
               >
-                {/* Efecto de línea hover */}
+
                 <motion.span
                   className="absolute bottom-0 left-0 w-full h-0.5 bg-[#D4A76A]"
                   initial={{ scaleX: 0 }}
@@ -100,7 +98,6 @@ export const Navbar: React.FC = () => {
           ))}
         </div>
 
-        {/* Botón Menú Móvil */}
         <motion.button
           onClick={toggleMobileMenu}
           whileTap={{ scale: 0.9 }}
@@ -130,7 +127,6 @@ export const Navbar: React.FC = () => {
         </motion.button>
       </div>
 
-      {/* Menú Móvil */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -164,8 +160,6 @@ export const Navbar: React.FC = () => {
                   </Link>
                 </motion.div>
               ))}
-              
-          
             </div>
           </motion.div>
         )}

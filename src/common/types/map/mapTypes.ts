@@ -17,7 +17,7 @@ export interface MarkerPosition {
  */
 export interface MapFocusProps {
   cafeId: number | null;
-  positions: Array<{id: number, lat: number, lng: number}>;
+  positions: Array<{ id: number, lat: number, lng: number }>;
   userLocation: LatLngTuple | null;
 }
 
@@ -44,19 +44,19 @@ export interface Cafe {
   id: number;
   name: string;
   rating: number;
-  reviewCount: number; 
-  openTime: string; 
-  image: string; 
-  tags: string[]; 
+  reviewCount: number;
+  openTime: string;
+  image: string;
+  tags: string[];
   latitude: number;
   longitude: number;
-  isOpen: boolean; 
+  isOpen: boolean;
   phone: string;
   address: string;
   distance: string;
   distanceValue: number;
-  storeId: number; 
-  storeName: string; 
+  storeId: number;
+  storeName: string;
 }
 
 /**

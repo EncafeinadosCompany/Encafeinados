@@ -3,8 +3,6 @@
 import { Label } from "@/common/ui/label"
 import { UseFormRegister } from "react-hook-form"
 import { InputForm } from "@/common/atoms/auth/inputForm"
-import { ButtonGoogle } from "@/common/atoms/buttonGoogle"
-
 
 interface RegisterCoffeloverStep1Props {
   register: UseFormRegister<any>

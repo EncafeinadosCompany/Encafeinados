@@ -87,7 +87,6 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
     }
   };
 
-  // Usar ubicación actual
   const UseCurrentLocation = () => {
     if (currentPosition && currentAddress) {
       setSelectedPosition(currentPosition);
@@ -117,24 +116,24 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
 
   return (
     <CardMapStore
-    mapRef={mapRef}
-    isLocating={isLocating}
-    isSearching={isSearching}
-    searchQuery={searchQuery}
-    searchInputRef={searchInputRef}
-    recentSearches={recentSearches}
-    showSuggestions={showSuggestions}
-    selectedPosition={selectedPosition}
-    currentPosition={currentPosition}
-    suggestions={suggestions}
-    clearSearch={clearSearch}
-    HandleSearch={HandleSearch}
-    setSearchQuery={setSearchQuery}
-    handleSearchFocus={handleSearchFocus}
-    UseCurrentLocation={UseCurrentLocation}
-    setSelectedPosition={setSelectedPosition}
-    handleSelectAddress={handleSelectAddress}
-    onLocationSelect={onLocationSelect}
+      mapRef={mapRef}
+      isLocating={isLocating}
+      isSearching={isSearching}
+      searchQuery={searchQuery}
+      searchInputRef={searchInputRef}
+      recentSearches={recentSearches}
+      showSuggestions={showSuggestions}
+      selectedPosition={selectedPosition}
+      currentPosition={currentPosition}
+      suggestions={suggestions}
+      clearSearch={clearSearch}
+      HandleSearch={HandleSearch}
+      setSearchQuery={setSearchQuery}
+      handleSearchFocus={handleSearchFocus}
+      UseCurrentLocation={UseCurrentLocation}
+      setSelectedPosition={setSelectedPosition}
+      handleSelectAddress={handleSelectAddress}
+      onLocationSelect={onLocationSelect}
     ></CardMapStore>
   );
 };

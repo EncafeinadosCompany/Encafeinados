@@ -1,4 +1,3 @@
-
 import { ArrowLeft } from "@/common/ui/icons"
 import { Link } from "react-router-dom"
 

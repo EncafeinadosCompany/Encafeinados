@@ -203,7 +203,6 @@ export const TeamCard = ({ members }: TeamCardProps) => {
                 </AnimatePresence>
               </div>
               
-              {/* Reflejo/Sombra debajo */}
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: activeIndex === index ? 0.15 : 0.1 }}
