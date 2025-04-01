@@ -11,11 +11,7 @@ import {
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import type { CarouselApi } from "@/common/ui/carousel";
 import {
-  Search,
   Coffee,
-  MapPin,
-  Star,
-  Filter,
   ChevronRight,
   Loader2,
 } from "lucide-react";
