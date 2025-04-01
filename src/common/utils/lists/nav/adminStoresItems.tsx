@@ -5,7 +5,6 @@ export const StoresItems: NavItemType[] = [
     {
       title: "Stores",
       href: "/login",
-      icon: <Home className="h-5 w-5" />,
-
+      icon: <Home className="h-5 w-5" />
     }
 ]

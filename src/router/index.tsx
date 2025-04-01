@@ -6,6 +6,7 @@ import { ROLES } from "@/common/utils/lists/roles";
 import  LoadingSpinner  from "@/common/atoms/LoadingSpinner";
 import NavbarGeneral from "@/common/widgets/nav/nav";
 import { CoffeloverItems } from "@/common/utils/lists/nav/CoffeeloverItems";
+import FinishAdminRegistration from "@/modules/adminStores/views/FinishAdminRegistration";
 
 
 
@@ -42,8 +43,10 @@ const AuthRoutes = () => {
             <Route path='/register' element={<CuestionCard />} />
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
+            <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
+           
             <Route path="/404" element={<NotFound />} />
-            <Route path="/mar" element={<NavbarGeneral navItems={CoffeloverItems}/>} />
+           
             <Route path="/admin" element={<HomeAdminStores />} />
 
             <Route element={<PrivateRoute />}>
@@ -59,7 +62,8 @@ const AuthRoutes = () => {
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
-              
+             
+              <Route path="/mar" element={<NavbarGeneral navItems={CoffeloverItems}/>} />
               </Route>
 
             </Route>

@@ -14,7 +14,7 @@ interface RegisterCoffeloverStep1Props {
 
 export default function RegisterCoffeloverStep1({ register, errors, onGoogleSignIn, isLoading }: RegisterCoffeloverStep1Props) {
   return (
-    <div>
+    <>
       <div className="space-y-4 m-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -74,7 +74,7 @@ export default function RegisterCoffeloverStep1({ register, errors, onGoogleSign
         </div> */}
       </div>
 
-    </div>
+    </>
   )
 }
 
