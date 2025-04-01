@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/common/ui/card';
 import { Avatar } from '@/common/ui/avatar';
 import { Text } from '@/common/atoms/Text';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { Coffee, Linkedin, Mail, Twitter, Sparkles, Star } from 'lucide-react';
+import { Coffee, Sparkles } from '@/common/ui/icons';
 
 interface TeamMember {
   name: string;
@@ -26,7 +26,6 @@ export const TeamCard = ({ members }: TeamCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: false, amount: 0.2 });
 
-  // Para efecto de movimiento del fondo
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (cardRef.current) {

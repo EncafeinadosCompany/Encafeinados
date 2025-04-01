@@ -1,8 +1,5 @@
-import { pageVariants } from "../../atoms/auth/pageVariants";
-import { motion } from "framer-motion"
-import { TitleForm } from "../../atoms/auth/titleForm";
 import { Controller, UseFormRegister } from "react-hook-form";
-import { Check, Coffee, Upload, X } from "lucide-react";
+import { Check, Coffee, Upload, X } from "@/common/ui/icons";
 
 interface ImagenFullProp {
     register: UseFormRegister<any>
@@ -20,14 +17,7 @@ interface ImagenFullProp {
 }
 
 const ImagenFull = ({ register,direction, errors, control, isDragging, previewImage, removeImage, handleDragOver, handleImageChange, handleDragLeave, fileInputRef, handleDrop }: ImagenFullProp) => {
-    
-    
- 
-    return (
-
-
-        
-        
+    return ( 
         <Controller
             control={control}
             name="logo"

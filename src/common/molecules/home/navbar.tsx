@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserIcon, HomeIcon, InfoIcon, MenuIcon, XIcon, CoffeeIcon } from 'lucide-react';
+import { UserIcon, HomeIcon, InfoIcon, MenuIcon, XIcon} from '@/common/ui/icons';
 import logoIcon from "@/assets/images/logo.ico";
 
 export const Navbar: React.FC = () => {

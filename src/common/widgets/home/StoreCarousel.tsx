@@ -1,31 +1,16 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Text } from "@/common/atoms/Text";
 import { StoreCard } from "@/common/molecules/home/StoreCard";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/common/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, } from "@/common/ui/carousel";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import type { CarouselApi } from "@/common/ui/carousel";
-import {
-  Search,
-  Coffee,
-  MapPin,
-  Star,
-  Filter,
-  ChevronRight,
-  Loader2,
-} from "lucide-react";
+import { Coffee, ChevronRight, Loader2 } from "@/common/ui/icons";
 import { useStores } from "@/api/queries/storesQueries";
 import { useGeolocation } from "@/common/hooks/map/useGeolocation";
 import { calculateDistance } from "@/common/utils/map/mapUtils";
 import L from 'leaflet';
 import { useBranches } from "@/api/queries/branchesQueries";
 
-// Mantenemos la estructura para StoreCard pero adaptada a los datos reales de la API
 interface StoreCardProps {
   id: number;
   name: string;
@@ -36,11 +21,10 @@ interface StoreCardProps {
   description?: string;
 }
 
-// Constantes para mejorar la legibilidad y mantenimiento
+
 const AUTOPLAY_DELAY = 4000;
 const INTERACTION_PAUSE = 5000;
 
-// Variantes de animación extraídas para mejor organización
 const animations = {
   title: {
     hidden: { opacity: 0, y: -20 },
@@ -92,7 +76,7 @@ export const StoreCarousel = () => {
 
   const { data: storesData, isLoading, error } = useStores();
   const { data: branchesData, isLoading: branchesLoading } = useBranches();
-  
+
   const { userLocation } = useGeolocation(mapInstanceDummy);
 
   const sectionRef = useRef<HTMLElement>(null);
@@ -115,21 +99,21 @@ export const StoreCarousel = () => {
     if (!storesData?.stores?.stores) {
       return [];
     }
-  
+
     return storesData.stores.stores.map((store) => {
       // Encontrar todas las sucursales para esta tienda
       const storeBranches = branchesData?.branches?.branches?.filter(
         branch => branch.store_name === store.name
       ) || [];
-      
+
       let nearestDistance = "No disponible";
       let nearestBranchName = "";
-      
+
       // Si tenemos la ubicación del usuario y hay sucursales
       if (userLocation && storeBranches.length > 0) {
         let minDistance = Number.MAX_VALUE;
         let closestBranch = null;
-        
+
         // Encontrar la sucursal más cercana
         storeBranches.forEach(branch => {
           if (branch.latitude && branch.longitude) {
@@ -139,7 +123,7 @@ export const StoreCarousel = () => {
               branch.latitude,
               branch.longitude
             );
-            
+
             const distValue = parseFloat(distKm);
             if (distValue < minDistance) {
               minDistance = distValue;
@@ -147,7 +131,7 @@ export const StoreCarousel = () => {
             }
           }
         });
-        
+
         if (closestBranch) {
           nearestDistance = `${minDistance.toFixed(1)} km`;
         }
@@ -156,7 +140,7 @@ export const StoreCarousel = () => {
       } else if (storeBranches.length === 0) {
         nearestDistance = "Sin sucursales cercanas";
       }
-      
+
       return {
         id: store.id,
         name: store.name,
@@ -172,18 +156,18 @@ export const StoreCarousel = () => {
 
   const filteredStores = React.useMemo(() => {
     if (!stores.length) return [];
-    
+
     let result = stores;
-    
+
     // Filtrar por término de búsqueda
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      result = result.filter(store => 
-        store.name.toLowerCase().includes(term) || 
+      result = result.filter(store =>
+        store.name.toLowerCase().includes(term) ||
         store.description?.toLowerCase().includes(term)
       );
     }
-    
+
     // Filtrar por categoría
     if (selectedCategory !== "Todos") {
       if (selectedCategory === "Cercanos") {
@@ -194,9 +178,9 @@ export const StoreCarousel = () => {
           return distA - distB;
         });
       }
-     
+
     }
-    
+
     return result;
   }, [stores, searchTerm, selectedCategory]);
 
@@ -307,7 +291,7 @@ export const StoreCarousel = () => {
             <Coffee className="h-12 w-12 text-[#6F4E37] mb-4" />
             <p className="text-[#6F4E37] font-medium">No se encontraron tiendas</p>
             {searchTerm && (
-              <button 
+              <button
                 className="mt-4 text-sm text-[#6F4E37] underline"
                 onClick={() => setSearchTerm("")}
               >
@@ -379,11 +363,10 @@ export const StoreCarousel = () => {
                     {Array.from({ length: Math.min(count, 5) }).map((_, i) => (
                       <motion.button
                         key={i}
-                        className={`transition-all duration-300 rounded-full ${
-                          i === current % 5
+                        className={`transition-all duration-300 rounded-full ${i === current % 5
                             ? "bg-[#6F4E37] w-6 h-2"
                             : "bg-[#D4A76A]/40 hover:bg-[#D4A76A]/60 w-2 h-2"
-                        }`}
+                          }`}
                         whileHover={{ scale: 1.2 }}
                         whileTap={{ scale: 0.8 }}
                         onClick={() => {

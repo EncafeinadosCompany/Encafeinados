@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { Link, Outlet, useLocation } from "react-router-dom"
-import { Home, Search, Bell, Settings, User, ChevronRight, ChevronLeft } from "lucide-react"
+import { Home, Search, Bell, Settings, User, ChevronRight, ChevronLeft } from "@/common/ui/icons"
 import { Button } from "@/common/ui/button"
 
 // Utility function for class names

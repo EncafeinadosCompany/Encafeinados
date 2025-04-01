@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Coffee, Star, Clock } from 'lucide-react';
+import { X, Star, Clock } from '@/common/ui/icons';
 import { FilterOptions } from '@/common/hooks/map/useSearchFilter';
 
 interface FilterModalProps {

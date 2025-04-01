@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Text } from "@/common/atoms/Text";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRightIcon, ChevronDownIcon } from "lucide-react";
+import { motion} from "framer-motion";
+import { ArrowRightIcon, ChevronDownIcon } from "@/common/ui/icons";
 import { Link } from "react-router-dom";
-import { Navbar } from "@/common/molecules/home/navbar"; // Ajusta la ruta si es necesario
 
 export const HeroSection: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);

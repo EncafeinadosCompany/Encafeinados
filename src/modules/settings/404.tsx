@@ -1,4 +1,4 @@
-import { Coffee, Home, ArrowLeft, CoffeeIcon, Croissant, Coffee as CoffeeCup } from 'lucide-react';
+import { Coffee, Home, ArrowLeft, CoffeeIcon, Croissant, Coffee as CoffeeCup } from '@/common/ui/icons';
 
 const NotFound = () => {
   const handleBack = () => {

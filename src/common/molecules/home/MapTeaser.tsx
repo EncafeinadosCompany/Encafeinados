@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Coffee, Navigation } from 'lucide-react';
+import { MapPin, Coffee, Navigation } from '@/common/ui/icons';
 import { useNavigate } from 'react-router-dom';
 
 interface MapTeaserProps {

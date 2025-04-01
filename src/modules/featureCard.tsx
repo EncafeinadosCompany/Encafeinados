@@ -1,4 +1,4 @@
-import { FlameIcon as Fire } from "lucide-react";
+import { FlameIcon as Fire } from "@/common/ui/icons";
 import { Card, CardContent } from "@/common/ui/card";
 
 interface FeaturedCardProps {

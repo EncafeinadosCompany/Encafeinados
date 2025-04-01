@@ -1,10 +1,5 @@
-
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import { QueryClientProvider } from '@tanstack/react-query' 
-import { queryClient } from '@/api/queryClient' 
-import { RecoilRoot } from 'recoil'
 import { I18nextProvider } from 'react-i18next'
 import './index.css'
 import App from './App'
