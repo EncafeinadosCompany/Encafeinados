@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "../ui/button";
 
-
 interface ButtonDefaultProps {
     className?: string;
     variant?: string;

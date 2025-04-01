@@ -18,17 +18,18 @@ describe('Coffee Lover Registration', () => {
     cy.get('input[name="userData.email"]').type('john.doe@example.com');
     cy.get('button[data-testid="next-button"]').click();
     
-
-    cy.get('[data-testid="type-document-select"]').click(); // Abre el menú
-    cy.get('[data-testid="type-document-option-CC"]').click(); // Selecciona "Cédula de Ciudadanía (CC)"
-    cy.get('[data-testid="type-document-select"]').should('contain', 'Cédula de Ciudadanía (CC)'); // Selecciona "Cédula de Ciudadanía (CC)"
+    // Step 2: Fill user data
+    cy.get('[data-testid="type-document-select"]').click(); 
+    cy.get('[data-testid="type-document-option-CC"]').click(); 
+    cy.get('[data-testid="type-document-select"]').should('contain', 'Cédula de Ciudadanía (CC)'); 
 
   
     cy.get('input[name="personData.number_document"]').type('123456789');
     cy.get('input[name="personData.phone_number"]').type('9876543210');
     cy.get('button[data-testid="next-button"]').click();
 
-  //   // Step 2: Fill user data
+  //   // Step 3: Fill user data autentication
+
     cy.get('input[name="userData.password"]').type('1234');
     cy.get('input[name="userData.confirmPassword"]').type('1234');
     cy.get('button[data-testid="next-button"]').click();

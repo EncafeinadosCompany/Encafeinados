@@ -16,8 +16,8 @@ interface ImagenFullProp {
     handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const ImagenFull = ({ register,direction, errors, control, isDragging, previewImage, removeImage, handleDragOver, handleImageChange, handleDragLeave, fileInputRef, handleDrop }: ImagenFullProp) => {
-    return ( 
+const ImagenFull = ({ register, direction, errors, control, isDragging, previewImage, removeImage, handleDragOver, handleImageChange, handleDragLeave, fileInputRef, handleDrop }: ImagenFullProp) => {
+    return (
         <Controller
             control={control}
             name="logo"
@@ -26,7 +26,7 @@ const ImagenFull = ({ register,direction, errors, control, isDragging, previewIm
                     <div
                         className={`relative mt-2 flex flex-col items-center justify-center border border-dashed rounded-3xl p-6 transition-all duration-300 ease-in-out ${isDragging
                             ? "border-amber-500 bg-amber-50/50"
-                            : previewImage 
+                            : previewImage
                                 ? "border-amber-400 bg-amber-50/30"
                                 : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/20"
                             } ${errors?.logo ? "border-red-300" : ""}`}
@@ -41,10 +41,10 @@ const ImagenFull = ({ register,direction, errors, control, isDragging, previewIm
                             ref={fileInputRef}
                             className="hidden"
                             accept="image/*"
-                            
+
                             onChange={(e) => {
                                 handleImageChange(e);
-                                field.onChange(e.target.files?.[0] || null );
+                                field.onChange(e.target.files?.[0] || null);
                             }}
                         />
 

@@ -4,7 +4,7 @@ import { RouteLineProps, LatLngTuple } from '@/common/types/map/mapTypes';
 import { simulateRoute } from '@/common/utils/map/mapUtils';
 
 /**
- * Componente para dibujar una línea de ruta entre dos puntos
+ * Component to draw a route line between two points
  */
 const RouteLine: React.FC<RouteLineProps> = ({ from, to }) => {
   const [routePoints, setRoutePoints] = useState<LatLngTuple[]>([]);

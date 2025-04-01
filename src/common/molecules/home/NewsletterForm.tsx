@@ -7,11 +7,11 @@ export const NewsletterForm = () => {
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simular envío
+
     setTimeout(() => {
       setIsSubmitted(true);
       setEmail('');
-      // Reset después de 3 segundos
+   
       setTimeout(() => setIsSubmitted(false), 3000);
     }, 500);
   };

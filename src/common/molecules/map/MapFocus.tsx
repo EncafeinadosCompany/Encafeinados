@@ -3,7 +3,7 @@ import { useMap } from 'react-leaflet';
 import { MapFocusProps } from '@/common/types/map/mapTypes';
 
 /**
- * Componente para centrar el mapa en la cafetería seleccionada o ubicación del usuario
+  Component to center the map on the selected coffee shop or user location
  */
 const MapFocus: React.FC<MapFocusProps> = ({ cafeId, positions, userLocation }) => {
   const map = useMap();

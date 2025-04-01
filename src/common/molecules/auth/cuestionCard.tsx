@@ -2,7 +2,6 @@ import { motion } from "framer-motion"
 import CardRegister from "@/common/atoms/auth/cardRegister"
 import { LinkReturn } from "./LinkReturn"
 
-
 export default function CuestionCard() {
   return (
     <div className=" bg-gradient-to-b from-orange-100 to-orange-200">
@@ -14,7 +13,7 @@ export default function CuestionCard() {
         <LinkReturn link="/login" className="m-2 xl:m-10"></LinkReturn>
         <div className="flex flex-col items-center justify-center p-4 sm:p-3">
           <div className="w-full max-w-sm sm:max-w-md ">
-            {/* Header con animación sutil */}
+
             <motion.div
               initial={{ y: -20 }}
               animate={{ y: 0 }}

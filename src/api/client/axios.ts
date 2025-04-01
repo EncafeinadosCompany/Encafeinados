@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
-
 export default class AuthClient {
 
   private client: AxiosInstance;

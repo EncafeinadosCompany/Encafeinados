@@ -5,7 +5,6 @@ import RoleRoute from "./RouleRoute";
 import { ROLES } from "@/common/utils/lists/roles";
 import  LoadingSpinner  from "@/common/atoms/LoadingSpinner";
 
-
 const CuestionCard = lazy(()=>import("@/common/molecules/auth/cuestionCard"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
 const LoginPage = lazy(() => import("@/modules/home/views/Login/loginPage"));
@@ -24,42 +23,41 @@ const MapView = lazy(() => import("@/common/widgets/map/MapView"));
 
 const AuthRoutes = () => {
   return (
-
    <>
    {/* <div className='fixed  bottom-4 right-4 z-50'>
     <LanguageSwitcher />
    </div> */}
-    <Router>
-    <Suspense fallback={<LoadingSpinner/>}>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/map" element={<MapView />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path='/register' element={<CuestionCard/>}/>
-        <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage/>} />
-        <Route path= "/store-registration" element= {<RegisterStorePage/>}/>
-        <Route path="/404" element={<NotFound />} />
+      <Router>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/map" element={<MapView />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path='/register' element={<CuestionCard />} />
+            <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
+            <Route path="/store-registration" element={<RegisterStorePage />} />
+            <Route path="/404" element={<NotFound />} />
 
 
-        <Route element={<PrivateRoute />}>
-          <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
-            <Route path="/coffeelover" element={<CoffeeloversLayout />}>
-              <Route index element={<CoffeeLoverDashboard />} />
-              <Route path="map-coffelover" element={<MapCoffelover />} />
+            <Route element={<PrivateRoute />}>
+              <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
+                <Route path="/coffeelover" element={<CoffeeloversLayout />}>
+                  <Route index element={<CoffeeLoverDashboard />} />
+                  <Route path="map-coffelover" element={<MapCoffelover />} />
+                </Route>
+              </Route>
+
+              <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
+                <Route path="/coffeelover" element={<CoffeeLoverDashboard />} />
+              </Route>
+
             </Route>
-          </Route>
-
-          <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
-            <Route path="/coffeelover" element={<CoffeeLoverDashboard />} />
-          </Route>
-
-        </Route>
-        <Route path="*" element={<Navigate to="/404" replace />} />
-        <Route path="unauthorized" element={<UnauthorizedPage />} />
-      </Routes>
-    </Suspense>
-    </Router>
+            <Route path="*" element={<Navigate to="/404" replace />} />
+            <Route path="unauthorized" element={<UnauthorizedPage />} />
+          </Routes>
+        </Suspense>
+      </Router>
    </>
 
   )

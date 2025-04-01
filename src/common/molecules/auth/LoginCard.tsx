@@ -26,7 +26,6 @@ export const LoginCard = (
     onGoogleSignIn }
     : LoginCardProps) => {
 
-
   const { t } = useTranslation()
 
   return (
