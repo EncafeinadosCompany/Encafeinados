@@ -35,7 +35,7 @@ jobs:
           NODE_ENV: test
 
       - name: Wait for frontend to be ready
-        run: npx wait-on http://localhost:4173
+        run: npx wait-on http://localhost:5173
 
       - name: Run Cypress E2E tests
         run: npm run cy:run
