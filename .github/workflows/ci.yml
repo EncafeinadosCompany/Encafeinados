@@ -10,6 +10,9 @@ jobs:
   CI:
     runs-on: ubuntu-latest
 
+    env:
+      VITE_API_URL: http://localhost:3300
+
     strategy:
       matrix:
         node-version: [18]
