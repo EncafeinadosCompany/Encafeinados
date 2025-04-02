@@ -25,8 +25,10 @@ export const useLoginMutation = () => {
       }    
     },
     onSuccess: (data) => {
-
-      setAuthStorage(data.accessToken, data.user)
+      
+      queryClient.setQueryData(['user'], data.user);
+      
+      queryClient.setQueryData(['authToken'], data.accessToken);
 
       console.log('datos', data)
 
@@ -100,6 +102,8 @@ export const useRegisterCoffeloverMutation = () => {
     },
     onSuccess: (data) => {
 
+
+
       setAuthStorage(data.accessToken, data.user)
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
@@ -149,6 +153,15 @@ export const useLogoutMutation = () => {
   })
 }
 
+
+// export const handleLogout = () => {
+//   // Elimina los datos de autenticación de la caché
+//   QueryClient.removeQueries(['user']);
+//   queryClient.removeQueries(['authToken']);
+  
+//   // También elimina en tu store si es necesario
+//   logout(); // Función de tu useAuthStore
+// }
 
 
 

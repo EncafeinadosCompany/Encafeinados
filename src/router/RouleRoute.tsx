@@ -1,26 +1,33 @@
-import { Navigate , Outlet } from "react-router-dom";
+
+import { queryClient } from "@/api/queryClient";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Navigate, Outlet } from "react-router-dom";
 
 type RouteProps = {
     allowedRoles: string[]
 }
 
-const RoleRoute = ({allowedRoles}: RouteProps) => {
-    // const token = localStorage.getItem('token')
-    const user = JSON.parse(localStorage.getItem('user') || '{}')
-    // if(!token) return <Navigate to="/login" replace />
-    if(!allowedRoles.includes(user.role)) return <Navigate to="/unauthorized" replace />
-    return <Outlet/> 
+const RoleRoute = ({ allowedRoles }: RouteProps) => {
+
+    const queryClient = useQueryClient();
+
+    const cachedUser = queryClient.getQueryData(['user']);
+
+    const { data: user } = useQuery({
+        queryKey: ['user'],
+        queryFn: () => {
+            return cachedUser || null;
+        },
+
+        initialData: cachedUser || null,
+        staleTime: Infinity,
+        enabled: !!cachedUser
+    });
+
+    if (!user) return <Navigate to="/login" replace />
+    console.log(user)
+    if (!allowedRoles.includes((user as { role: string }).role)) return <Navigate to="/unauthorized" replace />
+    return <Outlet />
 }
-
-
-// const RoleRoute = ({allowedRoles}: RouteProps) => {
-//     const token = localStorage.getItem('token')
-//     // const user = JSON.parse(localStorage.getItem('user') || '{}')
-//     const { user } = useAuth();
-//     if(!token) return <Navigate to="/login" replace />
-//     if(!user?.role || !allowedRoles.includes(user.role)) return <Navigate to="/unauthorized" replace />
-
-//     return <Outlet/> 
-// }
 
 export default RoleRoute
