@@ -7,7 +7,7 @@ describe("Login", () => {
   it("loguea correctamente al admin", () => {
     mockLoginSuccess();
     cy.visit("/login");
-    
+
     // cy.contains("Inicia sesión Encafeinados");
     //doLogin();
   });

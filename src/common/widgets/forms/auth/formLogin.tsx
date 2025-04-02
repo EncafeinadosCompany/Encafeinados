@@ -1,4 +1,4 @@
-import { useLoginMutation, User, User_Data } from "@/api";
+import { useLoginGoogleMutation, useLoginMutation, User, User_Data } from "@/api";
 
 import { loginSchema } from "@/common/utils/schemas/auth/loginShema";
 import { useState } from "react";
@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/common/molecules/hooks/useAuth";
-import { signInWithGoogle } from "@/api/firebase";
 import { LoginCard } from "@/common/molecules/auth/LoginCard";
 
 const Formlogin = () => {
@@ -46,17 +45,28 @@ const Formlogin = () => {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
+     window.location.href = "http://localhost:3000/api/v2/auth/google";
+    // window.open(
+    //      'http://localhost:3000/api/v2/auth/google',
+    //     'googleAuth',
+    //      'width=500,height=600'
+    //  );
+    // try {
+    //   const user = await signInWithGoogle();
+    //   // console.log("Usuario logueado:", user);
+    //   fetchUser();
 
-    try {
-      const user = await signInWithGoogle();
-      console.log("Usuario logueado:", user);
-    } catch (error) {
-      console.error("Error en el login:", error);
+    //   toast.success("Inicio de sesión exitoso");
+      
 
-      setTimeout(() => {
-        setIsLoading(false)
-      }, 1000)
-    }
+    //   console.log("Usuario logueado:", user);
+    // } catch (error) {
+    //   console.error("Error en el login:", error);
+
+    //   setTimeout(() => {
+    //     setIsLoading(false)
+    //   }, 1000)
+    // }
   }
 
   return (
