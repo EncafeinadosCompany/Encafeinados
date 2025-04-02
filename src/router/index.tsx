@@ -7,6 +7,7 @@ import  LoadingSpinner  from "@/common/atoms/LoadingSpinner";
 import NavbarGeneral from "@/common/widgets/nav/nav";
 import { CoffeloverItems } from "@/common/utils/lists/nav/CoffeeloverItems";
 import FinishAdminRegistration from "@/modules/adminStores/views/FinishAdminRegistration";
+import GoogleCallback from "@/common/hooks/google";
 
 
 
@@ -41,6 +42,7 @@ const AuthRoutes = () => {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path='/register' element={<CuestionCard />} />
+            <Route path="/google/callback" element={<GoogleCallback />} />
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
@@ -58,7 +60,7 @@ const AuthRoutes = () => {
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
-                <Route path="/store/dashboard" element={<CoffeeLoverDashboard />} />
+                <Route  index path="/store/dashboard" element={<CoffeeLoverDashboard />} />
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>

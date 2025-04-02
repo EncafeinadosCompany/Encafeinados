@@ -8,15 +8,13 @@ const authClient = new AuthClient()
 
 const AuthUsers = {
 
-  login: async (data: User_Data): Promise<LoginResponse> => {
-    try {
-      const response = await authClient.post<LoginResponse>('/auth/login', data);
-      return response;
+ 
 
-    } catch (error: any) {
-      throw handleApiError(error)
-    }
-  },
+
+
+
+
+
 
   registerCoffelover: async (data: RegisterCoffelover): Promise<LoginResponse> => {
     try {
@@ -77,3 +75,8 @@ const AuthUsers = {
 }
 
 export default AuthUsers;
+
+
+
+
+

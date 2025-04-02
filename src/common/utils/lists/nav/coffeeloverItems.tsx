@@ -7,24 +7,24 @@ export const CoffeloverItems: NavItemType[] = [
       href: "/coffeelover",
       icon: <Home className="h-5 w-5" />,
     },
-    {
-      title: "Buscar",
-      href: "/coffeelo",
-      icon: <Search className="h-5 w-5" />,
-    },
-    {
-      title: "Notificaciones",
-      href: "/coffeer",
-      icon: <Bell className="h-5 w-5" />,
-    },
-    {
-      title: "Configuración",
-      href: "/settings",
-      icon: <Settings className="h-5 w-5" />,
-    },
-    {
-      title: "Perfil",
-      href: "/profile",
-      icon: <User className="h-5 w-5" />,
-    },
+    // {
+    //   title: "Buscar",
+    //   href: "/coffeelo",
+    //   icon: <Search className="h-5 w-5" />,
+    // },
+    // {
+    //   title: "Notificaciones",
+    //   href: "/coffeer",
+    //   icon: <Bell className="h-5 w-5" />,
+    // },
+    // {
+    //   title: "Configuración",
+    //   href: "/settings",
+    //   icon: <Settings className="h-5 w-5" />,
+    // },
+    // {
+    //   title: "Perfil",
+    //   href: "/profile",
+    //   icon: <User className="h-5 w-5" />,
+    // },
   ]

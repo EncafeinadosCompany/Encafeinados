@@ -14,19 +14,24 @@ import registerCoffeeloverSchema from "@/common/utils/schemas/auth/registerCoffe
 import { TitleForm } from "@/common/atoms/auth/titleForm";
 import { pageVariants } from "@/common/atoms/auth/pageVariants";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
-import { signInWithGoogle } from "@/api/firebase";
+import { registerWithGoogle} from "@/api/firebase";
 import { LinkReturn } from "@/common/molecules/auth/LinkReturn";
 
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
+import { useAuth } from "@/common/molecules/hooks/useAuth";
+
+
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(1);
     const [direction, setDirection] = useState(0);
     const [showInfo, setShowInfo] = useState(false)
     const [passwordsMatch, setPasswordsMatch] = useState(true)
-    const navegate = useNavigate();
+    const navigate = useNavigate();
+
+    // const { user, isAuthenticated } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
     const totalSteps = 3
 
@@ -116,7 +121,7 @@ const FormRegisterCoffeelover = () => {
             useRegisterCoffeelover.mutateAsync(dataCoffeelover)
                 .then((response) => {
                     toast.success("Coffelover creado exitosamente.¡Bienvenido!");
-                    navegate("/login");
+                    navigate("/login");
                 })
         } catch (error) {
             console.log(error);
@@ -128,8 +133,8 @@ const FormRegisterCoffeelover = () => {
 
         try {
             setIsLoading(true)
-            const user = await signInWithGoogle().then((userCredential) => {
-                const user = userCredential.providerData;
+            const user = await registerWithGoogle().then((userCredential) => {
+                const user = userCredential.user.providerData;
                 const userData: RegisterCoffelover = {
                     userData: {
                         id_google: user[0].uid,
