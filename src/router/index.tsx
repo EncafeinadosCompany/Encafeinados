@@ -3,17 +3,12 @@ import { lazy, Suspense } from "react";
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 import { ROLES } from "@/common/utils/lists/roles";
-import  LoadingSpinner  from "@/common/atoms/LoadingSpinner";
-import NavbarGeneral from "@/common/widgets/nav/nav";
-import { CoffeloverItems } from "@/common/utils/lists/nav/coffeeloverItems";
-import { PendingStoresView } from "@/modules/adminStores/components/PendingStoresList";
-import FinishAdminRegistration from "@/modules/adminStores/views/FinishAdminRegistration";
-import GoogleCallback from "@/common/hooks/google";
+import LoadingSpinner from "@/common/atoms/LoadingSpinner";
 
-
-
-
-const CuestionCard = lazy(()=>import("@/common/molecules/auth/cuestionCard"));
+const PendingStoresView = lazy(() => import("@/modules/adminStores/components/PendingStoresList"));
+const FinishAdminRegistration = lazy(() => import("@/modules/adminStores/views/FinishAdminRegistration"));
+const GoogleCallback = lazy(() => import("@/common/hooks/google"));
+const CuestionCard = lazy(() => import("@/common/molecules/auth/cuestionCard"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
 const LoginPage = lazy(() => import("@/modules/home/views/Login/loginPage"));
 const RegisterCoffeloverPage = lazy(() => import("@/modules/home/views/Login/registerCoffeloverPage"));
@@ -25,15 +20,15 @@ const CoffeeloversLayout = lazy(() => import("@/modules/coffeelover/components/c
 const CoffeeLoverDashboard = lazy(() => import("@/modules/coffeelover/views/CoffeeLoverDashboard"));
 const MapCoffelover = lazy(() => import("@/modules/coffeelover/components/mapCoffelover"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
-const HomeAdminStores = lazy(()=> import ("@/modules/adminStores/views/homeAdmin"));
+const HomeAdminStores = lazy(() => import("@/modules/adminStores/views/homeAdmin"));
 const MapView = lazy(() => import("@/common/widgets/map/MapView"));
 
 // const LanguageSwitcher = lazy(() => import("@/common/molecules/settings/button-languages"));
 
 const AuthRoutes = () => {
   return (
-   <>
-   {/* <div className='fixed  bottom-4 right-4 z-50'>
+    <>
+      {/* <div className='fixed  bottom-4 right-4 z-50'>
     <LanguageSwitcher />
    </div> */}
       <Router>
@@ -48,15 +43,11 @@ const AuthRoutes = () => {
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
-           
+
             <Route path="/404" element={<NotFound />} />
-            <Route path="/mar" element={<NavbarGeneral navItems={CoffeloverItems}/>} />
-
-
-          <Route path="/admin" element={<HomeAdminStores />} >
-            <Route index path="stores/pending" element={<PendingStoresView />} />
-          </Route>
-
+            <Route path="/admin" element={<HomeAdminStores />} >
+              <Route index path="stores/pending" element={<PendingStoresView />} />
+            </Route>
             <Route element={<PrivateRoute />}>
               <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
                 <Route path="/coffeelover" element={<CoffeeloversLayout />}>
@@ -66,12 +57,12 @@ const AuthRoutes = () => {
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
-                <Route  index path="/store/dashboard" element={<CoffeeLoverDashboard />} />
+                <Route index path="/store/dashboard" element={<CoffeeLoverDashboard />} />
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
-             
-              <Route path="/mar" element={<NavbarGeneral navItems={CoffeloverItems}/>} />
+
+                {/* <Route path="/mar" element={<NavbarGeneral navItems={CoffeloverItems}/>} /> */}
               </Route>
 
             </Route>
@@ -80,7 +71,7 @@ const AuthRoutes = () => {
           </Routes>
         </Suspense>
       </Router>
-   </>
+    </>
 
   )
 }

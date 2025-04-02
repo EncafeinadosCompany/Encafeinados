@@ -1,14 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { RegisterCoffelover, LoginResponse, User_Data } from '../types/authTypes'
-import { useSetRecoilState } from 'recoil'
-import AuthUsers from '../queries/authQueries'
 import { useError } from '@/common/molecules/hooks/useErrors'
 import { clearAuthStorage, setAuthStorage } from '@/common/utils/authStorage'
 import { RegisterStoreSchemaType } from '../types/storeTypes'
 import AuthClient from '../client/axios'
 import { handleApiError } from '@/common/utils/errors/handleApiError'
-
-
 
 const authClient = new AuthClient()
 
@@ -119,8 +115,14 @@ export const useRegisterStoreMutation = () => {
 
   return useMutation<LoginResponse, Error, RegisterStoreSchemaType>({
     mutationFn: async (formData: RegisterStoreSchemaType): Promise<LoginResponse> => {
-      const response = await AuthUsers.registerStores(formData);
-      return response;
+      try {
+        const response = await authClient.post<LoginResponse>('/stores', formData);
+        console.log('AQUI', response)
+        return response;
+  
+      } catch (error: any) {
+        throw handleApiError(error)
+      }
     },
     onSuccess: (data) => {
 
@@ -148,29 +150,6 @@ export const useLogoutMutation = () => {
 }
 
 
-export const useChangePasswordMutation = () => {
-  return useMutation({
-    mutationFn: async ({ oldPassword, newPassword }: { oldPassword: string; newPassword: string }) => {
-      await AuthUsers.changePassword(oldPassword, newPassword);
-    }
-  });
-};
-
-export const useRequestPasswordResetMutation = () => {
-  return useMutation({
-    mutationFn: async (email: string) => {
-      await AuthUsers.requestPasswordReset(email);
-    }
-  });
-};
-
-export const useResetPasswordMutation = () => {
-  return useMutation({
-    mutationFn: async ({ token, newPassword }: { token: string; newPassword: string }) => {
-      await AuthUsers.resetPassword(token, newPassword);
-    }
-  });
-};
 
 
 

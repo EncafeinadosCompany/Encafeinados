@@ -1,5 +1,4 @@
 
-
 import { mockRegisterCoffelover } from '../../cypress/support/mocks/auth/registerCoffelover';
 
 describe('Coffee Lover Registration', () => {

@@ -1,4 +1,4 @@
-import { CoffeloverItems } from "@/common/utils/lists/nav/CoffeeloverItems";
+import { CoffeloverItems } from "@/common/utils/lists/nav/coffeeloverItems";
 import NavbarGeneral from "@/common/widgets/nav/nav";
 
 
