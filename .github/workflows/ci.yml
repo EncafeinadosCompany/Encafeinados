@@ -12,6 +12,7 @@ jobs:
 
     env:
       VITE_API_URL: http://localhost:3300
+      VITE_FIREBASE_API_KEY: test_key
 
     strategy:
       matrix:
