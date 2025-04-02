@@ -27,3 +27,14 @@ export const useBranchesByStore = (storeId: number | undefined) => {
       enabled: !!storeId, 
     })
 }
+
+export const usePendingStores = () => {
+  return useQuery<StoresResponse>({
+    queryKey: ['stores', 'pending'],
+    queryFn: async () => {
+      const response = await authClient.get<StoresResponse>('/stores/status/PENDING')
+      return response
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
