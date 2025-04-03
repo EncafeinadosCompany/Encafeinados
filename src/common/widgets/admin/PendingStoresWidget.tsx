@@ -143,7 +143,7 @@ export const PendingStoresWidget = () => {
 const renderPendingStoreCards = () => {
   if (filteredStores.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full py-6 text-gray-400">
+      <div className="flex flex-col items-center justify-center h-full w-full py-6 text-gray-400">
         <Coffee className="h-10 w-10 text-[#D4A76A]/60 mb-2" />
         <p className="font-medium text-sm text-[#6F4E37]">No hay tiendas pendientes</p>
         <p className="text-xs mt-1 max-w-xs text-center px-4">
@@ -163,7 +163,7 @@ const renderPendingStoreCards = () => {
   }
 
   return (
-    <div className="w-full px-2 py-2">
+    <div className="w-full px-1 py-1">
       <AnimatePresence>
         {paginatedStores.map((store: Store, index) => (
           <motion.div
@@ -172,9 +172,9 @@ const renderPendingStoreCards = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2, delay: index * 0.05 }}
-            className="mb-3 last:mb-0"
+            className="mb-3 last:mb-1"
           >
-            <Card className="bg-white border border-gray-100 hover:shadow-sm transition-shadow w-full group">
+            <Card className="bg-white border border-gray-100 hover:shadow-sm hover:border-amber-200/50 transition-all duration-200 w-full group">
               <CardContent className="p-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2.5 overflow-hidden">
@@ -212,7 +212,7 @@ const renderPendingStoreCards = () => {
                             <Eye className="h-3.5 w-3.5" />
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent side="bottom" className="text-xs font-medium bg-blue-50 text-blue-700 border-blue-200">
+                        <TooltipContent side="bottom" className="text-xs font-medium bg-blue-50 text-blue-700 border-blue-200 no-arrow">
                           Ver detalles
                         </TooltipContent>
                       </Tooltip>
@@ -228,7 +228,7 @@ const renderPendingStoreCards = () => {
                             <CheckCircle2 className="h-3.5 w-3.5" />
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent side="bottom" className="text-xs font-medium bg-green-50 text-green-700 border-green-200">
+                        <TooltipContent side="bottom" className="text-xs font-medium bg-green-50 text-green-700 border-green-200 no-arrow">
                           Aprobar tienda
                         </TooltipContent>
                       </Tooltip>
@@ -244,7 +244,7 @@ const renderPendingStoreCards = () => {
                             <XCircle className="h-3.5 w-3.5" />
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent side="bottom" className="text-xs font-medium bg-red-50 text-red-700 border-red-200">
+                        <TooltipContent side="bottom" className="text-xs font-medium bg-red-50 text-red-700 border-red-200 no-arrow">
                           Rechazar tienda
                         </TooltipContent>
                       </Tooltip>
@@ -316,7 +316,7 @@ const renderPendingStoreCards = () => {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <div className="p-3 space-y-3 w-full">
+        <div className="p-3 space-y-3 w-full flex-grow flex flex-col justify-center">
           <div className="flex items-center justify-between">
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-4 w-6 rounded-full" />
@@ -346,7 +346,7 @@ const renderPendingStoreCards = () => {
     
     if (error) {
       return (
-        <div className="flex flex-col items-center justify-center py-8 text-red-500">
+        <div className="flex flex-col items-center justify-center py-8 text-red-500 flex-grow">
           <AlertTriangle className="h-8 w-8 mb-2" />
           <p className="font-medium text-sm">Error al cargar</p>
           <Button 
@@ -363,12 +363,18 @@ const renderPendingStoreCards = () => {
     
     return (
       <>
-        <ScrollArea className="flex-grow overflow-auto pending-scroll-area w-full">
-          {renderPendingStoreCards()}
+        <ScrollArea 
+          className="flex-grow overflow-auto pending-scroll-area w-full" 
+          type="always" 
+          scrollHideDelay={0}
+        >
+          <div className="p-1 pb-2">
+            {renderPendingStoreCards()}
+          </div>
         </ScrollArea>
         
         {filteredStores.length > 0 && (
-          <CardFooter className="p-0 border-t w-full">
+          <CardFooter className="p-0 border-t w-full flex-shrink-0">
             <RenderPagination />
           </CardFooter>
         )}
@@ -379,7 +385,7 @@ const renderPendingStoreCards = () => {
   return (
     <>
       <Card className="w-full h-full shadow-sm border-gray-200 overflow-hidden flex flex-col">
-        <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50/80  py-2 px-3 flex justify-between items-center flex-shrink-0">
+        <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50/80 py-2 px-3 flex justify-between items-center flex-shrink-0 border-b">
           <div className="flex items-center space-x-2">
             <span className="h-2 w-2 rounded-full bg-amber-500"></span>
             <CardTitle className="text-sm font-medium text-gray-700">Tiendas Pendientes</CardTitle>
@@ -406,7 +412,7 @@ const renderPendingStoreCards = () => {
                     <RefreshCw className={`h-3 w-3 ${refreshAnimation ? 'animate-spin' : ''}`} />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs font-medium bg-amber-50 text-amber-700 border-amber-200">
+                <TooltipContent side="bottom" className="text-xs font-medium bg-amber-50 text-amber-700 border-amber-200 no-arrow">
                   Actualizar lista
                 </TooltipContent>
               </Tooltip>
@@ -414,7 +420,7 @@ const renderPendingStoreCards = () => {
           </div>
         </CardHeader>
         
-        <div className="flex-shrink-0 p-2 ">
+        <div className="flex-shrink-0 p-2 border-b">
           <div className="relative w-full">
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
             <Input 
@@ -426,7 +432,7 @@ const renderPendingStoreCards = () => {
           </div>
         </div>
         
-        <div className="flex-grow overflow-hidden w-full">
+        <div className="flex-grow flex flex-col min-h-0 w-full">
           {renderContent()}
         </div>
       </Card>
