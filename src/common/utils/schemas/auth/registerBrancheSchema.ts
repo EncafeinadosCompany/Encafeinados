@@ -3,10 +3,10 @@ import { z } from 'zod'
 export const registerBrancheSchema = [
     z.object({
         name: z.string()
-            .nonempty({ message: 'Queremos conocerte, ¿cómo te llamas?' })
-            .min(3, { message: 'Tu nombre debe tener al menos 3 letras, como un buen café debe tener su esencia' })
-            .max(30, { message: 'Wow, tu nombre es más largo que una charla con un barista sobre granos de especialidad' })
-            .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, { message: "Tu nombre no puede contener números ni caracteres especiales, solo letras y espacios" }),
+            .nonempty({ message: 'Por favor ingresa el nombre del la sucursal' })
+            .min(3, { message: 'Tu sucursal  debe tener al menos 3 letras' })
+            .max(30, { message: 'Wow, el nombre de la sucursal es muy grande' })
+            .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, { message: "Tu sucursal no puede contener números ni caracteres especiales, solo letras y espacios" }),
         phone_number: z.string()
             .nonempty({ message: "Tu número de teléfono es clave, como la temperatura del agua en un buen café" })
             .min(7, { message: "Tu número debe tener al menos 7 dígitos, como los pasos para hacer un buen pour-over" })

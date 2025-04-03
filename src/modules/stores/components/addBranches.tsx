@@ -91,10 +91,7 @@ export function AddBranchModal({ isOpen, onClose, onAdd }: AddBranchModalProps) 
   }
 
 
-  const onLocationSelect = (lat: number, lng: number, address: string) =>{
-    console.log(lat, lng, address)
-  }
-
+ 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] bg-white shadow-xl border-none">

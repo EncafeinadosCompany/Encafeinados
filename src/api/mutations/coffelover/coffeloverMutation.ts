@@ -15,7 +15,7 @@ export const useRegisterCoffeloverMutation = () => {
       mutationFn: async (formData: RegisterCoffelover): Promise<LoginResponse> => {
   
         try {
-          const response = await authClient.post<LoginResponse>('/auth/register-client', formData);
+          const response = await authClient.post<LoginResponse>('/clients', formData);
           console.log('AQUI', response)
           
           return response;

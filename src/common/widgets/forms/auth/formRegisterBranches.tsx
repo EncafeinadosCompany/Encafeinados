@@ -14,6 +14,7 @@ import {RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShe
 
 import { CurrentBrancheSchema, registerBrancheSchema } from "@/common/utils/schemas/auth/registerBrancheSchema"
 import { RegisterBranchesStep1 } from "@/common/molecules/auth/stores/branches/registerBranchesStep1"
+import { RegisterBranchesStep2 } from "@/common/molecules/auth/stores/branches/registerBranchesStep2"
 
 const FormRegisterBrands = () => {
     const [direction, setDirection] = useState(0);
@@ -47,6 +48,11 @@ const FormRegisterBrands = () => {
     };
     
 
+    const onLocationSelect = (lat: number, lng: number, address: string) =>{
+        console.log(lat, lng, address)
+      }
+    
+
     return (
         <div >
             <motion.div
@@ -70,7 +76,10 @@ const FormRegisterBrands = () => {
                                 )}
                                 {
                                     step === 1 && (
-                                        <p>chao</p>
+                                        <RegisterBranchesStep2
+                                            onLocationSelect={onLocationSelect}
+                                        >
+                                        </RegisterBranchesStep2>
                                     )
                                 }
                             </AnimatePresence>
