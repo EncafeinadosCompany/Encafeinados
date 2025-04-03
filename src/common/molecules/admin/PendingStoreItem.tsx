@@ -26,7 +26,7 @@ export const PendingStoreItem = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.2 }}
-      className="group relative flex items-center justify-between p-4 border-b border-gray-100 hover:bg-gradient-to-r hover:from-amber-50/30 hover:to-transparent transition-all duration-200"
+      className="group relative flex items-center justify-between p-4  border-gray-100 hover:bg-gradient-to-r hover:from-amber-50/30 hover:to-transparent transition-all duration-200"
     >
       {/* Línea decorativa lateral en hover */}
       <motion.div 

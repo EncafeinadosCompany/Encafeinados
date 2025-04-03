@@ -1,202 +1,65 @@
-import React, { useState } from "react";
-import { usePendingStores } from "@/api/queries/storesQueries";
-import { Store } from "@/api/types/storesTypes";
-import { 
-  Card, CardContent, CardHeader, CardTitle, CardFooter 
-} from "@/common/ui/card";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
-import { Badge } from "@/common/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay } from "@/common/ui/dialog";
-import { Input } from "@/common/ui/input";
-import { Textarea } from "@/common/ui/textarea";
-import { Label } from "@/common/ui/label";
+import { Coffee, RefreshCw, Search, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Coffee, RefreshCw, Search, CheckCircle2, XCircle, Eye, AlertTriangle, ChevronLeft, ChevronRight
-} from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/common/ui/tooltip";
-import { useChangeStoreStatus } from "@/api/mutations/storesMutations";
-import toast from "react-hot-toast";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 
-interface RejectFormData {
-  reason: string;
-}
+import { StatusBadge } from "@/common/atoms/StatusBadge";
+import { StoreSearchBar } from "@/common/molecules/admin/store/StoreSearchBar";
+import { StorePagination } from "@/common/molecules/admin/store/StorePagination";
+import { StoreCard } from "@/common/molecules/admin/store/StoreCard";
+import { StoreDetailsDialog } from "@/common/molecules/admin/store/StoreDetailsDialog";
+import { StoreRejectDialog } from "@/common/molecules/admin/store/StoreRejectDialog";
+import { StoreConfirmDialog } from "@/common/molecules/StoreConfirmDialog";
+import { usePendingStoresWidget } from "@/common/hooks/usePendingStoresWidget";
 
 export const PendingStoresWidget = () => {
-  const { data, isLoading, error } = usePendingStores();
-  const queryClient = useQueryClient();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
-  const [confirmationDialog, setConfirmationDialog] = useState<{isOpen: boolean, action: 'approve' | 'reject', storeId: number | null}>({
-    isOpen: false,
-    action: 'approve',
-    storeId: null
-  });
-  const [refreshAnimation, setRefreshAnimation] = useState(false);
-  const [rejectReason, setRejectReason] = useState("");
-  const [rejectFormOpen, setRejectFormOpen] = useState(false);
-  
-  const { register, handleSubmit, formState: { errors, isValid }, reset } = useForm<RejectFormData>({
-    defaultValues: {
-      reason: ""
-    },
-    mode: "onChange"
-  });
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(6);
-
-  const filteredStores = React.useMemo(() => {
-    const pendingStores = Array.isArray(data?.stores) ? data?.stores : data?.stores?.stores || [];
+  const {
+    // Data
+    data,
+    isLoading,
+    error,
+    filteredStores,
+    paginatedStores,
+    totalPages,
+    originalStores,
     
-    if (!searchTerm) return pendingStores;
+    // State
+    searchTerm,
+    selectedStore,
+    confirmationDialog,
+    refreshAnimation,
+    rejectReason,
+    rejectFormOpen,
+    isSubmitting,
+    currentPage,
+    itemsPerPage,
     
-    const term = searchTerm.toLowerCase();
-    return pendingStores.filter((store: Store) => 
-      store.name?.toLowerCase().includes(term) || 
-      store.email?.toLowerCase().includes(term)
-    );
-  }, [data, searchTerm]);
+    // Form 
+    methods,
+    
+    // Actions
+    setSearchTerm,
+    setSelectedStore,
+    setConfirmationDialog,
+    setRejectFormOpen,
+    setItemsPerPage,
+    handlePageChange,
+    handleApprove,
+    handleReject,
+    handleViewDetails,
+    handleRefresh,
+    onRejectFormSubmit,
+    confirmAction
+  } = usePendingStoresWidget();
 
-  const paginatedStores = React.useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+  const renderEmptyState = () => {
+    const originalStores = filteredStores.length === 0 && searchTerm 
+      ? Array.isArray(data?.stores) ? data?.stores : data?.stores?.stores || []
+      : [];
     
-    return filteredStores.slice(startIndex, endIndex);
-  }, [filteredStores, currentPage, itemsPerPage]);
-  
-  const totalPages = React.useMemo(() => {
-    return Math.max(1, Math.ceil(filteredStores.length / itemsPerPage));
-  }, [filteredStores, itemsPerPage]);
-  
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    const scrollContainer = document.querySelector('.pending-scroll-area');
-    if (scrollContainer) {
-      scrollContainer.scrollTop = 0;
-    }
-  };
-  
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, itemsPerPage]);
-  
-  const handleApprove = (id: number) => {
-    setConfirmationDialog({
-      isOpen: true,
-      action: 'approve',
-      storeId: id
-    });
-  };
-  
-  const handleReject = (id: number) => {
-    setSelectedStore(null);
-    setRejectReason("");
-    setRejectFormOpen(true);
-    setConfirmationDialog({
-      isOpen: false,
-      action: 'reject',
-      storeId: id
-    });
-  };
-  
-  const handleViewDetails = (store: Store) => {
-    setSelectedStore(store);
-  };
-
-  const handleRefresh = () => {
-    setRefreshAnimation(true);
-    queryClient.invalidateQueries({ queryKey: ["stores", "pending"] });
-    
-    setTimeout(() => {
-      setRefreshAnimation(false);
-    }, 1000);
-  };
-
-  const onRejectFormSubmit = (data: RejectFormData) => {
-    setRejectReason(data.reason);
-    setRejectFormOpen(false);
-    
-    setConfirmationDialog({
-      isOpen: true,
-      action: 'reject',
-      storeId: confirmationDialog.storeId
-    });
-  };
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const changeStatusMutation = useChangeStoreStatus();
-  const confirmAction = () => {
-    const { action, storeId } = confirmationDialog;
-    
-    if (!storeId) return;
-    
-    setIsSubmitting(true);
-    
-    changeStatusMutation.mutate({
-      storeId,
-      status: action === 'approve',
-      reason: action === 'reject' ? rejectReason : undefined
-    }, {
-      onSuccess: () => {
-        if (action === 'approve') {
-          toast.success('La tienda ha sido aprobada exitosamente', {
-            icon: <CheckCircle2 className="h-4 w-4 text-green-600" />,
-            style: {
-              background: '#f0fdf4',
-              border: '1px solid #bbf7d0',
-              padding: '16px',
-              color: '#166534'
-            },
-            duration: 3000
-          });
-        } else {
-          toast.success('La tienda ha sido rechazada exitosamente', {
-            icon: <XCircle className="h-4 w-4 text-red-600" />,
-            style: {
-              background: '#fef2f2',
-              border: '1px solid #fecaca',
-              padding: '16px',
-              color: '#991b1b'
-            },
-            duration: 3000
-          });
-        }
-        setConfirmationDialog({ isOpen: false, action: 'approve', storeId: null });
-        setRejectReason("");
-        setIsSubmitting(false);
-      },
-      onError: (error: any) => {
-        console.error('Error al cambiar el estado de la tienda:', error);
-        setIsSubmitting(false);
-        toast.error(error?.response?.data?.message || 'Error al procesar la solicitud', {
-          icon: <AlertTriangle className="h-4 w-4 text-red-600" />,
-          style: {
-            background: '#fef2f2',
-            border: '1px solid #fecaca',
-            padding: '16px',
-            color: '#991b1b'
-          },
-          duration: 5000
-        });
-      },
-    });
-  };
-
-const renderPendingStoreCards = () => {
-  const originalStores = Array.isArray(data?.stores) ? data?.stores : data?.stores?.stores || [];
-  
-  if (filteredStores.length === 0) {
     if (originalStores.length > 0 && searchTerm) {
       return (
         <div className="flex flex-col items-center justify-center py-6 text-gray-400">
@@ -234,157 +97,6 @@ const renderPendingStoreCards = () => {
           <RefreshCw className={`h-3 w-3 mr-1 ${refreshAnimation ? 'animate-spin' : ''}`} />
           Verificar
         </Button>
-      </div>
-    );
-  }
-
-  return (
-    <AnimatePresence mode="popLayout">
-      {paginatedStores.map((store: Store, index) => (
-        <motion.div
-          key={store.id}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.15, delay: index * 0.03 }}
-          className="mb-2 last:mb-1"
-        >
-          <Card className="bg-white border border-gray-100 hover:shadow-sm hover:border-amber-200/50 transition-all duration-200 w-full group">
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2.5 overflow-hidden">
-                  <div className="h-9 w-9 rounded-md bg-gradient-to-br from-orange-50 to-amber-100 flex items-center justify-center overflow-hidden shadow-sm flex-shrink-0">
-                    {store.logo ? (
-                      <img 
-                        src={store.logo} 
-                        alt={store.name} 
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-[#6F4E37] font-semibold text-sm">
-                        {store.name?.substring(0, 2).toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="font-medium text-gray-800 truncate text-sm">{store.name}</div>
-                    <div className="text-xs text-gray-500 truncate">
-                      {store.email?.substring(0, 14)}...
-                    </div>
-                  </div>
-                </div>
-              
-                <div className="flex space-x-1 items-center">
-                  <TooltipProvider delayDuration={300}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleViewDetails(store)}
-                          className="h-7 w-7 text-blue-600 hover:bg-blue-50/50 hover:text-blue-700"
-                        >
-                          <Eye className="h-3.5 w-3.5" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" className="text-xs font-medium bg-blue-50 text-blue-700 border-blue-200 no-arrow">
-                        Ver detalles
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleApprove(store.id)}
-                          className="h-7 w-7 text-green-600 hover:bg-green-50/50 hover:text-green-700"
-                        >
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" className="text-xs font-medium bg-green-50 text-green-700 border-green-200 no-arrow">
-                        Aprobar tienda
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleReject(store.id)}
-                          className="h-7 w-7 text-red-600 hover:bg-red-50/50 hover:text-red-700"
-                        >
-                          <XCircle className="h-3.5 w-3.5" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" className="text-xs font-medium bg-red-50 text-red-700 border-red-200 no-arrow">
-                        Rechazar tienda
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      ))}
-    </AnimatePresence>
-  );
-};
-  const RenderPagination = () => {
-    return (
-      <div className="flex items-center justify-between gap-1 py-1.5 px-2 text-xs ">
-        <div className="text-gray-500">
-          {filteredStores.length > 0 
-            ? `${(currentPage - 1) * itemsPerPage + 1}-${Math.min(currentPage * itemsPerPage, filteredStores.length)} de ${filteredStores.length}`
-            : "0 resultados"}
-        </div>
-        
-        <div className="flex items-center gap-1">
-          {totalPages > 1 && (
-            <>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="h-6 w-6 rounded-md"
-              >
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </Button>
-              
-              <span className="text-xs px-2 font-medium">
-                {currentPage} / {totalPages}
-              </span>
-              
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="h-6 w-6 rounded-md"
-              >
-                <ChevronRight className="h-3.5 w-3.5" />
-              </Button>
-            </>
-          )}
-          
-          <Select
-            value={itemsPerPage.toString()}
-            onValueChange={(value) => setItemsPerPage(Number(value))}
-          >
-            <SelectTrigger className="h-6 w-[45px] border-gray-200 text-xs ml-1">
-              <SelectValue placeholder="6" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="5">5</SelectItem>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="15">15</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
       </div>
     );
   };
@@ -441,18 +153,41 @@ const renderPendingStoreCards = () => {
       <>
         <div className="flex-grow relative h-0 min-h-0 w-full">
           <div 
-            className="absolute inset-0 overflow-y-auto py-1 px-1"
+            className="absolute inset-0 overflow-y-auto py-1 px-1 pending-scroll-area"
             style={{
               scrollbarWidth: 'thin',
               scrollbarColor: '#F3D19E transparent'
             }}
           >
-            {renderPendingStoreCards()}
+            {filteredStores.length === 0 ? (
+              renderEmptyState()
+            ) : (
+              <AnimatePresence mode="popLayout">
+                {paginatedStores.map((store, index) => (
+                  <StoreCard
+                    key={store.id}
+                    store={store}
+                    index={index}
+                    onView={handleViewDetails}
+                    onApprove={handleApprove}
+                    onReject={handleReject}
+                    type="pending"
+                  />
+                ))}
+              </AnimatePresence>
+            )}
           </div>
         </div>
         
         <CardFooter className="p-0 w-full flex-shrink-0">
-          <RenderPagination />
+          <StorePagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredStores.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={setItemsPerPage}
+          />
         </CardFooter>
       </>
     );
@@ -468,12 +203,7 @@ const renderPendingStoreCards = () => {
           </div>
           
           <div className="flex items-center gap-2">
-            <Badge 
-              variant="outline" 
-              className="text-amber-600 bg-amber-50 border-amber-200 text-xs font-normal h-5"
-            >
-              {filteredStores.length}
-            </Badge>
+            <StatusBadge count={filteredStores.length} status="pending" />
             
             <TooltipProvider>
               <Tooltip>
@@ -496,229 +226,40 @@ const renderPendingStoreCards = () => {
           </div>
         </CardHeader>
         
-        <div className="flex-shrink-0 p-2 ">
-          <div className="relative w-full">
-            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
-            <Input 
-              placeholder="Buscar..." 
-              className="pl-7 h-7 text-xs bg-white border-gray-200 rounded-md focus-visible:ring-1 focus-visible:ring-amber-400 w-full" 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+        <div className="flex-shrink-0 p-2">
+          <StoreSearchBar value={searchTerm} onChange={setSearchTerm} />
         </div>
         
         <div className="flex-grow flex flex-col min-h-0 w-full overflow-hidden">
           {renderContent()}
         </div>
       </Card>
-
-      <Dialog 
-        open={!!selectedStore} 
-        onOpenChange={(open) => {
-          if (!open) {
-            setSelectedStore(null);
-          }
-        }}
-      >
-        <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" />
-        <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-md border-0 shadow-lg bg-white rounded-lg overflow-hidden z-50">
-          <div className="relative z-10">
-            <DialogHeader className=" pb-3">
-              <DialogTitle className="text-[#6F4E37]">Detalles de la tienda</DialogTitle>
-              <DialogDescription>
-                Información completa de solicitud
-              </DialogDescription>
-            </DialogHeader>
-            
-            {selectedStore && (
-              <div className="p-4">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="h-16 w-16 rounded-lg bg-gradient-to-b from-[#D4A76A]/20 to-[#6F4E37]/10 flex items-center justify-center overflow-hidden">
-                    {selectedStore.logo ? (
-                      <img 
-                        src={selectedStore.logo} 
-                        alt={selectedStore.name} 
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-[#6F4E37] font-semibold text-2xl">
-                        {selectedStore.name?.substring(0, 2).toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-lg">{selectedStore.name}</h4>
-                    <Badge variant="outline" className="mt-1 bg-amber-50 text-amber-700 font-normal">
-                      {selectedStore.status}
-                    </Badge>
-                  </div>
-                </div>
-                
-                <div className="space-y-3 bg-gray-50 rounded-md p-3">
-                  <div className="grid grid-cols-3 text-sm  border-gray-100 pb-2">
-                    <span className="text-gray-500 col-span-1">Documento:</span>
-                    <span className="font-medium col-span-2">{selectedStore.type_document} {selectedStore.number_document}</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 text-sm  border-gray-100 pb-2">
-                    <span className="text-gray-500 col-span-1">Email:</span>
-                    <span className="font-medium col-span-2">{selectedStore.email}</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 text-sm  border-gray-100 pb-2">
-                    <span className="text-gray-500 col-span-1">Teléfono:</span>
-                    <span className="font-medium col-span-2">{selectedStore.phone_number || 'No especificado'}</span>
-                  </div>            
-                </div>         
-                <div className="flex justify-end space-x-2 pt-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => setSelectedStore(null)}
-                    className="border-gray-200"
-                  >
-                    Cerrar
-                  </Button>
-                  <Button 
-                    variant="default"
-                    className="bg-gradient-to-r from-[#D4A76A] to-[#6F4E37] text-white hover:opacity-90"
-                    onClick={() => {
-                      setSelectedStore(null);
-                      handleApprove(selectedStore.id);
-                    }}
-                  >
-                    Aprobar tienda
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
       
-      <Dialog open={rejectFormOpen} onOpenChange={(open) => {
-        if (!open) {
+      {/* Diálogs */}
+      <StoreDetailsDialog 
+        store={selectedStore} 
+        onClose={() => setSelectedStore(null)} 
+        onApprove={handleApprove} 
+      />
+      
+      <StoreRejectDialog 
+        open={rejectFormOpen}
+        onClose={() => {
           setRejectFormOpen(false);
-          reset();
-          if (!confirmationDialog.isOpen) {
-            setRejectReason("");
-          }
-        }
-      }}>
-        <DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" />
-        <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-md border-0 shadow-2xl bg-white/95 backdrop-blur-sm rounded-lg overflow-hidden z-50">
-          <div className="absolute inset-0 bg-gradient-to-b from-red-50/50 to-transparent opacity-70 pointer-events-none"></div>
-          <div className="relative z-10">
-            <DialogHeader>
-              <DialogTitle className="text-red-600">Rechazar Tienda</DialogTitle>
-              <DialogDescription>
-                Por favor, indica el motivo por el cual se rechaza esta solicitud de tienda.
-                Este motivo será enviado al solicitante.
-              </DialogDescription>
-            </DialogHeader>
-            
-            <form onSubmit={handleSubmit(onRejectFormSubmit)} className="space-y-4 pt-4">
-              <div className="space-y-2">
-                <Label htmlFor="reason" className="text-sm font-medium">
-                  Motivo de rechazo <span className="text-red-500">*</span>
-                </Label>
-                <Textarea
-                  id="reason"
-                  placeholder="Explique por qué se rechaza esta solicitud..."
-                  className="min-h-[120px] resize-none focus-visible:ring-red-400"
-                  {...register("reason", { 
-                    required: "El motivo de rechazo es obligatorio",
-                    minLength: {
-                      value: 10,
-                      message: "El motivo debe tener al menos 10 caracteres"
-                    }
-                  })}
-                />
-                {errors.reason && (
-                  <p className="text-sm text-red-500">{errors.reason.message}</p>
-                )}
-              </div>
-              
-              <div className="flex justify-end space-x-2 pt-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setRejectFormOpen(false);
-                    reset();
-                  }}
-                >
-                  Cancelar
-                </Button>
-                <Button 
-                  type="submit"
-                  variant="destructive"
-                  className="bg-red-600 hover:bg-red-700 text-white"
-                  disabled={!isValid}
-                >
-                  Continuar
-                </Button>
-              </div>
-            </form>
-          </div>
-        </DialogContent>
-      </Dialog>
+          methods.reset();
+        }}
+        onSubmit={onRejectFormSubmit}
+        form={methods}
+      />
       
-      <Dialog 
-        open={confirmationDialog.isOpen} 
-        onOpenChange={(open) => !open && setConfirmationDialog({...confirmationDialog, isOpen: false})}
-      >
-        <DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" />
-        <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-md border-0 shadow-2xl bg-white/95 backdrop-blur-sm rounded-lg overflow-hidden z-50">
-          <div className={`absolute inset-0 bg-gradient-to-b ${confirmationDialog.action === 'approve' ? 'from-green-50/50' : 'from-red-50/50'} to-transparent opacity-70 pointer-events-none`}></div>
-          <div className="relative z-10">
-            <DialogHeader>
-              <DialogTitle className={confirmationDialog.action === 'approve' ? 'text-green-600' : 'text-red-600'}>
-                {confirmationDialog.action === 'approve' ? 'Aprobar tienda' : 'Rechazar tienda'}
-              </DialogTitle>
-              <DialogDescription>
-                {confirmationDialog.action === 'approve' 
-                  ? '¿Estás seguro de que deseas aprobar esta tienda? La tienda aparecerá inmediatamente en la plataforma.'
-                  : '¿Estás seguro de que deseas rechazar esta tienda? Esta acción no se puede deshacer.'
-                }
-              </DialogDescription>
-            </DialogHeader>
-            
-            {confirmationDialog.action === 'reject' && rejectReason && (
-              <div className="my-4 p-3 bg-red-50 border border-red-100 rounded-md">
-                <p className="text-sm font-medium text-red-800">Motivo de rechazo:</p>
-                <p className="text-sm text-red-700 mt-1">{rejectReason}</p>
-              </div>
-            )}
-            
-            <div className="flex justify-end space-x-2 pt-4">
-              <Button
-                variant="outline"
-                onClick={() => setConfirmationDialog({...confirmationDialog, isOpen: false})}
-              >
-                Cancelar
-              </Button>
-              <Button 
-                variant={confirmationDialog.action === 'approve' ? 'default' : 'destructive'}
-                className={confirmationDialog.action === 'approve' 
-                  ? 'bg-gradient-to-r from-green-600 to-green-500 hover:opacity-90 text-white' 
-                  : 'bg-gradient-to-r from-red-600 to-red-500 hover:bg-red-700 text-white'}
-                onClick={confirmAction}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center">
-                    <RefreshCw className="h-3 w-3 mr-2 animate-spin" />
-                    {confirmationDialog.action === 'approve' ? 'Aprobando...' : 'Rechazando...'}
-                  </div>
-                ) : (
-                  confirmationDialog.action === 'approve' ? 'Sí, aprobar' : 'Sí, rechazar'
-                )}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <StoreConfirmDialog 
+        isOpen={confirmationDialog.isOpen}
+        action={confirmationDialog.action}
+        onClose={() => setConfirmationDialog({...confirmationDialog, isOpen: false})}
+        onConfirm={confirmAction}
+        rejectReason={rejectReason}
+        isSubmitting={isSubmitting}
+      />
     </>
   );
 };

@@ -316,7 +316,7 @@ export const RejectedStoresWidget = () => {
   return (
     <>
       <Card className="w-full h-full shadow-sm border-gray-200 overflow-hidden flex flex-col">
-        <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50/80 py-2 px-3 flex justify-between items-center flex-shrink-0 border-b">
+        <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50/80 py-2 px-3 flex justify-between items-center flex-shrink-0 ">
           <div className="flex items-center space-x-2">
             <span className="h-2 w-2 rounded-full bg-red-500"></span>
             <CardTitle className="text-sm font-medium text-gray-700">Tiendas Rechazadas</CardTitle>
@@ -351,7 +351,7 @@ export const RejectedStoresWidget = () => {
           </div>
         </CardHeader>
         
-        <div className="flex-shrink-0 p-2 border-b">
+        <div className="flex-shrink-0 p-2">
           <div className="relative w-full">
             <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
             <Input 
