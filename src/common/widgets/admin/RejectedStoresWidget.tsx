@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useRejectedStores } from "@/api/queries/storesQueries";
+import { useRejectedStores } from "@/api/queries/stores/storesQueries";
 import { Store } from "@/api/types/storesTypes";
 import { 
   Card, CardContent, CardHeader, CardTitle, CardFooter 
