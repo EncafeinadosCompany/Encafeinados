@@ -10,6 +10,10 @@ jobs:
   CI:
     runs-on: ubuntu-latest
 
+    env:
+      VITE_API_URL: http://localhost:3300
+      VITE_FIREBASE_API_KEY: test_key
+
     strategy:
       matrix:
         node-version: [18]
@@ -35,7 +39,7 @@ jobs:
           NODE_ENV: test
 
       - name: Wait for frontend to be ready
-        run: npx wait-on http://localhost:4173
+        run: npx wait-on http://localhost:5173
 
       - name: Run Cypress E2E tests
         run: npm run cy:run

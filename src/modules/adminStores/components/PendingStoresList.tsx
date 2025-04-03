@@ -19,8 +19,8 @@ export const PendingStoresView = () => {
             <PendingStoresWidget />
           </div>
           
-
-          <div className="h-full rounded-lg border border-red-100 overflow-hidden bg-red-50/10 relative">
+          {/* Columna 2: Tiendas Rechazadas (En desarrollo) */}
+          <div className="h-full rounded-lg border border-red-100 overflow-hidden bg-red-50/10 relative flex flex-col">
             <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-10">
               <div className="rounded-full bg-red-50 p-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-400">
@@ -35,8 +35,8 @@ export const PendingStoresView = () => {
             <PendingStoresWidget />
           </div>
           
-         
-          <div className="h-full rounded-lg border border-green-100 overflow-hidden bg-green-50/10 relative">
+          {/* Columna 3: Tiendas Aprobadas (En desarrollo) */}
+          <div className="h-full rounded-lg border border-green-100 overflow-hidden bg-green-50/10 relative flex flex-col">
             <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-10">
               <div className="rounded-full bg-green-50 p-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-400">

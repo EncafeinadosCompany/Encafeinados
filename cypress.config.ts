@@ -1,5 +1,8 @@
 import { defineConfig } from "cypress";
+import * as dotenv from "dotenv";
 import codeCoverage from "@cypress/code-coverage/task";
+
+dotenv.config();
 
 export default defineConfig({
   e2e: {
@@ -9,6 +12,9 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       codeCoverage(on, config);
       return config;
+    },
+    env: {
+      API_URL: process.env.VITE_API_URL || "http://localhost:3300",
     },
   },
 });
