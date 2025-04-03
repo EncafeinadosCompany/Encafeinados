@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/common/molecules/hooks/useAuth";
+import { useAuth } from "@/common/hooks/auth/useAuth";
 import { LoginCard } from "@/common/molecules/auth/LoginCard";
 
 const Formlogin = () => {

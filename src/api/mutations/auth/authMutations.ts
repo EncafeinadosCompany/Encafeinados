@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { RegisterCoffelover, LoginResponse, User_Data } from '../types/authTypes'
-import { useError } from '@/common/molecules/hooks/useErrors'
+import { RegisterCoffelover, LoginResponse, User_Data } from '../../types/authTypes'
+import { useError } from '@/common/hooks/auth/useErrors'
 import { clearAuthStorage, setAuthStorage } from '@/common/utils/authStorage'
-import { RegisterStoreSchemaType } from '../types/storeTypes'
-import AuthClient from '../client/axios'
+import { RegisterStoreSchemaType } from '../../types/storeTypes'
+import AuthClient from '../../client/axios'
 import { handleApiError } from '@/common/utils/errors/handleApiError'
 
 
@@ -83,72 +83,6 @@ export const useLoginGoogleMutation = () => {
   })
 }
 
-
-export const useRegisterCoffeloverMutation = () => {
-  const queryClient = useQueryClient()
-  const useErrors = useError("registeCoffelover")
-
-  return useMutation<LoginResponse, Error, RegisterCoffelover>({
-    mutationFn: async (formData: RegisterCoffelover): Promise<LoginResponse> => {
-
-      try {
-        const response = await authClient.post<LoginResponse>('/auth/register-client', formData);
-        console.log('AQUI', response)
-
-        if(response) {
-           const login = useLoginMutation()
-           login.mutateAsync({
-            email: formData.userData.email,
-            password: formData.userData.password 
-           })
-        }
-
-        return response;
-        
-      } catch (error: any) {
-        throw handleApiError(error)
-      }
-    },
-    onSuccess: (data) => {
-
-
-
-      setAuthStorage(data.accessToken, data.user)
-      queryClient.invalidateQueries({ queryKey: ['user'] });
-    },
-    onError: (error: any) => {
-      useErrors(error);
-    }
-  })
-}
-
-export const useRegisterStoreMutation = () => {
-  const queryClient = useQueryClient()
-  const useErrors = useError("registeCoffelover")
-
-  return useMutation<LoginResponse, Error, RegisterStoreSchemaType>({
-    mutationFn: async (formData: RegisterStoreSchemaType): Promise<LoginResponse> => {
-      try {
-        const response = await authClient.post<LoginResponse>('/stores', formData);
-        console.log('AQUI', response)
-        return response;
-  
-      } catch (error: any) {
-        throw handleApiError(error)
-      }
-    },
-    onSuccess: (data) => {
-
-      setAuthStorage(data.accessToken, data.user)
-
-      queryClient.invalidateQueries({ queryKey: ['user'] });
-    },
-    onError: (error: any) => {
-      useErrors(error);
-    }
-  })
-}
-
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient()
 
@@ -161,16 +95,6 @@ export const useLogoutMutation = () => {
     },
   })
 }
-
-
-// export const handleLogout = () => {
-//   // Elimina los datos de autenticación de la caché
-//   QueryClient.removeQueries(['user']);
-//   queryClient.removeQueries(['authToken']);
-  
-//   // También elimina en tu store si es necesario
-//   logout(); // Función de tu useAuthStore
-// }
 
 
 

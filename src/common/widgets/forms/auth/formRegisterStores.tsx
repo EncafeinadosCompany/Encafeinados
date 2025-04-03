@@ -14,16 +14,17 @@ import RegisterStoreStep2 from "@/common/molecules/auth/stores/store/registerSto
 
 import { useNavigate } from "react-router-dom"
 import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
-import { useRegisterStoreMutation } from "@/api"
-import {  useImagenMutation } from "@/api/mutations/imageMutations"
+
+import { useImagenMutation } from "@/api/mutations/imageMutations"
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator"
+import { useRegisterStoreMutation } from "@/api/mutations/stores/storesMutation"
 
 const FormRegisterStores = () => {
     const [direction, setDirection] = useState(0);
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
     const useRegiterStore = useRegisterStoreMutation();
-    const useImageMutation = useImagenMutation();
+    const useImageMutation = useImagenMutation()
     const navigate = useNavigate();
     const methods = useForm<CurrentSchema>({
         resolver: zodResolver(RegisterStoreSchema[step] as any),
@@ -48,7 +49,7 @@ const FormRegisterStores = () => {
         });
     };
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async(data: any) => {
         const finalData = { ...formData, ...data };
         console.log("Formulario enviado:", finalData);
     
@@ -59,7 +60,7 @@ const FormRegisterStores = () => {
     
         // Envía el formulario sin esperar la imagen
         try {
-            const formResponse = await useRegiterStore.mutateAsync({
+            await useRegiterStore.mutateAsync({
                 email: finalData.email,
                 name: finalData.name,
                 type_document: finalData.type_document,

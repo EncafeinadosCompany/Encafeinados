@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "@/common/ui/icons";
 import { motion, AnimatePresence} from "framer-motion";
 
-import { RegisterCoffelover, useRegisterCoffeloverMutation } from "@/api";
+import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffeloverMutation";
 import {registerCoffeeloverSchema, CurrentCoffeeLoverSchema } from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
 import { TitleForm } from "@/common/atoms/auth/titleForm";
 import { registerWithGoogle} from "@/api/firebase";
@@ -18,6 +18,8 @@ import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/register
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
+import { RegisterCoffelover } from "@/api";
+
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(0);
@@ -116,8 +118,8 @@ const FormRegisterCoffeelover = () => {
                     personData: {
                         full_name: user[0].displayName || "",
                         type_document: 'CC',
-                        number_document: "534085495345",
-                        phone_number:"45354355434"
+                        number_document: '334343443',
+                        phone_number:'344324324342'
                     }
                 }
 
