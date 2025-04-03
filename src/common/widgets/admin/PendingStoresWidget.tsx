@@ -163,7 +163,7 @@ export const PendingStoresWidget = () => {
               renderEmptyState()
             ) : (
               <AnimatePresence mode="popLayout">
-                {paginatedStores.map((store, index) => (
+                {paginatedStores.map((store: any, index:any) => (
                   <StoreCard
                     key={store.id}
                     store={store}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useRejectedStores } from "@/api/queries/stores/storesQueries";
+
 import { Store } from "@/api/types/storesTypes";
 import { 
   Card, CardContent, CardHeader, CardTitle, CardFooter 
@@ -23,6 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from "@/common/ui/tooltip";
+import { useRejectedStores } from "@/api/queries/stores/storesQueries";
 
 export const RejectedStoresWidget = () => {
   const { data, isLoading, error } = useRejectedStores();
@@ -128,7 +129,7 @@ export const RejectedStoresWidget = () => {
 
     return (
       <AnimatePresence mode="popLayout">
-        {paginatedStores.map((store: Store, index) => (
+        {paginatedStores.map((store: Store, index:any) => (
           <motion.div
             key={store.id}
             initial={{ opacity: 0, y: 10 }}
