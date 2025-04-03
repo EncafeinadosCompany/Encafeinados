@@ -14,16 +14,21 @@ export const registerBrancheSchema = [
             .regex(/^\+?[1-9]\d{6,14}$/, { message: "El número de teléfono debe ser válido, con o sin prefijo internacional" }),
     }),
     z.object({
-        type_document: z
-            .string({ message: 'Por favor ingresa tu tipo de documento' })
-            .nonempty({ message: "El tipo de documento es esencial, como el café en la mañana" }),
-        number_document: z.string()
-            .nonempty({ message: 'Necesitamos tu número de documento, como un barista necesita su molino' })
-            .min(6, { message: 'Tu número de documento debe tener al menos 6 caracteres, como los ingredientes básicos de una buena receta' })
-            .max(11, { message: 'Parece que tu número de documento es tan largo como la cola en una cafetería popular' }),
+        latitude: z
+            .number()
+            .min(-90, { message: 'La latitud debe estar entre -90 y 90, como un café debe estar en un lugar' })
+            .max(90, { message: 'La latitud debe estar entre -90 y 90, como un café debe estar en un lugar' }),
+        logitude: z
+            .number()
+            .min(-90, { message: 'La latitud debe estar entre -90 y 90, como un café debe estar en un lugar' })
+            .max(90, { message: 'La latitud debe estar entre -90 y 90, como un café debe estar en un lugar' }),
+        address: z
+           .string()
+           .nonempty({ message: 'La dirección es importante, como la ruta para llegar a un buen café' })
+           .min(3, { message: 'La dirección debe tener al menos 3 caracteres, como el nombre de una calle' })
 
     }),
-   
+
 ]
 
-export type CurrentCoffeeLoverSchema = z.infer<typeof registerBrancheSchema[number]>
+export type CurrentBrancheSchema = z.infer<typeof registerBrancheSchema[number]>
