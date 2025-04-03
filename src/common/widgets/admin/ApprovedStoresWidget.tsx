@@ -1,247 +1,82 @@
-import React, { useState } from "react";
-import { useApprovedStores } from "@/api/queries/storesQueries";
-import { Store } from "@/api/types/storesTypes";
-import { 
-  Card, CardContent, CardHeader, CardTitle, CardFooter 
-} from "@/common/ui/card";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
-import { Badge } from "@/common/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay } from "@/common/ui/dialog";
-import { Input } from "@/common/ui/input";
+import { Store as StoreIcon, RefreshCw, Search, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  CheckCircle, RefreshCw, Search, Eye, AlertTriangle, ChevronLeft, ChevronRight, Store as StoreIcon
-} from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
-import { 
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
-} from "@/common/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/common/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
+
+import { StatusBadge } from "@/common/atoms/StatusBadge";
+import { StoreSearchBar } from "@/common/molecules/admin/store/StoreSearchBar";
+import { StorePagination } from "@/common/molecules/admin/store/StorePagination";
+import { StoreCard } from "@/common/molecules/admin/store/StoreCard";
+import { ApprovedStoreDetailsDialog } from "@/common/molecules/admin/store/ApprovedStoreDetailsDialog";
+import { useApprovedStoresWidget } from "@/common/hooks/useApprovedStoresWidget";
+
 export const ApprovedStoresWidget = () => {
-  const { data, isLoading, error } = useApprovedStores();
-  const queryClient = useQueryClient();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
-  const [refreshAnimation, setRefreshAnimation] = useState(false);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(6);
-
-  const filteredStores = React.useMemo(() => {
-    const approvedStores = Array.isArray(data?.stores) ? data?.stores : data?.stores?.stores || [];
+  const {
+    // Data
+    isLoading,
+    error,
+    originalStores,
+    filteredStores,
+    paginatedStores,
+    totalPages,
     
-    if (!searchTerm) return approvedStores;
+    // State
+    searchTerm,
+    selectedStore,
+    refreshAnimation,
+    currentPage,
+    itemsPerPage,
     
-    const term = searchTerm.toLowerCase();
-    return approvedStores.filter((store: Store) => 
-      store.name?.toLowerCase().includes(term) || 
-      store.email?.toLowerCase().includes(term)
-    );
-  }, [data, searchTerm]);
+    // Actions
+    setSearchTerm,
+    setSelectedStore,
+    setItemsPerPage,
+    handlePageChange,
+    handleViewDetails,
+    handleRefresh
+  } = useApprovedStoresWidget();
 
-  const paginatedStores = React.useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    
-    return filteredStores.slice(startIndex, endIndex);
-  }, [filteredStores, currentPage, itemsPerPage]);
-  
-  const totalPages = React.useMemo(() => {
-    return Math.max(1, Math.ceil(filteredStores.length / itemsPerPage));
-  }, [filteredStores, itemsPerPage]);
-  
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    const scrollContainer = document.querySelector('.approved-scroll-area');
-    if (scrollContainer) {
-      scrollContainer.scrollTop = 0;
-    }
-  };
-  
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, itemsPerPage]);
-  
-  const handleViewDetails = (store: Store) => {
-    setSelectedStore(store);
-  };
-
-  const handleRefresh = () => {
-    setRefreshAnimation(true);
-    queryClient.invalidateQueries({ queryKey: ["stores", "approved"] });
-    
-    setTimeout(() => {
-      setRefreshAnimation(false);
-    }, 1000);
-  };
-
-  const renderApprovedStoreCards = () => {
-    const originalStores = Array.isArray(data?.stores) ? data?.stores : data?.stores?.stores || [];
-    
-    if (filteredStores.length === 0) {
-      if (originalStores.length > 0 && searchTerm) {
-        return (
-          <div className="flex flex-col items-center justify-center py-6 text-gray-400">
-            <Search className="h-10 w-10 text-gray-300 mb-2 stroke-[1.5px]" />
-            <p className="font-medium text-sm text-gray-500">No se encontraron resultados</p>
-            <p className="text-xs mt-1 max-w-xs text-center px-4">
-              No hay tiendas que coincidan con "{searchTerm}"
-            </p>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setSearchTerm("")}
-              className="mt-3 border-gray-300 text-gray-500 hover:bg-gray-50 h-7 text-xs"
-            >
-              <RefreshCw className="h-3 w-3 mr-1" />
-              Limpiar búsqueda
-            </Button>
-          </div>
-        );
-      }
-      
+  const renderEmptyState = () => {
+    if (originalStores.length > 0 && searchTerm) {
       return (
         <div className="flex flex-col items-center justify-center py-6 text-gray-400">
-          <StoreIcon className="h-10 w-10 text-green-400/60 mb-2" />
-          <p className="font-medium text-sm text-green-700">No hay tiendas aprobadas</p>
+          <Search className="h-10 w-10 text-gray-300 mb-2 stroke-[1.5px]" />
+          <p className="font-medium text-sm text-gray-500">No se encontraron resultados</p>
           <p className="text-xs mt-1 max-w-xs text-center px-4">
-            Aún no se ha aprobado ninguna tienda
+            No hay tiendas que coincidan con "{searchTerm}"
           </p>
           <Button 
             variant="outline" 
             size="sm"
-            onClick={handleRefresh}
-            className="mt-3 border-green-200 text-green-700 hover:bg-green-50/50 h-7 text-xs"
+            onClick={() => setSearchTerm("")}
+            className="mt-3 border-gray-300 text-gray-500 hover:bg-gray-50 h-7 text-xs"
           >
-            <RefreshCw className={`h-3 w-3 mr-1 ${refreshAnimation ? 'animate-spin' : ''}`} />
-            Verificar
+            <RefreshCw className="h-3 w-3 mr-1" />
+            Limpiar búsqueda
           </Button>
         </div>
       );
     }
-
+    
     return (
-      <AnimatePresence mode="popLayout">
-        {paginatedStores.map((store: Store, index) => (
-          <motion.div
-            key={store.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.15, delay: index * 0.03 }}
-            className="mb-2 last:mb-1"
-          >
-            <Card className="bg-white border border-gray-100 hover:shadow-sm hover:border-green-200/50 transition-all duration-200 w-full group">
-              <CardContent className="p-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2.5 overflow-hidden">
-                    <div className="h-9 w-9 rounded-md bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center overflow-hidden shadow-sm flex-shrink-0">
-                      {store.logo ? (
-                        <img 
-                          src={store.logo} 
-                          alt={store.name} 
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-green-700 font-semibold text-sm">
-                          {store.name?.substring(0, 2).toUpperCase()}
-                        </span>
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="font-medium text-gray-800 truncate text-sm">{store.name}</div>
-                      <div className="text-xs text-gray-500 truncate">
-                        {store.email?.substring(0, 14)}...
-                      </div>
-                    </div>
-                  </div>
-                
-                  <div className="flex space-x-1 items-center">
-                    <TooltipProvider delayDuration={300}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleViewDetails(store)}
-                            className="h-7 w-7 text-blue-600 hover:bg-blue-50/50 hover:text-blue-700"
-                          >
-                            <Eye className="h-3.5 w-3.5" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="bottom" className="text-xs font-medium bg-blue-50 text-blue-700 border-blue-200 no-arrow">
-                          Ver detalles
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    );
-  };
-
-  const RenderPagination = () => {
-    return (
-      <div className="flex items-center justify-between gap-1 py-1.5 px-2 text-xs">
-        <div className="text-gray-500">
-          {filteredStores.length > 0 
-            ? `${(currentPage - 1) * itemsPerPage + 1}-${Math.min(currentPage * itemsPerPage, filteredStores.length)} de ${filteredStores.length}`
-            : "0 resultados"}
-        </div>
-        
-        <div className="flex items-center gap-1">
-          {totalPages > 1 && (
-            <>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="h-6 w-6 rounded-md"
-              >
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </Button>
-              
-              <span className="text-xs px-2 font-medium">
-                {currentPage} / {totalPages}
-              </span>
-              
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="h-6 w-6 rounded-md"
-              >
-                <ChevronRight className="h-3.5 w-3.5" />
-              </Button>
-            </>
-          )}
-          
-          <Select
-            value={itemsPerPage.toString()}
-            onValueChange={(value) => setItemsPerPage(Number(value))}
-          >
-            <SelectTrigger className="h-6 w-[45px] border-gray-200 text-xs ml-1">
-              <SelectValue placeholder="6" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="5">5</SelectItem>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="15">15</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="flex flex-col items-center justify-center py-6 text-gray-400">
+        <StoreIcon className="h-10 w-10 text-green-400/60 mb-2" />
+        <p className="font-medium text-sm text-green-700">No hay tiendas aprobadas</p>
+        <p className="text-xs mt-1 max-w-xs text-center px-4">
+          Aún no se ha aprobado ninguna tienda
+        </p>
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={handleRefresh}
+          className="mt-3 border-green-200 text-green-700 hover:bg-green-50/50 h-7 text-xs"
+        >
+          <RefreshCw className={`h-3 w-3 mr-1 ${refreshAnimation ? 'animate-spin' : ''}`} />
+          Verificar
+        </Button>
       </div>
     );
   };
@@ -304,11 +139,35 @@ export const ApprovedStoresWidget = () => {
               scrollbarColor: '#86EFAC transparent'
             }}
           >
-            {renderApprovedStoreCards()}
+            {filteredStores.length === 0 ? (
+              renderEmptyState()
+            ) : (
+              <AnimatePresence mode="popLayout">
+                {paginatedStores.map((store, index) => (
+                  <StoreCard
+                    key={store.id}
+                    store={store}
+                    index={index}
+                    onView={handleViewDetails}
+                    onApprove={() => {}}
+                    onReject={() => {}}
+                    type="approved"
+                  />
+                ))}
+              </AnimatePresence>
+            )}
           </div>
         </div>
+        
         <CardFooter className="p-0 w-full flex-shrink-0">
-          <RenderPagination />
+          <StorePagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredStores.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={setItemsPerPage}
+          />
         </CardFooter>
       </>
     );
@@ -317,19 +176,14 @@ export const ApprovedStoresWidget = () => {
   return (
     <>
       <Card className="w-full h-full shadow-sm border-gray-200 overflow-hidden flex flex-col">
-        <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50/80 py-2 px-3 flex justify-between items-center flex-shrink-0 border-b">
+        <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50/80 py-2 px-3 flex justify-between items-center flex-shrink-0">
           <div className="flex items-center space-x-2">
             <span className="h-2 w-2 rounded-full bg-green-500"></span>
             <CardTitle className="text-sm font-medium text-gray-700">Tiendas Aprobadas</CardTitle>
           </div>
           
           <div className="flex items-center gap-2">
-            <Badge 
-              variant="outline" 
-              className="text-green-600 bg-green-50 border-green-200 text-xs font-normal h-5"
-            >
-              {filteredStores.length}
-            </Badge>
+            <StatusBadge count={filteredStores.length} status="approved" />
             
             <TooltipProvider>
               <Tooltip>
@@ -352,100 +206,19 @@ export const ApprovedStoresWidget = () => {
           </div>
         </CardHeader>
         
-        <div className="flex-shrink-0 p-2 border-b">
-          <div className="relative w-full">
-            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
-            <Input 
-              placeholder="Buscar..." 
-              className="pl-7 h-7 text-xs bg-white border-gray-200 rounded-md focus-visible:ring-1 focus-visible:ring-green-400 w-full" 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+        <div className="flex-shrink-0 p-2 ">
+          <StoreSearchBar value={searchTerm} onChange={setSearchTerm} />
         </div>
         
         <div className="flex-grow flex flex-col min-h-0 w-full overflow-hidden">
           {renderContent()}
         </div>
       </Card>
-
-      <Dialog 
-        open={!!selectedStore} 
-        onOpenChange={(open) => {
-          if (!open) {
-            setSelectedStore(null);
-          }
-        }}
-      >
-        <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" />
-        <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-md border-0 shadow-lg bg-white rounded-lg overflow-hidden z-50">
-          <div className="relative z-10">
-            <DialogHeader className="pb-3">
-              <DialogTitle className="text-green-700">Detalles de la tienda</DialogTitle>
-              <DialogDescription>
-                Información completa de la tienda aprobada
-              </DialogDescription>
-            </DialogHeader>
-            
-            {selectedStore && (
-              <div className="p-4">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="h-16 w-16 rounded-lg bg-gradient-to-b from-green-100/50 to-emerald-100/30 flex items-center justify-center overflow-hidden">
-                    {selectedStore.logo ? (
-                      <img 
-                        src={selectedStore.logo} 
-                        alt={selectedStore.name} 
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-green-700 font-semibold text-2xl">
-                        {selectedStore.name?.substring(0, 2).toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-lg">{selectedStore.name}</h4>
-                    <div className="flex gap-2 mt-1">
-                      <Badge variant="outline" className="bg-green-50 text-green-700 font-normal border-green-200">
-                        {selectedStore.status}
-                      </Badge>
-                      <Badge variant="outline" className="bg-blue-50 text-blue-700 font-normal border-blue-200">
-                        <CheckCircle className="mr-1 h-3 w-3" /> Activa
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="space-y-3 bg-gray-50 rounded-md p-3">
-                  <div className="grid grid-cols-3 text-sm border-gray-100 pb-2">
-                    <span className="text-gray-500 col-span-1">Documento:</span>
-                    <span className="font-medium col-span-2">{selectedStore.type_document} {selectedStore.number_document}</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 text-sm border-gray-100 pb-2">
-                    <span className="text-gray-500 col-span-1">Email:</span>
-                    <span className="font-medium col-span-2">{selectedStore.email}</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 text-sm border-gray-100 pb-2">
-                    <span className="text-gray-500 col-span-1">Teléfono:</span>
-                    <span className="font-medium col-span-2">{selectedStore.phone_number || 'No especificado'}</span>
-                  </div>
-                </div>         
-                <div className="flex justify-end space-x-2 pt-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => setSelectedStore(null)}
-                    className="border-gray-200"
-                  >
-                    Cerrar
-                  </Button>
-                </div>
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      
+      <ApprovedStoreDetailsDialog 
+        store={selectedStore} 
+        onClose={() => setSelectedStore(null)} 
+      />
     </>
   );
 };
