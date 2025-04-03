@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AuthClient from "../client/axios";
-import { useError } from "@/common/molecules/hooks/useErrors";
+import { useError } from "@/common/hooks/auth/useErrors";
 import { ImageType } from "../types/imageTypes";
 import { handleApiError } from "@/common/utils/errors/handleApiError";
 
@@ -8,7 +8,7 @@ const authClient = new AuthClient()
 
 export const useImagenMutation = () => {
   const queryClient = useQueryClient()
-//   const useErros = useError('imagen')
+  const useErrors = useError('imagen')
   
 return useMutation<ImageType, Error, File>({
     mutationFn: async (file: File) => {
@@ -28,7 +28,7 @@ return useMutation<ImageType, Error, File>({
             );
             return response; // 👈 Retorna solo los datos relevantes
         } catch (error: any) {
-            throw handleApiError(error);
+            throw useErrors(error);
         }
     },
     onSuccess: (data) => {

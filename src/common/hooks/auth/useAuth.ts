@@ -13,7 +13,6 @@ export const useAuth = () => {
     }else if (rol === ROLES.ADMIN) {
       return navigate("/admin");
     }
-      
     else {
       navigate("/");
     }

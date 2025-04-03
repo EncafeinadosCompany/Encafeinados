@@ -17,7 +17,7 @@ export interface User_Data {
   password?: string
 }
 
-interface PersonData {
+export interface PersonData {
   full_name: string,
   type_document: string,
   number_document:string,

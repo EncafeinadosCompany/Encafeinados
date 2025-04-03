@@ -4,6 +4,7 @@ import { ROLES } from "@/common/utils/lists/roles";
 
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
+import { PrincipalStores } from "@/modules/stores/components/principalStorePage";
 
 const LoadingSpinner = lazy(() => import ("@/common/atoms/LoadingSpinner"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
@@ -62,7 +63,9 @@ const AuthRoutes = () => {
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
-                <Route index path="/stores" element={<HomeStores />} /> 
+                <Route path="/stores" element={<HomeStores />}> 
+                <Route index element={<PrincipalStores />} />
+                </Route>
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>

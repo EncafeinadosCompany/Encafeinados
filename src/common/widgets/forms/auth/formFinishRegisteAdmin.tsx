@@ -10,11 +10,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { FinistAdminStore2 } from "@/common/molecules/auth/stores/admin/finishAdminStore2";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
+import { useAdminStoreMutation } from "@/api/mutations/adminStores/adminStoresMutation";
+import { RegisterAdminStores } from "@/api/types/adminStoresTypes";
+import { useNavigate } from "react-router-dom";
 
 export const FormFinishRegisteAdmin = ({ref}:any) => {
 
     const [direction, setDirection] = useState(0);
     const [formData, setFormData] = useState({})
+    const useRegisterAdminStore = useAdminStoreMutation();
+    const navigate = useNavigate();
 
     const [step, setStep] = useState(0)
     const methods = useForm<CurrentAdminSchema>({
@@ -39,21 +44,43 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
         });
 
     };
-
-    const onSubmit = (data: any) => {
+    const onSubmit = async (data: any) => {
         console.log("Formulario enviado:", formData, ref);
+
+        const finalData = {...formData,...data };
+
+        const register : RegisterAdminStores = {
+            storeData:{
+                id: ref,
+            },
+            userData: {
+                email: finalData.email,
+                password: finalData.password, 
+            },
+            personData:{
+                full_name: finalData.name,
+                type_document: finalData.type_document,
+                number_document: finalData.number_document,
+                phone_number: finalData.phone_number,
+            }
+        }
+        await useRegisterAdminStore.mutateAsync(register).then((res) => {
+            navigate("/login") 
+        }).catch((err) => {
+            console.log(err);
+        })
     };
 
     return (
         <Card className="border-none bg-white/80 p-10 shadow-2xl">
 
             <motion.div
-                className="max-w-2xl w-full"
+                className="max-w-2xlw-full"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                <div className="flex flex-col justify-center items-center">
+                <div className="flex flex-col justify-center">
                     <div className="mt-8 mb-2 text-center ">
                         <TitleForm
                             title="¡Finalicemos tu registro!"
@@ -62,11 +89,11 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
                         </TitleForm>
                     </div>
                     {/* Progress indicator */}
-                    <ProgressIndicator className="space-x-5" step={step} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator>
+                    <ProgressIndicator className="ml-16 md:ml-36" step={step + 1} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator>
                     
                 </div>
                 <FormProvider {...methods}>
-                    <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4 p-3 relative overflow-hidden">
+                    <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4  relative overflow-hidden">
                         <div className="relative" style={{ minHeight: "250px" }}>
                             <AnimatePresence initial={false} custom={direction} mode="wait">
                                 {step === 0 && (
@@ -116,7 +143,7 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
                             >
                                 {step > 0 ? (
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button type="button" variant="outline" onClick={() => { setStep(step - 1), setDirection(-1) }} className="border-gray-200 bg-gray-400/50">
+                                        <Button type="button" variant="outline" onClick={() => { setStep(step - 1), setDirection(-1) }} className="border-gray-200 bg-[#020F17] text-gray-200">
                                             <ArrowLeft className="w-4 h-4 mr-2" />
                                             Previous
                                         </Button>
@@ -126,7 +153,7 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
                                 )}
                                 {step < RegisterAdminStoreSchema.length - 1 ? (
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button type="button" onClick={onNext} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
+                                        <Button type="button" onClick={onNext} className="bg-[#DB8935] hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
                                             Siguiente
                                             <ArrowRight className="w-4 h-4 ml-2" />
                                         </Button>

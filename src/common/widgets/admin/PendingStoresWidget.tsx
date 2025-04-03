@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { Store } from "@/api/types/storesTypes";
-import { usePendingStores } from "@/api/queries/storesQueries";
+
 
 import { Input } from "@/common/ui/input";
 import { Badge } from "@/common/ui/badge";
@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {Tooltip,TooltipContent,TooltipProvider,TooltipTrigger} from "@/common/ui/tooltip";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { usePendingStores } from "@/api/queries/stores/storesQueries";
 
 interface RejectFormData {
   reason: string;
@@ -155,7 +156,7 @@ const renderPendingStoreCards = () => {
   return (
     <div className="w-full px-1 py-1">
       <AnimatePresence>
-        {paginatedStores.map((store: Store, index) => (
+        {paginatedStores.map((store: Store, index: any) => (
           <motion.div
             key={store.id}
             initial={{ opacity: 0, y: 10 }}

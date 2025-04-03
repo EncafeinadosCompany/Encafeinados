@@ -2,21 +2,15 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Text } from "@/common/atoms/Text";
 import { StoreCard } from "@/common/molecules/home/StoreCard";
 import { StoreCardSkeleton } from "@/common/molecules/home/StoreCardSkeleton";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/common/ui/carousel";
+import {Carousel,CarouselContent,CarouselItem,CarouselNext,CarouselPrevious} from "@/common/ui/carousel";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import type { CarouselApi } from "@/common/ui/carousel";
-import { Coffee, ChevronRight, Loader2 } from "@/common/ui/icons";
-import { useStores } from "@/api/queries/storesQueries";
+import { Coffee, ChevronRight} from "@/common/ui/icons";
 import { useGeolocation } from "@/common/hooks/map/useGeolocation";
 import { calculateDistance } from "@/common/utils/map/mapUtils";
 import L from 'leaflet';
-import { useBranches } from "@/api/queries/branchesQueries";
+import { useBranches } from "@/api/queries/stores/branchesQueries";
+import { useStores } from "@/api/queries/stores/storesQueries";
 
 interface StoreCardProps {
   id: number;

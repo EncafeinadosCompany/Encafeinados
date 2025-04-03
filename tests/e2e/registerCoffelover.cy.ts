@@ -16,10 +16,7 @@ describe("Coffee Lover Registration", () => {
     // Step 2: Fill user data
     cy.get('[data-testid="type-document-select"]').click();
     cy.get('[data-testid="type-document-option-CC"]').click();
-    cy.get('[data-testid="type-document-select"]').should(
-      "contain",
-      "Cédula de Ciudadanía (CC)"
-    );
+    cy.get('[data-testid="type-document-select"]').should("contain","Cédula de Ciudadanía (CC)");
 
   
     cy.get('input[name="number_document"]').type('123456789');

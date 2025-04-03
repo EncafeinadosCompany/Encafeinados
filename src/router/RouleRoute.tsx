@@ -9,22 +9,6 @@ type RouteProps = {
 }
 
 const RoleRoute = ({ allowedRoles }: RouteProps) => {
-
-    // const queryClient = useQueryClient();
-
-    // const cachedUser = queryClient.getQueryData(['user']);
-
-    // const { data: user } = useQuery({
-    //     queryKey: ['user'],
-    //     queryFn: () => {
-    //         return cachedUser || null;
-    //     },
-
-    //     initialData: cachedUser || null,
-    //     staleTime: Infinity,
-    //     enabled: !!cachedUser
-    // });
-
     const {user} = getAuthStorage() 
 
     if (!user) return <Navigate to="/login" replace />

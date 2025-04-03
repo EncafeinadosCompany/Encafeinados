@@ -9,7 +9,7 @@ import 'leaflet/dist/leaflet.css';
 //   COMMENTS FOR EACH SECTION ARE NECESSARY IN THIS MODULE BECAUSE I GET LOST :(
 
 // API imports
-import { useBranches } from '@/api/queries/branchesQueries';
+import { useBranches } from '@/api/queries/stores/branchesQueries';
 import { useStores, useBranchesByStore } from '@/api/queries/storesQueries';
 // Types
 import {  Cafe } from '@/common/types/map/mapTypes';
