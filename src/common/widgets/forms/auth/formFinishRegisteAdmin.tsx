@@ -7,9 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { AnimatePresence, motion } from "framer-motion";
-import ProgressIndicator1 from "@/common/atoms/auth/ProgressIndicator1";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { FinistAdminStore2 } from "@/common/molecules/auth/stores/admin/finishAdminStore2";
+import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 
 export const FormFinishRegisteAdmin = ({ref}:any) => {
 
@@ -62,7 +62,7 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
                         </TitleForm>
                     </div>
                     {/* Progress indicator */}
-                    <ProgressIndicator1 className="space-x-5" step={step} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator1>
+                    <ProgressIndicator className="space-x-5" step={step} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator>
                     
                 </div>
                 <FormProvider {...methods}>

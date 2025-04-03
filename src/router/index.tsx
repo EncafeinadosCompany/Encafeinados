@@ -1,29 +1,34 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import { ROLES } from "@/common/utils/lists/roles";
+
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
-import { ROLES } from "@/common/utils/lists/roles";
-import LoadingSpinner from "@/common/atoms/LoadingSpinner";
-import HomeStores from "@/modules/stores/views/homeStores";
 
-const PendingStoresView = lazy(() => import("@/modules/adminStores/components/PendingStoresList"));
+const LoadingSpinner = lazy(() => import ("@/common/atoms/LoadingSpinner"));
+const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
+const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
+
+const LoginPage = lazy(() => import("@/modules/home/views/Login/loginPage"));
+const CuestionCard = lazy(() => import("@/common/molecules/auth/cuestionCard"));
 const FinishAdminRegistration = lazy(() => import("@/modules/stores/components/FinishAdminRegistration"));
 const GoogleCallback = lazy(() => import("@/common/hooks/google"));
-const CuestionCard = lazy(() => import("@/common/molecules/auth/cuestionCard"));
-const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
-const LoginPage = lazy(() => import("@/modules/home/views/Login/loginPage"));
 const RegisterCoffeloverPage = lazy(() => import("@/modules/home/views/Login/registerCoffeloverPage"));
 const RegisterStorePage = lazy(() => import("@/modules/home/views/Login/registerStoresPage"));
-const UnauthorizedPage = lazy(() => import("@/modules/settings/authorizationPage"));
-const NotFound = lazy(() => import("@/modules/settings/404"));
 
-const CoffeeloversLayout = lazy(() => import("@/modules/coffeelover/components/coffeeloversLayout"));
+const HomeStores = lazy(() => import ("@/modules/stores/views/homeStores"));
+const PendingStoresView = lazy(() => import("@/modules/adminStores/components/PendingStoresList"));
+
+const HomeAdminStores = lazy(() => import("@/modules/adminStores/views/homeAdmin"));
+
+const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/components/homeCoffeelover"));
 const CoffeeLoverDashboard = lazy(() => import("@/modules/coffeelover/views/CoffeeLoverDashboard"));
 const MapCoffelover = lazy(() => import("@/modules/coffeelover/components/mapCoffelover"));
-const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
-const HomeAdminStores = lazy(() => import("@/modules/adminStores/views/homeAdmin"));
+
 const MapView = lazy(() => import("@/common/widgets/map/MapView"));
 
+const NotFound = lazy(() => import("@/modules/settings/404"));
+const UnauthorizedPage = lazy(() => import("@/modules/settings/authorizationPage"));
 // const LanguageSwitcher = lazy(() => import("@/common/molecules/settings/button-languages"));
 
 const AuthRoutes = () => {
@@ -50,7 +55,7 @@ const AuthRoutes = () => {
             <Route element={<PrivateRoute/>}>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
-                <Route path="/coffeelover" element={<CoffeeloversLayout />}>
+                <Route path="/coffeelover" element={<HomeCoffeelover />}>
                   <Route index element={<CoffeeLoverDashboard />} />
                   <Route path="map-coffelover" element={<MapCoffelover />} />
                 </Route>

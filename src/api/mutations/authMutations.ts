@@ -94,8 +94,17 @@ export const useRegisterCoffeloverMutation = () => {
       try {
         const response = await authClient.post<LoginResponse>('/auth/register-client', formData);
         console.log('AQUI', response)
+
+        if(response) {
+           const login = useLoginMutation()
+           login.mutateAsync({
+            email: formData.userData.email,
+            password: formData.userData.password 
+           })
+        }
+
         return response;
-  
+        
       } catch (error: any) {
         throw handleApiError(error)
       }

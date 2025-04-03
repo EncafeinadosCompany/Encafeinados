@@ -12,12 +12,11 @@ import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
 import RegisterStoreStep1 from "@/common/molecules/auth/stores/store/registerStoreStep1"
 import RegisterStoreStep2 from "@/common/molecules/auth/stores/store/registerStoreStep2"
 
-import ProgressIndicator1 from "@/common/atoms/auth/ProgressIndicator1"
-
 import { useNavigate } from "react-router-dom"
 import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
 import { useRegisterStoreMutation } from "@/api"
 import {  useImagenMutation } from "@/api/mutations/imageMutations"
+import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator"
 
 const FormRegisterStores = () => {
     const [direction, setDirection] = useState(0);
@@ -96,7 +95,7 @@ const FormRegisterStores = () => {
                         />
                     </div>
                     {/* Progress indicator */}
-                    <ProgressIndicator1 step={step} totalSteps={RegisterStoreSchema.length}></ProgressIndicator1>
+                    <ProgressIndicator step={step} totalSteps={RegisterStoreSchema.length}></ProgressIndicator>
                 </div>
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4 relative">

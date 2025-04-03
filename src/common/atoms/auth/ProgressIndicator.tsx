@@ -4,11 +4,12 @@ import { Check } from "@/common/ui/icons";
 interface ProgressIndicatorProps {
   step: number;
   totalSteps: number;
+  className?: string;
 }
 
-const ProgressIndicator = ({ step, totalSteps }: ProgressIndicatorProps) => {
+const ProgressIndicator = ({ step, totalSteps, className }: ProgressIndicatorProps) => {
   return (
-    <div className="flex mb-8">
+    <div className={`flex mb-8 ${className}`}>
       {Array.from({ length: totalSteps }).map((_, index) => (
         <div key={index} className="flex-1 flex items-center" role="listitem">
           <div

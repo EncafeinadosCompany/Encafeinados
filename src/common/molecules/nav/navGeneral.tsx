@@ -23,34 +23,40 @@ export const NavGeneral = ({ isMobile, isExpanded, navItems, setIsExpanded }: Na
     <>
       {/* Mobile Bottom Navigation */}
       {isMobile ? (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-xl border-t border-amber-100 z-[100] rounded-t-xl">
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_70px_-1px_rgba(0,0,0,0.1)] z-[100] rounded-t-xl">
           <nav className="flex justify-around items-center h-16">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 to={item.href}
                 className={cn(
-                  "flex flex-col items-center justify-center px-2 py-1 rounded-md transition-all duration-300",
+                  "flex flex-col items-center justify-center px-2 py-1 rounded-md transition-all duration-300 relative",
                   location.pathname === item.href
-                    ? "text-amber-800 bg-amber-50 transform scale-110 shadow-md"
+                    ? "text-gray-300 bg-white transform scale-110 "
                     : "text-muted-foreground hover:text-amber-700 hover:bg-amber-50/50",
                 )}
               >
-                {item.icon}
-                <span className="text-xs mt-1 font-medium">{item.title}</span>
+               <span className="m-2"> {item.icon}</span>
+                {/* <span className="text-xs mt-1 font-medium">{item.title}</span> */}
+                {location.pathname === item.href && (
+                  <div className="absolute  bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-[#f7952c] rounded-full"></div>
+                )}
               </Link>
             ))}
             <Link
               to={"/login"}
               className={cn(
-                "flex flex-col items-center justify-center px-2 py-1 rounded-md transition-all duration-300",
-                location.pathname === "/"
+                "flex flex-col items-center justify-center px-2 py-1 rounded-md transition-all duration-300 relative",
+                location.pathname === "/login"
                   ? "text-amber-800 bg-amber-50 transform scale-110 shadow-md"
                   : "text-muted-foreground hover:text-amber-700 hover:bg-amber-50/50",
               )}
               onClick={clearAuthStorage}
             >
-              <span className="text-xs mt-1 font-medium">Cerrar sesión</span>
+              {location.pathname === "/login" && (
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
+              )}
+              <div className="flex-shrink-0 text-gray-300"><LogOutIcon /></div>
             </Link>
           </nav>
         </div>
@@ -102,7 +108,7 @@ export const NavGeneral = ({ isMobile, isExpanded, navItems, setIsExpanded }: Na
               to={"/login"}
               className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-500",
-                location.pathname === "/"
+                location.pathname === "/login"
                   ? "bg-[#F5E4D2] text-amber-800 shadow-md font-medium"
                   : "text-muted-foreground hover:bg-amber-50  hover:text-amber-700",
                 isExpanded ? "" : "justify-center"

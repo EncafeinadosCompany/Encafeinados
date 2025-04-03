@@ -14,13 +14,12 @@ export interface LoginResponse {
 export interface User_Data {
   id_google?: string,
   email: string,
-  password: string,
-  role_id: number
+  password?: string
 }
 
 interface PersonData {
   full_name: string,
-  type_document: number,
+  type_document: string,
   number_document:string,
   phone_number: string
 }

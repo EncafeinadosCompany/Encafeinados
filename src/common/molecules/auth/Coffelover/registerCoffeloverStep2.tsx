@@ -3,17 +3,30 @@ import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument"
 import { Label } from "@/common/ui/label"
 import { HelpCircle, X } from "@/common/ui/icons"
 import { Controller, UseFormRegister } from "react-hook-form"
+import { pageVariants } from "@/common/atoms/auth/pageVariants"
+import { motion } from "framer-motion"
 
 interface RegisterCoffeloverStep2Props {
     toggleInfo: () => void
     showInfo: boolean
     errors: any
     control: any
+    direction: number
     register: UseFormRegister<any>
 }
 
-const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, control }: RegisterCoffeloverStep2Props) => {
+const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, control, direction }: RegisterCoffeloverStep2Props) => {
     return (
+        <motion.div
+        key="step2"
+        custom={direction}
+        variants={pageVariants}
+        initial="enter"
+        animate="center"
+        exit="exit"
+        className="absolute w-full"
+        style={{ perspective: "1000px" }}
+    >
         <div className="space-y-6 m-3">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <div className="relative">
@@ -51,7 +64,7 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
 
                     <Controller
                         control={control}
-                        name="personData.type_document"
+                        name="type_document"
                         render={({ field }) => (
                             <div>
                                 <Label htmlFor="documentType" className="text-sm font-medium">
@@ -63,7 +76,7 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                                 />
                             </div>
                         )} />
-                    {errors?.personData?.type_document && <p className="text-red-500">{errors.personData.type_document.message}</p>}
+                    {errors?.type_document && <p className="text-red-500">{errors.type_document.message}</p>}
                 </div>
 
                 <div>
@@ -74,10 +87,10 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                     <InputForm
                         id="number_document"
                         type="number"
-                        {...register("personData.number_document")}
+                        {...register("number_document")}
                         placeholder="Ingresa tu número de documento"
                     />
-                    {errors?.personData?.number_document && <p className="text-red-500">{errors.personData.number_document.message}</p>}
+                    {errors?.number_document && <p className="text-red-500">{errors.number_document.message}</p>}
                 </div>
                 <div>
                     <Label htmlFor="phone_number" className="text-sm font-medium">
@@ -87,14 +100,15 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                     <InputForm
                         id="phone_number"
                         type="tel"
-                        {...register("personData.phone_number")}
+                        {...register("phone_number")}
                         placeholder="Número de teléfono"
                     />
-                    {errors?.personData?.phone_number && <p className="text-red-500">{errors.personData.phone_number.message}</p>}
+                    {errors?.phone_number && <p className="text-red-500">{errors.phone_number.message}</p>}
                 </div>
             </div>
 
         </div>
+    </motion.div>
 
     )
 }
