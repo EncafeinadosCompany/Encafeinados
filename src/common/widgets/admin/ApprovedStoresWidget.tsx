@@ -6,7 +6,7 @@ import {
 } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
-import { Store as StoreIcon, RefreshCw, Search, AlertTriangle } from "lucide-react";
+// import { Store as StoreIcon, RefreshCw, Search, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   CheckCircle, RefreshCw, Search, Eye, AlertTriangle, ChevronLeft, ChevronRight, Store as StoreIcon
@@ -22,6 +22,12 @@ import {
   TooltipTrigger
 } from "@/common/ui/tooltip";
 import { useApprovedStores } from "@/api/queries/stores/storesQueries";
+import { StoreCard } from "@/common/molecules/admin/store/StoreCard";
+import { StorePagination } from "@/common/molecules/admin/store/StorePagination";
+import { useApprovedStoresWidget } from "@/common/hooks/useApprovedStoresWidget";
+import { ApprovedStoreDetailsDialog } from "@/common/molecules/admin/store/ApprovedStoreDetailsDialog";
+import { StoreSearchBar } from "@/common/molecules/admin/store/StoreSearchBar";
+import { StatusBadge } from "@/common/atoms/StatusBadge";
 export const ApprovedStoresWidget = () => {
   const {
     // Data
@@ -152,7 +158,7 @@ export const ApprovedStoresWidget = () => {
               renderEmptyState()
             ) : (
               <AnimatePresence mode="popLayout">
-                {paginatedStores.map((store, index) => (
+                {paginatedStores.map((store: any, index: any) => (
                   <StoreCard
                     key={store.id}
                     store={store}

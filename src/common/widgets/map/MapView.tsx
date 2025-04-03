@@ -10,7 +10,7 @@ import 'leaflet/dist/leaflet.css';
 
 // API imports
 import { useBranches } from '@/api/queries/stores/branchesQueries';
-import { useStores, useBranchesByStore } from '@/api/queries/storesQueries';
+
 // Types
 import {  Cafe } from '@/common/types/map/mapTypes';
 
@@ -29,6 +29,7 @@ import HighlightText from '@/common/atoms/common/HighlightText';
 
 // Animations
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
+import { useBranchesByStore, useStores } from '@/api/queries/stores/storesQueries';
 
 // ==============================
 // MAIN COMPONENT
