@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useApprovedStores } from "@/api/queries/storesQueries";
+
 import { Store } from "@/api/types/storesTypes";
 import { 
   Card, CardContent, CardHeader, CardTitle, CardFooter 
@@ -23,6 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from "@/common/ui/tooltip";
+import { useApprovedStores } from "@/api/queries/stores/storesQueries";
 export const ApprovedStoresWidget = () => {
   const { data, isLoading, error } = useApprovedStores();
   const queryClient = useQueryClient();
