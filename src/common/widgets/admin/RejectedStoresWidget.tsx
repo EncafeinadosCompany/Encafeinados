@@ -83,11 +83,9 @@ export const RejectedStoresWidget = () => {
   };
 
   const renderRejectedStoreCards = () => {
-    // Obtener la lista original de tiendas sin filtrar para comparar
     const originalStores = Array.isArray(data?.stores) ? data?.stores : data?.stores?.stores || [];
     
     if (filteredStores.length === 0) {
-      // Mostrar un mensaje diferente si hay tiendas pero ninguna coincide con la búsqueda
       if (originalStores.length > 0 && searchTerm) {
         return (
           <div className="flex flex-col items-center justify-center py-6 text-gray-400">
@@ -108,8 +106,6 @@ export const RejectedStoresWidget = () => {
           </div>
         );
       }
-      
-      // Mensaje cuando no hay tiendas rechazadas
       return (
         <div className="flex flex-col items-center justify-center py-6 text-gray-400">
           <ShieldX className="h-10 w-10 text-red-400/60 mb-2" />
@@ -204,7 +200,6 @@ export const RejectedStoresWidget = () => {
         </div>
         
         <div className="flex items-center gap-1">
-          {/* Controles de paginación solo visibles si hay más de 1 página */}
           {totalPages > 1 && (
             <>
               <Button 
@@ -232,8 +227,6 @@ export const RejectedStoresWidget = () => {
               </Button>
             </>
           )}
-          
-          {/* Selector de cantidad siempre visible */}
           <Select
             value={itemsPerPage.toString()}
             onValueChange={(value) => setItemsPerPage(Number(value))}
@@ -313,8 +306,6 @@ export const RejectedStoresWidget = () => {
             {renderRejectedStoreCards()}
           </div>
         </div>
-        
-        {/* Siempre mostrar el CardFooter con el paginador */}
         <CardFooter className="p-0 w-full flex-shrink-0">
           <RenderPagination />
         </CardFooter>
@@ -381,7 +372,6 @@ export const RejectedStoresWidget = () => {
         open={!!selectedStore} 
         onOpenChange={(open) => {
           if (!open) {
-            // Al cerrar, limpiamos completamente el estado
             setSelectedStore(null);
           }
         }}

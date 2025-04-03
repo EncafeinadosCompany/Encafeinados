@@ -23,7 +23,6 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from "@/common/ui/tooltip";
-
 export const ApprovedStoresWidget = () => {
   const { data, isLoading, error } = useApprovedStores();
   const queryClient = useQueryClient();
@@ -83,11 +82,9 @@ export const ApprovedStoresWidget = () => {
   };
 
   const renderApprovedStoreCards = () => {
-    // Obtener la lista original de tiendas sin filtrar para comparar
     const originalStores = Array.isArray(data?.stores) ? data?.stores : data?.stores?.stores || [];
     
     if (filteredStores.length === 0) {
-      // Mostrar un mensaje diferente si hay tiendas pero ninguna coincide con la búsqueda
       if (originalStores.length > 0 && searchTerm) {
         return (
           <div className="flex flex-col items-center justify-center py-6 text-gray-400">
@@ -109,7 +106,6 @@ export const ApprovedStoresWidget = () => {
         );
       }
       
-      // Mensaje cuando no hay tiendas aprobadas
       return (
         <div className="flex flex-col items-center justify-center py-6 text-gray-400">
           <StoreIcon className="h-10 w-10 text-green-400/60 mb-2" />
@@ -204,7 +200,6 @@ export const ApprovedStoresWidget = () => {
         </div>
         
         <div className="flex items-center gap-1">
-          {/* Controles de paginación solo visibles si hay más de 1 página */}
           {totalPages > 1 && (
             <>
               <Button 
@@ -233,7 +228,6 @@ export const ApprovedStoresWidget = () => {
             </>
           )}
           
-          {/* Selector de cantidad siempre visible */}
           <Select
             value={itemsPerPage.toString()}
             onValueChange={(value) => setItemsPerPage(Number(value))}
@@ -313,8 +307,6 @@ export const ApprovedStoresWidget = () => {
             {renderApprovedStoreCards()}
           </div>
         </div>
-        
-        {/* Siempre mostrar el CardFooter con el paginador */}
         <CardFooter className="p-0 w-full flex-shrink-0">
           <RenderPagination />
         </CardFooter>
@@ -381,7 +373,6 @@ export const ApprovedStoresWidget = () => {
         open={!!selectedStore} 
         onOpenChange={(open) => {
           if (!open) {
-            // Al cerrar, limpiamos completamente el estado
             setSelectedStore(null);
           }
         }}
