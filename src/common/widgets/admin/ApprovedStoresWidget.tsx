@@ -1,18 +1,27 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
+import React, { useState } from "react";
+
+import { Store } from "@/api/types/storesTypes";
+import { 
+  Card, CardContent, CardHeader, CardTitle, CardFooter 
+} from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
 import { Store as StoreIcon, RefreshCw, Search, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
-
-import { StatusBadge } from "@/common/atoms/StatusBadge";
-import { StoreSearchBar } from "@/common/molecules/admin/store/StoreSearchBar";
-import { StorePagination } from "@/common/molecules/admin/store/StorePagination";
-import { StoreCard } from "@/common/molecules/admin/store/StoreCard";
-import { ApprovedStoreDetailsDialog } from "@/common/molecules/admin/store/ApprovedStoreDetailsDialog";
-import { useApprovedStoresWidget } from "@/common/hooks/useApprovedStoresWidget";
-
+import { 
+  CheckCircle, RefreshCw, Search, Eye, AlertTriangle, ChevronLeft, ChevronRight, Store as StoreIcon
+} from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { 
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
+} from "@/common/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "@/common/ui/tooltip";
+import { useApprovedStores } from "@/api/queries/stores/storesQueries";
 export const ApprovedStoresWidget = () => {
   const {
     // Data
