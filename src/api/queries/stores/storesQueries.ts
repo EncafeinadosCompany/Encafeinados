@@ -39,3 +39,25 @@ export const usePendingStores = () => {
     staleTime: 5 * 60 * 1000,
   })
 }
+
+export const useApprovedStores = () => {
+  return useQuery<StoresResponse>({
+    queryKey: ['stores', 'approved'],
+    queryFn: async () => {
+      const response = await authClient.get<StoresResponse>('/stores/status/APPROVED')
+      return response
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export const useRejectedStores = () => {
+  return useQuery<StoresResponse>({
+    queryKey: ['stores', 'rejected'],
+    queryFn: async () => {
+      const response = await authClient.get<StoresResponse>('/stores/status/REJECTED')
+      return response
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}
