@@ -65,5 +65,15 @@ export default class AuthClient {
       throw error;
     }
   }
+
+public async put<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<T> {
+  try {
+    const response: AxiosResponse<T> = await this.client.put(url, data, config)
+    return response.data;
+  } catch (error) {
+    console.log(`PUT ${url}`)
+    throw error
+  }
+}
 }
 
