@@ -8,6 +8,7 @@ import { Button } from "@/common/ui/button"
 import { Input } from "@/common/ui/input"
 import { Label } from "@/common/ui/label"
 import MapSearch from "@/common/molecules/mapSearch"
+import FormRegisterBrands from "@/common/widgets/forms/auth/formRegisterBranches"
 
 
 interface AddBranchModalProps {
@@ -98,58 +99,13 @@ export function AddBranchModal({ isOpen, onClose, onAdd }: AddBranchModalProps) 
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] bg-white shadow-xl border-none">
         <DialogHeader className="flex flex-col items-center">
-          <DialogTitle>Agregar Nueva Sucursal</DialogTitle>
+          <DialogTitle className="text-amber-950">AGREGAR NUEVA SUCURSAL</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          {/* <div className="space-y-2">
-            <Label htmlFor="name">
-              Nombre <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className={errors.name ? "border-destructive" : ""}
-            />
-            {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
-          </div>
+          <FormRegisterBrands>
 
-          <div className="space-y-2">
-            <Label htmlFor="phone_number">
-              Número de Teléfono <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="phone_number"
-              name="phone_number"
-              value={formData.phone_number}
-              onChange={handleChange}
-              className={errors.phone_number ? "border-destructive" : ""}
-            />
-            {errors.phone_number && <p className="text-xs text-destructive">{errors.phone_number}</p>}
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-               <MapSearch
-                 onLocationSelect={onLocationSelect}
-               ></MapSearch>
-            </div>
-
-          </div> */}
-
-          <div className="space-y-2">
-            <Label htmlFor="address">Dirección</Label>
-            <Input id="address" name="address" value={formData.address} onChange={handleChange} />
-          </div>
-
-          <DialogFooter className="pt-4">
-            <Button type="button" className="bg-red-900 text-white" variant="outline" onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button className="bg-[#DB8935] text-white" type="submit">Guardar</Button>
-          </DialogFooter>
-        </form>
+          </FormRegisterBrands>
+          
+     
       </DialogContent>
     </Dialog>
   )
