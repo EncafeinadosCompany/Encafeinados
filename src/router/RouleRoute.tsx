@@ -1,5 +1,6 @@
 
 import { queryClient } from "@/api/queryClient";
+import { getAuthStorage } from "@/common/utils/authStorage";
 import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -9,20 +10,22 @@ type RouteProps = {
 
 const RoleRoute = ({ allowedRoles }: RouteProps) => {
 
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
 
-    const cachedUser = queryClient.getQueryData(['user']);
+    // const cachedUser = queryClient.getQueryData(['user']);
 
-    const { data: user } = useQuery({
-        queryKey: ['user'],
-        queryFn: () => {
-            return cachedUser || null;
-        },
+    // const { data: user } = useQuery({
+    //     queryKey: ['user'],
+    //     queryFn: () => {
+    //         return cachedUser || null;
+    //     },
 
-        initialData: cachedUser || null,
-        staleTime: Infinity,
-        enabled: !!cachedUser
-    });
+    //     initialData: cachedUser || null,
+    //     staleTime: Infinity,
+    //     enabled: !!cachedUser
+    // });
+
+    const {user} = getAuthStorage() 
 
     if (!user) return <Navigate to="/login" replace />
     console.log(user)

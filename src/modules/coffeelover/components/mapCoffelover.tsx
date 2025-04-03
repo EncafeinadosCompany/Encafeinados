@@ -1,6 +1,5 @@
 import MapView  from "@/common/widgets/map/MapView"
 
-
 const MapCoffelover = () => {
 return(
     <div>

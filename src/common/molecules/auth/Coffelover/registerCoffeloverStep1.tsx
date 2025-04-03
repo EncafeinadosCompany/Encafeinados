@@ -58,7 +58,7 @@ export default function RegisterCoffeloverStep1({ register, errors, onGoogleSign
           </div>
           
           <div className="grid grid-cols-1 gap-3">
-            {/* <ButtonGoogle
+            <ButtonGoogle
               variant="outline"
               onClick={onGoogleSignIn}
               disabled={isLoading}
@@ -66,7 +66,7 @@ export default function RegisterCoffeloverStep1({ register, errors, onGoogleSign
               <span className="flex items-center">
                 Continuar con Google
               </span>
-            </ButtonGoogle> */}
+            </ButtonGoogle>
           </div>
           
           <div className="text-center text-xs text-gray-500 mt-10">

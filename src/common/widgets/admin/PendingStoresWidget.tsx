@@ -1,34 +1,25 @@
 import React, { useState } from "react";
-import { usePendingStores } from "@/api/queries/storesQueries";
-import { Store } from "@/api/types/storesTypes";
-import { 
-  Card, CardContent, CardHeader, CardTitle, CardFooter 
-} from "@/common/ui/card";
-import { Button } from "@/common/ui/button";
-import { Skeleton } from "@/common/ui/skeleton";
-import { Badge } from "@/common/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay } from "@/common/ui/dialog";
-import { ScrollArea } from "@/common/ui/scroll-area";
-import { Input } from "@/common/ui/input";
-import { Textarea } from "@/common/ui/textarea";
-import { Label } from "@/common/ui/label";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Coffee, RefreshCw, Search, CheckCircle2, XCircle, Eye, AlertTriangle, LayoutDashboard, ChevronLeft, ChevronRight
-} from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
+
 import { useForm } from "react-hook-form";
-import { 
-  Pagination, PaginationContent, PaginationEllipsis, PaginationItem,
-  PaginationLink, PaginationNext, PaginationPrevious 
-} from "@/common/ui/pagination";
+import { useQueryClient } from "@tanstack/react-query";
+
+import { Store } from "@/api/types/storesTypes";
+import { usePendingStores } from "@/api/queries/storesQueries";
+
+import { Input } from "@/common/ui/input";
+import { Badge } from "@/common/ui/badge";
+import { Label } from "@/common/ui/label";
+import { Button } from "@/common/ui/button";
+import { Textarea } from "@/common/ui/textarea";
+import { Skeleton } from "@/common/ui/skeleton";
+import { ScrollArea } from "@/common/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay } from "@/common/ui/dialog";
+import { Coffee, RefreshCw, Search, CheckCircle2, XCircle, Eye, AlertTriangle, ChevronLeft, ChevronRight} from "@/common/ui/icons";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/common/ui/tooltip";
+import {Tooltip,TooltipContent,TooltipProvider,TooltipTrigger} from "@/common/ui/tooltip";
+
+import { motion, AnimatePresence } from "framer-motion";
 
 interface RejectFormData {
   reason: string;
@@ -161,7 +152,6 @@ const renderPendingStoreCards = () => {
       </div>
     );
   }
-
   return (
     <div className="w-full px-2 py-2">
       <AnimatePresence>

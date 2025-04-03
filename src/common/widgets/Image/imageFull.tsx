@@ -1,6 +1,7 @@
 import { UseFormRegister } from "react-hook-form"
 import { useState, useRef, useEffect } from "react"
 import ImagenFull from "@/common/molecules/auth/imagenFull"
+import { useImagenMutation } from "@/api/mutations/imageMutations"
 
 interface registerStoreProps {
     register: UseFormRegister<any>
@@ -12,6 +13,7 @@ interface registerStoreProps {
 const Imagen = ({register, errors, direction, control}:registerStoreProps) =>{
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [isDragging, setIsDragging] = useState(false);
+    const useImageMutation = useImagenMutation();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +25,9 @@ const Imagen = ({register, errors, direction, control}:registerStoreProps) =>{
                 
             };
             reader.readAsDataURL(file);
+             
+            // console.log("file", file);
+          
         }
     };
 

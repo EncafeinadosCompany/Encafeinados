@@ -46,27 +46,6 @@ const Formlogin = () => {
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
      window.location.href = "http://localhost:3000/api/v2/auth/google";
-    // window.open(
-    //      'http://localhost:3000/api/v2/auth/google',
-    //     'googleAuth',
-    //      'width=500,height=600'
-    //  );
-    // try {
-    //   const user = await signInWithGoogle();
-    //   // console.log("Usuario logueado:", user);
-    //   fetchUser();
-
-    //   toast.success("Inicio de sesión exitoso");
-      
-
-    //   console.log("Usuario logueado:", user);
-    // } catch (error) {
-    //   console.error("Error en el login:", error);
-
-    //   setTimeout(() => {
-    //     setIsLoading(false)
-    //   }, 1000)
-    // }
   }
 
   return (
@@ -81,6 +60,5 @@ const Formlogin = () => {
     </div>
   )
 }
-
 
 export default Formlogin;

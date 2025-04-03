@@ -6,12 +6,13 @@ import { RegisterStoreSchemaType } from '../types/storeTypes'
 import AuthClient from '../client/axios'
 import { handleApiError } from '@/common/utils/errors/handleApiError'
 
+
 const authClient = new AuthClient()
 
 export const useLoginMutation = () => {
   const queryClient = useQueryClient()
   const useErros = useError('login')
-
+  
 
   return useMutation<LoginResponse, Error, User_Data>({
     mutationFn: async (formData: User_Data) => {
@@ -25,12 +26,11 @@ export const useLoginMutation = () => {
       }    
     },
     onSuccess: (data) => {
-      
       queryClient.setQueryData(['user'], data.user);
       
       queryClient.setQueryData(['authToken'], data.accessToken);
 
-      console.log('datos', data)
+      setAuthStorage(data.accessToken, data.user);
 
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },

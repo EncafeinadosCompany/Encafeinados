@@ -1,13 +1,21 @@
 import React from "react";
 import { PendingStoresWidget } from "@/common/widgets/admin/PendingStoresWidget";
+import { TitleForm } from "@/common/atoms/auth/titleForm";
 
 export const PendingStoresView = () => {
   return (
-    <div className="h-[calc(100vh-10rem)] flex flex-col p-4">
-      <div className="flex-grow overflow-hidden rounded-xl shadow-sm bg-white border border-gray-100">
+    <div className="min-h-screen flex flex-col p-4">
+       <div className="text-center m-3">
+       <TitleForm
+       title="Nuevas Tiendas Listas para Unirse"
+       subtitle="¡Nuevas tiendas están listas para unirse! Revisa sus datos y decide cuáles formarán parte de la plataforma."
+       >
+       </TitleForm>
+       </div>
+      <div className="flex-grow overflow-hidden rounded-xl shadow-md  bg-white border border-gray-100">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-full p-3">
        
-          <div className="h-full rounded-lg border border-amber-100 overflow-hidden bg-amber-50/10">
+          <div className="max-h-[610px] bg-amber-50/10 rounded-lg border border-amber-100 overflow-y-auto">
             <PendingStoresWidget />
           </div>
           

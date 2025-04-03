@@ -14,6 +14,9 @@ const registerCoffeeloverSchema = z.object({
             .length(4, { message: "La confirmación de la contraseña debe tener exactamente 4 dígitos" })
             .regex(/^\d{4}$/, { message: "La confirmación de la contraseña solo debe contener números" }),
         role_id: z.number().default(3)
+    }).refine((data) => data.password === data.confirmPassword, {
+        message: "Las contraseñas no coinciden",
+        path: ["confirmPassword"], // Muestra el error en este campo
     }),
     personData: personalDataSchema,
 

@@ -8,9 +8,13 @@ export const useAuth = () => {
       return navigate("/coffeelover");
       
     } else if (rol === ROLES.STORE) {
-      return navigate("/store/dashboard");
+      return navigate("/stores");
 
-    } else {
+    }else if (rol === ROLES.ADMIN) {
+      return navigate("/admin");
+    }
+      
+    else {
       navigate("/");
     }
   }

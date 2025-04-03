@@ -4,9 +4,10 @@ import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 import { ROLES } from "@/common/utils/lists/roles";
 import LoadingSpinner from "@/common/atoms/LoadingSpinner";
+import HomeStores from "@/modules/stores/views/homeStores";
 
 const PendingStoresView = lazy(() => import("@/modules/adminStores/components/PendingStoresList"));
-const FinishAdminRegistration = lazy(() => import("@/modules/adminStores/views/FinishAdminRegistration"));
+const FinishAdminRegistration = lazy(() => import("@/modules/stores/components/FinishAdminRegistration"));
 const GoogleCallback = lazy(() => import("@/common/hooks/google"));
 const CuestionCard = lazy(() => import("@/common/molecules/auth/cuestionCard"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
@@ -43,12 +44,11 @@ const AuthRoutes = () => {
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
-
             <Route path="/404" element={<NotFound />} />
-            <Route path="/admin" element={<HomeAdminStores />} >
-              <Route index path="stores/pending" element={<PendingStoresView />} />
-            </Route>
-            <Route element={<PrivateRoute />}>
+
+
+            <Route element={<PrivateRoute/>}>
+
               <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
                 <Route path="/coffeelover" element={<CoffeeloversLayout />}>
                   <Route index element={<CoffeeLoverDashboard />} />
@@ -57,12 +57,13 @@ const AuthRoutes = () => {
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
-                <Route index path="/store/dashboard" element={<CoffeeLoverDashboard />} />
+                <Route index path="/stores" element={<HomeStores />} /> 
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
-
-                {/* <Route path="/mar" element={<NavbarGeneral navItems={CoffeloverItems}/>} /> */}
+              <Route path="/admin" element={<HomeAdminStores />} >
+                <Route index element={<PendingStoresView />} />
+               </Route>
               </Route>
 
             </Route>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/common/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/common/ui/avatar";
-import { Check, X, Eye, Clock } from "lucide-react";
+import { Check, X, Eye, Clock } from "@/common/ui/icons";
 import { Store } from "@/api/types/storesTypes";
 import { Badge } from "@/common/ui/badge";
 import { motion } from "framer-motion";

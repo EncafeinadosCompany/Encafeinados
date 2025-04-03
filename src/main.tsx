@@ -6,31 +6,9 @@ import { Toaster } from 'react-hot-toast'
 import ReactDOM from 'react-dom/client'
 import { I18nextProvider } from 'react-i18next'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { persistQueryClient } from '@tanstack/query-persist-client-core';
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: Infinity,
-      gcTime: 1000 * 60 * 60 * 24, 
-    },
-  },
-});
-
-const persister = createSyncStoragePersister({
-  storage: window.localStorage, 
-  key: 'REACT_QUERY_OFFLINE_CACHE', 
-  throttleTime: 1000, 
-});
-
-persistQueryClient({
-  queryClient,
-  persister,
-  maxAge: Infinity
-});
-
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>

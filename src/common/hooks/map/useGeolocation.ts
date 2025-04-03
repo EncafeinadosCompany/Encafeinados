@@ -79,7 +79,7 @@ export const useGeolocation = (mapInstance: L.Map | null) => {
           if (attempt === 0 && posAccuracy > 100) {
             progressiveTimeoutRef.current = setTimeout(() => {
               getLocationWithPrecision(1);
-            }, 1000);
+            }, 1500);
           } else {
             setLocatingUser(false);
           }

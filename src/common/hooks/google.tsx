@@ -1,18 +1,19 @@
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { setAuthStorage } from "../utils/authStorage";
-import { use } from "chai";
+import {  setAuthStorageGoogle } from "../utils/authStorage";
+
 
 const GoogleCallback = () => {
     const navigate = useNavigate();
+
   
     useEffect(() => {
       const fetchToken = async () => {
 
         const urlParams = new URLSearchParams(window.location.search);
         const tokenResponse = urlParams.get('accessToken');
-        const userData = urlParams.get('user');
+        const userData = JSON.parse(urlParams.get('user') || '{}');
         
         try {
   
@@ -21,12 +22,15 @@ const GoogleCallback = () => {
             navigate("/login");
             return; 
           }
-          setAuthStorage(tokenResponse, userData)
+
+          setAuthStorageGoogle(tokenResponse, userData)
+
+          console.log(userData)
   
           toast.success("Inicio de sesión exitoso");
   
-          // Redirigir a la página correspondiente
-           navigate("/coffelover");
+           navigate("/coffeelover");
+
         } catch (error) {
           console.error("Error en la autenticación con Google:", error);
           toast.error("Error en la autenticación.");
@@ -37,7 +41,7 @@ const GoogleCallback = () => {
       fetchToken();
     }, [navigate]);
   
-    return <p>Autenticando...</p>; // Mensaje de espera mientras se procesa la autenticación
+    return <p>Autenticando...</p>; 
   };
   
   export default GoogleCallback;

@@ -3,12 +3,13 @@ import { Check } from "@/common/ui/icons";
 interface ProgressIndicatorProps {
   step: number;
   totalSteps: number;
+  className?: string;
 }
 
-const ProgressIndicator1 = ({step, totalSteps}:ProgressIndicatorProps) => {
+const ProgressIndicator1 = ({step, totalSteps, className}:ProgressIndicatorProps) => {
    console.log(step, totalSteps);
     return (
-        <div className="flex mb-8">
+        <div className={`flex mb-8 ${className}`}>
           {Array.from({ length: totalSteps }).map((_, index) => (
             <div key={index} className="flex-1 flex items-center">
               <div
