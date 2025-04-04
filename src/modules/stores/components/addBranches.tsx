@@ -91,18 +91,17 @@ export function AddBranchModal({ isOpen, onClose, onAdd }: AddBranchModalProps) 
   }
 
 
- 
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] bg-white shadow-xl border-none">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-hidden bg-white shadow-xl border-none">
         <DialogHeader className="flex flex-col items-center">
           <DialogTitle className="text-amber-950">AGREGAR NUEVA SUCURSAL</DialogTitle>
         </DialogHeader>
+        <div className="overflow-auto">
           <FormRegisterBrands>
-
           </FormRegisterBrands>
-          
-     
+        </div>
       </DialogContent>
     </Dialog>
   )

@@ -64,7 +64,7 @@ const FormRegisterBrands = () => {
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4 relative ">
 
-                        <div className="relative" style={{ minHeight: "300px"}}>
+                    <div className="relative" style={{ height: step === 1 ? "450px" : "300px", overflow: "hidden" }}>
                             <AnimatePresence initial={false} custom={direction} mode="wait">
                                 {step === 0 && (
                                    <RegisterBranchesStep1
