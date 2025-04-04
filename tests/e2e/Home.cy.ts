@@ -1,9 +1,5 @@
 import {
-  mockStores,
-  mockBranches,
-  mockUserLocation,
-  apiStates,
-} from "../../cypress/support/mocks/home/storeMocks";
+mockStores,mockBranches,mockUserLocation,apiStates} from "../../cypress/support/mocks/home/storeMocks";
 
 const apiUrl = Cypress.env("API_URL");
 

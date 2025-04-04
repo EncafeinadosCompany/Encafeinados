@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VITE_API_URL: http://localhost:3300
+      VITE_API_URL: http://localhost:3000
       VITE_FIREBASE_API_KEY: test_key
 
     strategy:

@@ -44,16 +44,16 @@ export const NavGeneral = ({ isMobile, isExpanded, navItems, setIsExpanded }: Na
               </Link>
             ))}
             <Link
-              to={"/login"}
+              to={"/"}
               className={cn(
                 "flex flex-col items-center justify-center px-2 py-1 rounded-md transition-all duration-300 relative",
-                location.pathname === "/login"
+                location.pathname === "/"
                   ? "text-amber-800 bg-amber-50 transform scale-110 shadow-md"
                   : "text-muted-foreground hover:text-amber-700 hover:bg-amber-50/50",
               )}
               onClick={clearAuthStorage}
             >
-              {location.pathname === "/login" && (
+              {location.pathname === "/" && (
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
               )}
               <div className="flex-shrink-0 text-gray-300"><LogOutIcon /></div>
@@ -105,10 +105,10 @@ export const NavGeneral = ({ isMobile, isExpanded, navItems, setIsExpanded }: Na
               </Link>
             ))}
              <Link
-              to={"/login"}
+              to={"/"}
               className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-md transition-all duration-500",
-                location.pathname === "/login"
+                location.pathname === "/"
                   ? "bg-[#F5E4D2] text-amber-800 shadow-md font-medium"
                   : "text-muted-foreground hover:bg-amber-50  hover:text-amber-700",
                 isExpanded ? "" : "justify-center"
