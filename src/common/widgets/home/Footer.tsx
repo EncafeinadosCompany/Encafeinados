@@ -99,7 +99,7 @@ export const Footer = () => {
             <div className="flex space-x-4">
               <SocialIcon
                 icon={<Instagram size={20} />}
-                href="https://www.instagram.com/encafeinados_tienda/"
+                href="https://taplink.cc/encafeinadoscompany/"
                 label="Instagram"
               />
               <SocialIcon
