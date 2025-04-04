@@ -30,7 +30,7 @@ export const LoginCard = (
 
   return (
     <div className="flex flex-col gap-5">
-      <Card className="overflow-hidden rounded-xl border-none sm:border border-amber-200/50 sm:shadow-lg backdrop-blur-sm sm:bg-white/90">
+      <Card className="overflow-hidden rounded-xl border-none sm:border border-amber-200/50 sm:shadow-lg  sm:bg-white/90">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form className="p-6 md:p-8" onSubmit={onSubmit}>
             <div className="flex flex-col gap-6">

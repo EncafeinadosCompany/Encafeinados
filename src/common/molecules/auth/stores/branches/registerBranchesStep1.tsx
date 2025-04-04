@@ -1,8 +1,8 @@
 import { InputForm } from "@/common/atoms/auth/inputForm"
-import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument"
 import { Label } from "@radix-ui/react-label"
-import { FileText, Hash, Phone, User } from "lucide-react"
-import { Controller, UseFormRegister } from "react-hook-form"
+import { Phone, Store} from "lucide-react"
+import { useState } from "react"
+import {  UseFormRegister } from "react-hook-form"
 
 interface registerAdminProps {
     register: UseFormRegister<any>
@@ -11,41 +11,54 @@ interface registerAdminProps {
 }
 
 export const RegisterBranchesStep1 = ({ register, control, errors }: registerAdminProps) => {
+    const [focusedField, setFocusedField] = useState<string | null>(null);
+
+
+    const registerWithFocus = (name: string) => {
+        const registration = register(name);
+        return {
+            ...registration,
+            onFocus: () => setFocusedField(name),
+            onBlur: (e: any) => {
+                setFocusedField(null);
+                registration.onBlur(e);
+            }
+        };
+    };
     return (
-        <div className="space-y-8 mx-auto max-w-4xl p-6 ">
-            <div className="grid grid-cols-1  gap-8">
-                <div className="text-center mb.3">
-                <p className="text-gray-400">¡Aqui prodras registrar una nueva sucursal a tu tienda!</p>
-                </div>
+        <div className="space-y-8 mx-auto max-w-4xl p-6">
+            <div className="grid grid-cols-1 mt-3 gap-8">
                 <div className="relative flex flex-col space-y-2">
-                    <Label htmlFor="name" className="text-sm font-medium text-gray-700">Nombre de la sucursal</Label>
+                    <Label htmlFor="name" className={`flex items-center text-xs transition-colors ${focusedField === "name" ? "text-[#3e90a4]" : "text-gray-600"
+                        }`}>Nombre de la sucursal</Label>
                     <div className="relative">
-                        <User className="absolute top-3 left-4 text-gray-400" size={18} />
+                        <Store className="absolute top-3 left-4 text-gray-400" size={18} />
                         <InputForm
                             id="name"
                             type="text"
-                            {...register('name')}
+                            {...registerWithFocus('name')}
                             placeholder="Ingresa tu nombre"
-                            className="pl-12 pr-4 py-3 rounded-lg text-gray-800 border shadow-sm border-gray-200 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#3e90a4] focus:border-transparent transition-all"
                         />
                     </div>
                     {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
                     <div className="relative flex flex-col space-y-2">
-                    <Label htmlFor="phone_number" className="text-sm font-medium text-gray-700">
-                        Teléfono / Celular
-                    </Label>
-                    <div className="relative">
-                        <Phone className="absolute top-3 left-4 text-gray-400" size={18} />
-                        <InputForm
-                            id="phone_number"
-                            type="tel"
-                            {...register("phone_number")}
-                            placeholder="Número de teléfono"
-                            className="pl-12 pr-4 py-3 rounded-lg text-gray-800 border shadow-sm border-gray-200 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                        />
+                        <Label htmlFor="phone_number" className={`flex items-center text-xs transition-colors ${focusedField === "phone_number" ? "text-[#3e90a4]" : "text-gray-600"
+                            }`}>
+                            Teléfono / Celular
+                        </Label>
+                        <div className="relative">
+                            <Phone className="absolute top-3 left-4 text-gray-400" size={18} />
+                            <InputForm
+                                id="phone_number"
+                                type="tel"
+                                {...registerWithFocus("phone_number")}
+                                placeholder="Número de teléfono"
+                                className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#3e90a4] focus:border-transparent transition-all"
+                            />
+                        </div>
+                        {errors?.phone_number && <p className="text-red-500 text-sm">{errors.phone_number.message}</p>}
                     </div>
-                    {errors?.phone_number && <p className="text-red-500 text-sm">{errors.phone_number.message}</p>}
-                </div>
 
 
                 </div>

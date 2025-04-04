@@ -13,6 +13,7 @@ import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { useAdminStoreMutation } from "@/api/mutations/adminStores/adminStoresMutation";
 import { RegisterAdminStores } from "@/api/types/adminStoresTypes";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export const FormFinishRegisteAdmin = ({ref}:any) => {
 
@@ -45,13 +46,15 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
 
     };
     const onSubmit = async (data: any) => {
-        console.log("Formulario enviado:", formData, ref);
+        // console.log("Formulario enviado:", formData, ref);
 
         const finalData = {...formData,...data };
+        
+        // const cleanPhoneNumber = finalData.phone_number.replace(/\s+/g, '');
 
         const register : RegisterAdminStores = {
             storeData:{
-                id: ref,
+                id: Number(ref),
             },
             userData: {
                 email: finalData.email,
@@ -64,11 +67,15 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
                 phone_number: finalData.phone_number,
             }
         }
-        await useRegisterAdminStore.mutateAsync(register).then((res) => {
-            navigate("/login") 
-        }).catch((err) => {
-            console.log(err);
-        })
+
+        try {
+
+            const response = await useRegisterAdminStore.mutateAsync(register);
+            toast.success("Registro exitoso");
+            navigate("/login");
+        } catch (error) {
+            console.error("Registration error:", error);
+        }
     };
 
     return (
@@ -97,20 +104,21 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
                         <div className="relative" style={{ minHeight: "250px" }}>
                             <AnimatePresence initial={false} custom={direction} mode="wait">
                                 {step === 0 && (
-                                    <FinistAdminStore
+                                    <FinistAdminStore2
+                                    register={methods.register}
+                                    control={methods.control}
+                                    errors={methods.formState.errors}
+                                ></FinistAdminStore2>
+                                  
+                                )},
+                                {
+                                    step === 1 && (
+                                        <FinistAdminStore
                                         direction={direction}
                                         register={methods.register}
                                         control={methods.control}
                                         errors={methods.formState.errors}
                                     ></FinistAdminStore>
-                                )},
-                                {
-                                    step === 1 && (
-                                        <FinistAdminStore2
-                                            register={methods.register}
-                                            control={methods.control}
-                                            errors={methods.formState.errors}
-                                        ></FinistAdminStore2>
                                     )},
 
                                 {

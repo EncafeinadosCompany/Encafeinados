@@ -18,7 +18,7 @@ export const registerBrancheSchema = [
             .number()
             .min(-90, { message: 'La latitud debe estar entre -90 y 90, como un café debe estar en un lugar' })
             .max(90, { message: 'La latitud debe estar entre -90 y 90, como un café debe estar en un lugar' }),
-        logitude: z
+        longitude: z
             .number()
             .min(-90, { message: 'La latitud debe estar entre -90 y 90, como un café debe estar en un lugar' })
             .max(90, { message: 'La latitud debe estar entre -90 y 90, como un café debe estar en un lugar' }),
@@ -28,6 +28,19 @@ export const registerBrancheSchema = [
            .min(3, { message: 'La dirección debe tener al menos 3 caracteres, como el nombre de una calle' })
 
     }),
+    z.object({
+        addressDetails: z
+          .string()
+          .nonempty({ message: 'La dirección es importante, como la ruta para llegar a un buen café' })
+          .min(3, { message: 'La dirección debe tener al menos 3 caracteres, como el nombre de una calle' }) ,
+          nearbyReference: z
+          .string()
+          .nullable(),
+          additionalNotes:z
+         .string()
+         .nullable(),
+    })
+    
 
 ]
 

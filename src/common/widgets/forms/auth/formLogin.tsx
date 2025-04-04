@@ -45,7 +45,7 @@ const Formlogin = () => {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
-     window.location.href = "http://localhost:3000/api/v2/auth/google";
+    window.open("http://localhost:3000/api/v2/auth/google", "_self");
   }
 
   return (

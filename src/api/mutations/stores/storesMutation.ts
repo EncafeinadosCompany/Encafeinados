@@ -27,10 +27,12 @@ export const useRegisterStoreMutation = () => {
   
         setAuthStorage(data.accessToken, data.user)
   
-        queryClient.invalidateQueries({ queryKey: ['user'] });
+        queryClient.invalidateQueries({ queryKey: ['stores'] });
       },
       onError: (error: any) => {
         useErrors(error);
       }
     })
 }
+
+

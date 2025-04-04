@@ -1,33 +1,35 @@
 import AuthClient from "@/api/client/axios";
-import { RegisterAdminStores } from "@/api/types/adminStoresTypes";
+import { LoginResponse } from "@/api/types/authTypes";
+import { BranchPost } from "@/api/types/branchesTypes";
 import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const authClient = new AuthClient();
 
-export const useAdminStoreMutation = () => {
+export const useRegisterBrandMutation = () => {
+    const useErrors = useError("stores")
     const queryClient = useQueryClient()
-    const useErrors = useError("registerAdminStores")
   
-    return useMutation<any, Error, RegisterAdminStores>({
-      mutationFn: async (formData: RegisterAdminStores): Promise<any> => {
-  
+    return useMutation<any, Error, BranchPost>({
+      mutationFn: async (formData: BranchPost): Promise<LoginResponse> => {
         try {
-          const response = await authClient.post<any>('/admin/store-admin', formData);
+          const response = await authClient.post<any>('/branches', formData);
           console.log('AQUI', response)
-          
-          return response.data;
+          return response;
     
         } catch (error: any) {
           throw handleApiError(error)
         }
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ['adminStore'] });
+  
+        queryClient.invalidateQueries({ queryKey: ['branches'] });
       },
       onError: (error: any) => {
         useErrors(error);
       }
     })
-  }
+}
+
+

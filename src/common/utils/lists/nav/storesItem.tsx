@@ -1,11 +1,11 @@
 import { NavItemType } from "@/common/types/navTypes";
-import { Home } from "lucide-react";
+import { GitBranchPlus} from "lucide-react";
 
 export const StoresItems: NavItemType[] = [
     {
-      title: "Stores",
+      title: "Sucursales",
       href: "/stores",
-      icon: <Home className="h-5 w-5" />,
+      icon: <GitBranchPlus className="h-5 w-5" />,
 
     }
 ]

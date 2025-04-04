@@ -6,12 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "@/common/ui/icons";
-import { motion, AnimatePresence} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffeloverMutation";
-import {registerCoffeeloverSchema, CurrentCoffeeLoverSchema } from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
+import { registerCoffeeloverSchema, CurrentCoffeeLoverSchema } from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
 import { TitleForm } from "@/common/atoms/auth/titleForm";
-import { registerWithGoogle} from "@/api/firebase";
+import { registerWithGoogle } from "@/api/firebase";
 import { LinkReturn } from "@/common/molecules/auth/LinkReturn";
 
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
@@ -19,6 +19,7 @@ import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/register
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { RegisterCoffelover } from "@/api";
+import { dataTagErrorSymbol } from "@tanstack/react-query";
 
 
 const FormRegisterCoffeelover = () => {
@@ -30,17 +31,17 @@ const FormRegisterCoffeelover = () => {
     const useRegisterCoffeelover = useRegisterCoffeloverMutation()
     const navigate = useNavigate();
 
- 
+
     const methods = useForm<CurrentCoffeeLoverSchema>({
         resolver: zodResolver(registerCoffeeloverSchema[step] as any),
-        defaultValues: {     
-                name: "",
-                lastname: "",
-                type_document: "",
-                number_document: "",
-                email: "",
-                password: "",
-                confirmPassword: ""         
+        defaultValues: {
+            name: "",
+            lastname: "",
+            type_document: "",
+            number_document: "",
+            email: "",
+            password: "",
+            confirmPassword: ""
         },
         // mode: "onChange"
     });
@@ -58,7 +59,7 @@ const FormRegisterCoffeelover = () => {
     const onNext = async () => {
         methods.trigger().then((isValid) => {
             if (isValid) {
-                setFormData(prev => ({...prev , ...methods.getValues()}));
+                setFormData(prev => ({ ...prev, ...methods.getValues() }));
                 setStep(step + 1);
                 setDirection(1);
             }
@@ -77,7 +78,7 @@ const FormRegisterCoffeelover = () => {
 
         const finalData = { ...formData, ...data };
         // console.log(finalData);
-        const dataCoffeelover = {  
+        const dataCoffeelover = {
             personData: {
                 full_name: `${finalData.name} ${finalData.lastname}`,
                 type_document: finalData.type_document,
@@ -90,7 +91,7 @@ const FormRegisterCoffeelover = () => {
             }
         };
 
-        console.log('Coffelover',dataCoffeelover);
+        console.log('Coffelover', dataCoffeelover);
 
         try {
             useRegisterCoffeelover.mutateAsync(dataCoffeelover)
@@ -105,46 +106,53 @@ const FormRegisterCoffeelover = () => {
 
 
     const handleGoogleSignIn = async () => {
-
         try {
-            setIsLoading(true)
-            const user = await registerWithGoogle().then((userCredential) => {
-                const user = userCredential.user.providerData;
-                const userData: RegisterCoffelover = {
-                    userData: {
-                        id_google: user[0].uid,
-                        email: user[0].email || ""
-                    },
-                    personData: {
-                        full_name: user[0].displayName || "",
-                        type_document: 'CC',
-                        number_document: '334343443',
-                        phone_number:'344324324342'
-                    }
-                }
+            setIsLoading(true);
+            const { user, token, isNewUser } = await registerWithGoogle();
 
-                console.log("Usuario creado:", userData);
+            const userData: RegisterCoffelover = {
+                userData: {
+                    id_google: user.
+                        providerData[0]?.uid,
+                    email: user.email || "",
+                },
+                personData: {
+                    full_name: user.displayName || "",
+                    type_document: "",  // Datos vacíos
+                    number_document: "",
+                    phone_number: "",
+                },
+            };
+
+            console.log('Coffelover', userData,);
+
+            // Verificar si hay datos incompletos
+            const datosIncompletos = !userData.personData.type_document || !userData.personData.number_document || !userData.personData.phone_number;
 
 
-                useRegisterCoffeelover.mutateAsync(userData).then((response) => {
-                    toast.success("Coffelover creado exitosamente.¡Bienvenido!");
-                    navigate("/coffeelover");
-                }).catch((error) => {
-                    console.log(error);
-                    setIsLoading(false)
-                })
-                console.log("Usuario creado:", userData);
-                console.log("Usuario logueado:", user);
-                return user
-            });
+            console.log('Datos incompletos:', datosIncompletos);
+            console.log('Nuevo usuario:', isNewUser);
+
+            setIsLoading(false);
+            if (isNewUser || datosIncompletos) {
+                sessionStorage.setItem("tempUserData", JSON.stringify(userData));
+                navigate("/completar-perfil");
+            }
+            
+
+            // await useRegisterCoffeelover.mutateAsync(userData).then((response) => {
+            //     toast.success("Coffelover creado exitosamente. ¡Bienvenido!");
+            //     navigate("/login");
+            // }).catch((error) => {
+            //     console.error("Error al registrar el usuario:", error);
+            //     setIsLoading(false);
+
+            // });
+
         } catch (error) {
-            console.error("Error en el login:", error);
-
-            setTimeout(() => {
-                setIsLoading(false)
-            }, 1000)
+            setIsLoading(false);
         }
-    }
+    };
 
     return (
         <div className="min-h-screen  bg-gradient-to-b from-orange-50 to-orange-200" translate="no">
@@ -157,7 +165,7 @@ const FormRegisterCoffeelover = () => {
                     animate={{ opacity: 1, y: 0 }}
                     initial={{ opacity: 0, y: 20 }}
                     transition={{ duration: 0.5 }}
-                    >
+                >
                     <div>
                         <div className="mt-8 mb-2">
                             <TitleForm
@@ -171,10 +179,10 @@ const FormRegisterCoffeelover = () => {
                     </div>
 
                     <FormProvider {...methods}>
-                    <form className="space-y-4 relative overflow-hidden" onSubmit={methods.handleSubmit(onSubmit)}>
-                        <div className="relative" style={{ minHeight: "300px" }}>
-                            <AnimatePresence initial={false} custom={direction} mode="wait">
-                                {step === 0 && (      
+                        <form className="space-y-4 relative overflow-hidden" onSubmit={methods.handleSubmit(onSubmit)}>
+                            <div className="relative" style={{ minHeight: "300px" }}>
+                                <AnimatePresence initial={false} custom={direction} mode="wait">
+                                    {step === 0 && (
                                         <RegisterCoffeloverStep1
                                             onGoogleSignIn={handleGoogleSignIn}
                                             isLoading={isLoading}
@@ -182,87 +190,87 @@ const FormRegisterCoffeelover = () => {
                                             errors={methods.formState.errors}
                                             direction={direction}
                                         />
-                                )}
-                                {step === 1 && (
+                                    )}
+                                    {step === 1 && (
                                         <RegisterCoffeloverStep2
                                             showInfo={showInfo}
                                             toggleInfo={toggleInfo}
-                                            register={methods.register }
+                                            register={methods.register}
                                             direction={direction}
                                             errors={methods.formState.errors}
                                             control={methods.control}
                                         />
-                                  
-                                )}
 
-                                {step === 2 && (                             
+                                    )}
+
+                                    {step === 2 && (
                                         <RegisterCoffeloverStep3
                                             register={methods.register as UseFormRegister<any>}
                                             errors={methods.formState.errors}
                                             direction={direction}
-                                        />                               
+                                        />
+                                    )}
+                                    {
+                                        step === 3 && (
+                                            <>
+                                                <p>Condiciones</p>
+                                                <div>
+                                                    <p>
+                                                        Política de privacidad
+                                                        <br />
+                                                        Términos y condiciones
+                                                    </p>
+                                                </div>
+                                                <input type="checkbox" {...methods.register("conditions")} />
+                                                {step === 3 && "conditions" in methods.formState.errors && (
+                                                    <p className=" text-red-500">{methods.formState.errors.conditions?.message}</p>
+                                                )}
+
+                                            </>
+                                        )
+                                    }
+                                </AnimatePresence>
+                            </div>
+
+                            {/* Navigation buttons */}
+                            <motion.div
+                                className="pt-2 m-2 flex justify-between"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.4 }}
+                            >
+                                {step > 0 ? (
+                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                        <Button type="button" variant="outline" onClick={prevStep} className="border-gray-200 bg-amber-50/50">
+                                            <ArrowLeft className="w-4 h-4 mr-2" />
+                                            Previous
+                                        </Button>
+                                    </motion.div>
+                                ) : (
+                                    <div></div>
                                 )}
-                                {
-                                    step === 3 && (
-                                        <>
-                                            <p>Condiciones</p>
-                                            <div>
-                                                <p>
-                                                    Política de privacidad
-                                                    <br />
-                                                    Términos y condiciones
-                                                </p>
-                                            </div>
-                                            <input type="checkbox" {...methods.register("conditions")} />
-                                            {step === 3 && "conditions" in methods.formState.errors && (
-                                                <p className=" text-red-500">{methods.formState.errors.conditions?.message}</p>
-                                            )}
 
-                                        </>
-                                    )
-                                }
-                            </AnimatePresence>
-                        </div>
-
-                        {/* Navigation buttons */}
-                        <motion.div
-                            className="pt-2 m-2 flex justify-between"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.4 }}
-                        >
-                            {step > 0 ? (
-                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                    <Button type="button" variant="outline" onClick={prevStep} className="border-gray-200 bg-amber-50/50">
-                                        <ArrowLeft className="w-4 h-4 mr-2" />
-                                        Previous
-                                    </Button>
-                                </motion.div>
-                            ) : (
-                                <div></div>
-                            )}
-
-                            {step < registerCoffeeloverSchema.length -1  ? (
-                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                    <Button disabled={!methods.formState.isValid} type="button" data-testid="next-button" onClick={onNext} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
-                                        {isLoading ? "Cargando..." : "Siguiente"}
-                                        <ArrowRight className="w-4 h-4 ml-2" />
-                                    </Button>
-                                </motion.div>
-                            ) : (
-                                <motion.div>
-                                    <Button
-                                        type="submit"
-                                        data-testid="submit-button"
-                                        disabled={!methods.formState.isValid}
-                                        className={`rounded-lg px-6 py-2 ${!methods.formState.isValid ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800 text-white"}`}>
-                                        Complete Registration
-                                    </Button>
-                                </motion.div>
-                            )}
-                        </motion.div>
-                    </form>
-                    </FormProvider> 
+                                {step < registerCoffeeloverSchema.length - 1 ? (
+                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                        <Button disabled={!methods.formState.isValid} type="button" data-testid="next-button" onClick={onNext} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
+                                            {isLoading ? "Cargando..." : "Siguiente"}
+                                            <ArrowRight className="w-4 h-4 ml-2" />
+                                        </Button>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div>
+                                        <Button
+                                            type="submit"
+                                            data-testid="submit-button"
+                                            disabled={!methods.formState.isValid}
+                                            className={`rounded-lg px-6 py-2 ${!methods.formState.isValid ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800 text-white"}`}>
+                                            Complete Registration
+                                        </Button>
+                                    </motion.div>
+                                )}
+                            </motion.div>
+                        </form>
+                    </FormProvider>
                 </motion.div>
             </div>
         </div>

@@ -23,27 +23,6 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
 
-export const signInWithGoogle = async () => {
-  try {
-
-    const authWindow = window.location.href = 'http://localhost:3000/api/v2/auth/google'
-    if (!authWindow) {
-      throw new Error('No se pudo abrir la ventana de autenticación');
-    }
-  } catch (error) {
-    console.error("Error en login con Google:", error);
-
-    if ((error as { code: string }).code === 'auth/popup-closed-by-user') {
-      throw new Error('El usuario cerró la ventana de autenticación');
-    } else if ((error as { code: string }).code === 'auth/cancelled-popup-request') {
-      throw new Error('Solicitud de autenticación cancelada');
-    } else {
-      throw error;
-    }
-  }
-};
-
-
 export const registerWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
@@ -51,13 +30,9 @@ export const registerWithGoogle = async () => {
     const token = credential?.accessToken;
     const user = result.user;
 
-    return {
-      user,
-      token,
-      additionalInfo: {
-        isNewUser: (result as any).additionalUserInfo?.isNewUser || false
-      }
-    };
+    const isNewUser = (result as any).additionalUserInfo?.isNewUser || false;
+
+    return { user, token, isNewUser };
   } catch (error) {
     console.error("Error en registro con Google:", error);
     throw error;

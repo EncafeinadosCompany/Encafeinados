@@ -202,7 +202,7 @@ export function PrincipalStores() {
 
   return (
     <Card className="border border-gray-200 shadow-sm">
-      <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50/80 border-b">
+      <CardHeader className="bg-gradient-to-r from-amber-50 border-none to-orange-50/80 border-b">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="bg-gradient-to-br from-[#D4A76A]/20 to-[#6F4E37]/20 p-1.5 rounded-md">
@@ -212,12 +212,12 @@ export function PrincipalStores() {
               Gestión de Sucursales
             </CardTitle>
           </div>
-          <Badge 
+          {/* <Badge 
             variant="outline" 
             className="bg-amber-50/80 border-amber-200 text-amber-700 font-normal"
           >
             {filteredBranches.length} {filteredBranches.length === 1 ? "sucursal" : "sucursales"} 
-          </Badge>
+          </Badge> */}
         </div>
       </CardHeader>
       
@@ -259,7 +259,7 @@ export function PrincipalStores() {
             
             <Button 
               onClick={() => setIsAddModalOpen(true)}
-              className="bg-gradient-to-r from-[#D4A76A] to-[#6F4E37] hover:opacity-90 text-white"
+              className="bg-[#DB8935] text-white"
             >
               <PlusCircle className="h-4 w-4 mr-2" />
               Agregar Sucursal
@@ -267,7 +267,7 @@ export function PrincipalStores() {
           </div>
         </div>
 
-        {loading ? (
+        {/* {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {renderSkeletons()}
           </div>
@@ -286,7 +286,7 @@ export function PrincipalStores() {
               ))}
             </AnimatePresence>
           </div>
-        )}
+        )} */}
       </CardContent>
       
       {filteredBranches.length > itemsPerPage && (

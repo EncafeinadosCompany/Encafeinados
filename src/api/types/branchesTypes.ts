@@ -21,6 +21,17 @@ export interface Store {
     longitude: number;
     address: string;
   }
+
+
+  export interface BranchPost {
+    store_id: number;
+    name: string;
+    phone_number: string;
+    latitude: number;
+    longitude: number;
+    address: string;
+  }
+  
   
   export interface BranchesResponse {
     message: string;

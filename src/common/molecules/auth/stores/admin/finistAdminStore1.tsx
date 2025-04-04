@@ -1,11 +1,10 @@
-import { TitleForm } from "@/common/atoms/auth/titleForm"
 import { InputEmail } from "@/common/atoms/Input-email"
 import { InputPassword } from "@/common/atoms/input-passwork"
+import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 
 import { Label } from "@radix-ui/react-label"
 import { Mail } from "lucide-react"
 import { UseFormRegister } from "react-hook-form"
-
 
 
 interface registerAdminProps {
@@ -15,45 +14,51 @@ interface registerAdminProps {
     control: any
 }
 
-export const FinistAdminStore = ({register, errors}:registerAdminProps) => {
-    return(
-            <div className="space-y-6 mx-2 ">
-                <div className="flex flex-col relative  space-y-2">
-                    <Label htmlFor="email">Correo Electrónico</Label>
-                    <Mail className="absolute top-11 left-4 text-gray-400" size={18} />
-                    <InputEmail
-                        id="email"
-                        type="email"
-                        {...register('email')}
-                        placeholder="tiendaEspecialidad@example.com"
-                        className="rounded-full pl-10 border shadow-sm  border-gray-200 bg-gray-50"
+export const FinistAdminStore = ({ register, errors }: registerAdminProps) => {
+
+    const { registerWithFocus, focusedField } = useRegisterFocus()
+    return (
+        <div className="space-y-6 mx-2 ">
+            <div className="flex flex-col relative  space-y-2">
+                <Label className={`flex items-center text-xs transition-colors ${focusedField === "email" ? "text-[#DB8935]" : "text-gray-600"}`}>Correo electrónico</Label>
+                <Mail className="absolute top-9 left-4 text-gray-400" size={18} />
+                <InputEmail
+                    id="email"
+                    type="email"
+                    {...registerWithFocus('email', register)}
+                    placeholder="TiendaEspecialidad@example.com"
+                    className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+
+                />
+                {errors.email && <p className="text-xs m-2 text-red-700">{errors.email.message}</p>}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className=" flex flex-col space-y-2">
+                    <Label className={`flex items-center text-xs transition-colors ${focusedField === "password" ? "text-[#DB8935]" : "text-gray-600"}`}>Contraseña</Label>
+                    
+                    <InputPassword
+
+                        {...registerWithFocus('password', register)}
+                        id="firstName" placeholder="Ingresa tu contraseña"
+                        className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+
                     />
-                    {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+                    {errors.password && <p className="text-xs m-2 text-red-700">{errors.password.message}</p>}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className=" flex flex-col space-y-2">
-                        <Label htmlFor="firstName">Contraseña</Label>
-                        <InputPassword
 
-                            {...register('password') }
-                            id="firstName" placeholder="Ingresa tu contraseña"
-                            className="rounded-full border shadow-sm  border-gray-200 bg-gray-50"
-                        />
-                        {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-                    </div>
+                <div className="flex flex-col space-y-2">
+                    <Label className={`flex items-center text-xs transition-colors ${focusedField === "confirmPassword" ? "text-[#DB8935]" : "text-gray-600"}`}>Confirmar contraseña</Label>
 
-                    <div className="flex flex-col space-y-2">
-                        <Label htmlFor="lastName">Confirma Contraseña</Label>
-                        <InputPassword
-                            id="lastName"
-                            {...register('confirmPassword')}
-                            placeholder="Confirma tu contraseña"
-                              className="rounded-full border shadow-sm  border-gray-200 bg-gray-50"
-                            />
-                            
-                        {errors?.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
-                    </div>
+                    <InputPassword
+                        id="lastName"
+                        {...registerWithFocus('confirmPassword', register)}
+                        placeholder="Confirma tu contraseña"
+                        className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+
+                    />
+                    {errors?.confirmPassword && <p className="text-red-700 m-2 text-xs">{errors.confirmPassword.message}</p>}
                 </div>
             </div>
+        </div>
     )
 }

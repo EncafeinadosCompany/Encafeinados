@@ -67,30 +67,6 @@ export function AddBranchModal({ isOpen, onClose, onAdd }: AddBranchModalProps) 
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (validateForm()) {
-      onAdd({
-        name: formData.name,
-        phone_number: formData.phone_number,
-        latitude: Number(formData.latitude),
-        longitude: formData.longitude ? Number(formData.longitude) : undefined,
-        address: formData.address || undefined,
-      })
-
-      // Resetear formulario
-      setFormData({
-        name: "",
-        phone_number: "",
-        latitude: "",
-        longitude: "",
-        address: "",
-      })
-    }
-  }
-
-
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -99,7 +75,9 @@ export function AddBranchModal({ isOpen, onClose, onAdd }: AddBranchModalProps) 
           <DialogTitle className="text-amber-950">AGREGAR NUEVA SUCURSAL</DialogTitle>
         </DialogHeader>
         <div className="overflow-auto">
-          <FormRegisterBrands>
+          <FormRegisterBrands
+          onClose={onClose}
+          >
           </FormRegisterBrands>
         </div>
       </DialogContent>

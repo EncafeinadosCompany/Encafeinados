@@ -16,7 +16,7 @@ const SelectTypeDocument = ({ onValueChange, value, className}: selectTypeDocume
             <SelectTrigger
                 data-testid="type-document-select"
                 id="type_document"
-                className={`w-full pl-10  text-gray-500 bg-white/60 shadow-sm focus:shadow-md border focus:border-amber-500 border-gray-300 ${className}`}
+                className={`w-full p-5 text-gray-500 bg-white/60 shadow-sm focus:shadow-md border focus:border-amber-500 border-gray-300 ${className}`}
             >
                 <SelectValue placeholder="Selecciona tipo" />
             </SelectTrigger>

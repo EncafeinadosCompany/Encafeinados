@@ -19,6 +19,10 @@ export const errorMessages: Record<number, string> = {
     },
     registerAdminStores:{
         409: "El correo eléctronico ya se encuentra registrado"
+    },
+    branches:{
+        409: "El nombre de la sucursal ya se encuentra registrado",
+        404: "La sucursal no se encuentra registrada"
     }
   
   };

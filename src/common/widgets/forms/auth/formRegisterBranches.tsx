@@ -6,29 +6,35 @@ import { ArrowLeft, ArrowRight } from "@/common/ui/icons"
 import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 
-
-
-
-import { useNavigate } from "react-router-dom"
-import {RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
+import { RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
 
 import { CurrentBrancheSchema, registerBrancheSchema } from "@/common/utils/schemas/auth/registerBrancheSchema"
 import { RegisterBranchesStep1 } from "@/common/molecules/auth/stores/branches/registerBranchesStep1"
 import { RegisterBranchesStep2 } from "@/common/molecules/auth/stores/branches/registerBranchesStep2"
+import { RegisterBranchesStep3 } from "@/common/molecules/auth/stores/branches/registerBranchesStep3"
+import { BranchPost } from "@/api/types/branchesTypes"
+import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
 
-const FormRegisterBrands = () => {
+interface FormRegisterBrandsProps {
+    onClose: () => void 
+}
+
+const FormRegisterBrands = ({onClose}:FormRegisterBrandsProps) => {
     const [direction, setDirection] = useState(0);
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
-    const navigate = useNavigate();
+    const [baseAddress, setBaseAddress] = useState("");
+    const useBranchesMuntation = useRegisterBrandMutation();
     const methods = useForm<CurrentBrancheSchema>({
         resolver: zodResolver(registerBrancheSchema[step] as any),
         defaultValues: {
             name: "",
             phone_number: "",
             latitude: 0,
-            address: "",
-        }
+            longitude: 0,
+            address: ""
+        },
+        mode: "onChange"
     })
 
     const onNext = () => {
@@ -42,16 +48,39 @@ const FormRegisterBrands = () => {
         });
     };
 
-    const onSubmit = async(data: any) => {
+    const onSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
         console.log("Formulario enviado:", finalData);
-    };
-    
+        const branchesData: BranchPost = {
+            store_id: 1,
+            name: finalData.name,
+            phone_number: finalData.phone_number,
+            latitude: finalData.latitude,
+            longitude: finalData.longitude,
+            address: `${finalData.address}, ${finalData.addressDetails}, ${finalData.nearbyReference}`
+        }
 
-    const onLocationSelect = (lat: number, lng: number, address: string) =>{
+        try {
+            useBranchesMuntation.mutateAsync(branchesData).then((res) => {
+                toast.success("Sucursal registrada con exito");
+                onClose();
+                console.log(res)
+            })
+        } catch (error) {
+            toast.error("Error al registrar la sucursal");
+        }
+    };
+
+
+    const onLocationSelect = (lat: number, lng: number, address: string) => {
         console.log(lat, lng, address)
-      }
-    
+        methods.setValue("latitude", lat, { shouldValidate: true });
+        methods.setValue("longitude", lng, { shouldValidate: true });
+        methods.setValue("address", address, { shouldValidate: true });
+        
+        setBaseAddress(address);
+    }
+
 
     return (
         <div >
@@ -64,15 +93,15 @@ const FormRegisterBrands = () => {
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4 relative ">
 
-                    <div className="relative" style={{ height: step === 1 ? "450px" : "300px", overflow: "hidden" }}>
+                        <div className="relative" style={{ maxHeight: "600px", overflow: "hidden" }}>
                             <AnimatePresence initial={false} custom={direction} mode="wait">
                                 {step === 0 && (
-                                   <RegisterBranchesStep1
-                                   register={methods.register}
-                                   control={methods.control}
-                                   errors={methods.formState.errors}
-                                   >
-                                   </RegisterBranchesStep1>
+                                    <RegisterBranchesStep1
+                                        register={methods.register}
+                                        control={methods.control}
+                                        errors={methods.formState.errors}
+                                    >
+                                    </RegisterBranchesStep1>
                                 )}
                                 {
                                     step === 1 && (
@@ -80,6 +109,15 @@ const FormRegisterBrands = () => {
                                             onLocationSelect={onLocationSelect}
                                         >
                                         </RegisterBranchesStep2>
+                                    )
+                                }
+                                {
+                                    step === 2 && (
+                                        <RegisterBranchesStep3
+                                            register={methods.register}
+                                            errors={methods.formState.errors}
+                                            baseAddress={baseAddress}>
+                                        </RegisterBranchesStep3>
                                     )
                                 }
                             </AnimatePresence>
@@ -124,7 +162,7 @@ const FormRegisterBrands = () => {
                                 )}
                             </motion.div>
                         </div>
-          
+
                     </form>
                 </FormProvider>
             </motion.div>
