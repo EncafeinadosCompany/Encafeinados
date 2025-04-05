@@ -19,8 +19,6 @@ import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/register
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { RegisterCoffelover } from "@/api";
-import { dataTagErrorSymbol } from "@tanstack/react-query";
-
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(0);
@@ -221,7 +219,7 @@ const FormRegisterCoffeelover = () => {
                                                         Términos y condiciones
                                                     </p>
                                                 </div>
-                                                <input type="checkbox" {...methods.register("conditions")} />
+                                                <input data-testid="conditions-checkbox"  type="checkbox" {...methods.register("conditions")} />
                                                 {step === 3 && "conditions" in methods.formState.errors && (
                                                     <p className=" text-red-500">{methods.formState.errors.conditions?.message}</p>
                                                 )}

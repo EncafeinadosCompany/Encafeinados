@@ -29,7 +29,10 @@ describe("Coffee Lover Registration", () => {
     cy.get('input[name="confirmPassword"]').type('1234');
     cy.get('button[data-testid="next-button"]').click();
 
-    //   // Step 3: Confirm and submit
+    //   // Step 3: Confirm checkbox
+    cy.get('[data-testid="conditions-checkbox"]').click();
+
+    //   // Step 4: Confirm and submit
     cy.get('button[data-testid="submit-button"]').click();
 
     cy.wait("@registerCoffelover").its("response.statusCode").should("eq", 201);
