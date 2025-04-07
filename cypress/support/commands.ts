@@ -1,7 +1,12 @@
 
 /// <reference types="cypress" />
 
-export {};
+
+
+
+
+export const API_URL = Cypress.env("API_URL");
+
 
 Cypress.on('uncaught:exception', (err) => {
     if (err.message.includes('ResizeObserver loop completed with undelivered notifications')) {
@@ -9,4 +14,5 @@ Cypress.on('uncaught:exception', (err) => {
     }
   });
 
+  
 

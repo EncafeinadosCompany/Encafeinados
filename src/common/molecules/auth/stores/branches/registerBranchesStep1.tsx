@@ -42,7 +42,7 @@ export const RegisterBranchesStep1 = ({ register, control, errors }: registerAdm
                         />
                     </div>
                     {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
-                    <div className="relative flex flex-col space-y-2">
+                    <div className="flex flex-col space-y-2">
                         <Label htmlFor="phone_number" className={`flex items-center text-xs transition-colors ${focusedField === "phone_number" ? "text-[#3e90a4]" : "text-gray-600"
                             }`}>
                             Teléfono / Celular

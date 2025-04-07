@@ -1,4 +1,4 @@
-import { mockRegisterCoffelover } from "../../cypress/support/mocks/auth/registerCoffelover";
+import { mockRegisterCoffelover } from "../../../cypress/support/mocks/auth/register";
 
 describe("Coffee Lover Registration", () => {
   beforeEach(() => {

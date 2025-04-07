@@ -133,7 +133,7 @@ const FormRegisterBrands = ({onClose}:FormRegisterBrandsProps) => {
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                         <Button type="button" variant="outline" onClick={() => { setStep(step - 1), setDirection(-1) }} className="border-gray-200 bg-amber-50/50">
                                             <ArrowLeft className="w-4 h-4 mr-2" />
-                                            Previous
+                                            Anterior
                                         </Button>
                                     </motion.div>
                                 ) : (

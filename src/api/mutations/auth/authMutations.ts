@@ -1,8 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { RegisterCoffelover, LoginResponse, User_Data } from '../../types/authTypes'
+import {LoginResponse, User_Data } from '../../types/authTypes'
 import { useError } from '@/common/hooks/auth/useErrors'
 import { clearAuthStorage, setAuthStorage } from '@/common/utils/authStorage'
-import { RegisterStoreSchemaType } from '../../types/storeTypes'
 import AuthClient from '../../client/axios'
 import { handleApiError } from '@/common/utils/errors/handleApiError'
 

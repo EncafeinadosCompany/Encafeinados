@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/common/ui/button"
 import { Input } from "@/common/ui/input"
 import { Label } from "@/common/ui/label"
-import MapSearch from "@/common/molecules/mapSearch"
+import MapSearch from "@/common/widgets/map/mapSearch"
 import FormRegisterBrands from "@/common/widgets/forms/auth/formRegisterBranches"
 
 
