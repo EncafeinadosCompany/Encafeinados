@@ -60,7 +60,7 @@ export const CardMapStore = ({
           onChange={(e) => HandleSearch(e.target.value)}
           onFocus={handleSearchFocus}
           placeholder="Busca una dirección o lugar..."
-          className="pl-10 pr-10 w-full p-3 border rounded-full border-gray-600 shadow-sm focus:outline-none focus:ring-[0.5] focus:ring-amber-500 focus:border-amber-500 transition"
+          className="pl-10 pr-10 w-full p-3 border rounded-full border-gray-600 shadow-sm focus:outline-none  focus:ring-amber-500 focus:border-amber-500 transition"
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-2">
           {searchQuery && (
