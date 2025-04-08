@@ -1,4 +1,3 @@
-
 export interface Store {
   id: number;
   name: string;
@@ -10,32 +9,37 @@ export interface Store {
   status: string;
 }
   
-  export interface Branch {
-    id: number;
-    store_name: string;
-    name: string;
-    phone_number: string;
-    average_rating: string;
-    status: boolean;
-    latitude: number;
-    longitude: number;
-    address: string;
-  }
-
-
-  export interface BranchPost {
+export interface Branch {
+  id: number;
+  name: string;
+  phone_number?: string;
+  average_rating?: string;
+  status?: boolean;
+  latitude: number;
+  longitude: number;
+  address?: string;
+  store_name?: string; 
+  store?: {
     store_id: number;
-    name: string;
-    phone_number: string;
-    latitude: number;
-    longitude: number;
-    address: string;
-  }
+    store_name: string;
+    store_logo: string;
+    store_email: string;
+  };
+}
+
+export interface BranchPost {
+  store_id: number;
+  name: string;
+  phone_number: string;
+  latitude: number;
+  longitude: number;
+  address: string;
+}
   
   
-  export interface BranchesResponse {
-    message: string;
-    branches: {
-      branches: Branch[];
-    };
-  }
+export interface BranchesResponse {
+  message: string;
+  branches: {
+    branches: Branch[];
+  };
+}

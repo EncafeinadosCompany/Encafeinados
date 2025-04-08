@@ -1,0 +1,122 @@
+/* Estilos para los marcadores de cafeterías */
+.custom-cafe-marker {
+  background: none !important;
+  border: none !important;
+}
+
+.cafe-marker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  border: 3px solid white;
+  background-color: white;
+  transform-origin: center bottom;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.cafe-marker.active {
+  border-color: #6F4E37;
+  box-shadow: 0 5px 15px rgba(111, 78, 55, 0.4);
+  z-index: 1000;
+}
+
+.cafe-marker img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.cafe-marker:hover img {
+  transform: scale(1.1);
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  border-radius: 50%;
+  background-color: rgba(111, 78, 55, 0.4);
+  top: -50%;
+  left: -50%;
+  z-index: -1;
+  animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Estilos para el marcador de usuario */
+.custom-user-marker {
+  background: none !important;
+  border: none !important;
+}
+
+.user-marker {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.user-marker-outer {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(111, 78, 55, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-marker-middle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(111, 78, 55, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-marker-inner {
+  width: 12px;
+  height: 12px;
+  background-color: #6F4E37;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.user-marker.pulsing .user-marker-outer {
+  animation: user-pulse 2s infinite;
+}
+
+@keyframes user-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(111, 78, 55, 0.5);
+  }
+  
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 15px rgba(111, 78, 55, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(111, 78, 55, 0);
+  }
+}

@@ -5,7 +5,7 @@ import {
 } from 'lucide-react'; // Cambiado de @/common/ui/icons a lucide-react
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker} from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -13,9 +13,10 @@ import 'leaflet/dist/leaflet.css';
 
 // API imports
 import { useBranches } from '@/api/queries/stores/branchesQueries';
+import { useApprovedStores } from '@/api/queries/stores/storesQueries';
 
 // Types
-import {  Cafe } from '@/common/types/map/mapTypes';
+import { Cafe } from '@/common/types/map/mapTypes';
 
 // Hooks
 import { useFavorites } from '@/common/hooks/map/useFavorites';
@@ -31,10 +32,13 @@ import RouteLine from '@/common/molecules/map/RouteLine';
 import FilterModal from '@/common/molecules/map/filterModal';
 import HighlightText from '@/common/atoms/common/HighlightText';
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
+import CafeMarker from '@/common/molecules/map/CafeMarker';
+import UserMarker from '@/common/molecules/map/UserMarker';
+import '@/common/styles/mapMarkers.css';
 
 // Animations
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
-import { useBranchesByStore, useStores } from '@/api/queries/stores/storesQueries';
+import { useBranchesByStore } from '@/api/queries/stores/storesQueries';
 
 // ==============================
 // MAIN COMPONENT
@@ -72,7 +76,7 @@ const MapView: React.FC = () => {
   // API DATA FETCHING
   // ==============================
   const { data: branchesData, isLoading: branchesLoading, error: branchesError } = useBranches();
-  const { data: storesData, isLoading: storesLoading } = useStores();
+  const { data: storesData, isLoading: storesLoading } = useApprovedStores();
   const { data: filteredBranchesData } = useBranchesByStore(selectedStore);
 
   // ==============================
@@ -85,8 +89,7 @@ const MapView: React.FC = () => {
     filteredCafes,
     sortedCafes: mapDataSortedCafes,
     activeCafeData,
-    availableStores,
-    customIcon
+    availableStores
   } = useMapData(
     branchesData,
     filteredBranchesData,
@@ -141,10 +144,7 @@ const MapView: React.FC = () => {
  * Handles sharing cafe location
  */
 const handleShare = useCallback((cafe: Cafe) => {
-  // Crear URL de Google Maps usando las coordenadas del café
   const googleMapsUrl = `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}&z=17&t=m&hl=es&q=${encodeURIComponent(cafe.name)}`;
-  
-  // Si el navegador soporta la API de compartir, usarla
   if (navigator.share) {
     navigator.share({
       title: `${cafe.name} - Encafeina2`,
@@ -152,11 +152,9 @@ const handleShare = useCallback((cafe: Cafe) => {
       url: googleMapsUrl
     }).catch(error => {
       console.log('Error compartiendo', error);
-      // Si falla, abrir directamente
       window.open(googleMapsUrl, '_blank');
     });
   } else {
-    // Fallback: abrir Google Maps directamente
     window.open(googleMapsUrl, '_blank');
   }
 }, []);
@@ -181,7 +179,7 @@ const handleShare = useCallback((cafe: Cafe) => {
     // Efecto visual más pronunciado
     const popoverElement = document.querySelector('.popover-content');
     if (popoverElement) {
-      // Opcional: añadir un flash de color verde claro como feedback visual
+      
     }
     
     setTimeout(() => setCopied(false), 2000);
@@ -426,7 +424,7 @@ const handleShare = useCallback((cafe: Cafe) => {
               </motion.button>
             </PopoverTrigger>
             <PopoverContent 
-              className="w-64 sm:w-72 p-0 sm:bottom-auto bottom-16 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95" 
+              className="w-64 sm:w-72 p-0 sm:bottom-auto bottom-16 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 bg-white shadow-md border border-gray-100 rounded-lg" 
               align="center" 
               alignOffset={0} 
               sideOffset={5}
@@ -515,54 +513,15 @@ const handleShare = useCallback((cafe: Cafe) => {
   // ==============================
 
   return (
+    // Modificar el contenedor principal para usar grid en modo lista
     <motion.div
-      className="h-screen w-full relative bg-gray-50 overflow-hidden font-sans"
+      className={`h-screen w-full relative bg-gray-50 overflow-hidden font-sans ${
+        viewMode === 'list' && window.innerWidth >= 768 ? 'md:grid md:grid-cols-[1fr_390px]' : ''
+      }`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
-      {/* CSS styles for user marker */}
-      <style>{`
-        .user-marker {
-          width: 24px;
-          height: 24px;
-          background-color: rgba(111, 78, 55, 0.2);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .user-marker.pulsing {
-          animation: pulse 2s infinite;
-        }
-        
-        .user-marker-inner {
-          width: 12px;
-          height: 12px;
-          background-color: #6F4E37;
-          border-radius: 50%;
-          border: 2px solid white;
-        }
-        
-        @keyframes pulse {
-          0% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(111, 78, 55, 0.5);
-          }
-          
-          70% {
-            transform: scale(1);
-            box-shadow: 0 0 0 10px rgba(111, 78, 55, 0);
-          }
-          
-          100% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(111, 78, 55, 0);
-          }
-        }
-      `}</style>
-
       {/* Loading overlay */}
       <AnimatePresence>
         {!mapLoaded && (
@@ -652,8 +611,6 @@ const handleShare = useCallback((cafe: Cafe) => {
             </motion.button>
           </motion.div>
 
-          {/* View toggle buttons */}
-          {/* View toggle buttons */}
           <div className="hidden md:flex bg-white/90 backdrop-blur-sm rounded-full shadow-lg overflow-hidden">
             <button
               className={`px-4 py-2 transition-colors duration-300 ${viewMode === 'map' ? 'bg-[#6F4E37] text-white' : 'text-[#6F4E37] hover:bg-gray-100'
@@ -681,7 +638,8 @@ const handleShare = useCallback((cafe: Cafe) => {
       </div>
 
       {/* Map Container */}
-      <div className={`absolute inset-0 z-10 ${viewMode === 'list' && window.innerWidth >= 768 ? 'md:w-1/2' : 'w-full'}`}>
+      <div className={`absolute inset-0 z-10 ${viewMode === 'list' && window.innerWidth >= 768 ? 'md:w-[calc(100%-390px)]' 
+    : 'w-full'}`}>
         <MapContainer
           center={defaultCenter}
           zoom={14}
@@ -698,25 +656,21 @@ const handleShare = useCallback((cafe: Cafe) => {
           />
 
           {/* User location marker */}
-          <UserLocationMarker position={userLocation} pulsing={true} />
+          <UserMarker position={userLocation} pulsing={true} />
 
           {/* Cafe markers */}
-          {cafePositions.map(position => (
-            <Marker
-              key={position.id}
-              position={[position.lat, position.lng]}
-              icon={customIcon}
-              eventHandlers={{
-                click: () => {
-                  setActiveCafe(position.id);
-                  if (window.innerWidth >= 768) {
-                    setShowSidebar(true);
-                  }
-                },
+          {cafes.map(cafe => (
+            <CafeMarker
+              key={cafe.id}
+              cafe={cafe}
+              isActive={activeCafe === cafe.id}
+              onClick={() => {
+                setActiveCafe(cafe.id);
+                if (window.innerWidth >= 768) {
+                  setShowSidebar(true);
+                }
               }}
-            >
-
-            </Marker>
+            />
           ))}
 
           {/* Route line between user location and selected cafe */}
@@ -781,7 +735,7 @@ const handleShare = useCallback((cafe: Cafe) => {
         ) && (
             <motion.div
               className={`absolute top-0 bottom-0 ${viewMode === 'list' && window.innerWidth >= 768
-                ? 'right-0 w-1/2 md:max-w-[390px] xl:max-w-[500px] lg:relative lg:shadow-none' 
+                ? 'right-0 w-1/2 md:max-w-[390px] xl:max-w-[390px] ' 
                 : 'right-0 w-full md:w-96'
                 } bg-white z-20 shadow-2xl rounded-l-3xl md:rounded-l-3xl overflow-hidden`}
               initial={{ x: '100%', opacity: 0 }}
@@ -889,4 +843,4 @@ const handleShare = useCallback((cafe: Cafe) => {
   );
 };
 
-export default MapView
+export default MapView;
