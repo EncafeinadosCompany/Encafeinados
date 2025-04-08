@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { UseFormRegister } from "react-hook-form";
+import { UseFormRegister, FieldValues } from "react-hook-form";
 
-export const  useRegisterFocus = () => {
+export function useRegisterFocus<T extends FieldValues = any>() {
     const [focusedField, setFocusedField] = useState<string | null>(null);
 
-    const registerWithFocus = (name: string, register: UseFormRegister<any>) => {
-        const registration = register(name);
+    const registerWithFocus = (name: keyof T, register: UseFormRegister<T>) => {
+        const registration = register(name as any); // Cast por seguridad
         return {
             ...registration,
-            onFocus: () => setFocusedField(name),
+            onFocus: () => setFocusedField(name as string),
             onBlur: (e: any) => {
                 setFocusedField(null);
                 registration.onBlur(e);
@@ -17,5 +17,4 @@ export const  useRegisterFocus = () => {
     };
 
     return { registerWithFocus, focusedField };
-
 }

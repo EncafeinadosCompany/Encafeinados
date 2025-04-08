@@ -7,7 +7,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 
 import { TitleForm } from "@/common/atoms/auth/titleForm"
-import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
+
 
 import RegisterStoreStep1 from "@/common/molecules/auth/stores/store/registerStoreStep1"
 import RegisterStoreStep2 from "@/common/molecules/auth/stores/store/registerStoreStep2"
@@ -19,7 +19,7 @@ import { useImagenMutation } from "@/api/mutations/imageMutations"
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator"
 import { useRegisterStoreMutation } from "@/api/mutations/stores/storesMutation"
 import { Card, CardContent, CardFooter, CardHeader } from "@/common/ui/card"
-import BranchRegistrationDrawer from "@/common/molecules/auth/stores/store/registerBranchesStep3"
+
 
 const FormRegisterStores = () => {
     const [direction, setDirection] = useState(0);
@@ -36,6 +36,7 @@ const FormRegisterStores = () => {
             type_document: "",
             number_document: "",
             phone_number: "",
+            
 
         },
         mode: "onChange"
@@ -43,8 +44,9 @@ const FormRegisterStores = () => {
 
     const onNext = () => {
         methods.trigger().then((isValid) => {
+            console.log("¿Paso válido?", isValid);
             if (isValid) {
-                console.log("paso siguiente", direction);
+                
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
                 setStep(step + 1);
                 setDirection(1);
@@ -82,7 +84,7 @@ const FormRegisterStores = () => {
 
 
     return (
-        <Card className="w-full max-w-3xl  overflow-x-hidden mx-auto h-screen max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent relative p-4 sm:p-6 border-none shadow-2xl bg-white/90">
+        <Card className="w-full max-w-3xl overflow-x-hidden mx-auto h-screen max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent relative p-4 sm:p-6 border-none shadow-2xl bg-white/90">
             <FormProvider {...methods}>
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -112,8 +114,8 @@ const FormRegisterStores = () => {
                         </div>
 
                     </CardHeader>
-                    <CardContent className="grid gap-4 min-h-[310px]">
                         <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-2">
+                    <CardContent className="grid gap-4 min-h-[310px]">
                             <AnimatePresence initial={false} custom={direction} mode="wait">
                                 {step === 0 && (
                                     <RegisterStoreStep1
@@ -132,12 +134,7 @@ const FormRegisterStores = () => {
                                         errors={methods.formState.errors}
                                     />
                                 )}
-                                {step === 2 && (
-                                    <div className="container mx-auto py-10">
-                                        <BranchRegistrationDrawer />
-                                    </div>
-                                )}
-                                {step === 3 && (
+                                {/* {step === 2 && (
                                     <>
                                         <p>Condiciones</p>
                                         <div>
@@ -152,9 +149,8 @@ const FormRegisterStores = () => {
                                             <p className="text-red-500">{methods.formState.errors.conditions?.message}</p>
                                         )}
                                     </>
-                                )}
+                                )} */}
                             </AnimatePresence>
-                        </form>
                     </CardContent>
 
                     {/* Footer con botones */}
@@ -170,7 +166,7 @@ const FormRegisterStores = () => {
                                             setDirection(-1);
                                         }}
                                         className="border-gray-200 bg-amber-50/50"
-                                    >
+                                        >
                                         <ArrowLeft className="w-4 h-4 mr-2" />
                                         Anterior
                                     </Button>
@@ -185,7 +181,7 @@ const FormRegisterStores = () => {
                                         type="button"
                                         onClick={onNext}
                                         className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white"
-                                    >
+                                        >
                                         Siguiente
                                         <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
@@ -198,14 +194,15 @@ const FormRegisterStores = () => {
                                         className={`rounded-lg px-6 py-2 ${!methods.formState.isValid
                                             ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                                             : "bg-gray-900 hover:bg-gray-800 text-white"
-                                            }`}
-                                    >
+                                        }`}
+                                        >
                                         Completar Registro
                                     </Button>
                                 </motion.div>
                             )}
                         </div>
                     </CardFooter>
+                            </form>
                 </motion.div>
             </FormProvider>
         </Card>
