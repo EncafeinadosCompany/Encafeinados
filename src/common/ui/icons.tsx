@@ -49,6 +49,9 @@ export {
     ArrowRightIcon,
     ChevronDownIcon,
     SlidersHorizontal,
+    ExternalLink, 
+    Copy,
+     Map
 
 
 } from "lucide-react";
