@@ -1,4 +1,4 @@
-import MapSearch from "@/common/molecules/mapSearch"
+import MapSearch from "@/common/widgets/map/mapSearch"
 
 interface registerAdminProps {
     onLocationSelect: (lat: number, lng: number, address: string) => void;

@@ -1,8 +1,9 @@
+"use client"
 import { useEffect, useState, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import MapSettings from "@/api/mutations/map/mapMutations";
-import { CardMapStore } from "./auth/stores/cardMapStore";
+import { CardMapStore } from "../../molecules/auth/stores/cardMapStore";
 
 interface MapSearchProps {
   onLocationSelect: (lat: number, lng: number, address: string) => void;

@@ -33,6 +33,7 @@ const CardRegister = ({ link, title, subtitle, description }: CartProps) => {
         <Link
           to={`${link}`}
           className="block mt-4"
+           data-testid={`card-link-${title.toLowerCase()}`} 
         >
           <motion.div
             whileHover={{ scale: 1.03 }}

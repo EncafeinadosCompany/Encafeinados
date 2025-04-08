@@ -8,9 +8,7 @@ import { TitleForm } from "@/common/atoms/auth/titleForm";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CurrentfinishSchema, registerCoffeeloverGoogleSchema } from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
-import { Label } from "@radix-ui/react-select";
 import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument";
-
 
 
 const CompletePerfil = () => {

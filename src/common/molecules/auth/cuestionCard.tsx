@@ -50,6 +50,7 @@ export default function CuestionCard() {
               <CardRegister
                 link="/store-registration"
                 title="Tienda"
+               
                 subtitle="Cafetería de Especialidad"
                 description="Para baristas, tostadores y amantes del café de origen"
               ></CardRegister>
