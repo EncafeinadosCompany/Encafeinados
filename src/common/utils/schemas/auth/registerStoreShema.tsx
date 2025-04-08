@@ -12,11 +12,11 @@ export const RegisterStoreSchema = [
             .string({message:'Por favor ingresa tu tipo de documento'})
             .nonempty({ message: "El tipo de documento es esencial, como el café en la mañana" }),
         number_document: z.string()
-            .nonempty({ message: 'Necesitamos tu número de documento, como un barista necesita su molino' })
+            .nonempty({ message: 'Necesitamos tu número de documento' })
             .min(6, { message: 'Tu número de documento debe tener al menos 6 caracteres, como los ingredientes básicos de una buena receta' })
             .max(11, { message: 'Parece que tu número de documento es tan largo como la cola en una cafetería popular' }),
         phone_number: z.string()
-            .nonempty({ message: "Tu número de teléfono es clave, como la temperatura del agua en un buen café" })
+            .nonempty({ message: "Tu número de teléfono es clave" })
             .min(7, { message: "Tu número debe tener al menos 7 dígitos, como los pasos para hacer un buen pour-over" })
             .max(15, { message: "Este número es más largo que la lista de métodos de extracción en una competencia de baristas" })
             .regex(/^\+?[1-9]\d{6,14}$/, { message: "El número de teléfono debe ser válido, con o sin prefijo internacional" }),
@@ -28,9 +28,13 @@ export const RegisterStoreSchema = [
     z.object({
         logo: 
         z.any()
-        .refine((file) => file instanceof File, {
+        .optional()
+        .refine((file) => {
+            if (!file) return true; // Si no hay archivo, está bien (opcional)
+            return file instanceof File; // Si hay archivo, debe ser válido
+          }, {
             message: "Debes subir un archivo válido",
-        })
+          })
         // .refine((file) => ["image/png", "image/jpeg", "image/jpg"].includes(file.type), {
         //     message: "Solo se permiten archivos PNG, JPG o JPEG",
         // }),

@@ -153,7 +153,7 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                         <Button type="button" variant="outline" onClick={() => { setStep(step - 1), setDirection(-1) }} className="border-gray-200 bg-[#020F17] text-gray-200">
                                             <ArrowLeft className="w-4 h-4 mr-2" />
-                                            Previous
+                                            Anterior
                                         </Button>
                                     </motion.div>
                                 ) : (

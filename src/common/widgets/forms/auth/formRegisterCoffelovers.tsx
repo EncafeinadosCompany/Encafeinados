@@ -19,6 +19,7 @@ import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/register
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { RegisterCoffelover } from "@/api";
+import { ButtonGoogle } from "@/common/atoms/buttonGoogle";
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(0);
@@ -41,7 +42,7 @@ const FormRegisterCoffeelover = () => {
             password: "",
             confirmPassword: ""
         },
-        // mode: "onChange"
+        mode: "onChange"
     });
 
 
@@ -136,7 +137,7 @@ const FormRegisterCoffeelover = () => {
                 sessionStorage.setItem("tempUserData", JSON.stringify(userData));
                 navigate("/completar-perfil");
             }
-            
+
 
             // await useRegisterCoffeelover.mutateAsync(userData).then((response) => {
             //     toast.success("Coffelover creado exitosamente. ¡Bienvenido!");
@@ -153,125 +154,168 @@ const FormRegisterCoffeelover = () => {
     };
 
     return (
-        <div className="min-h-screen  bg-gradient-to-b from-orange-50 to-orange-200" translate="no">
-            <LinkReturn link="/register" className="m-2 xl:m-10" >
-            </LinkReturn>
-
-            <div className="flex flex-col items-center justify-center p-4">
-                <motion.div
-                    className="max-w-2xl w-full"
-                    animate={{ opacity: 1, y: 0 }}
-                    initial={{ opacity: 0, y: 20 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <div>
-                        <div className="mt-8 mb-2">
-                            <TitleForm
-                                title="Conviértete en un verdadero Coffelover"
-                                subtitle=" Descubre un mundo de aromas y sabores. Únete a la comunidad donde el café es más que una bebida, es una pasión."
-                            >
-                            </TitleForm>
-                        </div>
-                        {/* Progress indicator */}
-                        <ProgressIndicator step={step + 1} totalSteps={registerCoffeeloverSchema.length}></ProgressIndicator>
+        <div className="flex flex-col items-center justify-center p-4">
+            <motion.div
+                className="max-w-2xl w-full"
+                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.5 }}
+            >
+                <div>
+                    <div className="mt-8 mb-2">
+                        <TitleForm
+                            title="Conviértete en un verdadero Coffelover"
+                            subtitle=" Descubre un mundo de aromas y sabores. Únete a la comunidad donde el café es más que una bebida, es una pasión."
+                        >
+                        </TitleForm>
                     </div>
+                    {/* Progress indicator */}
+                    <ProgressIndicator step={step + 1} totalSteps={registerCoffeeloverSchema.length}></ProgressIndicator>
+                </div>
 
-                    <FormProvider {...methods}>
-                        <form className="space-y-4 relative overflow-hidden" onSubmit={methods.handleSubmit(onSubmit)}>
-                            <div className="relative" style={{ minHeight: "300px" }}>
-                                <AnimatePresence initial={false} custom={direction} mode="wait">
-                                    {step === 0 && (
-                                        <RegisterCoffeloverStep1
-                                            onGoogleSignIn={handleGoogleSignIn}
-                                            isLoading={isLoading}
-                                            register={methods.register}
-                                            errors={methods.formState.errors}
-                                            direction={direction}
-                                        />
-                                    )}
-                                    {step === 1 && (
-                                        <RegisterCoffeloverStep2
-                                            showInfo={showInfo}
-                                            toggleInfo={toggleInfo}
-                                            register={methods.register}
-                                            direction={direction}
-                                            errors={methods.formState.errors}
-                                            control={methods.control}
-                                        />
+                <FormProvider {...methods}>
+                    <form className="space-y-2 relative overflow-hidden" onSubmit={methods.handleSubmit(onSubmit)}>
+                        <div className="relative" style={step === 0 ? { minHeight: "200px" } : { minHeight: "300px" }}>
+                            <AnimatePresence initial={false} custom={direction} mode="wait">
+                                {step === 0 && (
+                                    <RegisterCoffeloverStep1
+                                        onGoogleSignIn={handleGoogleSignIn}
+                                        isLoading={isLoading}
+                                        register={methods.register}
+                                        errors={methods.formState.errors}
+                                        direction={direction}
+                                    />
+                                )}
+                                {step === 1 && (
+                                    <RegisterCoffeloverStep2
+                                        showInfo={showInfo}
+                                        toggleInfo={toggleInfo}
+                                        register={methods.register}
+                                        direction={direction}
+                                        errors={methods.formState.errors}
+                                        control={methods.control}
+                                    />
 
-                                    )}
-
-                                    {step === 2 && (
-                                        <RegisterCoffeloverStep3
-                                            register={methods.register as UseFormRegister<any>}
-                                            errors={methods.formState.errors}
-                                            direction={direction}
-                                        />
-                                    )}
-                                    {
-                                        step === 3 && (
-                                            <>
-                                                <p>Condiciones</p>
-                                                <div>
-                                                    <p>
-                                                        Política de privacidad
-                                                        <br />
-                                                        Términos y condiciones
-                                                    </p>
-                                                </div>
-                                                <input data-testid="conditions-checkbox"  type="checkbox" {...methods.register("conditions")} />
-                                                {step === 3 && "conditions" in methods.formState.errors && (
-                                                    <p className=" text-red-500">{methods.formState.errors.conditions?.message}</p>
-                                                )}
-
-                                            </>
-                                        )
-                                    }
-                                </AnimatePresence>
-                            </div>
-
-                            {/* Navigation buttons */}
-                            <motion.div
-                                className="pt-2 m-2 flex justify-between"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.4 }}
-                            >
-                                {step > 0 ? (
-                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button type="button" variant="outline" onClick={prevStep} className="border-gray-200 bg-amber-50/50">
-                                            <ArrowLeft className="w-4 h-4 mr-2" />
-                                            Previous
-                                        </Button>
-                                    </motion.div>
-                                ) : (
-                                    <div></div>
                                 )}
 
-                                {step < registerCoffeeloverSchema.length - 1 ? (
-                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button disabled={!methods.formState.isValid} type="button" data-testid="next-button" onClick={onNext} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
-                                            {isLoading ? "Cargando..." : "Siguiente"}
-                                            <ArrowRight className="w-4 h-4 ml-2" />
-                                        </Button>
-                                    </motion.div>
-                                ) : (
-                                    <motion.div>
-                                        <Button
-                                            type="submit"
-                                            data-testid="submit-button"
-                                            disabled={!methods.formState.isValid}
-                                            className={`rounded-lg px-6 py-2 ${!methods.formState.isValid ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800 text-white"}`}>
-                                            Complete Registration
-                                        </Button>
-                                    </motion.div>
+                                {step === 2 && (
+                                    <RegisterCoffeloverStep3
+                                        register={methods.register as UseFormRegister<any>}
+                                        errors={methods.formState.errors}
+                                        direction={direction}
+                                    />
                                 )}
-                            </motion.div>
-                        </form>
-                    </FormProvider>
-                </motion.div>
-            </div>
+                                {
+                                    step === 3 && (
+                                        <>
+                                            <p>Condiciones</p>
+                                            <div>
+                                                <p>
+                                                    Política de privacidad
+                                                    <br />
+                                                    Términos y condiciones
+                                                </p>
+                                            </div>
+                                            <input data-testid="conditions-checkbox" type="checkbox" {...methods.register("conditions")} />
+                                            {step === 3 && "conditions" in methods.formState.errors && (
+                                                <p className=" text-red-500">{methods.formState.errors.conditions?.message}</p>
+                                            )}
+
+                                        </>
+                                    )
+                                }
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Navigation buttons */}
+                        {
+                            step === 0 && (
+
+                                <div className="mt-2 space-y-6">
+                                    <div className="relative flex items-center justify-center">
+                                        <div className="absolute inset-0 flex items-center">
+                                            <div className="w-full border-t border-gray-900"></div>
+                                        </div>
+                                        <div className="relative px-4 text-sm  bg-[#ffe4c4] text-gray-500 font-medium">
+                                            Opciones de registro
+                                        </div>
+                                    </div>
+                                    <motion.div
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className={step === 0 ? 'w-full flex px-8' : ''}
+                                    >
+
+                                        <ButtonGoogle
+                                            variant="outline"
+                                            onClick={handleGoogleSignIn}
+                                            disabled={isLoading}
+                                            className=" w-full"
+                                        >
+                                            <span className="flex items-center">
+                                                Continuar con Google
+                                            </span>
+                                        </ButtonGoogle>
+
+                                    </motion.div>
+
+                                    {/* <div className="text-center text-xs text-gray-500 mt-10">
+                                  Al registrarte, aceptas nuestros <a href="#" className="text-amber-700 hover:underline">Términos de servicio</a> y <a href="#" className="text-amber-700 hover:underline">Política de privacidad</a>
+                                </div> */}
+                                </div>
+
+                            )
+                        }
+                        <motion.div
+                            className=" m-5 flex justify-between"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.4 }}
+                        >
+                            {step > 0 ? (
+                                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                    <Button type="button" variant="outline" onClick={prevStep} className="border-gray-200 bg-amber-50/50">
+                                        <ArrowLeft className="w-4 h-4 mr-2" />
+                                        Anterior
+                                    </Button>
+                                </motion.div>
+                            ) : (
+                                <div></div>
+                            )}
+                            {step < registerCoffeeloverSchema.length - 1 ? (
+                                <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className={step === 0 ? 'w-full flex p-4' : ''}
+                                >
+                                    <Button
+                                        type="button"
+                                        className={`bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white ${step === 0 ? 'w-full' : ''}`}
+                                        // disabled={!methods.formState.isValid} 
+                                        data-testid="next-button"
+                                        onClick={onNext} >
+                                        {step === 0 ? "Continuar registro manual" : "Siguiente"}
+                                        {/* {isLoading ? "Cargando..." : "Siguiente"} */}
+                                        <ArrowRight className="w-4 h-4 ml-2" />
+                                    </Button>
+                                </motion.div>
+                            ) : (
+                                <motion.div>
+                                    <Button
+                                        type="submit"
+                                        data-testid="submit-button"
+                                        disabled={!methods.formState.isValid}
+                                        className={`rounded-lg px-6 py-2 ${!methods.formState.isValid ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800 text-white"}`}>
+                                        Complete Registration
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </motion.div>
+                    </form>
+                </FormProvider>
+            </motion.div>
         </div>
+
     )
 }
 
