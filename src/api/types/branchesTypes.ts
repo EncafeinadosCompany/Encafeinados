@@ -1,3 +1,10 @@
+// Interfaz para los datos de redes sociales
+export interface SocialBranch {
+  social_network_name: string;
+  url: string;
+  description: string;
+}
+
 export interface Store {
   id: number;
   name: string;
@@ -14,7 +21,7 @@ export interface Branch {
   name: string;
   phone_number?: string;
   average_rating?: string;
-  status?: boolean;
+  status: string; // Cambiado de boolean a string para reflejar valores como "PENDING"
   latitude: number;
   longitude: number;
   address?: string;
@@ -25,6 +32,7 @@ export interface Branch {
     store_logo: string;
     store_email: string;
   };
+  social_branches?: SocialBranch[]; 
 }
 
 export interface BranchPost {
@@ -35,7 +43,6 @@ export interface BranchPost {
   longitude: number;
   address: string;
 }
-  
   
 export interface BranchesResponse {
   message: string;

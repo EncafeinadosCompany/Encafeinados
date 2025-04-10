@@ -5,9 +5,11 @@ import {
 } from 'lucide-react'; // Cambiado de @/common/ui/icons a lucide-react
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import toast from 'react-hot-toast';
 import 'leaflet/dist/leaflet.css';
+import '@/common/styles/desktopDetails.css';
 
 //   COMMENTS FOR EACH SECTION ARE NECESSARY IN THIS MODULE BECAUSE I GET LOST :(
 
@@ -24,21 +26,60 @@ import { useGeolocation } from '@/common/hooks/map/useGeolocation';
 import { useMapData } from '@/common/hooks/map/useMapData';
 import { useSearchFilter } from '@/common/hooks/map/useSearchFilter';
 import { useDebounce } from '@/common/hooks/utils/useDebounce';
+import { useRouteNavigation } from '@/common/hooks/map/useRouteNavigation';
 
 // Components
 import UserLocationMarker from '@/common/atoms/map/UserLocationMarker';
 import MapFocus from '@/common/molecules/map/MapFocus';
-import RouteLine from '@/common/molecules/map/RouteLine';
 import FilterModal from '@/common/molecules/map/filterModal';
 import HighlightText from '@/common/atoms/common/HighlightText';
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
-import CafeMarker from '@/common/molecules/map/CafeMarker';
-import UserMarker from '@/common/molecules/map/UserMarker';
+import SmartClusterGroup from '@/common/molecules/map/SmartClusterGroup';
+import UserMarker from '@/common/molecules/map/UserMarker'; 
+import DirectRouteLine from '@/common/molecules/map/DirectRouteLine';
+import RouteControls from '@/common/molecules/map/RouteControls';
 import '@/common/styles/mapMarkers.css';
+import CafeDetail from '@/common/molecules/map/CafeDetail';
 
 // Animations
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
 import { useBranchesByStore } from '@/api/queries/stores/storesQueries';
+
+// Componente para capturar la instancia del mapa
+const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (map) {
+      setMapInstance(map);
+      
+      // Asegurar que los controles personalizados estén por encima del mapa
+      setTimeout(() => {
+        const mapContainer = map.getContainer();
+        const controlContainer = mapContainer.querySelector('.leaflet-control-container') as HTMLElement;
+        if (controlContainer) {
+          controlContainer.style.zIndex = '400';
+        }
+        
+        // Solución para eventos táctiles: prevenir eventos problemáticos
+        function handleTouchMove(e: TouchEvent) {
+          // Si el evento tiene múltiples toques (gesto de zoom/pinch)
+          if (e.touches.length > 1) {
+            e.stopPropagation();
+          }
+        }
+        
+        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+        
+        return () => {
+          mapContainer.removeEventListener('touchmove', handleTouchMove);
+        };
+      }, 100);
+    }
+  }, [map, setMapInstance]);
+  
+  return null;
+};
 
 // ==============================
 // MAIN COMPONENT
@@ -61,6 +102,8 @@ const MapView: React.FC = () => {
   const [searchInputValue, setSearchInputValue] = useState('');
   const debouncedSearchValue = useDebounce(searchInputValue, 500);
   const [copied, setCopied] = useState(false);
+  const [showRouteControls, setShowRouteControls] = useState<boolean>(false);
+  const [shouldResetMapOnClose, setShouldResetMapOnClose] = useState(false);
 
   // Custom hooks
   const { favorites, toggleFavorite } = useFavorites();
@@ -71,6 +114,20 @@ const MapView: React.FC = () => {
     errorMessage,
     getUserLocation
   } = useGeolocation(mapInstance);
+  const {
+    transportMode,
+    setTransportMode,
+    origin: routeOrigin,
+    destination: routeDestination,
+    setOrigin: setRouteOrigin,
+    setDestination: setRouteDestination,
+    isCalculatingRoute: isRouteLoading,
+    setIsCalculatingRoute: setIsRouteLoading,
+    routeInfo,
+    setRouteInfo,
+    clearRoute,
+    isRouteActive
+  } = useRouteNavigation();
 
   // ==============================
   // API DATA FETCHING
@@ -119,12 +176,10 @@ const MapView: React.FC = () => {
     toggleFilterModal
   } = useSearchFilter(cafes);
 
-  // Sincronizar los dos estados de búsqueda
   useEffect(() => {
     setFilterSearchTerm(searchTerm);
   }, [searchTerm, setFilterSearchTerm]);
 
-  // Función para actualizar la búsqueda en ambos lugares
   const handleSearchChange = useCallback((value: string) => {
     setSearchInputValue(value);
     setIsTyping(true);
@@ -162,685 +217,614 @@ const handleShare = useCallback((cafe: Cafe) => {
 /**
  * Starts navigation to a cafe
  */
-  const navigateToCafe = useCallback((cafeId: number): void => {
-    if (!userLocation) {
-      getUserLocation();
-      return;
-    }
-
+const navigateToCafe = useCallback((cafeId: number): void => {
+  if (activeCafe && activeCafe !== cafeId) {
+    setActiveCafe(null);
+    setTimeout(() => {
+      setActiveCafe(cafeId);
+    }, 100);
+  } else {
     setActiveCafe(cafeId);
-    setShowDirections(true);
-  }, [getUserLocation, userLocation]);
+  }
 
-  const copyToClipboard = useCallback((text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
+  if (window.innerWidth < 768) {
+    setShowSidebar(false);
+  }
+
+  if (!userLocation) {
+    getUserLocation();
+    setShouldResetMapOnClose(false);
+    return;
+  }
+
+  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  if (selectedCafe) {
+    mapInstance?.flyTo(
+      [selectedCafe.latitude, selectedCafe.longitude],
+      16,
+      { duration: 1.5, animate: true }
+    );
+  }
+}, [userLocation, cafes, setActiveCafe, mapInstance, getUserLocation, activeCafe]);
+
+const setupRoute = useCallback((cafeId: number) => {
+  if (!userLocation) {
+    toast.error("Necesitamos tu ubicación para trazar la ruta");
+    getUserLocation();
+    return;
+  }
+
+  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  if (selectedCafe) {
+    setActiveCafe(null);
+    setTimeout(() => {
+      setRouteOrigin(userLocation);
+      setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
+      setShowRouteControls(true);
+
+      if (mapInstance) {
+        const bounds = L.latLngBounds(
+          L.latLng(userLocation[0], userLocation[1]),
+          L.latLng(selectedCafe.latitude, selectedCafe.longitude)
+        );
+        mapInstance.fitBounds(bounds, { padding: [50, 50] });
+      }
+    }, 300);
+  }
+}, [userLocation, cafes, mapInstance, setRouteOrigin, setRouteDestination, getUserLocation]);
+
+const copyToClipboard = useCallback((text: string) => {
+  navigator.clipboard.writeText(text);
+  setCopied(true);
+  
+  const popoverElement = document.querySelector('.popover-content');
+  if (popoverElement) {
     
-    // Efecto visual más pronunciado
-    const popoverElement = document.querySelector('.popover-content');
-    if (popoverElement) {
-      
+  }
+  
+  setTimeout(() => setCopied(false), 2000);
+}, []);
+
+const handleCloseRouteControls = useCallback(() => {
+  setShowRouteControls(false);
+  clearRoute();
+}, [clearRoute]);
+
+const handleCloseDetails = useCallback(() => {
+  setActiveCafe(null);
+  if (shouldResetMapOnClose && !showRouteControls) {
+    mapInstance?.setZoom(13, { animate: true });
+  }
+}, [shouldResetMapOnClose, showRouteControls, mapInstance]);
+
+// ==============================
+// EFFECTS
+// ==============================
+
+// Load map and get user location when component mounts
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setMapLoaded(true);
+    getUserLocation();
+  }, 800);
+
+  return () => clearTimeout(timer);
+}, [getUserLocation]);
+
+// Update route when active cafe changes
+useEffect(() => {
+  if (activeCafeData && userLocation && showRouteControls) {
+    setRouteOrigin(userLocation);
+    setRouteDestination([activeCafeData.latitude, activeCafeData.longitude]);
+  }
+}, [activeCafeData, userLocation, showRouteControls, setRouteOrigin, setRouteDestination]);
+
+useEffect(() => {
+  if (activeCafe && window.innerWidth < 768) {
+    setShowSidebar(false);
+  }
+  if (showRouteControls) {
+    setShowSidebar(false);
+  }
+}, [activeCafe, showRouteControls]);
+
+useEffect(() => {
+  if (mapInstance) {
+    const map = mapInstance;
+    const resizeMap = () => {
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+    };
+
+    window.addEventListener('resize', resizeMap);
+    window.addEventListener('orientationchange', resizeMap);
+    
+    return () => {
+      window.removeEventListener('resize', resizeMap);
+      window.removeEventListener('orientationchange', resizeMap);
+    };
+  }
+}, [mapInstance]);
+
+// Añade este useEffect para mejorar el flujo de interacción
+useEffect(() => {
+  // Si estamos mostrando detalles de una cafetería, asegurarnos de que no hay elementos de UI que interfieran
+  if (activeCafe) {
+    // Cerrar la barra lateral en móvil, pero mantenerla en desktop si está en modo lista
+    if (window.innerWidth < 768) {
+      setShowSidebar(false);
     }
-    
-    setTimeout(() => setCopied(false), 2000);
-  }, []);
+    // Si se están mostrando controles de ruta, ocultarlos
+    if (showRouteControls) {
+      setShowRouteControls(false);
+    }
+  }
+  
+  // Si se muestran controles de ruta, ocultar otros elementos de UI que puedan interferir
+  if (showRouteControls) {
+    setShowSidebar(false);
+  }
+}, [activeCafe, showRouteControls]);
 
-  // ==============================
-  // EFFECTS
-  // ==============================
+// ==============================
+// RENDER FUNCTIONS
+// ==============================
 
-  // Load map and get user location when component mounts
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMapLoaded(true);
-      getUserLocation();
-    }, 800);
-
-    return () => clearTimeout(timer);
-  }, [getUserLocation]);
-
-  // ==============================
-  // RENDER FUNCTIONS
-  // ==============================
-
-  /**
-   * Renders a cafe card for the sidebar
-   */
-  const renderCafeCard = (cafe: Cafe, index: number) => (
-    <motion.div
-      key={cafe.id}
-      custom={index}
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      className={`rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden shadow-sm hover:shadow-md ${activeCafe === cafe.id ? 'ring-2 ring-[#D4A76A]' : 'ring-1 ring-gray-100'}`}
-      onClick={() => setActiveCafe(cafe.id)}
-    >
-      <div className="relative">
-        <img
-          src={cafe.image}
-          alt={cafe.name}
-          className="w-full h-36 object-cover"
+/**
+ * Renders a cafe card for the sidebar
+ */
+const renderCafeCard = (cafe: Cafe, index: number) => (
+  <motion.div
+    key={cafe.id}
+    custom={index}
+    variants={cardVariants}
+    initial="hidden"
+    animate="visible"
+    className={`rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden shadow-sm hover:shadow-md ${activeCafe === cafe.id ? 'ring-2 ring-[#D4A76A]' : 'ring-1 ring-gray-100'}`}
+    onClick={() => setActiveCafe(cafe.id)}
+  >
+    <div className="relative">
+      <img
+        src={cafe.image}
+        alt={cafe.name}
+        className="w-full h-36 object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+      <div className="absolute bottom-3 left-3 flex items-center gap-2">
+        {cafe.tags.map((tag, i) => (
+          <span key={i} className="text-xs font-medium bg-white/90 text-[#6F4E37] px-2 py-1 rounded-full">
+            {tag}
+          </span>
+        ))}
+      </div>
+      <motion.button
+        className="absolute top-3 right-3 bg-white/90 rounded-full p-1.5"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleFavorite(cafe.id);
+        }}
+      >
+        <Heart
+          size={16}
+          className={`${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : 'text-[#6F4E37]'}`}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute bottom-3 left-3 flex items-center gap-2">
-          {cafe.tags.map((tag, i) => (
-            <span key={i} className="text-xs font-medium bg-white/90 text-[#6F4E37] px-2 py-1 rounded-full">
-              {tag}
-            </span>
-          ))}
+      </motion.button>
+    </div>
+
+    <div className="p-4 bg-white">
+      <div className="flex justify-between items-start">
+        <h3 className="font-bold text-lg text-[#2C1810] line-clamp-1">
+          <HighlightText text={cafe.name} highlight={searchTerm} />
+        </h3>
+        <div className="flex items-center gap-1 text-amber-500">
+          <Star size={16} className="fill-amber-500" />
+          <span className="font-medium">{cafe.rating}</span>
+          <span className="text-xs text-gray-500">({cafe.reviewCount})</span>
         </div>
+      </div>
+
+      <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+        <div className="flex items-center gap-1">
+          <MapPin size={14} className="text-[#6F4E37]" />
+          <span>{cafe.distance}</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <Clock size={14} className="text-[#6F4E37]" />
+          <span>{cafe.openTime}</span>
+        </div>
+      </div>
+
+      <div className="flex gap-2 mt-3">
         <motion.button
-          className="absolute top-3 right-3 bg-white/90 rounded-full p-1.5"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          className="flex-1 bg-[#6F4E37] text-white py-2 rounded-lg font-medium hover:bg-[#5d4230] transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Ver detalles
+        </motion.button>
+        <motion.button
+          className="w-10 h-10 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-lg hover:bg-[#6F4E37] hover:text-white transition-colors"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={(e) => {
             e.stopPropagation();
-            toggleFavorite(cafe.id);
+            navigateToCafe(cafe.id);
           }}
         >
-          <Heart
-            size={16}
-            className={`${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : 'text-[#6F4E37]'}`}
-          />
+          <Route size={18} />
         </motion.button>
-      </div>
-
-      <div className="p-4 bg-white">
-        <div className="flex justify-between items-start">
-          <h3 className="font-bold text-lg text-[#2C1810] line-clamp-1">
-            <HighlightText text={cafe.name} highlight={searchTerm} />
-          </h3>
-          <div className="flex items-center gap-1 text-amber-500">
-            <Star size={16} className="fill-amber-500" />
-            <span className="font-medium">{cafe.rating}</span>
-            <span className="text-xs text-gray-500">({cafe.reviewCount})</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-          <div className="flex items-center gap-1">
-            <MapPin size={14} className="text-[#6F4E37]" />
-            <span>{cafe.distance}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Clock size={14} className="text-[#6F4E37]" />
-            <span>{cafe.openTime}</span>
-          </div>
-        </div>
-
-        <div className="flex gap-2 mt-3">
-          <motion.button
-            className="flex-1 bg-[#6F4E37] text-white py-2 rounded-lg font-medium hover:bg-[#5d4230] transition-colors"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            Ver detalles
-          </motion.button>
-          <motion.button
-            className="w-10 h-10 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-lg hover:bg-[#6F4E37] hover:text-white transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigateToCafe(cafe.id);
-            }}
-          >
-            <Route size={18} />
-          </motion.button>
-        </div>
-      </div>
-    </motion.div>
-  );
-
-  /**
-   * Renders the cafe detail popup/sheet
-   */
-  const renderCafeDetail = (cafe: Cafe) => (
-    <div key={cafe.id} className="relative md:flex md:flex-col md:max-h-[80vh] overflow-auto">
-      <div className="relative h-48 md:h-64 w-full">
-        <img
-          src={cafe.image}
-          alt={cafe.name}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-
-        <button
-          onClick={() => setActiveCafe(null)}
-          className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors"
-        >
-          <ArrowLeft size={20} className="text-[#6F4E37] transform rotate-45" />
-        </button>
-
-        <div className="absolute bottom-0 left-0 p-4 w-full">
-          <h3 className="font-bold text-2xl md:text-3xl text-white">{cafe.name}</h3>
-          <div className="flex items-center justify-between mt-1">
-            <div className="flex items-center gap-1 text-amber-400">
-              <Star size={18} className="fill-amber-400" />
-              <span className="font-medium text-white">{cafe.rating}</span>
-              <span className="text-sm text-white/80">({cafe.reviewCount} reseñas)</span>
-            </div>
-            <motion.button
-              className="bg-white/20 backdrop-blur-sm p-1.5 rounded-full"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleFavorite(cafe.id);
-              }}
-            >
-              <Heart
-                size={18}
-                className={`${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : 'text-white'}`}
-              />
-            </motion.button>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-4 md:p-6">
-        {/* Información de la tienda */}
-        <div className="md:mb-3 text-[#6F4E37]/80 text-sm md:text-base">
-          <span className="font-medium">{cafe.storeName}</span>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-4 mb-4">
-          <div className="flex justify-between items-center py-3 border-b border-gray-100">
-            <div className="flex items-center gap-2 text-[#6F4E37]">
-              <Clock size={18} />
-              <span className="font-medium">{cafe.openTime}</span>
-            </div>
-            <span className={`text-xs py-0.5 px-2 rounded-full font-medium ${cafe.isOpen
-                ? 'bg-green-50 text-green-600'
-                : 'bg-red-50 text-red-600'
-              }`}>
-              {cafe.isOpen ? 'Abierto ahora' : 'Cerrado'}
-            </span>
-          </div>
-
-          <div className="flex justify-between items-center py-3 border-b border-gray-100">
-            <div className="flex items-center gap-2 text-[#6F4E37]">
-              <MapPin size={18} />
-              <span className="font-medium">{cafe.distance} de distancia</span>
-            </div>
-            <motion.button
-              className="text-[#6F4E37] bg-[#FAF3E0] p-2 rounded-lg hover:bg-[#FAF3E0]/70 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigateToCafe(cafe.id)}
-            >
-              <Navigation size={18} />
-            </motion.button>
-          </div>
-        </div>
-
-        {/* Dirección completa - solo visible en desktop */}
-        <div className="hidden md:block mb-5 bg-gray-50 p-3 rounded-lg">
-          <h4 className="font-medium text-[#2C1810] mb-1">Dirección</h4>
-          <p className="text-gray-700">{cafe.address}</p>
-        </div>
-
-        <div className="py-3">
-          <h4 className="font-medium text-[#2C1810] mb-2">Características</h4>
-          <div className="flex flex-wrap gap-2">
-            {cafe.tags.map((tag, i) => (
-              <span key={i} className="text-sm font-medium bg-gray-50 text-[#6F4E37] px-3 py-1 rounded-full">
-                {tag}
-              </span>
-            ))}
-            <span className="text-sm font-medium bg-gray-50 text-[#6F4E37] px-3 py-1 rounded-full">
-              Wi-Fi
-            </span>
-            <span className="text-sm font-medium bg-gray-50 text-[#6F4E37] px-3 py-1 rounded-full">
-              Terraza
-            </span>
-          </div>
-        </div>
-
-        {/* Información de contacto - visible en desktop */}
-        <div className="py-3 border-t border-gray-100">
-          <h4 className="font-medium text-[#2C1810] mb-2">Contacto</h4>
-          <p className="text-[#6F4E37]">{cafe.phone || 'No disponible'}</p>
-        </div>
-
-        <div className="flex gap-3 py-4 md:py-5 md:mt-2">
-          <motion.button
-            className="flex-1 bg-[#6F4E37] text-white py-3 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-2"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Coffee size={18} />
-            <span>Ver menú</span>
-          </motion.button>
-          <Popover>
-            <PopoverTrigger asChild>
-              <motion.button
-                className="w-12 h-12 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-xl hover:bg-[#6F4E37] hover:text-white transition-colors"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Share2 size={18} />
-              </motion.button>
-            </PopoverTrigger>
-            <PopoverContent 
-              className="w-64 sm:w-72 p-0 sm:bottom-auto bottom-16 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 bg-white shadow-md border border-gray-100 rounded-lg" 
-              align="center" 
-              alignOffset={0} 
-              sideOffset={5}
-              side="top"
-            >
-              <div className="px-1 py-1.5">
-                <div className="border-b border-gray-100 pb-1.5 mb-1">
-                  <p className="text-xs font-medium text-[#6F4E37]/80 px-2.5 mb-1">
-                    Compartir ubicación
-                  </p>
-                </div>
-                
-                <button 
-                  className="w-full flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-[#FAF3E0] hover:text-[#6F4E37] rounded-md transition-colors"
-                  onClick={() => {
-                    const googleMapsUrl = `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}&z=17&t=m&hl=es&q=${encodeURIComponent(cafe.name)}`;
-                    window.open(googleMapsUrl, '_blank');
-                  }}
-                >
-                  <MapIcon className="mr-3 h-4.5 w-4.5 text-[#6F4E37]" />
-                  <span>Abrir en Google Maps</span>
-                </button>
-                
-                <button 
-                  className="w-full flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-[#FAF3E0] hover:text-[#6F4E37] rounded-md transition-colors"
-                  onClick={() => {
-                    const url = `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`;
-                    copyToClipboard(url);
-                  }}
-                >
-                  <Copy className="mr-3 h-4.5 w-4.5 text-[#6F4E37]" />
-                  <span className="flex-1 text-left">
-                    {copied ? 
-                      <span className="flex items-center">
-                        <span className="text-green-600 font-medium">¡Copiado!</span>
-                        <motion.span 
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="ml-1 inline-block bg-green-100 text-green-600 text-xs p-0.5 rounded-full"
-                        >
-                          ✓
-                        </motion.span>
-                      </span> : 
-                      "Copiar link"
-                    }
-                  </span>
-                </button>
-                
-                {navigator.share && (
-                  <button 
-                    className="w-full flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-[#FAF3E0] hover:text-[#6F4E37] rounded-md transition-colors"
-                    onClick={() => {
-                      navigator.share({
-                        title: `${cafe.name} - Encafeina2`,
-                        text: `¡Visita ${cafe.name} en ${cafe.address || 'esta ubicación'}!`,
-                        url: `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`
-                      });
-                    }}
-                  >
-                    <Share2 className="mr-3 h-4.5 w-4.5 text-[#6F4E37]" />
-                    <span>Compartir...</span>
-                  </button>
-                )}
-
-                {/* Opción adicional para direcciones */}
-                <button 
-                  className="w-full flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-[#FAF3E0] hover:text-[#6F4E37] rounded-md transition-colors"
-                  onClick={() => {
-                    const googleMapsNavUrl = `https://www.google.com/maps/dir/?api=1&destination=${cafe.latitude},${cafe.longitude}&travelmode=driving`;
-                    window.open(googleMapsNavUrl, '_blank');
-                  }}
-                >
-                  <Navigation className="mr-3 h-4.5 w-4.5 text-[#6F4E37]" />
-                  <span>Obtener indicaciones</span>
-                </button>
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
       </div>
     </div>
-  );
+  </motion.div>
+);
 
-  // ==============================
-  // COMPONENT RENDER
-  // ==============================
+// ==============================
+// COMPONENT RENDER
+// ==============================
 
-  return (
-    // Modificar el contenedor principal para usar grid en modo lista
-    <motion.div
-      className={`h-screen w-full relative bg-gray-50 overflow-hidden font-sans ${
-        viewMode === 'list' && window.innerWidth >= 768 ? 'md:grid md:grid-cols-[1fr_390px]' : ''
-      }`}
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Loading overlay */}
-      <AnimatePresence>
-        {!mapLoaded && (
-          <motion.div
-            className="absolute inset-0 bg-white z-50 flex flex-col items-center justify-center"
-            exit={{
-              opacity: 0,
-              transition: { duration: 0.7, ease: "easeInOut" }
-            }}
-          >
-            <motion.div
-              className="w-16 h-16 text-[#6F4E37]"
-              animate={{
-                rotate: 360,
-                transition: { duration: 2, repeat: Infinity, ease: "linear" }
-              }}
-            >
-              <Coffee size={64} />
-            </motion.div>
-            <motion.p
-              className="mt-4 text-[#6F4E37] font-medium"
-              animate={{
-                opacity: [0.5, 1, 0.5],
-                transition: { duration: 1.5, repeat: Infinity }
-              }}
-            >
-              Cargando tu experiencia cafetera...
-            </motion.p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+return (
+  <motion.div
+    className={`h-screen w-full relative bg-gray-50 font-sans ${
+      viewMode === 'list' && window.innerWidth >= 768 ? 'md:grid md:grid-cols-[1fr_390px]' : ''
+    }`}
+    variants={containerVariants}
+    initial="hidden"
+    animate="visible"
+  >
+    {/* Nota: quité overflow-hidden para evitar problemas de scroll */}
 
-      {/* Header with search and navigation */}
-      <div className="absolute top-0 left-0 right-0 z-40 bg-gradient-to-b from-white/90 to-white/0 pt-4 pb-8 px-4">
-        <div className="flex items-center justify-between">
-          <Link
-            to="/"
-            className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg flex items-center gap-2 hover:bg-white transition-all duration-300 group"
-          >
-            <ArrowLeft size={20} className="text-[#6F4E37] group-hover:-translate-x-1 transition-transform duration-300" />
-            <span className="pr-2 text-[#6F4E37] font-medium hidden md:inline">Volver</span>
-          </Link>
-
-          <motion.div
-            className={`relative transition-all duration-300 ${searchFocused ? 'w-full md:w-96' : 'w-48 md:w-64'}`}
-            layout
-          >
-            <input
-              type="text"
-              value={searchInputValue} // Usar el valor de entrada sin debounce
-              onChange={(e) => handleSearchChange(e.target.value)}
-              placeholder="Buscar cafeterías..."
-              className="w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none focus:ring-2 focus:ring-[#D4A76A] transition-all duration-300 bg-white border-black/10"
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
-            />
-            {isTyping ? (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]"
-              >
-                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                  <circle 
-                    className="opacity-25" 
-                    cx="12" cy="12" r="10" 
-                    stroke="currentColor" 
-                    strokeWidth="4" 
-                    fill="none" 
-                  />
-                  <path 
-                    className="opacity-75" 
-                    fill="currentColor" 
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-              </motion.div>
-            ) : (
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
-            )}
-            <motion.button
-              className="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[#6F4E37] text-white p-1.5 rounded-full hover:bg-[#5d4230] transition-colors duration-300"
-              whileTap={{ scale: 0.9 }}
-              onClick={toggleFilterModal}
-            >
-              <Filter size={16} />
-            </motion.button>
-          </motion.div>
-
-          <div className="hidden md:flex bg-white/90 backdrop-blur-sm rounded-full shadow-lg overflow-hidden">
-            <button
-              className={`px-4 py-2 transition-colors duration-300 ${viewMode === 'map' ? 'bg-[#6F4E37] text-white' : 'text-[#6F4E37] hover:bg-gray-100'
-                }`}
-              onClick={() => {
-                setViewMode('map');
-                setShowSidebar(false); // Añadir esta línea para ocultar la barra lateral
-              }}
-            >
-              Mapa
-            </button>
-            <button
-              className={`px-4 py-2 transition-colors duration-300 ${viewMode === 'list' ? 'bg-[#6F4E37] text-white' : 'text-[#6F4E37] hover:bg-gray-100'
-                }`}
-              onClick={() => {
-                setViewMode('list');
-                setShowSidebar(true);
-              }}
-            >
-              Lista
-            </button>
-          </div>
-          <div className="w-10 md:hidden"></div> {/* Spacer for mobile layout */}
-        </div>
-      </div>
-
-      {/* Map Container */}
-      <div className={`absolute inset-0 z-10 ${viewMode === 'list' && window.innerWidth >= 768 ? 'md:w-[calc(100%-390px)]' 
-    : 'w-full'}`}>
-        <MapContainer
-          center={defaultCenter}
-          zoom={14}
-          zoomControl={false}
-          style={{ height: '100%', width: '100%' }}
-          className="z-10"
-          ref={(map: L.Map | null) => {
-            if (map) setMapInstance(map);
+    {/* Loading overlay */}
+    <AnimatePresence>
+      {!mapLoaded && (
+        <motion.div
+          className="absolute inset-0 bg-white z-50 flex flex-col items-center justify-center"
+          exit={{
+            opacity: 0,
+            transition: { duration: 0.7, ease: "easeInOut" }
           }}
         >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          <motion.div
+            className="w-16 h-16 text-[#6F4E37]"
+            animate={{
+              rotate: 360,
+              transition: { duration: 2, repeat: Infinity, ease: "linear" }
+            }}
+          >
+            <Coffee size={64} />
+          </motion.div>
+          <motion.p
+            className="mt-4 text-[#6F4E37] font-medium"
+            animate={{
+              opacity: [0.5, 1, 0.5],
+              transition: { duration: 1.5, repeat: Infinity }
+            }}
+          >
+            Cargando tu experiencia cafetera...
+          </motion.p>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Header with search and navigation */}
+    <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-white/95 via-white/80 to-white/0 pt-4 pb-12 px-4">
+      <div className="flex items-center justify-between">
+        <Link
+          to="/"
+          className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg flex items-center gap-2 hover:bg-white transition-all duration-300 group"
+        >
+          <ArrowLeft size={20} className="text-[#6F4E37] group-hover:-translate-x-1 transition-transform duration-300" />
+          <span className="pr-2 text-[#6F4E37] font-medium hidden md:inline">Volver</span>
+        </Link>
+
+        <motion.div
+          className={`relative transition-all duration-300 ${searchFocused ? 'w-full md:w-96' : 'w-48 md:w-64'}`}
+          layout
+        >
+          <input
+            type="text"
+            value={searchInputValue} 
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder="Buscar cafeterías..."
+            className="w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none focus:ring-2 focus:ring-[#D4A76A] transition-all duration-300 bg-white border-black/10"
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
           />
-
-          {/* User location marker */}
-          <UserMarker position={userLocation} pulsing={true} />
-
-          {/* Cafe markers */}
-          {cafes.map(cafe => (
-            <CafeMarker
-              key={cafe.id}
-              cafe={cafe}
-              isActive={activeCafe === cafe.id}
-              onClick={() => {
-                setActiveCafe(cafe.id);
-                if (window.innerWidth >= 768) {
-                  setShowSidebar(true);
-                }
-              }}
-            />
-          ))}
-
-          {/* Route line between user location and selected cafe */}
-          {showDirections && userLocation && activeCafeData && (
-            <RouteLine
-              from={userLocation}
-              to={[activeCafeData.latitude, activeCafeData.longitude]}
-            />
+          {isTyping ? (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]"
+            >
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                <circle 
+                  className="opacity-25" 
+                  cx="12" cy="12" r="10" 
+                  stroke="currentColor" 
+                  strokeWidth="4" 
+                  fill="none" 
+                />
+                <path 
+                  className="opacity-75" 
+                  fill="currentColor" 
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            </motion.div>
+          ) : (
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
           )}
-
-          {/* Component to manage map focus */}
-          <MapFocus
-            cafeId={activeCafe}
-            positions={cafePositions}
-            userLocation={userLocation}
-          />
-        </MapContainer>
-
-        {/* Map controls */}
-        <div className="absolute top-24 right-4 z-30 flex flex-col gap-3">
           <motion.button
-            className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
-            whileHover={{ scale: 1.1 }}
+            className="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[#6F4E37] text-white p-1.5 rounded-full hover:bg-[#5d4230] transition-colors duration-300"
             whileTap={{ scale: 0.9 }}
-            onClick={() => mapInstance?.zoomIn()}
+            onClick={toggleFilterModal}
           >
-            <span className="text-xl font-bold text-[#6F4E37]">+</span>
+            <Filter size={16} />
           </motion.button>
-          <motion.button
-            className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => mapInstance?.zoomOut()}
+        </motion.div>
+
+        <div className="hidden md:flex bg-white/90 backdrop-blur-sm rounded-full shadow-lg overflow-hidden">
+          <button
+            className={`px-4 py-2 transition-colors duration-300 ${viewMode === 'map' ? 'bg-[#6F4E37] text-white' : 'text-[#6F4E37] hover:bg-gray-100'
+              }`}
+            onClick={() => {
+              setViewMode('map');
+              setShowSidebar(false); 
+            }}
           >
-            <span className="text-xl font-bold text-[#6F4E37]">−</span>
-          </motion.button>
+            Mapa
+          </button>
+          <button
+            className={`px-4 py-2 transition-colors duration-300 ${viewMode === 'list' ? 'bg-[#6F4E37] text-white' : 'text-[#6F4E37] hover:bg-gray-100'
+              }`}
+            onClick={() => {
+              setViewMode('list');
+              setShowSidebar(true);
+            }}
+          >
+            Lista
+          </button>
         </div>
+        <div className="w-10 md:hidden"></div> {/* Spacer for mobile layout */}
+      </div>
+    </div>
 
-        {/* User location button */}
+    {/* Map Container */}
+    <div className={`absolute inset-0 z-10 ${viewMode === 'list' && window.innerWidth >= 768 ? 'md:w-[calc(100%-390px)]' 
+  : 'w-full'}`}>
+      <MapContainer
+        center={defaultCenter}
+        zoom={13}
+        style={{ height: "100%", width: "100%" }}
+        zoomControl={false}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        
+        {/* User location marker */}
+        <UserMarker position={userLocation} pulsing={true} />
+        <SmartClusterGroup
+          cafes={cafes} 
+          activeCafe={activeCafe} 
+          setActiveCafe={setActiveCafe}
+          setShowSidebar={setShowSidebar}
+        />
+        
+        {/* Direct route line */}
+        {routeOrigin && routeDestination && (
+          <DirectRouteLine
+            from={routeOrigin}
+            to={routeDestination}
+            color="#6F4E37"
+            weight={4}
+            opacity={0.7}
+          />
+        )}
+
+        {/* Component to manage map focus */}
+        <MapFocus
+          cafeId={activeCafe}
+          positions={cafePositions}
+          userLocation={userLocation}
+        />
+
+        {/* Map controller to capture map instance */}
+        <MapController setMapInstance={setMapInstance} />
+      </MapContainer>
+
+      {/* Map controls */}
+      <div className="absolute top-24 right-4 z-[400] flex flex-col gap-3 pointer-events-auto">
         <motion.button
-          className="absolute bottom-28 right-4 z-30 bg-white rounded-full p-3 shadow-lg"
+          className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={getUserLocation}
-          disabled={locatingUser}
+          onClick={() => mapInstance?.zoomIn()}
         >
-          <Navigation size={20} className={`${locatingUser ? 'animate-pulse' : ''} text-[#6F4E37]`} />
+          <span className="text-xl font-bold text-[#6F4E37]">+</span>
         </motion.button>
-
-
-        {/* Para mostrar errores de ubicación (opcional) */}
-        {errorMessage && (
-          <div className="absolute bottom-44 right-4 left-4 md:left-auto md:w-72 z-30 bg-red-50 text-red-700 p-3 rounded-lg shadow-lg">
-            <p className="text-sm">{errorMessage}</p>
-          </div>
-        )}
+        <motion.button
+          className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => mapInstance?.zoomOut()}
+        >
+          <span className="text-xl font-bold text-[#6F4E37]">−</span>
+        </motion.button>
       </div>
-      <AnimatePresence>
-        {(
-          (showSidebar && window.innerWidth < 768) ||
-          (viewMode === 'list' && window.innerWidth >= 768)
-        ) && (
-            <motion.div
-              className={`absolute top-0 bottom-0 ${viewMode === 'list' && window.innerWidth >= 768
-                ? 'right-0 w-1/2 md:max-w-[390px] xl:max-w-[390px] ' 
-                : 'right-0 w-full md:w-96'
-                } bg-white z-20 shadow-2xl rounded-l-3xl md:rounded-l-3xl overflow-hidden`}
-              initial={{ x: '100%', opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: '100%', opacity: 0 }}
-              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+
+      {/* User location button - with extremely high z-index */}
+      <motion.button
+        className="absolute bottom-28 right-4 z-[999] bg-white rounded-full p-3 shadow-lg pointer-events-auto"
+        style={{ 
+          position: 'fixed', 
+          zIndex: 9999,
+        }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={getUserLocation}
+        disabled={locatingUser}
+      >
+        <Navigation size={20} className={`${locatingUser ? 'animate-pulse' : ''} text-[#6F4E37]`} />
+      </motion.button>
+    </div>
+    <AnimatePresence>
+      {(
+        (showSidebar && window.innerWidth < 768) ||
+        (viewMode === 'list' && window.innerWidth >= 768)
+      ) && (
+        <motion.div
+          className={`absolute top-0 bottom-0 ${viewMode === 'list' && window.innerWidth >= 768
+            ? 'right-0 w-1/2 md:max-w-[390px] xl:max-w-[390px] ' 
+            : 'right-0 w-full md:w-96'
+            } bg-white z-20 shadow-2xl rounded-l-3xl md:rounded-l-3xl overflow-hidden`}
+          initial={{ x: '100%', opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: '100%', opacity: 0 }}
+          transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+        >
+          <div className="h-full flex flex-col">
+            <div className="flex-none p-6 pt-20 md:pt-24 flex justify-between items-center border-b border-gray-100">
+              <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
+                <Coffee size={20} className="text-[#6F4E37]" />
+                <span>Cafeterías cercanas</span>
+                {sortedCafes.length > 0 && (
+                  <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
+                    {sortedCafes.length}
+                  </span>
+                )}
+              </h2>
+              <button
+                onClick={() => {
+                  setShowSidebar(false);
+                  // Para dispositivos móviles, también cambiamos el modo de vista
+                  if (window.innerWidth < 768) {
+                    setViewMode('map');
+                  }
+                }}
+                className="text-[#6F4E37] md:hidden bg-gray-50 rounded-full p-2 hover:bg-gray-100 transition-colors"
+              >
+                <ArrowLeft size={20} />
+              </button>
+            </div>
+
+            {/* Cambios para arreglar scroll móvil */}
+            <div 
+              className="flex-1 h-full overflow-y-auto p-4 pb-32" 
+              style={{ 
+                WebkitOverflowScrolling: 'touch', 
+                touchAction: 'pan-y',
+                overscrollBehavior: 'contain',
+                height: 'calc(100% - 80px)' // Resta la altura del header
+              }}
             >
-              <div className="h-full flex flex-col">
-                <div className="p-6 pt-20 md:pt-24 flex justify-between items-center border-b border-gray-100">
-                  <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
-                    <Coffee size={20} className="text-[#6F4E37]" />
-                    <span>Cafeterías cercanas</span>
-                    {sortedCafes.length > 0 && (
-                      <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
-                        {sortedCafes.length}
-                      </span>
-                    )}
-                  </h2>
+              {sortedCafes.length > 0 ? (
+                <div className="space-y-4 pb-16">
+                  {sortedCafes.map((cafe, index) => renderCafeCard(cafe, index))}
+                </div>
+              ) : (
+                <div className="mt-8 text-center">
+                  <Coffee size={48} className="mx-auto text-gray-300" />
+                  <p className="mt-4 text-gray-500">No se encontraron cafeterías con los filtros actuales</p>
                   <button
-                    onClick={() => setShowSidebar(false)}
-                    className="text-[#6F4E37] md:hidden bg-gray-50 rounded-full p-2 hover:bg-gray-100 transition-colors"
+                    className="mt-2 text-[#6F4E37] underline"
+                    onClick={resetFilters}
                   >
-                    <ArrowLeft size={20} />
+                    Limpiar filtros
                   </button>
                 </div>
-
-                <div className="flex-1 overflow-y-auto p-4 pb-32">
-                  {sortedCafes.length > 0 ? (
-                    <motion.div className="space-y-4">
-                      {sortedCafes.map((cafe, index) => renderCafeCard(cafe, index))}
-                    </motion.div>
-                  ) : (
-                    <div className="mt-8 text-center">
-                      <Coffee size={48} className="mx-auto text-gray-300" />
-                      <p className="mt-4 text-gray-500">No se encontraron cafeterías con los filtros actuales</p>
-                      <button
-                        className="mt-2 text-[#6F4E37] underline"
-                        onClick={resetFilters}
-                      >
-                        Limpiar filtros
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          )}
-      </AnimatePresence>
-
-      {/* Filter Modal */}
-      <FilterModal
-        isOpen={isFilterModalOpen}
-        onClose={toggleFilterModal}
-        filterOptions={filterOptions}
-        updateFilterOptions={updateFilterOptions}
-        resetFilters={resetFilters}
-        availableTags={availableTags}
-      />
-
-      {/* Toggle sidebar button (mobile) */}
-      {!showSidebar && (
-        <motion.button
-          className="absolute bottom-42 right-4 z-30 text-white bg-[#6F4E37] p-3 rounded-full shadow-lg md:hidden"
-          onClick={() => setShowSidebar(true)}
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <Coffee size={20} className="text-white" />
-        </motion.button>
-      )}
-
-      {/* Selected Cafe Popup/Details */}
-      <AnimatePresence>
-        {activeCafe && (
-          <motion.div
-            className="absolute left-0 right-0 bottom-0 md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[500px] md:h-auto md:max-h-[80vh] lg:w-[650px] xl:w-[700px] bg-white md:rounded-2xl shadow-2xl z-40 overflow-hidden"
-            initial={{ y: "100%", opacity: 0, scale: 0.9 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: "100%", opacity: 0, scale: 0.9 }}
-            transition={{ type: 'spring', damping: 30 }}
-          >
-            {activeCafeData && renderCafeDetail(activeCafeData)}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Pulsating indicator on map for selected cafe */}
-      {activeCafe && (
-        <motion.div
-          className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
-          variants={pulseVariants}
-          animate="pulse"
-        >
-          <div className="w-16 h-16 bg-[#6F4E37]/30 rounded-full flex items-center justify-center">
-            <div className="w-8 h-8 bg-[#6F4E37]/60 rounded-full flex items-center justify-center">
-              <div className="w-4 h-4 bg-[#6F4E37] rounded-full"></div>
+              )}
             </div>
           </div>
         </motion.div>
       )}
-    </motion.div>
-  );
+    </AnimatePresence>
+
+    {/* Filter Modal */}
+    <FilterModal
+      isOpen={isFilterModalOpen}
+      onClose={toggleFilterModal}
+      filterOptions={filterOptions}
+      updateFilterOptions={updateFilterOptions}
+      resetFilters={resetFilters}
+      availableTags={availableTags}
+    />
+
+    {/* Toggle sidebar button (mobile) - increased z-index */}
+    {!showSidebar && (
+      <motion.button
+        className="absolute bottom-16 right-4 z-[100] text-white bg-[#6F4E37] p-3 rounded-full shadow-lg md:hidden"
+        onClick={() => setShowSidebar(true)}
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+      >
+        <Coffee size={20} className="text-white" />
+      </motion.button>
+    )}
+
+    {/* Selected Cafe Popup/Details */}
+    <AnimatePresence>
+      {activeCafe && (
+        <motion.div
+          className="absolute left-0 right-0 bottom-0 md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[65%] lg:w-[55%] xl:w-[820px] md:h-auto md:max-h-[90vh] bg-white md:rounded-2xl shadow-2xl z-[200] overflow-hidden"
+          initial={{ y: "100%", opacity: 0, scale: 0.9 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          exit={{ y: "100%", opacity: 0, scale: 0.9 }}
+          transition={{ type: 'spring', damping: 30 }}
+        >
+          {activeCafeData && (
+            <CafeDetail
+              cafe={activeCafeData}
+              favorites={favorites}
+              toggleFavorite={toggleFavorite}
+              navigateToCafe={setupRoute}
+              onClose={handleCloseDetails}
+              copyToClipboard={copyToClipboard}
+              copied={copied}
+            />
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Pulsating indicator on map for selected cafe */}
+    {activeCafe && (
+      <motion.div
+        className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
+        variants={pulseVariants}
+        animate="pulse"
+      >
+        <div className="w-16 h-16 bg-[#6F4E37]/30 rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-[#6F4E37]/60 rounded-full flex items-center justify-center">
+            <div className="w-4 h-4 bg-[#6F4E37] rounded-full"></div>
+          </div>
+        </div>
+      </motion.div>
+    )}
+
+    {/* Route Controls */}
+    <AnimatePresence>
+      {showRouteControls && activeCafeData && (
+        <RouteControls
+          isActive={showRouteControls}
+          transportMode={transportMode}
+          setTransportMode={setTransportMode}
+          distance={routeInfo?.distance || null}
+          duration={routeInfo?.time || null}
+          isCalculating={isRouteLoading}
+          onClose={handleCloseRouteControls}
+          cafeName={activeCafeData.name}
+        />
+      )}
+    </AnimatePresence>
+  </motion.div>
+);
 };
 
 export default MapView;

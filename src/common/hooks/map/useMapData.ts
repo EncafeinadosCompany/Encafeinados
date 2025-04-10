@@ -1,8 +1,7 @@
 import { useMemo } from "react";
-import L from "leaflet";
 import { LatLngTuple, Cafe, MarkerPosition } from "@/common/types/map/mapTypes";
 import { calculateDistance } from "@/common/utils/map/mapUtils";
-import { Branch, BranchesResponse } from "@/api/types/branchesTypes";
+import { Branch, BranchesResponse, SocialBranch } from "@/api/types/branchesTypes";
 import { Store, StoresResponse } from "@/api/types/storesTypes";
 
 /**
@@ -17,39 +16,23 @@ export const useMapData = (
 ) => {
   const defaultCenter: LatLngTuple = [6.2476, -75.5658];
 
+  // 1. Memoizar branches por separado para evitar cálculos repetidos
+  const branches = useMemo(() => 
+    filteredBranchesData?.branches?.branches ||
+    branchesData?.branches?.branches ||
+    [],
+  [filteredBranchesData?.branches?.branches, branchesData?.branches?.branches]);
+  
+  // 2. Memoizar filteredBranches separadamente
+  const filteredBranches = useMemo(() => 
+    branches.filter((branch) => branch.status === "APPROVED"),
+  [branches]);
+
+  // 3. Ahora memoizamos cafes basado en filteredBranches
   const cafes: Cafe[] = useMemo(() => {
     if (!branchesData?.branches?.branches) return [];
-    const stores = storesData?.stores;
     
-    // Primero, obtener los IDs de tiendas aprobadas
-    const approvedStoreIds = Array.isArray(stores) 
-      ? stores.map((store: Store) => store.id) 
-      : [];
-    console.log("Approved store IDs:", approvedStoreIds);
-
-    const branches =
-      filteredBranchesData?.branches?.branches ||
-      branchesData?.branches?.branches ||
-      [];
-  
-    // Ahora filtrar las sucursales basándonos en si su tienda está aprobada
-    const filteredBranches = branches.filter((branch) => {
-      // Extraer el store_id del objeto store anidado
-      const branchStoreId = branch.store?.store_id;
-      
-      if (!branchStoreId) {
-        console.log(`Branch "${branch.name}" has no store_id`);
-        return false;
-      }
-      
-      const isApproved = approvedStoreIds.includes(branchStoreId);
-      console.log(`Branch "${branch.name}" (Store ID: ${branchStoreId}) - Approved: ${isApproved}`);
-      
-      return isApproved;
-    });
-
-    // Y luego, al mapear los cafés, usar directamente la info de la tienda:
-    const mappedCafes = filteredBranches
+    return filteredBranches
       .map((branch: Branch) => {
         if (!branch.latitude || !branch.longitude) return null;
         
@@ -67,11 +50,13 @@ export const useMapData = (
           tags: ["Coffee", "Specialty"],
           latitude: branch.latitude,
           longitude: branch.longitude,
-          isOpen: branch.status,
+          isOpen: true, // Ya está filtrado por APPROVED
+          status: branch.status,
           phone: branch.phone_number,
           address: branch.address,
           storeId: branch.store?.store_id ?? 0,
           storeName: branch.store?.store_name ?? "",
+          socialNetworks: branch.social_branches || []
         };
 
         // Calcular distancia si la ubicación del usuario está disponible
@@ -97,34 +82,33 @@ export const useMapData = (
         };
       })
       .filter(Boolean) as Cafe[];
+  }, [filteredBranches, userLocation]);
 
-    return mappedCafes;
-  }, [branchesData, filteredBranchesData, userLocation, storesData]);
-
-  // Crear posiciones de marcadores a partir de datos de café
+  // 4. Memoizar las posiciones de los marcadores
   const cafePositions: MarkerPosition[] = useMemo(
-    () =>
-      cafes.map((cafe) => ({
-        id: cafe.id,
-        lat: cafe.latitude,
-        lng: cafe.longitude,
-      })),
+    () => cafes.map((cafe) => ({
+      id: cafe.id,
+      lat: cafe.latitude,
+      lng: cafe.longitude,
+    })),
     [cafes]
   );
 
-  // Ya no necesitamos filtrar por searchTerm aquí
-  const filteredCafes = cafes;
+  // 5. Ahora sí ordenamos correctamente por distancia
+  const sortedCafes = useMemo(() => {
+    if (!userLocation) return cafes;
+    return [...cafes].sort((a, b) => 
+      (a.distanceValue || 999) - (b.distanceValue || 999)
+    );
+  }, [cafes, userLocation]);
 
-  // Ordenar cafés por distancia
-  const sortedCafes = useMemo(() => cafes, [cafes]);
-
-  // Obtener datos para el café actualmente activo
+  // 6. Memoizar activeCafeData
   const activeCafeData = useMemo(
-    () => (activeCafe ? cafes.find((cafe) => cafe.id === activeCafe) : null),
+    () => activeCafe ? cafes.find((cafe) => cafe.id === activeCafe) : null,
     [activeCafe, cafes]
   );
 
-  // Extraer tiendas disponibles para el filtro
+  // 7. Memoizar las tiendas disponibles para el filtro
   const availableStores = useMemo(() => {
     if (!storesData?.stores?.stores) return [];
 
@@ -132,13 +116,13 @@ export const useMapData = (
       id: store.id,
       name: store.name,
     }));
-  }, [storesData]);
+  }, [storesData?.stores?.stores]);
 
   return {
     defaultCenter,
     cafes,
     cafePositions,
-    filteredCafes,
+    filteredCafes: cafes, // Para mantener la compatibilidad con el API existente
     sortedCafes,
     activeCafeData,
     availableStores,

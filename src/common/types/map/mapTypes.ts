@@ -1,3 +1,4 @@
+import { SocialBranch } from '@/api/types/branchesTypes';
 /**
  * Geographic coordinates as [latitude, longitude]
  */
@@ -51,12 +52,14 @@ export interface Cafe {
   latitude: number;
   longitude: number;
   isOpen: boolean;
-  phone: string;
-  address: string;
-  distance: string;
-  distanceValue: number;
+  status: string; // Nuevo: status como string
+  phone?: string;
+  address?: string;
+  distance?: string;
+  distanceValue?: number;
   storeId: number;
   storeName: string;
+  socialNetworks?: SocialBranch[]; 
 }
 
 /**
