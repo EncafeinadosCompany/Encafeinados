@@ -14,6 +14,39 @@ import {
 import { Cafe } from '@/common/types/map/mapTypes';
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
 
+// Función para determinar el tipo de red social basado en la URL o el ID
+const determineNetworkType = (social: any): 'facebook' | 'instagram' | 'twitter' | 'other' => {
+  // Si no existe el objeto o la URL, devolver 'other'
+  if (!social || !social.url) return 'other';
+  
+  const url = social.url.toLowerCase();
+  
+  if (url.includes('facebook') || url.includes('fb.com')) return 'facebook';
+  if (url.includes('instagram') || url.includes('ig.com')) return 'instagram';
+  if (url.includes('twitter') || url.includes('x.com')) return 'twitter';
+  
+  // También podemos verificar por ID si tenemos un mapeo
+  if (social.social_network_id === 1) return 'facebook';
+  if (social.social_network_id === 2) return 'instagram';
+  if (social.social_network_id === 3) return 'twitter';
+  
+  return 'other';
+};
+
+// Función para obtener un nombre para mostrar
+const getNetworkDisplayName = (social: any, networkType: string): string => {
+  // Si existe social_network_name, usarlo
+  if (social.social_network_name) return social.social_network_name;
+  
+  // En caso contrario, usar un nombre basado en el tipo
+  switch (networkType) {
+    case 'facebook': return 'Facebook';
+    case 'instagram': return 'Instagram';
+    case 'twitter': return 'Twitter';
+    default: return 'Sitio web';
+  }
+};
+
 interface CafeDetailProps {
   cafe: Cafe;
   favorites: number[];
@@ -129,36 +162,53 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           <div className="py-3 border-b border-gray-100">
             <h4 className="font-medium text-[#2C1810] mb-2">Encuéntranos en redes</h4>
             <div className="flex flex-wrap gap-2">
-              {cafe.socialNetworks.map((social, idx) => (
-                <a 
-                  key={idx}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 text-[#6F4E37] px-3 py-1.5 rounded-full transition-colors"
-                >
-                  {social.social_network_name.toLowerCase().includes('facebook') && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3V2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                  {social.social_network_name.toLowerCase().includes('instagram') && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                  {social.social_network_name.toLowerCase().includes('twitter') && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                  <span className="text-sm font-medium">{social.social_network_name}</span>
-                </a>
-              ))}
+              {cafe.socialNetworks.map((social, idx) => {
+                // Determinar el tipo de red social basado en la URL o el ID
+                const networkType = determineNetworkType(social);
+                
+                return (
+                  <a 
+                    key={idx}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 text-[#6F4E37] px-3 py-1.5 rounded-full transition-colors"
+                  >
+                    {/* Renderizar ícono basado en el tipo de red social */}
+                    {networkType === 'facebook' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3V2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                    {networkType === 'instagram' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                    {networkType === 'twitter' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                    {networkType === 'other' && (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                    
+                    {/* Mostrar nombre de la red social */}
+                    <span className="text-sm font-medium">
+                      {getNetworkDisplayName(social, networkType)}
+                    </span>
+                  </a>
+                );
+              })}
             </div>
           </div>
         ) : (
+          // Contenido alternativo si no hay redes sociales
           <div className="py-3 border-b border-gray-100">
             <h4 className="font-medium text-[#2C1810] mb-2">Características</h4>
             <div className="flex flex-wrap gap-2">
