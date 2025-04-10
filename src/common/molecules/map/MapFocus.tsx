@@ -1,27 +1,28 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import { MapFocusProps } from '@/common/types/map/mapTypes';
 
 /**
-  Component to center the map on the selected coffee shop or user location
+  Component to center the map on the selected coffee shop
  */
 const MapFocus: React.FC<MapFocusProps> = ({ cafeId, positions, userLocation }) => {
   const map = useMap();
+  const prevCafeIdRef = useRef<number | null>(null);
   
   useEffect(() => {
-    if (cafeId) {
+    // Solo hacer flyTo cuando se selecciona un nuevo café, no cuando se deselecciona
+    if (cafeId && cafeId !== prevCafeIdRef.current) {
       const position = positions.find(pos => pos.id === cafeId);
       if (position) {
-        map.flyTo([position.lat, position.lng], 15, {
-          duration: 2
+        map.flyTo([position.lat, position.lng], 16, {
+          duration: 1.5
         });
       }
-    } else if (userLocation) {
-      map.flyTo(userLocation, 15, {
-        duration: 2
-      });
-    }
-  }, [cafeId, map, positions, userLocation]);
+      prevCafeIdRef.current = cafeId;
+    } 
+    // Importante: No volver a la ubicación del usuario automáticamente
+    // cuando cafeId cambia a null
+  }, [cafeId, map, positions]);
   
   return null;
 };
