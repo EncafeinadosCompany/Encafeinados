@@ -9,12 +9,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 
 import toast from "react-hot-toast"
 
-import { Input } from "@/common/ui/input"
-import { Label } from "@/common/ui/label"
 import { Button } from "@/common/ui/button"
 import { TitleForm } from "@/common/atoms/auth/titleForm"
 import { validateImageRequirements } from "@/common/hooks/useCriteria"
-import { RadioGroup, RadioGroupItem } from "@/common/ui/radio-group"
 import { Card, CardContent, CardFooter, CardHeader } from "@/common/ui/card"
 import { RegisterStoreBrancheSchema, RegisterStoreBrancheSchemaType } from "@/common/utils/schemas/auth/registerStoreBrancheSchema"
 
@@ -28,6 +25,7 @@ const SocialNetworksForm = lazy(() => import("./socialNetwork"))
 import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueries"
 import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
 import { BranchPost } from "@/api/types/branchesTypes"
+import { useRegisterCriteriaMutation } from "@/api/mutations/stores/criteriaMutation"
 
 
 export default function RegisterStoreBranches() {
@@ -35,6 +33,7 @@ export default function RegisterStoreBranches() {
     const { data: criteria } = useCriteria();
     const { data: socialNetworks } = useSocialNetworksQuery();
     const useBranchesMutation = useRegisterBrandMutation();
+    const useCriteriaMutation = useRegisterCriteriaMutation();
     const [baseAddress, setBaseAddress] = useState("");
 
     const { storeId } = useParams();
@@ -70,26 +69,37 @@ export default function RegisterStoreBranches() {
 
     const handleSubmit = async(data: any) => {
         const finalData = { ...formData, ...data };
-        console.log(finalData)
+        console.log(finalData.criteria)
 
 
-        try{
-
-            storeId? storeId : toast.error('no cuenta con el id') 
-            const data: BranchPost ={
-                store_id: Number(storeId),
-                name: finalData.name,
-                phone_number: finalData.phone_number,
-                latitude: finalData.latitude,
-                longitude: finalData.longitude,
-                address: finalData.address,
-                social_branches:finalData.social_networks
-            }
-            await useBranchesMutation.mutateAsync(data)
-
-        }catch(err){
-            console.log(err)
+        const criteria= {
+            branchId: 1,
+            criteria: finalData.criteria
         }
+       
+        
+        await useCriteriaMutation.mutateAsync({
+          branchId: 1,
+          criteriaResponseData: finalData.criteria,
+        });
+
+        // try{
+
+        //     storeId? storeId : toast.error('no cuenta con el id') 
+        //     const data: BranchPost ={
+        //         store_id: Number(storeId),
+        //         name: finalData.name,
+        //         phone_number: finalData.phone_number,
+        //         latitude: finalData.latitude,
+        //         longitude: finalData.longitude,
+        //         address: finalData.address,
+        //         social_branches:finalData.social_networks
+        //     }
+        //     await useBranchesMutation.mutateAsync(data)
+
+        // }catch(err){
+        //     console.log(err)
+        // }
         // const social_branches = selectedNetworks.map((network) => ({
         //     social_network_id: network.networkId,
         //     url: network.url,

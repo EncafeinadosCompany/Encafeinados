@@ -42,3 +42,21 @@ return useMutation<ImageType, Error, File>({
     },
 });
 }
+
+
+export const uploadImage = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    const response = await authClient.post<ImageType>(
+      "/images/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+  
+    return response.image.url;
+  };

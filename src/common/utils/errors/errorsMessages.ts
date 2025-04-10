@@ -1,3 +1,5 @@
+import { criteria } from "../lists/criteria";
+
 export const errorMessages: Record<number, string> = { 
     401: "Credenciales inválidas.",
     403: "Acceso denegado.",
@@ -26,6 +28,10 @@ export const errorMessages: Record<number, string> = {
     },
     images:{
         409: "La imagen ya se encuentra registrada"
+    },
+    criteria:{
+        409: "El criterio ya se encuentra registrado",
+        404: "El criterio no se encuentra registrado"
     }
   
   };
