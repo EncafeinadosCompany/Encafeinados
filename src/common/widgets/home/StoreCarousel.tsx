@@ -114,7 +114,7 @@ const CarouselControls = React.memo(({ api, current, count, handleUserInteractio
       </motion.div>
     </div>
     
-    <motion.button
+    {/* <motion.button
       whileHover={{
         scale: 1.03,
         boxShadow: "0 8px 20px -5px rgba(111, 78, 55, 0.3)",
@@ -138,7 +138,7 @@ const CarouselControls = React.memo(({ api, current, count, handleUserInteractio
       >
         <ChevronRight className="w-4 h-4" />
       </motion.span>
-    </motion.button>
+    </motion.button> */}
   </div>
 ));
 

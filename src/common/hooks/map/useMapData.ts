@@ -15,46 +15,63 @@ export const useMapData = (
   activeCafe: number | null,
   storesData: StoresResponse | undefined
 ) => {
-  // Centro predeterminado del mapa (Medellín)
   const defaultCenter: LatLngTuple = [6.2476, -75.5658];
 
-  // Transformar branches de la API a nuestra estructura de datos de café
   const cafes: Cafe[] = useMemo(() => {
     if (!branchesData?.branches?.branches) return [];
+    const stores = storesData?.stores;
+    
+    // Primero, obtener los IDs de tiendas aprobadas
+    const approvedStoreIds = Array.isArray(stores) 
+      ? stores.map((store: Store) => store.id) 
+      : [];
+    console.log("Approved store IDs:", approvedStoreIds);
 
-    // Determinar qué datos de branches usar (filtrados o todos)
     const branches =
       filteredBranchesData?.branches?.branches ||
-      branchesData.branches.branches ||
+      branchesData?.branches?.branches ||
       [];
+  
+    // Ahora filtrar las sucursales basándonos en si su tienda está aprobada
+    const filteredBranches = branches.filter((branch) => {
+      // Extraer el store_id del objeto store anidado
+      const branchStoreId = branch.store?.store_id;
+      
+      if (!branchStoreId) {
+        console.log(`Branch "${branch.name}" has no store_id`);
+        return false;
+      }
+      
+      const isApproved = approvedStoreIds.includes(branchStoreId);
+      console.log(`Branch "${branch.name}" (Store ID: ${branchStoreId}) - Approved: ${isApproved}`);
+      
+      return isApproved;
+    });
 
-    return branches
+    // Y luego, al mapear los cafés, usar directamente la info de la tienda:
+    const mappedCafes = filteredBranches
       .map((branch: Branch) => {
-        // Omitir branches con datos de ubicación faltantes
         if (!branch.latitude || !branch.longitude) return null;
-
-        // Buscar el logo de la tienda correspondiente
-        const storeLogo =
-          storesData?.stores?.stores?.find(
-            (store) => store.name === branch.store_name
-          )?.logo ||
+        
+        // Usar directamente el logo de la tienda de la respuesta API
+        const storeLogo = branch.store?.store_logo || 
           "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
         const baseData = {
           id: branch.id,
           name: branch.name,
-          rating: parseFloat(branch.average_rating) || 4.5, // Convertir string a número
-          reviewCount: Math.floor(Math.random() * 100) + 50, // Recuento de reseñas aleatorio (50-150)
-          openTime: "7:00 AM - 6:00 PM", // Horario de apertura predeterminado
+          rating: parseFloat(branch.average_rating ?? "4.5") || 4.5,
+          reviewCount: Math.floor(Math.random() * 100) + 50,
+          openTime: "7:00 AM - 6:00 PM",
           image: storeLogo,
-          tags: ["Coffee", "Specialty"], // Etiquetas predeterminadas
+          tags: ["Coffee", "Specialty"],
           latitude: branch.latitude,
           longitude: branch.longitude,
           isOpen: branch.status,
           phone: branch.phone_number,
           address: branch.address,
-          storeId: 1, // Asumiendo que todas las branches pertenecen a la tienda con ID 1
-          storeName: branch.store_name,
+          storeId: branch.store?.store_id ?? 0,
+          storeName: branch.store?.store_name ?? "",
         };
 
         // Calcular distancia si la ubicación del usuario está disponible
@@ -79,7 +96,9 @@ export const useMapData = (
           distanceValue: 999, // Valor alto para ordenar al final
         };
       })
-      .filter(Boolean) as Cafe[]; // Filtrar valores nulos y hacer cast de tipo
+      .filter(Boolean) as Cafe[];
+
+    return mappedCafes;
   }, [branchesData, filteredBranchesData, userLocation, storesData]);
 
   // Crear posiciones de marcadores a partir de datos de café
@@ -115,22 +134,6 @@ export const useMapData = (
     }));
   }, [storesData]);
 
-  // Icono de marcador personalizado
-  const customIcon = useMemo(
-    () =>
-      new L.Icon({
-        iconUrl:
-          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowUrl:
-          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-        shadowSize: [41, 41],
-      }),
-    []
-  );
-
   return {
     defaultCenter,
     cafes,
@@ -139,6 +142,5 @@ export const useMapData = (
     sortedCafes,
     activeCafeData,
     availableStores,
-    customIcon,
   };
 };

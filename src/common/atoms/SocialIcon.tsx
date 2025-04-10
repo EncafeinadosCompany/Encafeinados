@@ -5,6 +5,7 @@ interface SocialIconProps {
   icon: React.ReactNode;
   href: string;
   label: string;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 export const SocialIcon = ({ icon, href, label }: SocialIconProps) => {

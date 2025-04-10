@@ -1,8 +1,11 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { ArrowLeft, Search, Filter, Coffee, Star, Clock, MapPin, Heart, Share2, Navigation, Route } from '@/common/ui/icons';
+import { 
+  ArrowLeft, Search, Filter, Coffee, Star, Clock, MapPin, Heart, 
+  Share2, Navigation, Route, ExternalLink, Copy, Map as MapIcon
+} from 'lucide-react'; // Cambiado de @/common/ui/icons a lucide-react
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker} from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -10,15 +13,17 @@ import 'leaflet/dist/leaflet.css';
 
 // API imports
 import { useBranches } from '@/api/queries/stores/branchesQueries';
+import { useApprovedStores } from '@/api/queries/stores/storesQueries';
 
 // Types
-import {  Cafe } from '@/common/types/map/mapTypes';
+import { Cafe } from '@/common/types/map/mapTypes';
 
 // Hooks
 import { useFavorites } from '@/common/hooks/map/useFavorites';
 import { useGeolocation } from '@/common/hooks/map/useGeolocation';
 import { useMapData } from '@/common/hooks/map/useMapData';
 import { useSearchFilter } from '@/common/hooks/map/useSearchFilter';
+import { useDebounce } from '@/common/hooks/utils/useDebounce';
 
 // Components
 import UserLocationMarker from '@/common/atoms/map/UserLocationMarker';
@@ -26,10 +31,14 @@ import MapFocus from '@/common/molecules/map/MapFocus';
 import RouteLine from '@/common/molecules/map/RouteLine';
 import FilterModal from '@/common/molecules/map/filterModal';
 import HighlightText from '@/common/atoms/common/HighlightText';
+import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
+import CafeMarker from '@/common/molecules/map/CafeMarker';
+import UserMarker from '@/common/molecules/map/UserMarker';
+import '@/common/styles/mapMarkers.css';
 
 // Animations
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
-import { useBranchesByStore, useStores } from '@/api/queries/stores/storesQueries';
+import { useBranchesByStore } from '@/api/queries/stores/storesQueries';
 
 // ==============================
 // MAIN COMPONENT
@@ -47,8 +56,11 @@ const MapView: React.FC = () => {
   const [showDirections, setShowDirections] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
   const [selectedStore, setSelectedStore] = useState<number | undefined>(undefined);
-  // Declaramos searchTerm aquí para que esté disponible antes de pasarlo a useMapData
   const [searchTerm, setSearchTermLocal] = useState<string>('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [searchInputValue, setSearchInputValue] = useState('');
+  const debouncedSearchValue = useDebounce(searchInputValue, 500);
+  const [copied, setCopied] = useState(false);
 
   // Custom hooks
   const { favorites, toggleFavorite } = useFavorites();
@@ -64,7 +76,7 @@ const MapView: React.FC = () => {
   // API DATA FETCHING
   // ==============================
   const { data: branchesData, isLoading: branchesLoading, error: branchesError } = useBranches();
-  const { data: storesData, isLoading: storesLoading } = useStores();
+  const { data: storesData, isLoading: storesLoading } = useApprovedStores();
   const { data: filteredBranchesData } = useBranchesByStore(selectedStore);
 
   // ==============================
@@ -77,8 +89,7 @@ const MapView: React.FC = () => {
     filteredCafes,
     sortedCafes: mapDataSortedCafes,
     activeCafeData,
-    availableStores,
-    customIcon
+    availableStores
   } = useMapData(
     branchesData,
     filteredBranchesData,
@@ -115,18 +126,42 @@ const MapView: React.FC = () => {
 
   // Función para actualizar la búsqueda en ambos lugares
   const handleSearchChange = useCallback((value: string) => {
-    setSearchTermLocal(value);
-    setFilterSearchTerm(value);
-  }, [setFilterSearchTerm]);
+    setSearchInputValue(value);
+    setIsTyping(true);
+  }, []);
+
+  useEffect(() => {
+    setSearchTermLocal(debouncedSearchValue);
+    setFilterSearchTerm(debouncedSearchValue);
+    setIsTyping(false);
+  }, [debouncedSearchValue, setFilterSearchTerm]);
 
   // ==============================
   // CALLBACKS
   // ==============================
 
+/**
+ * Handles sharing cafe location
+ */
+const handleShare = useCallback((cafe: Cafe) => {
+  const googleMapsUrl = `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}&z=17&t=m&hl=es&q=${encodeURIComponent(cafe.name)}`;
+  if (navigator.share) {
+    navigator.share({
+      title: `${cafe.name} - Encafeina2`,
+      text: `¡Visita ${cafe.name} en ${cafe.address || 'esta ubicación'}!`,
+      url: googleMapsUrl
+    }).catch(error => {
+      console.log('Error compartiendo', error);
+      window.open(googleMapsUrl, '_blank');
+    });
+  } else {
+    window.open(googleMapsUrl, '_blank');
+  }
+}, []);
 
-  /**
-   * Starts navigation to a cafe
-   */
+/**
+ * Starts navigation to a cafe
+ */
   const navigateToCafe = useCallback((cafeId: number): void => {
     if (!userLocation) {
       getUserLocation();
@@ -136,6 +171,19 @@ const MapView: React.FC = () => {
     setActiveCafe(cafeId);
     setShowDirections(true);
   }, [getUserLocation, userLocation]);
+
+  const copyToClipboard = useCallback((text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    
+    // Efecto visual más pronunciado
+    const popoverElement = document.querySelector('.popover-content');
+    if (popoverElement) {
+      
+    }
+    
+    setTimeout(() => setCopied(false), 2000);
+  }, []);
 
   // ==============================
   // EFFECTS
@@ -365,13 +413,96 @@ const MapView: React.FC = () => {
             <Coffee size={18} />
             <span>Ver menú</span>
           </motion.button>
-          <motion.button
-            className="w-12 h-12 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-xl hover:bg-[#6F4E37] hover:text-white transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Share2 size={18} />
-          </motion.button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <motion.button
+                className="w-12 h-12 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-xl hover:bg-[#6F4E37] hover:text-white transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Share2 size={18} />
+              </motion.button>
+            </PopoverTrigger>
+            <PopoverContent 
+              className="w-64 sm:w-72 p-0 sm:bottom-auto bottom-16 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 bg-white shadow-md border border-gray-100 rounded-lg" 
+              align="center" 
+              alignOffset={0} 
+              sideOffset={5}
+              side="top"
+            >
+              <div className="px-1 py-1.5">
+                <div className="border-b border-gray-100 pb-1.5 mb-1">
+                  <p className="text-xs font-medium text-[#6F4E37]/80 px-2.5 mb-1">
+                    Compartir ubicación
+                  </p>
+                </div>
+                
+                <button 
+                  className="w-full flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-[#FAF3E0] hover:text-[#6F4E37] rounded-md transition-colors"
+                  onClick={() => {
+                    const googleMapsUrl = `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}&z=17&t=m&hl=es&q=${encodeURIComponent(cafe.name)}`;
+                    window.open(googleMapsUrl, '_blank');
+                  }}
+                >
+                  <MapIcon className="mr-3 h-4.5 w-4.5 text-[#6F4E37]" />
+                  <span>Abrir en Google Maps</span>
+                </button>
+                
+                <button 
+                  className="w-full flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-[#FAF3E0] hover:text-[#6F4E37] rounded-md transition-colors"
+                  onClick={() => {
+                    const url = `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`;
+                    copyToClipboard(url);
+                  }}
+                >
+                  <Copy className="mr-3 h-4.5 w-4.5 text-[#6F4E37]" />
+                  <span className="flex-1 text-left">
+                    {copied ? 
+                      <span className="flex items-center">
+                        <span className="text-green-600 font-medium">¡Copiado!</span>
+                        <motion.span 
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="ml-1 inline-block bg-green-100 text-green-600 text-xs p-0.5 rounded-full"
+                        >
+                          ✓
+                        </motion.span>
+                      </span> : 
+                      "Copiar link"
+                    }
+                  </span>
+                </button>
+                
+                {navigator.share && (
+                  <button 
+                    className="w-full flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-[#FAF3E0] hover:text-[#6F4E37] rounded-md transition-colors"
+                    onClick={() => {
+                      navigator.share({
+                        title: `${cafe.name} - Encafeina2`,
+                        text: `¡Visita ${cafe.name} en ${cafe.address || 'esta ubicación'}!`,
+                        url: `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`
+                      });
+                    }}
+                  >
+                    <Share2 className="mr-3 h-4.5 w-4.5 text-[#6F4E37]" />
+                    <span>Compartir...</span>
+                  </button>
+                )}
+
+                {/* Opción adicional para direcciones */}
+                <button 
+                  className="w-full flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-[#FAF3E0] hover:text-[#6F4E37] rounded-md transition-colors"
+                  onClick={() => {
+                    const googleMapsNavUrl = `https://www.google.com/maps/dir/?api=1&destination=${cafe.latitude},${cafe.longitude}&travelmode=driving`;
+                    window.open(googleMapsNavUrl, '_blank');
+                  }}
+                >
+                  <Navigation className="mr-3 h-4.5 w-4.5 text-[#6F4E37]" />
+                  <span>Obtener indicaciones</span>
+                </button>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </div>
@@ -382,54 +513,15 @@ const MapView: React.FC = () => {
   // ==============================
 
   return (
+    // Modificar el contenedor principal para usar grid en modo lista
     <motion.div
-      className="h-screen w-full relative bg-gray-50 overflow-hidden font-sans"
+      className={`h-screen w-full relative bg-gray-50 overflow-hidden font-sans ${
+        viewMode === 'list' && window.innerWidth >= 768 ? 'md:grid md:grid-cols-[1fr_390px]' : ''
+      }`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
-      {/* CSS styles for user marker */}
-      <style>{`
-        .user-marker {
-          width: 24px;
-          height: 24px;
-          background-color: rgba(111, 78, 55, 0.2);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .user-marker.pulsing {
-          animation: pulse 2s infinite;
-        }
-        
-        .user-marker-inner {
-          width: 12px;
-          height: 12px;
-          background-color: #6F4E37;
-          border-radius: 50%;
-          border: 2px solid white;
-        }
-        
-        @keyframes pulse {
-          0% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(111, 78, 55, 0.5);
-          }
-          
-          70% {
-            transform: scale(1);
-            box-shadow: 0 0 0 10px rgba(111, 78, 55, 0);
-          }
-          
-          100% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(111, 78, 55, 0);
-          }
-        }
-      `}</style>
-
       {/* Loading overlay */}
       <AnimatePresence>
         {!mapLoaded && (
@@ -479,14 +571,37 @@ const MapView: React.FC = () => {
           >
             <input
               type="text"
-              value={searchTerm}
+              value={searchInputValue} // Usar el valor de entrada sin debounce
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Buscar cafeterías..."
               className="w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none focus:ring-2 focus:ring-[#D4A76A] transition-all duration-300 bg-white border-black/10"
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
             />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
+            {isTyping ? (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]"
+              >
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                  <circle 
+                    className="opacity-25" 
+                    cx="12" cy="12" r="10" 
+                    stroke="currentColor" 
+                    strokeWidth="4" 
+                    fill="none" 
+                  />
+                  <path 
+                    className="opacity-75" 
+                    fill="currentColor" 
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              </motion.div>
+            ) : (
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
+            )}
             <motion.button
               className="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[#6F4E37] text-white p-1.5 rounded-full hover:bg-[#5d4230] transition-colors duration-300"
               whileTap={{ scale: 0.9 }}
@@ -496,8 +611,6 @@ const MapView: React.FC = () => {
             </motion.button>
           </motion.div>
 
-          {/* View toggle buttons */}
-          {/* View toggle buttons */}
           <div className="hidden md:flex bg-white/90 backdrop-blur-sm rounded-full shadow-lg overflow-hidden">
             <button
               className={`px-4 py-2 transition-colors duration-300 ${viewMode === 'map' ? 'bg-[#6F4E37] text-white' : 'text-[#6F4E37] hover:bg-gray-100'
@@ -525,7 +638,8 @@ const MapView: React.FC = () => {
       </div>
 
       {/* Map Container */}
-      <div className={`absolute inset-0 z-10 ${viewMode === 'list' && window.innerWidth >= 768 ? 'md:w-1/2' : 'w-full'}`}>
+      <div className={`absolute inset-0 z-10 ${viewMode === 'list' && window.innerWidth >= 768 ? 'md:w-[calc(100%-390px)]' 
+    : 'w-full'}`}>
         <MapContainer
           center={defaultCenter}
           zoom={14}
@@ -542,25 +656,21 @@ const MapView: React.FC = () => {
           />
 
           {/* User location marker */}
-          <UserLocationMarker position={userLocation} pulsing={true} />
+          <UserMarker position={userLocation} pulsing={true} />
 
           {/* Cafe markers */}
-          {cafePositions.map(position => (
-            <Marker
-              key={position.id}
-              position={[position.lat, position.lng]}
-              icon={customIcon}
-              eventHandlers={{
-                click: () => {
-                  setActiveCafe(position.id);
-                  if (window.innerWidth >= 768) {
-                    setShowSidebar(true);
-                  }
-                },
+          {cafes.map(cafe => (
+            <CafeMarker
+              key={cafe.id}
+              cafe={cafe}
+              isActive={activeCafe === cafe.id}
+              onClick={() => {
+                setActiveCafe(cafe.id);
+                if (window.innerWidth >= 768) {
+                  setShowSidebar(true);
+                }
               }}
-            >
-
-            </Marker>
+            />
           ))}
 
           {/* Route line between user location and selected cafe */}
@@ -625,7 +735,7 @@ const MapView: React.FC = () => {
         ) && (
             <motion.div
               className={`absolute top-0 bottom-0 ${viewMode === 'list' && window.innerWidth >= 768
-                ? 'right-0 w-1/2'
+                ? 'right-0 w-1/2 md:max-w-[390px] xl:max-w-[390px] ' 
                 : 'right-0 w-full md:w-96'
                 } bg-white z-20 shadow-2xl rounded-l-3xl md:rounded-l-3xl overflow-hidden`}
               initial={{ x: '100%', opacity: 0 }}
@@ -634,7 +744,7 @@ const MapView: React.FC = () => {
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
             >
               <div className="h-full flex flex-col">
-                <div className="p-6 pt-20 flex justify-between items-center border-b border-gray-100">
+                <div className="p-6 pt-20 md:pt-24 flex justify-between items-center border-b border-gray-100">
                   <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
                     <Coffee size={20} className="text-[#6F4E37]" />
                     <span>Cafeterías cercanas</span>
@@ -733,4 +843,4 @@ const MapView: React.FC = () => {
   );
 };
 
-export default MapView
+export default MapView;
