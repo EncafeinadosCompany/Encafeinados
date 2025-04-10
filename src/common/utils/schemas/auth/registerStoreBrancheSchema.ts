@@ -15,7 +15,15 @@ export const RegisterStoreBrancheSchema = [
     criteria: z.record(
       z.object({
         response_text: z.string().min(1, "Requerido"),
-        image_url: z.string().url().optional(),
+        image_url: z.union([
+          z.object({
+            file: z.instanceof(File),
+            preview: z.string().url(),
+          }),
+          z.string().url(), // caso en el que ya venga una URL lista del backend
+          z.literal(undefined),
+          z.null(),
+        ]).optional(),
         other_text: z.string().optional(),
       })
     )

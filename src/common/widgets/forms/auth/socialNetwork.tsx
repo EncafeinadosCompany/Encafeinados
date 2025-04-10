@@ -1,7 +1,7 @@
 "use client"
 
 import { useFieldArray, useFormContext, UseFormRegister } from "react-hook-form"
-import { Trash2, Plus, Globe, Link as LinkIcon, MessageSquare } from "lucide-react"
+import { Trash2,Globe, Link as LinkIcon, MessageSquare } from "lucide-react"
 import type { SocialNetworksType } from "@/api/queries/stores/socialNetworksQueries"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/common/ui/card"
 import { Label } from "@/common/ui/label"
