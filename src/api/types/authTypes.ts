@@ -8,7 +8,8 @@ export interface LoginResponse {
     user: {
       email: string;
       role: string;
-    };
+    },
+	storeOrBranchId?:0
   }
   
 export interface User_Data {
@@ -27,4 +28,20 @@ export interface PersonData {
 export interface RegisterCoffelover {
     userData: User_Data,
     personData: PersonData
+}
+
+
+export interface RegisterCoffeloverResponse {
+	message: string,
+	client: {
+		id: number,
+		person: {
+			user_id: number,
+			user_email: string,
+			type_document: string,
+			number_document: string,
+			full_name: string,
+			phone_number: string
+		}
+	}
 }

@@ -15,6 +15,7 @@ import { RegisterBranchesStep3 } from "@/common/molecules/auth/stores/branches/r
 import { BranchPost } from "@/api/types/branchesTypes"
 import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
 
+
 interface FormRegisterBrandsProps {
     onClose: () => void 
 }
@@ -25,6 +26,7 @@ const FormRegisterBrands = ({onClose}:FormRegisterBrandsProps) => {
     const [formData, setFormData] = useState({});
     const [baseAddress, setBaseAddress] = useState("");
     const useBranchesMuntation = useRegisterBrandMutation();
+   
     const methods = useForm<CurrentBrancheSchema>({
         resolver: zodResolver(registerBrancheSchema[step] as any),
         defaultValues: {
@@ -57,7 +59,7 @@ const FormRegisterBrands = ({onClose}:FormRegisterBrandsProps) => {
             phone_number: finalData.phone_number,
             latitude: finalData.latitude,
             longitude: finalData.longitude,
-            address: `${finalData.address}, ${finalData.addressDetails}, ${finalData.nearbyReference}`
+            address: `${finalData.address}, ${finalData.addressDetails}, ${finalData.nearbyReference}`,
         }
 
         try {
@@ -76,8 +78,7 @@ const FormRegisterBrands = ({onClose}:FormRegisterBrandsProps) => {
         console.log(lat, lng, address)
         methods.setValue("latitude", lat, { shouldValidate: true });
         methods.setValue("longitude", lng, { shouldValidate: true });
-        methods.setValue("address", address, { shouldValidate: true });
-        
+        methods.setValue("address", address, { shouldValidate: true });  
         setBaseAddress(address);
     }
 
@@ -106,8 +107,7 @@ const FormRegisterBrands = ({onClose}:FormRegisterBrandsProps) => {
                                 {
                                     step === 1 && (
                                         <RegisterBranchesStep2
-                                            onLocationSelect={onLocationSelect}
-                                        >
+                                            onLocationSelect={onLocationSelect}>
                                         </RegisterBranchesStep2>
                                     )
                                 }

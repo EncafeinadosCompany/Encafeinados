@@ -6,6 +6,7 @@ import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 import { PrincipalStores } from "@/modules/stores/components/principalStorePage";
 import CompletePerfil from "@/common/widgets/forms/auth/formCompleteProfile";
+import RegisterStoreBranches from "@/common/widgets/forms/auth/registerStoreBranches";
 
 const LoadingSpinner = lazy(() => import ("@/common/atoms/LoadingSpinner"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
@@ -50,6 +51,7 @@ const AuthRoutes = () => {
             <Route path="/google/callback" element={<GoogleCallback />} />
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
+            <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches/>} />
             <Route path="/completar-perfil" element={<CompletePerfil />} />
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
             <Route path="/404" element={<NotFound />} />

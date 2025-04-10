@@ -33,7 +33,7 @@ export const TermsDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogOverlay className="bg-black/70 backdrop-blur-sm" />
       <DialogContent 
-        className="max-w-md sm:max-w-lg md:max-w-xl w-[90vw] border border-gray-200 shadow-xl 
+        className="max-w-md sm:max-w-lg md:max-w-xl w-[90vw] border-none shadow-xl 
                   p-0 rounded-lg overflow-hidden bg-white flex flex-col max-h-[90vh] sm:max-h-[85vh]
                   fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >

@@ -22,6 +22,11 @@ export interface Store {
     address: string;
   }
 
+  interface socialBranches {
+    social_network_id: number,
+    url: string,
+    description: string
+  }
 
   export interface BranchPost {
     store_id: number;
@@ -30,6 +35,7 @@ export interface Store {
     latitude: number;
     longitude: number;
     address: string;
+    social_branches?:socialBranches
   }
   
   

@@ -24,21 +24,20 @@ export const RegisterStoreSchema = [
             .min(1, { message: "El correo electrónico es obligatorio" })
             .email({ message: "El formato del correo electrónico no es válido" })
     }),
-    
     z.object({
-        logo: 
-        z.any()
-        .refine((file) => file instanceof File, {
-            message: "Debes subir un archivo válido",
-        })
-    }),
-    // z.object({
-    //     conditions: z.boolean().nullable()
-    //        .refine((value) => value === true, {
-    //         message: "Debes aceptar las condiciones para continuar",
-    //        }) 
-    // })
-    
+        logo: z
+        .any()
+        .optional()
+        .refine((file) => {
+          if (!file) return true; 
+          return file instanceof File;
+        }, {
+          message: "Debes subir un archivo válido",
+        }),
+        conditions: z.literal(true, {
+            errorMap: () => ({ message: "Debes aceptar los términos y condiciones" }),
+          })
+    })
 ]
 
 // Extraer el tipo inferido del esquema

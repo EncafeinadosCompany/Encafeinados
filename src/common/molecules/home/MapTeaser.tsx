@@ -59,7 +59,7 @@ export const MapTeaser = ({ totalCafes, city = "Medellín" }: MapTeaserProps) =>
   };
 
   return (
-    <section className="pt-16 px-4 overflow-hidden">
+    <section className="pt-16 px-4 overflow-hidden"  >
       <motion.div
         className="max-w-6xl mx-auto bg-gradient-to-r from-[#6F4E37]/5 to-[#D4A76A]/10 rounded-3xl overflow-hidden relative"
         initial="hidden"

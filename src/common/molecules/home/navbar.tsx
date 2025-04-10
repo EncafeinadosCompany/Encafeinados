@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserIcon, HomeIcon, InfoIcon, MenuIcon, XIcon } from '@/common/ui/icons';
@@ -12,9 +12,9 @@ export const Navbar: React.FC = () => {
   };
 
   const navLinks = [
-    { href: '/', label: 'Inicio', icon: <HomeIcon className="w-5 h-5" /> },
-    { href: '/about', label: 'Acerca de', icon: <InfoIcon className="w-5 h-5" /> },
-    { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-5 h-5" /> }
+    { href: '/', label: 'Inicio', icon: <HomeIcon className="w-4 h-4" /> },
+    { href: '/about', label: 'Acerca de', icon: <InfoIcon className="w-4 h-4" /> },
+    { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-4 h-4" /> }
   ];
 
   const mobileMenuVariants = {
@@ -40,10 +40,30 @@ export const Navbar: React.FC = () => {
     visible: { opacity: 1, x: 0 }
   };
 
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      if (scrollPosition > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+  
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 
-      bg-gradient-to-r from-[#2C1810]/90 to-[#6F4E37]/90 
-      backdrop-blur-md shadow-lg">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 
+      ${scrolled 
+        ? 'bg-[#2C1810]/90 backdrop-blur-md shadow-lg' 
+        : 'bg-transparent'}`}>
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link
           to="/"

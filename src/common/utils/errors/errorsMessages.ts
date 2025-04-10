@@ -23,6 +23,9 @@ export const errorMessages: Record<number, string> = {
     branches:{
         409: "El nombre de la sucursal ya se encuentra registrado",
         404: "La sucursal no se encuentra registrada"
+    },
+    images:{
+        409: "La imagen ya se encuentra registrada"
     }
   
   };
