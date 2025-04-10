@@ -23,7 +23,6 @@ export const useRegisterBrandMutation = () => {
         }
       },
       onSuccess: (data) => {
-  
         queryClient.invalidateQueries({ queryKey: ['branches'] });
       },
       onError: (error: any) => {

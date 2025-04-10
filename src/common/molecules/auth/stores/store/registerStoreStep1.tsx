@@ -56,13 +56,13 @@ const RegisterStoreStep1 = ({ register, errors, direction, control }: registerSt
                         {errors?.email && <TextError>{errors.email.message}</TextError>}
                     </div>
                     <div className="space-y-2">
+                        <Label className={`m-1 flex items-center text-xs transition-colors ${focusedField === "type_document" ? "text-[#DB8935]" : "text-gray-600"}`}>Tipo de documento</Label>
                         <Controller
                             control={control}
                             name="type_document"
                             render={({ field }) => (
                                 <div className="relative">
-                                    <Label className={`m-1 flex items-center text-xs transition-colors ${focusedField === "type_document" ? "text-[#DB8935]" : "text-gray-600"}`}>Tipo de documento</Label>
-                                    <FileText className="absolute top-8 left-4 text-gray-400" size={16}/>
+                                    <FileText className="absolute top-3 left-4 text-gray-400" size={16}/>
                                     <SelectTypeDocument
                                         className="rounded-full pl-10"
                                         onValueChange={field.onChange}

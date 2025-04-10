@@ -73,7 +73,7 @@ const FormRegisterCoffeelover = () => {
         }
     }
 
-    const onSubmit = (data: any) => {
+    const onSubmit = async(data: any) => {
 
         const finalData = { ...formData, ...data };
         // console.log(finalData);
@@ -93,13 +93,11 @@ const FormRegisterCoffeelover = () => {
         console.log('Coffelover', dataCoffeelover);
 
         try {
-            useRegisterCoffeelover.mutateAsync(dataCoffeelover)
-                .then((response) => {
-                    toast.success("Coffelover creado exitosamente.¡Bienvenido!");
-                    navigate("/login");
-                })
+            await useRegisterCoffeelover.mutateAsync(dataCoffeelover)
         } catch (error) {
             console.log(error);
+        }finally{
+            toast.success("Coffelover creado exitosamente.¡Bienvenido!")       
         }
     };
 

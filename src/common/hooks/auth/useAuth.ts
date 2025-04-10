@@ -4,6 +4,8 @@ export const useAuth = () => {
 
   const pagesPermissions = (rol: string, navigate: (path: string) => void) => {
 
+    console.log("rol", rol);
+
     if (rol === ROLES.COFFEE_LOVER) {
       return navigate("/coffeelover");
       

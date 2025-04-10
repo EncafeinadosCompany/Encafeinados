@@ -11,7 +11,10 @@ const HomePage = () => {
       <Navbar />
       <div className="relative z-5"> 
         <HeroSection />
+        <div  id="descubre-section">
+
         <MapTeaser totalCafes={45} city="Medellín" />
+        </div>
         <StoreCarousel />
         <BenefitsSection />
         <Footer />

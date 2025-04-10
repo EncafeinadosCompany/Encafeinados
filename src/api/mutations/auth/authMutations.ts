@@ -4,14 +4,17 @@ import { useError } from '@/common/hooks/auth/useErrors'
 import { clearAuthStorage, setAuthStorage } from '@/common/utils/authStorage'
 import AuthClient from '../../client/axios'
 import { handleApiError } from '@/common/utils/errors/handleApiError'
+import { useAuth } from '@/common/hooks/auth/useAuth'
+import { useNavigate } from 'react-router-dom'
 
 
 const authClient = new AuthClient()
 
 export const useLoginMutation = () => {
   const queryClient = useQueryClient()
+  const { pagesPermissions } = useAuth()
   const useErros = useError('login')
-  
+  const navigate = useNavigate()
 
   return useMutation<LoginResponse, Error, User_Data>({
     mutationFn: async (formData: User_Data) => {
@@ -29,7 +32,14 @@ export const useLoginMutation = () => {
       
       queryClient.setQueryData(['authToken'], data.accessToken);
 
+      if(data.storeOrBranchId) {
+        queryClient.setQueryData(['storeOrBranchId'], data.storeOrBranchId);
+        localStorage.setItem('storeOrBranchId', data.storeOrBranchId);
+      }
+
       setAuthStorage(data.accessToken, data.user);
+
+       pagesPermissions(data.user.role, navigate)
 
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
@@ -38,38 +48,6 @@ export const useLoginMutation = () => {
     }
   });
 }
-
-// export const useLoginGoogleMutation = () => {
-//   const queryClient = useQueryClient()
-//   const useErros = useError('login')
-
-//   return useMutation<LoginResponse, Error, any>({
-//     mutationFn: async (formData: any) => {
-//       console.log('form data', formData)
-//       try {
-//         const response = await authClient.get<LoginResponse>('/auth/google', formData);
-//         window.location.href = 'http://localhost:3300/api/v2/auth/google';
-//         console.log('AQUI', response)
-//         return response as LoginResponse;
-  
-//       } catch (error: any) {
-//         throw handleApiError(error)
-//       }
-//     },
-//     onSuccess: (data) => {
-
-//       setAuthStorage(data.accessToken, data.user)
-
-//       console.log('datos', data)
-
-//       queryClient.invalidateQueries({ queryKey: ['user'] });
-//     },
-//     onError: (error: any) => {
-//       useErros(error)
-//     }
-//   });
-// }
-
 
 export const useLoginGoogleMutation = () => {
   return useQuery<any>({
