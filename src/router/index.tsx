@@ -21,6 +21,7 @@ const RegisterStorePage = lazy(() => import("@/modules/home/views/Login/register
 
 const HomeStores = lazy(() => import ("@/modules/stores/views/homeStores"));
 const PendingStoresView = lazy(() => import("@/modules/adminStores/components/PendingStoresList"));
+const PendingBranchesView = lazy(() => import("@/modules/adminStores/components/PendingBranchesList"));
 
 const HomeAdminStores = lazy(() => import("@/modules/adminStores/views/homeAdmin"));
 
@@ -75,6 +76,7 @@ const AuthRoutes = () => {
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
               <Route path="/admin" element={<HomeAdminStores />} >
                 <Route index element={<PendingStoresView />} />
+                <Route path="branches" element={< PendingBranchesView/>} /> 
                </Route>
               </Route>
 
