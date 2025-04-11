@@ -13,6 +13,32 @@ import {
 } from 'lucide-react';
 import { Cafe } from '@/common/types/map/mapTypes';
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
+const determineNetworkType = (social: any): 'facebook' | 'instagram' | 'twitter' | 'other' => {
+  if (!social || !social.url) return 'other';
+  
+  const url = social.url.toLowerCase();
+  
+  if (url.includes('facebook') || url.includes('fb.com')) return 'facebook';
+  if (url.includes('instagram') || url.includes('ig.com')) return 'instagram';
+  if (url.includes('twitter') || url.includes('x.com')) return 'twitter';
+  
+  if (social.social_network_id === 1) return 'facebook';
+  if (social.social_network_id === 2) return 'instagram';
+  if (social.social_network_id === 3) return 'twitter';
+  
+  return 'other';
+};
+
+const getNetworkDisplayName = (social: any, networkType: string): string => {
+ 
+  if (social.social_network_name) return social.social_network_name;
+  switch (networkType) {
+    case 'facebook': return 'Facebook';
+    case 'instagram': return 'Instagram';
+    case 'twitter': return 'Twitter';
+    default: return 'Sitio web';
+  }
+};
 
 interface CafeDetailProps {
   cafe: Cafe;
@@ -77,7 +103,6 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
       </div>
 
       <div className="p-4 overflow-auto md:p-6 md:pb-8 flex-1">
-        {/* Información de la tienda */}
         <div className="md:mb-3 text-[#6F4E37]/80 text-sm md:text-base">
           <span className="font-medium">{cafe.storeName}</span>
         </div>
@@ -117,14 +142,10 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
             </motion.button>
           </div>
         </div>
-
-        {/* Dirección completa - visible en desktop */}
         <div className="mb-5 bg-gray-50 p-3 rounded-lg">
           <h4 className="font-medium text-[#2C1810] mb-1">Dirección</h4>
           <p className="text-gray-700">{cafe.address || "Dirección no disponible"}</p>
         </div>
-
-        {/* Sección de Redes Sociales - reemplaza características */}
         {cafe.socialNetworks && cafe.socialNetworks.length > 0 ? (
           <div className="py-3 border-b border-gray-100">
             <h4 className="font-medium text-[#2C1810] mb-2">Encuéntranos en redes</h4>
@@ -174,7 +195,6 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           </div>
         )}
 
-        {/* Información de contacto */}
         {cafe.phone && (
           <div className="py-3 border-t border-gray-100">
             <h4 className="font-medium text-[#2C1810] mb-2">Contacto</h4>

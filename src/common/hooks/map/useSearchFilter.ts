@@ -18,6 +18,7 @@ export const useSearchFilter = (cafes: Cafe[]) => {
     sortBy: 'distance'
   });
   const [isFilterModalOpen, setIsFilterModalOpen] = useState<boolean>(false);
+  const [hasActiveFilters, setHasActiveFilters] = useState(false);
 
   // Función segura para buscar coincidencias en texto
   const safeTextSearch = (text: unknown, term: string): boolean => {
@@ -74,9 +75,29 @@ export const useSearchFilter = (cafes: Cafe[]) => {
   
   // Ordenar cafés según el criterio seleccionado
   const sortedCafes = useMemo(() => {
-    if (!filteredCafes.length) return [];
+    let filtered = [...cafes];
+    let filtersActive = false;
     
-    const sorted = [...filteredCafes];
+    // Aplicar filtro de texto
+    if (searchTerm.trim()) {
+      filtersActive = true;
+      filtered = filtered.filter(cafe => 
+        cafe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cafe.storeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (cafe.address && cafe.address.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+    
+    // Aplicar otros filtros (rating, distancia, tags, etc.)
+    if (filterOptions.minRating > 0) {
+      filtersActive = true;
+      filtered = filtered.filter(cafe => cafe.rating >= filterOptions.minRating);
+    }
+    
+    // Actualizar el estado de filtros activos
+    setHasActiveFilters(filtersActive);
+    
+    const sorted = [...filtered];
     
     switch (filterOptions.sortBy) {
       case 'distance':
@@ -100,8 +121,8 @@ export const useSearchFilter = (cafes: Cafe[]) => {
       default:
         return sorted;
     }
-  }, [filteredCafes, filterOptions.sortBy]);
-  
+  }, [cafes, searchTerm, filterOptions]);
+
   // Actualizar las opciones de filtro con tipo correcto
   const updateFilterOptions = useCallback((newOptions: Partial<FilterOptions>) => {
     setFilterOptions(prev => ({
@@ -135,6 +156,7 @@ export const useSearchFilter = (cafes: Cafe[]) => {
     sortedCafes,
     filteredCafes,
     isFilterModalOpen,
-    toggleFilterModal
+    toggleFilterModal,
+    hasActiveFilters
   };
 };

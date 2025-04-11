@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, Search, Filter, Coffee, Star, Clock, MapPin, Heart, 
-  Share2, Navigation, Route, ExternalLink, Copy, Map as MapIcon
+  Share2, Navigation, Route, ExternalLink, Copy, Map as MapIcon, X
 } from 'lucide-react'; // Cambiado de @/common/ui/icons a lucide-react
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -25,7 +25,6 @@ import { useFavorites } from '@/common/hooks/map/useFavorites';
 import { useGeolocation } from '@/common/hooks/map/useGeolocation';
 import { useMapData } from '@/common/hooks/map/useMapData';
 import { useSearchFilter } from '@/common/hooks/map/useSearchFilter';
-import { useDebounce } from '@/common/hooks/utils/useDebounce';
 import { useRouteNavigation } from '@/common/hooks/map/useRouteNavigation';
 
 // Components
@@ -100,7 +99,9 @@ const MapView: React.FC = () => {
   const [searchTerm, setSearchTermLocal] = useState<string>('');
   const [isTyping, setIsTyping] = useState(false);
   const [searchInputValue, setSearchInputValue] = useState('');
-  const debouncedSearchValue = useDebounce(searchInputValue, 500);
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState('');
+  const [isSearchProcessing, setIsSearchProcessing] = useState(false);
+  const lastToastRef = useRef('');
   const [copied, setCopied] = useState(false);
   const [showRouteControls, setShowRouteControls] = useState<boolean>(false);
   const [shouldResetMapOnClose, setShouldResetMapOnClose] = useState(false);
@@ -186,10 +187,135 @@ const MapView: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setSearchTermLocal(debouncedSearchValue);
-    setFilterSearchTerm(debouncedSearchValue);
+    const handler = setTimeout(() => {
+      if (searchInputValue !== debouncedSearchValue) {
+        setDebouncedSearchValue(searchInputValue);
+      }
+    }, 800);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchInputValue, debouncedSearchValue]);
+
+  useEffect(() => {
+    if (!debouncedSearchValue || debouncedSearchValue.length < 3) {
+      setIsTyping(false);
+      if (debouncedSearchValue === '') {
+        setSearchTermLocal('');
+        setFilterSearchTerm('');
+      }
+      return;
+    }
+
+    setIsSearchProcessing(true);
     setIsTyping(false);
-  }, [debouncedSearchValue, setFilterSearchTerm]);
+
+    const currentSearch = debouncedSearchValue.trim();
+
+    const filterTimer = setTimeout(() => {
+      setSearchTermLocal(currentSearch);
+      setFilterSearchTerm(currentSearch);
+
+      const resultTimer = setTimeout(() => {
+        const searchHash = `${currentSearch}-${sortedCafes.length}`;
+        const shouldShowToast = lastToastRef.current !== searchHash;
+
+        if (sortedCafes.length > 0) {
+          if (userLocation) {
+            const closestCafe = sortedCafes[0];
+            if (activeCafe !== closestCafe.id || shouldShowToast) {
+              setActiveCafe(closestCafe.id);
+
+              if (mapInstance) {
+                mapInstance.flyTo(
+                  [closestCafe.latitude, closestCafe.longitude],
+                  16,
+                  { duration: 1.5, animate: true }
+                );
+              }
+            }
+          } else {
+            const firstResult = sortedCafes[0];
+            if (activeCafe !== firstResult.id || shouldShowToast) {
+              setActiveCafe(firstResult.id);
+
+              if (mapInstance) {
+                mapInstance.flyTo(
+                  [firstResult.latitude, firstResult.longitude],
+                  16,
+                  { duration: 1.5, animate: true }
+                );
+              }
+            }
+          }
+
+          if (window.innerWidth < 768) {
+            setShowSidebar(false);
+            setViewMode('map');
+          }
+
+          if (shouldShowToast) {
+            lastToastRef.current = searchHash;
+
+            if (sortedCafes.length === 1) {
+              toast.success(`¡Encontrada "${sortedCafes[0].name}"!`, {
+                icon: '🎯',
+                duration: 2000,
+                id: searchHash
+              });
+            } else {
+              toast.success(`Mostrando el más cercano de ${sortedCafes.length} resultados`, {
+                icon: '📍',
+                duration: 2000,
+                id: searchHash
+              });
+            }
+          }
+        } else if (shouldShowToast) {
+          lastToastRef.current = searchHash;
+          toast.error('No se encontraron cafeterías con ese nombre', {
+            duration: 2000,
+            id: searchHash
+          });
+        }
+
+        setIsSearchProcessing(false);
+      }, 400);
+
+      return () => clearTimeout(resultTimer);
+    }, 200);
+
+    return () => clearTimeout(filterTimer);
+  }, [debouncedSearchValue, userLocation, mapInstance, sortedCafes.length]);
+
+  // Modificar la función hasActiveFilters para excluir filtros predeterminados
+  const hasActiveFilters = useMemo(() => {
+    // Verificar si hay un término de búsqueda activo
+    const hasSearchTerm = Boolean(searchTerm);
+    
+    // Verificar si hay filtros personalizados aplicados (excluyendo la ordenación por defecto)
+    const hasCustomFilters = Object.entries(filterOptions).some(([key, value]) => {
+      // Ignorar el filtro de ordenación por distancia que es el predeterminado
+      if (key === 'sortBy' && value === 'distance') return false;
+      
+      // Ignorar valores por defecto o vacíos
+      if (
+        (key === 'minRating' && value === 0) ||
+        (key === 'maxDistance' && value === 100) ||
+        (key === 'selectedTags' && (!value || value.length === 0)) ||
+        (key === 'selectedStore' && value === 0) ||
+        value === false
+      ) {
+        return false;
+      }
+      
+      return true;
+    });
+    
+    // Solo mostrar el indicador si hay búsqueda o filtros personalizados
+    return hasSearchTerm || hasCustomFilters;
+  }, [searchTerm, filterOptions]);
 
   // ==============================
   // CALLBACKS
@@ -297,6 +423,45 @@ const handleCloseDetails = useCallback(() => {
   }
 }, [shouldResetMapOnClose, showRouteControls, mapInstance]);
 
+// Asegurarnos de que clearAllFilters funcione correctamente
+const clearAllFilters = useCallback(() => {
+  // Limpiar filtros del hook
+  resetFilters();
+  
+  // Restablecer input y búsqueda
+  setSearchInputValue('');
+  setDebouncedSearchValue('');
+  setSearchTermLocal('');
+  setFilterSearchTerm('');
+  
+  // Limpiar estado de procesamiento
+  setIsSearchProcessing(false);
+  setIsTyping(false);
+  
+  // Resetear referencia de toast
+  lastToastRef.current = '';
+  
+  // Si estamos mostrando resultados filtrados, volver a mostrar todos
+  if (sortedCafes.length !== cafes.length) {
+    // Restablecer vista del mapa a una posición que muestre todas las cafeterías
+    if (mapInstance) {
+      // Si hay ubicación del usuario, centrar ahí
+      if (userLocation) {
+        mapInstance.setView(userLocation, 13, {
+          animate: true,
+          duration: 1
+        });
+      } else {
+        // Si no hay ubicación, usar vista predeterminada
+        mapInstance.setView(defaultCenter, 13, {
+          animate: true,
+          duration: 1
+        });
+      }
+    }
+  }
+}, [resetFilters, setFilterSearchTerm, mapInstance, defaultCenter, userLocation, sortedCafes.length, cafes.length]);
+
 // ==============================
 // EFFECTS
 // ==============================
@@ -366,6 +531,35 @@ useEffect(() => {
     setShowSidebar(false);
   }
 }, [activeCafe, showRouteControls]);
+
+// Añadir este useEffect para ajustar la vista del mapa cuando cambian los filtros
+useEffect(() => {
+  // Solo ajustar cuando hay resultados filtrados y son menos que el total
+  if (mapInstance && sortedCafes.length > 0 && sortedCafes.length < cafes.length) {
+    // Si solo hay un resultado, hacer zoom a ese café
+    if (sortedCafes.length === 1) {
+      const onlyCafe = sortedCafes[0];
+      mapInstance.flyTo(
+        [onlyCafe.latitude, onlyCafe.longitude],
+        16,
+        { duration: 1.5, animate: true }
+      );
+    } 
+    // Con múltiples resultados, ajustar el mapa para mostrarlos todos
+    else if (sortedCafes.length > 1) {
+      const bounds = new L.LatLngBounds(
+        sortedCafes.map(cafe => [cafe.latitude, cafe.longitude])
+      );
+      
+      // Añadir un pequeño padding
+      mapInstance.fitBounds(bounds, {
+        padding: [50, 50],
+        animate: true,
+        duration: 1
+      });
+    }
+  }
+}, [sortedCafes, cafes.length, mapInstance]);
 
 // ==============================
 // RENDER FUNCTIONS
@@ -523,39 +717,62 @@ return (
           className={`relative transition-all duration-300 ${searchFocused ? 'w-full md:w-96' : 'w-48 md:w-64'}`}
           layout
         >
-          <input
-            type="text"
-            value={searchInputValue} 
-            onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Buscar cafeterías..."
-            className="w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none focus:ring-2 focus:ring-[#D4A76A] transition-all duration-300 bg-white border-black/10"
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
-          />
-          {isTyping ? (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]"
-            >
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                <circle 
-                  className="opacity-25" 
-                  cx="12" cy="12" r="10" 
-                  stroke="currentColor" 
-                  strokeWidth="4" 
-                  fill="none" 
-                />
-                <path 
-                  className="opacity-75" 
-                  fill="currentColor" 
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-            </motion.div>
-          ) : (
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
-          )}
+          <div className="relative">
+            <input
+              type="text"
+              value={searchInputValue} 
+              onChange={(e) => {
+                // Actualizar el valor, pero el debounce controlará cuándo se aplica
+                setSearchInputValue(e.target.value);
+                // Mostrar el estado de "escribiendo"
+                setIsTyping(true);
+              }}
+              placeholder={searchInputValue.length < 3 && searchInputValue.length > 0 
+                ? "Escribe al menos 3 caracteres..." 
+                : "Buscar cafeterías..."}
+              className={`w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none transition-all duration-300 bg-white border-black/10 ${
+                searchInputValue.length < 3 && searchInputValue.length > 0 
+                  ? 'focus:ring-2 focus:ring-amber-300' 
+                  : 'focus:ring-2 focus:ring-[#D4A76A]'
+              }`}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
+            />
+            
+            {/* Icono que cambia según el estado */}
+            {isTyping || isSearchProcessing ? (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]"
+              >
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                  <circle 
+                    className="opacity-25" 
+                    cx="12" cy="12" r="10" 
+                    stroke="currentColor" 
+                    strokeWidth="4" 
+                    fill="none" 
+                  />
+                  <path 
+                    className="opacity-75" 
+                    fill="currentColor" 
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              </motion.div>
+            ) : (
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
+            )}
+            
+            {/* Mostrar contador de caracteres si está escribiendo y no alcanza el mínimo */}
+            {searchInputValue.length > 0 && searchInputValue.length < 3 && (
+              <div className="absolute right-12 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
+                {searchInputValue.length}/3
+              </div>
+            )}
+          </div>
+
           <motion.button
             className="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[#6F4E37] text-white p-1.5 rounded-full hover:bg-[#5d4230] transition-colors duration-300"
             whileTap={{ scale: 0.9 }}
@@ -608,7 +825,7 @@ return (
         {/* User location marker */}
         <UserMarker position={userLocation} pulsing={true} />
         <SmartClusterGroup
-          cafes={cafes} 
+          cafes={sortedCafes} // Cambiamos cafes por sortedCafes (cafés ya filtrados)
           activeCafe={activeCafe} 
           setActiveCafe={setActiveCafe}
           setShowSidebar={setShowSidebar}
@@ -670,6 +887,69 @@ return (
       >
         <Navigation size={20} className={`${locatingUser ? 'animate-pulse' : ''} text-[#6F4E37]`} />
       </motion.button>
+
+      {/* Indicator for active filters */}
+      <AnimatePresence>
+        {hasActiveFilters && (
+          <motion.div 
+            className="absolute top-24 left-4 z-[400] bg-white/90 backdrop-blur-sm rounded-full px-3 py-2 shadow-lg pointer-events-auto flex items-center gap-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            key="filter-indicator"
+          >
+            <Filter size={16} className="text-[#6F4E37]" />
+            <span className="text-sm font-medium text-[#6F4E37]">
+              Mostrando {sortedCafes.length} de {cafes.length} cafeterías
+            </span>
+            <button 
+              className="ml-1 text-[#6F4E37] hover:text-[#5d4230] transition-colors"
+              onClick={clearAllFilters}
+              aria-label="Limpiar filtros"
+            >
+              <X size={14} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Button to view all results */}
+      <AnimatePresence>
+        {searchTerm && sortedCafes.length > 1 && !isSearchProcessing && (
+          <motion.button
+            className="absolute top-24 left-[285px] z-[400] bg-[#6F4E37] text-white rounded-full px-3 py-2 shadow-lg pointer-events-auto flex items-center gap-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            onClick={() => {
+              // Ajustar el mapa para mostrar todos los resultados
+              if (mapInstance && sortedCafes.length > 1) {
+                const bounds = new L.LatLngBounds(
+                  sortedCafes.map(cafe => [cafe.latitude, cafe.longitude])
+                );
+                
+                // Añadir un pequeño padding
+                mapInstance.fitBounds(bounds, {
+                  padding: [50, 50],
+                  animate: true,
+                  duration: 1
+                });
+              }
+              
+              // Cerrar cualquier detalle abierto
+              setActiveCafe(null);
+              
+              // En móvil mostrar la lista de resultados
+              if (window.innerWidth < 768) {
+                setShowSidebar(true);
+              }
+            }}
+          >
+            <MapIcon size={16} />
+            <span className="text-sm font-medium">Ver todos</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
     <AnimatePresence>
       {(
@@ -821,6 +1101,42 @@ return (
           onClose={handleCloseRouteControls}
           cafeName={activeCafeData.name}
         />
+      )}
+    </AnimatePresence>
+
+    {/* Añadir un overlay de "loading" cuando se está procesando la búsqueda */}
+    <AnimatePresence>
+      {isSearchProcessing && (
+        <motion.div
+          className="absolute inset-0 bg-black/10 z-[50] flex items-center justify-center pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <motion.div 
+            className="bg-white/90 backdrop-blur-sm py-2 px-4 rounded-full shadow-lg flex items-center gap-2"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+          >
+            <svg className="animate-spin h-4 w-4 text-[#6F4E37]" viewBox="0 0 24 24">
+              <circle 
+                className="opacity-25" 
+                cx="12" cy="12" r="10" 
+                stroke="currentColor" 
+                strokeWidth="4" 
+                fill="none" 
+              />
+              <path 
+                className="opacity-75" 
+                fill="currentColor" 
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
+            </svg>
+            <span className="text-sm font-medium text-[#6F4E37]">Buscando cafeterías...</span>
+          </motion.div>
+        </motion.div>
       )}
     </AnimatePresence>
   </motion.div>
