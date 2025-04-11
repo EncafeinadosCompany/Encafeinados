@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
@@ -11,10 +11,24 @@ import { BranchSearchBar } from "@/common/molecules/admin/branch/BranchSearchBar
 import { BranchPagination } from "@/common/molecules/admin/branch/BranchPagination";
 import { BranchCard } from "@/common/molecules/admin/branch/BranchCard";
 import { BranchApprovalDialog } from "@/common/molecules/admin/branch/BranchApprovalDialog";
+import { BranchApproveDialog } from "@/common/molecules/admin/branch/BranchApproveDialog";
+import { BranchRejectDialog } from "@/common/molecules/admin/branch/BranchRejectDialog";
 import { usePendingBranchesWidget } from "@/common/hooks/usePendingBranchesWidget";
-import { PendingBranch, PendingBranchesResponse } from '@/api/types/branchesApprovalTypes';
+import { PendingBranch, PendingBranchesResponse, BranchApprovalDetails } from '@/api/types/branchesApprovalTypes';
+import { useApproveBranchMutation, useRejectBranchMutation } from "@/api/mutations/branchApprovalMutations";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from 'react-hot-toast';
 
 export const PendingBranchesWidget = () => {
+  const checkUserAuth = () => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      toast.error('No se detecta una sesión activa. Por favor, inicia sesión nuevamente.');
+      return false;
+    }
+    return true;
+  };
+
   const {
     // Data
     data = [],
@@ -46,21 +60,109 @@ export const PendingBranchesWidget = () => {
     handleRefresh,
   } = usePendingBranchesWidget();
 
-  // Crear adaptadores para las funciones
-  const handleApproveById = (branchId: number) => {
-    // Buscar el objeto branch completo usando el ID
-    const branch = data.find(b => b.id === branchId);
-    if (branch) {
-      handleApprove(branch);
-    }
+  const queryClient = useQueryClient();
+  
+  // Obtener las mutaciones
+  const approveBranchMutation = useApproveBranchMutation();
+  const rejectBranchMutation = useRejectBranchMutation();
+  
+  // Estados para los diálogos
+  const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedBranchForAction, setSelectedBranchForAction] = useState<number | null>(null);
+  
+  // Adaptadores de función para abrir los diálogos
+  const openApproveDialog = (branchId: number) => {
+    setSelectedBranchForAction(branchId);
+    setIsApproveDialogOpen(true);
   };
-
-  const handleRejectById = (branchId: number) => {
-    // Buscar el objeto branch completo usando el ID
-    const branch = data.find(b => b.id === branchId);
-    if (branch) {
-      handleReject(branch);
+  
+  const openRejectDialog = (branchId: number) => {
+    setSelectedBranchForAction(branchId);
+    setIsRejectDialogOpen(true);
+  };
+  
+  // Función para confirmar aprobación
+  const confirmApprove = (branchId: number) => {
+    if (!checkUserAuth()) return;
+    
+    setIsSubmitting(true);
+    
+    const branchDetails = queryClient.getQueryData<BranchApprovalDetails>(
+      ['branch-approvals', 'detail', branchId]
+    );
+    
+    if (!branchDetails?.approvalId) {
+      toast.error("No se encontró la información necesaria para aprobar");
+      setIsSubmitting(false);
+      setIsApproveDialogOpen(false);
+      return;
     }
+    
+    approveBranchMutation.mutate(branchDetails.approvalId, {
+      onSuccess: () => {
+        toast.success("Sucursal aprobada correctamente");
+        setIsSubmitting(false);
+        setIsApproveDialogOpen(false);
+        // Actualizar la lista de sucursales pendientes
+        refetch();
+        // Cerrar también el diálogo de detalles
+        setDetailsDialogOpen(false);
+      },
+      onError: (error) => {
+        toast.error(`Error al aprobar la sucursal: ${error.message}`);
+        setIsSubmitting(false);
+      }
+    });
+  };
+  
+  // Función para confirmar rechazo
+  const confirmReject = (branchId: number, reason: string) => {
+    if (!checkUserAuth()) return;
+    
+    setIsSubmitting(true);
+    
+    // Obtener el approvalId desde los detalles de la sucursal
+    const branchDetails = queryClient.getQueryData<BranchApprovalDetails>(
+      ['branch-approvals', 'detail', branchId]
+    );
+    
+    if (!branchDetails?.approvalId) {
+      toast.error("No se encontró la información necesaria para rechazar");
+      setIsSubmitting(false);
+      setIsRejectDialogOpen(false);
+      return;
+    }
+    
+    rejectBranchMutation.mutate(
+      { 
+        approvalId: branchDetails.approvalId, 
+        reason 
+      },
+      {
+        onSuccess: () => {
+          toast.success("Sucursal rechazada correctamente");
+          setIsSubmitting(false);
+          setIsRejectDialogOpen(false);
+          // Actualizar la lista de sucursales pendientes
+          refetch();
+          // Cerrar también el diálogo de detalles
+          setDetailsDialogOpen(false);
+        },
+        onError: (error) => {
+          toast.error(`Error al rechazar la sucursal: ${error.message}`);
+          setIsSubmitting(false);
+        }
+      }
+    );
+  };
+  
+  // Encontrar el nombre de la sucursal para mostrar en los diálogos
+  const getBranchName = (branchId: number | null) => {
+    if (!branchId) return undefined;
+    const branch = data.find(b => b.id === branchId);
+    return branch?.name;
   };
 
   const renderEmptyState = () => {
@@ -247,8 +349,26 @@ export const PendingBranchesWidget = () => {
         branchId={selectedBranch?.id || null}
         isOpen={detailsDialogOpen}
         onClose={() => setDetailsDialogOpen(false)}
-        onApprove={handleApproveById} // Usar el adaptador
-        onReject={handleRejectById}   // Usar el adaptador
+        onApprove={openApproveDialog}
+        onReject={openRejectDialog}
+      />
+      
+      <BranchApproveDialog
+        isOpen={isApproveDialogOpen}
+        onClose={() => setIsApproveDialogOpen(false)}
+        onConfirm={confirmApprove}
+        branchId={selectedBranchForAction}
+        branchName={getBranchName(selectedBranchForAction)}
+        isSubmitting={isSubmitting}
+      />
+      
+      <BranchRejectDialog
+        isOpen={isRejectDialogOpen}
+        onClose={() => setIsRejectDialogOpen(false)}
+        onConfirm={confirmReject}
+        branchId={selectedBranchForAction}
+        branchName={getBranchName(selectedBranchForAction)}
+        isSubmitting={isSubmitting}
       />
     </>
   );

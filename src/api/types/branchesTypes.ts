@@ -1,4 +1,4 @@
-// Interfaz para los datos de redes sociales
+
 export interface SocialBranch {
   social_network_id?: string;    
   social_network_name?: string;  

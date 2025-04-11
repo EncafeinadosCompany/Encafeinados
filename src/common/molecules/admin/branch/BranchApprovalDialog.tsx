@@ -4,9 +4,11 @@ import {
   DialogFooter, DialogOverlay 
 } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
-import { Separator } from "@/common/ui/separator";
 import { Badge } from "@/common/ui/badge";
-import { MapPin, Phone, CalendarClock, CheckCircle2, XCircle, Loader2, CoffeeIcon, AlertCircle } from "lucide-react";
+import { 
+  MapPin, Phone, CalendarClock, CheckCircle2, XCircle, 
+  Loader2, AlertCircle, Coffee 
+} from "lucide-react";
 import { useBranchApprovalDetails } from '@/api/queries/stores/branchesQueries';
 import { CriteriaItem } from './CriteriaItem';
 
@@ -60,12 +62,12 @@ export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" />
+      <DialogOverlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
       <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-[650px] max-h-[90vh] border-0 shadow-lg bg-white rounded-lg overflow-hidden z-50">
         <div className="relative z-10 flex flex-col max-h-[90vh]">
           <DialogHeader className="bg-gradient-to-r from-[#F3D19E]/20 to-[#D4A76A]/10 p-4 border-b border-amber-100">
             <DialogTitle className="text-[#6F4E37] flex items-center gap-2">
-              <CoffeeIcon className="h-5 w-5 text-amber-600" />
+              <Coffee className="h-5 w-5 text-amber-600" />
               Detalles de solicitud
               {data?.status && getStatusBadge(data.status)}
             </DialogTitle>
@@ -74,7 +76,7 @@ export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="overflow-y-auto p-4 flex-1 scrollbar-coffee">
+          <div className="overflow-y-auto p-4 flex-1 scrollbar-coffee bg-white">
             {isLoading ? (
               <div className="py-10 text-center flex flex-col items-center">
                 <div className="h-16 w-16 rounded-full bg-amber-50 flex items-center justify-center mb-3">
