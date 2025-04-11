@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { BranchesResponse, BranchesResponseList } from '../../types/branchesTypes'
+import { BranchesResponse, BranchesResponseList, PendingBranchesResponse } from '../../types/branchesTypes'
 import AuthClient from '../../client/axios'
 
 const authClient = new AuthClient()
