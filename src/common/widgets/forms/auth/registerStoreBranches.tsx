@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { Suspense, lazy } from "react"
 import { ArrowRight } from "lucide-react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { FormProvider, useForm } from "react-hook-form"
 import { motion } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -27,14 +27,18 @@ import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueri
 import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
 
 export default function RegisterStoreBranches() {
-
+    
     const [step, setStep] = useState(0)
-    const { data: criteria } = useCriteria();
-    const { data: socialNetworks } = useSocialNetworksQuery();
-    const useBranchesMutation = useRegisterBrandMutation();
+    const { storeId } = useParams();
+    const [formData, setFormData] = useState({})
     const [baseAddress, setBaseAddress] = useState("");
 
-    const { storeId } = useParams();
+    const navigate = useNavigate();
+    
+    const { data: socialNetworks } = useSocialNetworksQuery();
+    const { data: criteria } = useCriteria();
+    const useBranchesMutation = useRegisterBrandMutation();
+
 
     const methods = useForm<RegisterStoreBrancheSchemaType>({
         resolver: zodResolver(RegisterStoreBrancheSchema[step] as any),
@@ -62,9 +66,6 @@ export default function RegisterStoreBranches() {
     }, [criteria, methods]);
 
 
-    const [formData, setFormData] = useState({})
-
-
     const handleSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
         console.log(finalData.criteria)
@@ -89,6 +90,7 @@ export default function RegisterStoreBranches() {
                 criteria: finalData.criteria
             }
             await useBranchesMutation.mutateAsync(data)
+            navigate('/success')
 
         } catch (err) {
             console.log(err)
