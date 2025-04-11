@@ -18,6 +18,7 @@ export const useRegisterBrandMutation = () => {
         try {
           const response = await authClient.post<any>('/branches', formData);
           console.log('AQUI', response)
+          
           return response;
     
         } catch (error: any) {

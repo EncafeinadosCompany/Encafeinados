@@ -89,7 +89,6 @@ const FormRegisterStores = () => {
 
         } catch (error) {
             console.log("Error al registrar la tienda:", error);
-            methods.reset();
             setStep(0);
         }
 
@@ -204,7 +203,7 @@ const FormRegisterStores = () => {
                                                 : "bg-gray-900 hover:bg-gray-800 text-white"
                                                 }`}
                                         >
-                                            Continuar registro
+                                            Listo
                                         </Button>
                                     </motion.div>
                                 )}

@@ -1,4 +1,5 @@
 import { InputForm } from "@/common/atoms/auth/inputForm"
+import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 import { Label } from "@radix-ui/react-label"
 import { Phone, Store} from "lucide-react"
 import { useState } from "react"
@@ -7,24 +8,12 @@ import {  UseFormRegister } from "react-hook-form"
 interface registerAdminProps {
     register: UseFormRegister<any>
     errors: any
-    control: any
 }
 
-export const RegisterBranchesStep1 = ({ register, control, errors }: registerAdminProps) => {
-    const [focusedField, setFocusedField] = useState<string | null>(null);
+export const RegisterBranchesStep1 = ({ register,errors }: registerAdminProps) => {
+    
+    const { focusedField, registerWithFocus } = useRegisterFocus();
 
-
-    const registerWithFocus = (name: string) => {
-        const registration = register(name);
-        return {
-            ...registration,
-            onFocus: () => setFocusedField(name),
-            onBlur: (e: any) => {
-                setFocusedField(null);
-                registration.onBlur(e);
-            }
-        };
-    };
     return (
         <div className="space-y-8 mx-auto max-w-4xl p-6">
             <div className="grid grid-cols-1 mt-3 gap-8">
@@ -36,7 +25,7 @@ export const RegisterBranchesStep1 = ({ register, control, errors }: registerAdm
                         <InputForm
                             id="name"
                             type="text"
-                            {...registerWithFocus('name')}
+                            {...registerWithFocus('name', register)}
                             placeholder="Ingresa tu nombre"
                             className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#3e90a4] focus:border-transparent transition-all"
                         />
@@ -52,7 +41,7 @@ export const RegisterBranchesStep1 = ({ register, control, errors }: registerAdm
                             <InputForm
                                 id="phone_number"
                                 type="tel"
-                                {...registerWithFocus("phone_number")}
+                                {...registerWithFocus("phone_number", register)}
                                 placeholder="Número de teléfono"
                                 className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#3e90a4] focus:border-transparent transition-all"
                             />

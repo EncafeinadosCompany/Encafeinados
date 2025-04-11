@@ -3,20 +3,21 @@
 import { Label } from "@/common/ui/label"
 import { UseFormRegister } from "react-hook-form"
 import { InputForm } from "@/common/atoms/auth/inputForm"
-import { ButtonGoogle } from "@/common/atoms/buttonGoogle"
 import { motion } from "framer-motion"
 import { pageVariants } from "@/common/atoms/auth/pageVariants"
+import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
+import { TextError } from "@/common/atoms/textError"
 
 interface RegisterCoffeloverStep1Props {
   register: UseFormRegister<any>
   errors: any
-  onGoogleSignIn: () => void
   direction: number
-  isLoading: boolean
 }
 
 
-export default function RegisterCoffeloverStep1({ register, errors, onGoogleSignIn, isLoading , direction}: RegisterCoffeloverStep1Props) {
+export default function RegisterCoffeloverStep1({ register, errors, direction }: RegisterCoffeloverStep1Props) {
+  const { focusedField, registerWithFocus } = useRegisterFocus()
+
   return (
     <motion.div
       key="step1"
@@ -25,43 +26,41 @@ export default function RegisterCoffeloverStep1({ register, errors, onGoogleSign
       initial="enter"
       animate="center"
       exit="exit"
-      className="absolute w-full"
+      className="w-full"
       style={{ perspective: "1000px" }}
     >
       <div className="space-y-4 m-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="firstName">Nombre</Label>
+            <Label htmlFor="name" className={`flex items-center text-xs transition-colors ${focusedField === "name" ? "text-[#DB8935] " : "text-gray-600" }`}>Nombre</Label>
             <InputForm
-              {...register("name")}
-              id="firstName" placeholder="Nombre completo"
+              {...registerWithFocus("name", register)}
+              id="name" 
+              placeholder="Nombre completo"
             />
-            {errors?.name && <p className="text-red-500">{errors.name.message}</p>}
+            {errors?.name && <TextError>{errors.name.message}</TextError>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="lastName">Apellidos</Label>
+          <Label htmlFor="lastName" className={`flex items-center text-xs transition-colors ${focusedField === "lastname" ? "text-[#DB8935] " : "text-gray-600" }`}>Apellidos</Label>
             <InputForm id="lastName"
-              {...register('lastname')}
+              {...registerWithFocus('lastname', register)}
               placeholder="Ingresa tus apellidos" />
-            {errors?.lastname && <p className="text-red-500">{errors.lastname.message}</p>}
+            {errors?.lastname && <TextError>{errors.lastname.message}</TextError>}
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Correo Electrónico</Label>
+        <Label htmlFor="email" className={`flex items-center text-xs transition-colors ${focusedField === "email" ? "text-[#DB8935] " : "text-gray-600" }`}>Correo Electrónico</Label>
           <InputForm
             id="email"
             type="email"
-            {...register('email')}
+            {...registerWithFocus('email', register)}
             placeholder="coffeelover@example.com"
           />
-          {errors?.email && <p className="text-red-500">{errors.email.message}</p>}
+          {errors?.email && <TextError>{errors.email.message}</TextError>}
         </div>
-
-      
       </div>
-
     </motion.div>
   )
 }

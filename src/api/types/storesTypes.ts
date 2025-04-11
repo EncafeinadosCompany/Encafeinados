@@ -22,5 +22,6 @@ export interface StoresResponse {
 export interface responseStores  {
   store: {
       id: string;
+      name: string;
   }
 }

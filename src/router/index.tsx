@@ -7,7 +7,7 @@ import RoleRoute from "./RouleRoute";
 import { PrincipalStores } from "@/modules/stores/components/principalStorePage";
 import CompletePerfil from "@/common/widgets/forms/auth/formCompleteProfile";
 import RegisterStoreBranches from "@/common/widgets/forms/auth/registerStoreBranches";
-import CardSuccess from "@/common/atoms/auth/cardSuccess";
+
 
 const LoadingSpinner = lazy(() => import ("@/common/atoms/LoadingSpinner"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
@@ -50,7 +50,6 @@ const AuthRoutes = () => {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path='/register' element={<CuestionCard />} />
-            <Route path="/success" element={<CardSuccess />} />
             <Route path="/google/callback" element={<GoogleCallback />} />
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />

@@ -25,6 +25,8 @@ const MapSearch = lazy(() => import("@/common/widgets/map/mapSearch"));
 import { useCriteria } from "@/api/queries/stores/criteriaQueries"
 import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueries"
 import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
+import { showSuccessToast } from "@/common/molecules/auth/cardSuccess"
+
 
 export default function RegisterStoreBranches() {
     
@@ -90,7 +92,8 @@ export default function RegisterStoreBranches() {
                 criteria: finalData.criteria
             }
             await useBranchesMutation.mutateAsync(data)
-            navigate('/success')
+            const name = localStorage.getItem("nameStore");
+            showSuccessToast(name) 
 
         } catch (err) {
             console.log(err)
@@ -225,7 +228,7 @@ export default function RegisterStoreBranches() {
                                     ) : (
                                         <Button
                                             disabled={!methods.formState.isValid || !methods.getValues("social_networks")?.length}
-                                            type="submit" className="ml-auto">Guardar</Button>
+                                            type="submit" className="ml-auto bg-black text-white">Guardar</Button>
                                     )}
                                 </div>
                             </CardFooter>
