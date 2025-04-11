@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "types": ["jest", "@testing-library/jest-dom"],
+    "types": ["jest", "@testing-library/jest-dom"], // Agrega "cypress" aquí
     "module": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "skipLibCheck": true,
@@ -23,7 +23,6 @@
     "tests",
     "src/tests/setupTests.ts",
     "src/tests/custom.d.ts",
-    "src/common/ui/icons.tsx"
   ],
   "exclude": ["node_modules"]
 }

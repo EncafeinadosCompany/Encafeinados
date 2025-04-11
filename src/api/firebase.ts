@@ -1,9 +1,6 @@
 import { initializeApp } from "firebase/app";
-import {
-  Auth, getAuth, GoogleAuthProvider, signInWithPopup, AuthError,
-  UserCredential, signOut
-} from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,8 +11,6 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 }
-
-
 
 
 const app = initializeApp(firebaseConfig);
