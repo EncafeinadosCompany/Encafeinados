@@ -4,10 +4,12 @@ import { BranchPost } from "@/api/types/branchesTypes";
 import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRegisterCriteriaMutation } from "./criteriaMutation";
 
 const authClient = new AuthClient();
 
 export const useRegisterBrandMutation = () => {
+  const useCriteriaMutation = useRegisterCriteriaMutation();
     const useErrors = useError("stores")
     const queryClient = useQueryClient()
   
@@ -22,7 +24,14 @@ export const useRegisterBrandMutation = () => {
           throw handleApiError(error)
         }
       },
-      onSuccess: (data) => {
+      onSuccess: (data, value:BranchPost) => {
+
+        console.log('AQUI', data)
+
+         useCriteriaMutation.mutateAsync({
+          branchId: data.branch.id,
+          criteriaResponseData: value.criteria,
+      });
         queryClient.invalidateQueries({ queryKey: ['branches'] });
       },
       onError: (error: any) => {

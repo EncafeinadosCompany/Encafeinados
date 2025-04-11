@@ -15,7 +15,7 @@ import {
 
 interface BranchCardProps {
   branch: any
-  onViewDetails: () => void
+  onViewDetails?: () => void
   index?: number
 }
 
@@ -150,14 +150,14 @@ export function BranchCard({ branch, onViewDetails, index = 0 }: BranchCardProps
 
         {/* Footer with action button */}
         <CardFooter className="px-5 py-3 border-t border-gray-100 bg-gradient-to-r from-amber-50/30 to-transparent">
-          <Button 
+          {/* <Button 
             variant="outline" 
             onClick={onViewDetails} 
             className="w-full border-[#D4A76A]/50 text-[#6F4E37] hover:bg-[#6F4E37] hover:text-white hover:border-[#6F4E37] transition-all group"
           >
             Ver Detalles
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Button>
+          </Button> */}
         </CardFooter>
       </Card>
     </motion.div>

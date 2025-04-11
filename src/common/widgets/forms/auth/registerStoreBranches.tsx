@@ -18,22 +18,20 @@ import { RegisterStoreBrancheSchema, RegisterStoreBrancheSchemaType } from "@/co
 const RegisterStoreBrancheStep1 = lazy(() => import("@/common/molecules/auth/stores/store/registerStoreBrancheStep1"))
 const RegisterStoreBrancheStep2 = lazy(() => import("@/common/molecules/auth/stores/store/registerStoreBrancheStep2"))
 const RegisterStoreBrancheStep3 = lazy(() => import("@/common/molecules/auth/stores/store/registerStoreBrancheStep3"))
+
+const SocialNetworksForm = lazy(() => import("./socialNetwork"))
 const MapSearch = lazy(() => import("@/common/widgets/map/mapSearch"));
 
 import { useCriteria } from "@/api/queries/stores/criteriaQueries"
-const SocialNetworksForm = lazy(() => import("./socialNetwork"))
 import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueries"
 import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
-import { BranchPost } from "@/api/types/branchesTypes"
-import { useRegisterCriteriaMutation } from "@/api/mutations/stores/criteriaMutation"
-
 
 export default function RegisterStoreBranches() {
+
     const [step, setStep] = useState(0)
     const { data: criteria } = useCriteria();
     const { data: socialNetworks } = useSocialNetworksQuery();
     const useBranchesMutation = useRegisterBrandMutation();
-    const useCriteriaMutation = useRegisterCriteriaMutation();
     const [baseAddress, setBaseAddress] = useState("");
 
     const { storeId } = useParams();
@@ -53,80 +51,61 @@ export default function RegisterStoreBranches() {
 
     useEffect(() => {
         if (criteria && Object.keys(methods.getValues("criteria") || {}).length === 0) {
-          methods.setValue("criteria", criteria.reduce((acc, c) => {
-            acc[String(c.id)] = {
-              response_text: "",
-              image_url: undefined,
-            };
-            return acc;
-          }, {} as Record<string, { response_text: string; image_url?: string; other_text?: string }>));
+            methods.setValue("criteria", criteria.reduce((acc, c) => {
+                acc[String(c.id)] = {
+                    response_text: "",
+                    image_url: undefined,
+                };
+                return acc;
+            }, {} as Record<string, { response_text: string; image_url?: string; other_text?: string }>));
         }
-      }, [criteria, methods]);
+    }, [criteria, methods]);
 
-      
+
     const [formData, setFormData] = useState({})
 
 
-    const handleSubmit = async(data: any) => {
+    const handleSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
         console.log(finalData.criteria)
 
+        const social = finalData.social_networks || [];
 
-        const criteria= {
-            branchId: 1,
-            criteria: finalData.criteria
+        if (!social.length) {
+            toast.error("Debes agregar al menos una red social.");
+            return;
         }
-       
-        
-        await useCriteriaMutation.mutateAsync({
-          branchId: 1,
-          criteriaResponseData: finalData.criteria,
-        });
 
-        // try{
+        try {
+            storeId ? storeId : toast.error('no cuenta con el id')
+            const data = {
+                store_id: Number(storeId),
+                name: finalData.name,
+                phone_number: finalData.phone_number,
+                latitude: finalData.latitude,
+                longitude: finalData.longitude,
+                address: finalData.address,
+                social_branches: finalData.social_networks,
+                criteria: finalData.criteria
+            }
+            await useBranchesMutation.mutateAsync(data)
 
-        //     storeId? storeId : toast.error('no cuenta con el id') 
-        //     const data: BranchPost ={
-        //         store_id: Number(storeId),
-        //         name: finalData.name,
-        //         phone_number: finalData.phone_number,
-        //         latitude: finalData.latitude,
-        //         longitude: finalData.longitude,
-        //         address: finalData.address,
-        //         social_branches:finalData.social_networks
-        //     }
-        //     await useBranchesMutation.mutateAsync(data)
-
-        // }catch(err){
-        //     console.log(err)
-        // }
-        // const social_branches = selectedNetworks.map((network) => ({
-        //     social_network_id: network.networkId,
-        //     url: network.url,
-        //     description: network.description,
-        //   }))
-
-        //   console.log(social_branches)
+        } catch (err) {
+            console.log(err)
+        }
 
     }
-
-    const handleImageUpload = (e: any) => {
-        const file = e.target.files[0]
-        if (file) {
-            setFormData((prev) => ({ ...prev, baristaImage: file }))
-        }
-    }
-
 
     const nextStep = () => {
         methods.trigger(undefined, { shouldFocus: false }).then((isValid) => {
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
-
                 if (step === 1) {
                     const error = validateImageRequirements(Array.isArray(criteria) ? criteria : [], methods.getValues("criteria"));
                     if (error) {
-                        toast.error(error);
+                        toast.error(error, {
+                            id: "error"
+                        });
                         return;
                     }
                 }
@@ -149,33 +128,33 @@ export default function RegisterStoreBranches() {
     }
 
     return (<div className="min-h-screen flex items-center justify-center p-4  bg-gradient-to-b from-orange-100 to-orange-300 sm:to-orange-200" translate="no">
-
-        <Card className="relative w-full max-w-3xl mx-auto h-[90vh] flex flex-col overflow-y-auto border-none shadow-2xl bg-white/90">
-
-
+        <Card className="relative w-full max-w-3xl mx-auto min-h-[50vh] max-h-[90vh]   md:max-h-[85vh] flex flex-col overflow-y-auto border-none shadow-2xl bg-white/90">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
                 className="flex flex-col h-full"
             >
-                <CardHeader className="mb-1" >
-                    {step === 0 &&
-                        <TitleForm
-                            title="hola"
-                            subtitle="Ingrese la información básica de la sucursal">
-                        </TitleForm>
-
-                    }
-                    {step === 1 && "Complete los siguientes criterios"}
-                    {step === 2 && "Complete la dirección detallada"}
-                    {step === 3 && "Responda las preguntas adicionales"}
-                    {step === 4 && "Redes sociales"}
+                <CardHeader className="mb-1 text-center" >
+                    <TitleForm
+                        title="Formulario de registro de sucursal"
+                        subtitle={(() => {
+                            switch (step) {
+                                case 0:
+                                    return "Estás a un paso de hacer que tu cafetería crezca y se conecte con más amantes del café como vos. Este formulario nos ayuda a conocer mejor tu sucursal, sus sabores, su esencia y todo eso que la hace única.";
+                                case 1:
+                                    return "No hay respuestas correctas ni incorrectas - solo queremos conocerte mejor para acompañarte. Respondé con 'Sí', 'No' u 'Otro', y si podés, ¡sumá una imagen!";
+                                default:
+                                    return "";
+                            }
+                        })()}
+                        className="px-10"
+                    />
                 </CardHeader>
                 <FormProvider {...methods}>
-                    <Suspense fallback={<div>Loading...</div>}>
-                        <form className="space-y-9 md:space-y-2" onSubmit={methods.handleSubmit(handleSubmit)}>
-                            <CardContent className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent px-4 sm:px-6 ">
+                    <Suspense fallback={<div className="text-center">Loading...</div>}>
+                        <form className="space-y-9 md:space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent px-4 sm:px-6 " onSubmit={methods.handleSubmit(handleSubmit)}>
+                            <CardContent className="flex-1 max-h[10vh] ">
                                 {step === 0 && (
                                     <RegisterStoreBrancheStep1
                                         register={methods.register}
@@ -186,16 +165,21 @@ export default function RegisterStoreBranches() {
                                 )}
 
                                 {step === 1 && (
-                                    <RegisterStoreBrancheStep2
+                                    <div className=" ">
+                                        <RegisterStoreBrancheStep2
                                         methods={methods}
                                         criteria={criteria || []}
                                     ></RegisterStoreBrancheStep2>
+                                    </div>
 
                                 )}
 
                                 {step === 2 && (
-                                    <div className="border-none p-4 flex items-center justify-center bg-muted">
+                                    <div className="border-none flex items-center justify-center bg-muted">
                                         <MapSearch
+                                            initialAddress={baseAddress}
+                                            initialLat={methods.watch("latitude")}
+                                            initialLng={methods.watch("longitude")}
                                             onLocationSelect={onLocationSelect}>
                                         </MapSearch>
                                     </div>
@@ -213,9 +197,7 @@ export default function RegisterStoreBranches() {
                                         <SocialNetworksForm
                                             register={methods.register}
                                             control={methods.control}
-                                            availableSocialNetworks={socialNetworks}
-
-                                        >
+                                            availableSocialNetworks={socialNetworks}>
                                         </SocialNetworksForm>
                                     )
                                 }
@@ -224,22 +206,24 @@ export default function RegisterStoreBranches() {
                                 <div className="flex justify-between w-full">
                                     {step > 0 && (
                                         <Button
-                                        type="button"
-                                        
-                                        variant="outline" onClick={prevStep}>
+                                            type="button"
+
+                                            variant="outline" onClick={prevStep}>
                                             Anterior
                                         </Button>
                                     )}
                                     {step < RegisterStoreBrancheSchema.length - 1 ? (
 
                                         <Button type="button" onClick={nextStep} className={`${step > 0 ? "" : "ml-auto"} bg-amber-600 text-white `}>
-                                        
+
                                             Siguiente
                                             <ArrowRight className="ml-2 text-white " />
                                         </Button>
 
                                     ) : (
-                                        <Button className="ml-auto">Guardar</Button>
+                                        <Button
+                                            disabled={!methods.formState.isValid || !methods.getValues("social_networks")?.length}
+                                            type="submit" className="ml-auto">Guardar</Button>
                                     )}
                                 </div>
                             </CardFooter>

@@ -7,8 +7,13 @@ import { CardMapStore } from "../../molecules/auth/stores/cardMapStore";
 
 interface MapSearchProps {
   onLocationSelect: (lat: number, lng: number, address: string) => void;
+  initialLat?: number;
+  initialLng?: number;
+  initialAddress?: string;
 }
-const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
+const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat, 
+  initialLng, 
+  initialAddress = ""  }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<{ display_name: string; lat: string; lon: string; address: any }[]>([]);
   const [recentSearches, setRecentSearches] = useState<{ display_name: string; lat: string; lon: string }[]>([]);
@@ -22,6 +27,7 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
   const mapRef = useRef<L.Map | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { getCurrentLocation, handleSearch, saveRecentSearch } = MapSettings
+  const [initialPositionSet, setInitialPositionSet] = useState(Boolean(initialLat && initialLng));
   // Buscar direcciones con debounce
   const HandleSearch = (searchQuery: string) => {
     handleSearch(searchQuery,
@@ -53,21 +59,38 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect }) => {
   }
 
   useEffect(() => {
-    GetCurrenLocation();
-  }, []);
+    if (initialLat && initialLng) {
+      // Si tenemos coordenadas iniciales, las usamos y notificamos
+      setSelectedPosition([initialLat, initialLng]);
+      if (initialAddress) {
+        setSearchQuery(initialAddress);
+      }
+      // Notificar al componente padre que ya tenemos una ubicación seleccionada
+      onLocationSelect(initialLat, initialLng, initialAddress || "Selected location");
+      setInitialPositionSet(true);
+    } else {
+      // Solo obtenemos la ubicación actual si no hay coordenadas iniciales
+      GetCurrenLocation();
+    }
+  }, [initialLat, initialLng, initialAddress]);
 
   const GetCurrenLocation = () => {
-    getCurrentLocation({
-      onLocationSelect,
-      setCurrentAddress,
-      setIsLocating,
-      setCurrentPosition,
-      setSelectedPosition,
-      setSearchQuery,
-      setSuggestions,
-      setShowSuggestions
-    });
+    // Solo obtenemos la ubicación actual si no hay una posición inicial establecida
+    if (!initialPositionSet) {
+      getCurrentLocation({
+        onLocationSelect,
+        setCurrentAddress,
+        setIsLocating,
+        setCurrentPosition,
+        setSelectedPosition,
+        setSearchQuery,
+        setSuggestions,
+        setShowSuggestions
+      });
+    }
   }
+
+ 
 
   // Seleccionar dirección
   const handleSelectAddress = (lat: string, lon: string, name: string) => {

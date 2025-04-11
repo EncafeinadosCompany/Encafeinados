@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 interface TitleFormProps {
     title: string,
     subtitle: string
+    className?: string
 }
 
-export const TitleForm = ({title, subtitle}: TitleFormProps) => {
+export const TitleForm = ({title, subtitle, className}: TitleFormProps) => {
     return (
         <div>
             <motion.h1
@@ -18,7 +19,7 @@ export const TitleForm = ({title, subtitle}: TitleFormProps) => {
                 {title}
             </motion.h1>
             <motion.p
-                className="text-sm  text-gray-500 mt-3"
+                className={`text-sm  text-gray-500 mt-3 ${className}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}

@@ -42,11 +42,12 @@ export interface BranchPost {
   latitude: number;
   longitude: number;
   address: string;
+  social_branches?: SocialBranch[];
+  criteria?: any;
 }
   
 export interface BranchesResponse {
   message: string;
-  branches: {
-    branches: Branch[];
-  };
+  branches: Branch[];
+  
 }

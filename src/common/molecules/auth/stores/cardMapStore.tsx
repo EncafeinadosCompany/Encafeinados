@@ -47,7 +47,7 @@ export const CardMapStore = ({
   handleSelectAddress,
 }: SearchProps) => {
   return (
-    <div className="w-full max-w-6xl bg-white rounded-xl  p-4 md:p-6 space-y-4 [container-type:inline-size]">
+    <div className="w-full max-w-6xl bg-white rounded-xl  space-y-4 [container-type:inline-size]">
       <div className=" map-grid">
 
 {/* Input de búsqueda */}

@@ -14,10 +14,10 @@ import FormRegisterBrands from "@/common/widgets/forms/auth/formRegisterBranches
 interface AddBranchModalProps {
   isOpen: boolean
   onClose: () => void
-  onAdd: (branch: Omit<any, "id" | "isOpen">) => void
+  onAdd?: (branch: Omit<any, "id" | "isOpen">) => void
 }
 
-export function AddBranchModal({ isOpen, onClose, onAdd }: AddBranchModalProps) {
+export function AddBranchModal({ isOpen, onClose }: AddBranchModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     phone_number: "",
@@ -70,16 +70,15 @@ export function AddBranchModal({ isOpen, onClose, onAdd }: AddBranchModalProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-hidden bg-white shadow-xl border-none">
+     <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
+        max-h-[90vh]  bg-white shadow-xl border-none rounded-lg p-4 sm:p-6 md:p-8">
         <DialogHeader className="flex flex-col items-center">
           <DialogTitle className="text-amber-950">AGREGAR NUEVA SUCURSAL</DialogTitle>
         </DialogHeader>
-        <div className="overflow-auto">
           <FormRegisterBrands
           onClose={onClose}
-          >
+         >
           </FormRegisterBrands>
-        </div>
       </DialogContent>
     </Dialog>
   )

@@ -1,40 +1,40 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, PlusCircle, Store, Coffee, RefreshCw, MapPin } from "lucide-react"
+import { Search, PlusCircle, Store, RefreshCw, MapPin } from "lucide-react"
 import { Button } from "@/common/ui/button"
 import { Input } from "@/common/ui/input"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/common/ui/card"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/common/ui/select"
-import { Badge } from "@/common/ui/badge"
 import { Skeleton } from "@/common/ui/skeleton"
 import { BranchCard } from "@/common/molecules/adminStores/brandCard"
 import { AddBranchModal } from "./addBranches"
-import { motion, AnimatePresence } from "framer-motion"
+import {  AnimatePresence } from "framer-motion"
 import { 
   Tooltip, 
   TooltipContent, 
   TooltipProvider, 
   TooltipTrigger 
 } from "@/common/ui/tooltip"
+import { useBranchByStore } from "@/api/queries/stores/storesQueries"
+import { Branch, BranchesResponse } from "@/api/types/branchesTypes"
+import { use } from "chai"
+import { Badge } from "@/common/ui/badge"
 
-// Tipo para la estructura de una sucursal
-export type Branch = {
-  id: string
-  name: string
-  phone_number: string
-  latitude: number
-  longitude?: number
-  isOpen: boolean
-  address?: string
-}
+
 
 export function PrincipalStores() {
   // Estado para las sucursales
-  const [branches, setBranches] = useState<Branch[]>([])
+  // const [branches, setBranches] = useState<Branch[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshAnimation, setRefreshAnimation] = useState(false)
+  const storeId = localStorage.getItem("storeOrBranchId")
 
+ 
+  const {data:branchesList} = useBranchByStore(Number(storeId)) 
+  
+  console.log('hola',branchesList)
+  
   // Estado para el modal de agregar sucursal
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
@@ -47,69 +47,34 @@ export function PrincipalStores() {
   // Estado para la paginación
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(6)
+  const [filteredBranches , setFilteredBranches] = useState<Branch[]>([]) 
 
-  // Simular carga de datos
-  useEffect(() => {
-    setTimeout(() => {
-      setBranches([
-        {
-          id: "1",
-          name: "Aroma Montaña - Poblado",
-          phone_number: "123456789",
-          latitude: 6.210296692451014,
-          longitude: -75.5673828,
-          isOpen: true,
-          address: "Calle 10 #43-12, El Poblado",
-        },
-        {
-          id: "2",
-          name: "Aroma Montaña - Laureles",
-          phone_number: "987654321",
-          latitude: 6.2450422,
-          longitude: -75.5918271,
-          isOpen: false,
-          address: "Carrera 76 #33-24, Laureles",
-        },
-        {
-          id: "3",
-          name: "Aroma Montaña - Centro",
-          phone_number: "456789123",
-          latitude: 6.2518401,
-          longitude: -75.5636038,
-          isOpen: true,
-          address: "Calle 50 #45-12, Centro",
-        },
-      ]);
-      setLoading(false);
-    }, 800);
-  }, []);
 
-  // Filtrar sucursales por búsqueda
-  const filteredBranches = branches.filter(
-    (branch) =>
-      branch.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      branch.address?.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+useEffect(() => {
+  if (branchesList) {
+    setLoading(false)
+     const data =  branchesList?.branches.filter(
+      (branch) =>
+        branch.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        branch.address?.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+
+    setFilteredBranches(data)
+    }
+    console.log(filteredBranches, 'gbbb')
+},[branchesList, searchQuery])
+ 
 
   // Calcular sucursales para la página actual
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentBranches = filteredBranches.slice(indexOfFirstItem, indexOfLastItem)
-  const totalPages = Math.ceil(filteredBranches.length / itemsPerPage)
+  const currentBranches = filteredBranches?.slice(indexOfFirstItem, indexOfLastItem) || []
+  const totalPages = Math.ceil((filteredBranches?.length || 0) / itemsPerPage)
 
-  // Función para agregar una nueva sucursal
-  const addBranch = (branch: Omit<Branch, "id" | "isOpen">) => {
-    const newBranch: Branch = {
-      ...branch,
-      id: (branches.length + 1).toString(),
-      isOpen: false,
-    }
-    setBranches([...branches, newBranch])
-    setIsAddModalOpen(false)
-  }
+
 
   // Función para ver detalles de una sucursal
-  const viewBranchDetails = (branch: Branch) => {
+  const viewBranchDetails = (branch:Branch) => {
     setSelectedBranch(branch)
   }
 
@@ -129,7 +94,7 @@ export function PrincipalStores() {
     }, 1000);
   };
 
-  // Renderizar skeletons durante la carga
+
   const renderSkeletons = () => {
     return Array(3).fill(0).map((_, index) => (
       <div key={index} className="h-[220px]">
@@ -201,7 +166,7 @@ export function PrincipalStores() {
   };
 
   return (
-    <Card className="border border-gray-200 shadow-sm">
+    <Card className="border-none">
       <CardHeader className="bg-gradient-to-r from-amber-50 border-none to-orange-50/80 border-b">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -212,23 +177,23 @@ export function PrincipalStores() {
               Gestión de Sucursales
             </CardTitle>
           </div>
-          {/* <Badge 
+          <Badge 
             variant="outline" 
             className="bg-amber-50/80 border-amber-200 text-amber-700 font-normal"
           >
             {filteredBranches.length} {filteredBranches.length === 1 ? "sucursal" : "sucursales"} 
-          </Badge> */}
+          </Badge>
         </div>
       </CardHeader>
       
       <CardContent className="p-5">
         <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
           <div className="relative flex-grow max-w-md">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-2.5 top-3 h-4 w-4 text-gray-400" />
             <Input
               type="search"
               placeholder="Buscar por nombre o dirección..."
-              className="pl-8 border-gray-200 focus-visible:ring-amber-400"
+              className="pl-8 border-gray-400 focus-visible:ring-amber-400 rounded-full placeholder:text-xs "
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value)
@@ -267,7 +232,7 @@ export function PrincipalStores() {
           </div>
         </div>
 
-        {/* {loading ? (
+        {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {renderSkeletons()}
           </div>
@@ -280,19 +245,19 @@ export function PrincipalStores() {
                 <BranchCard 
                   key={branch.id} 
                   branch={branch} 
-                  onViewDetails={() => viewBranchDetails(branch)} 
+                  onViewDetails={() => viewBranchDetails(branch)}
                   index={index}
                 />
               ))}
             </AnimatePresence>
           </div>
-        )} */}
+        )}
       </CardContent>
       
-      {filteredBranches.length > itemsPerPage && (
+      {(filteredBranches?.length || 0) > itemsPerPage && (
         <CardFooter className="border-t border-gray-100 py-3 px-5 flex justify-between items-center">
           <div className="text-sm text-gray-500">
-            Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredBranches.length)} de {filteredBranches.length}
+            Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredBranches?.length || 0)} de {filteredBranches?.length || 0}
           </div>
           
           <div className="flex items-center gap-2">
@@ -370,7 +335,7 @@ export function PrincipalStores() {
       )}
 
       {/* Modal para agregar sucursal */}
-      <AddBranchModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onAdd={addBranch} />
+      <AddBranchModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}/>
 
       {/* Modal para ver detalles (Descomentado al estar implementado) */}
       {/* {selectedBranch && <BranchDetails branch={selectedBranch} isOpen={!!selectedBranch} onClose={closeDetails} />} */}
