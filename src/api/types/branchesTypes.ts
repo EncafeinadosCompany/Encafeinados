@@ -1,4 +1,12 @@
 
+export interface SocialBranch {
+  social_network_id?: string;    
+  social_network_name?: string;  
+  value?: string;                 
+  description?: string;          
+  url?: string;                  
+}
+
 export interface Store {
   id: number;
   name: string;
@@ -10,21 +18,48 @@ export interface Store {
   status: string;
 }
   
-  export interface Branch {
-    id: number;
+export interface Branch {
+  id: number;
+  name: string;
+  phone_number?: string;
+  average_rating?: string;
+  status: string; 
+  latitude: number;
+  longitude: number;
+  address?: string;
+  store_name?: string; 
+  store?: {
+    store_id: number;
     store_name: string;
-    name: string;
-    phone_number: string;
-    average_rating: string;
-    status: boolean;
-    latitude: number;
-    longitude: number;
-    address: string;
-  }
+    store_logo: string;
+    store_email: string;
+  };
+  social_branches?: SocialBranch[]; 
+}
+
+export interface BranchPost {
+  store_id: number;
+  name: string;
+  phone_number: string;
+  latitude: number;
+  longitude: number;
+  address: string;
+  social_branches?: SocialBranch[];
+  criteria?: any;
+}
+
+
   
-  export interface BranchesResponse {
-    message: string;
-    branches: {
-      branches: Branch[];
-    };
+export interface BranchesResponse {
+  message: string;
+  branches: {
+    branches: Branch[];
   }
+}
+
+
+export interface BranchesResponseStore {
+  message: string;
+    branches: Branch[];
+ 
+}

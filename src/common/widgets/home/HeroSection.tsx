@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Text } from "@/common/atoms/Text";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRightIcon, ChevronDownIcon } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRightIcon, ChevronDownIcon } from "@/common/ui/icons";
 import { Link } from "react-router-dom";
-import { Navbar } from "@/common/molecules/home/navbar"; // Ajusta la ruta si es necesario
 
 export const HeroSection: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -11,8 +10,10 @@ export const HeroSection: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       setScrollPosition(window.scrollY);
+      
     };
     window.addEventListener("scroll", handleScroll);
+    
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -36,7 +37,7 @@ export const HeroSection: React.FC = () => {
 
       {/* HeroSection Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 md:px-8">
-       
+
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -79,8 +80,8 @@ export const HeroSection: React.FC = () => {
             transition={{ duration: 0.5, delay: 0.8 }}
           >
             <Link
-            to="/login"
-             
+              to="/login"
+
               className="group relative px-6 py-3 bg-[#D4A76A] hover:bg-[#C19559] text-[#0F0F0F] rounded-full 
                 transition-all duration-300 font-medium flex items-center justify-center gap-2 
                 shadow-lg shadow-[#D4A76A]/20 hover:shadow-[#D4A76A]/30 overflow-hidden"
@@ -99,7 +100,9 @@ export const HeroSection: React.FC = () => {
           transition={{ delay: 1.2, duration: 1.5, repeat: Infinity }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
         >
-          <span className="text-white/70 text-sm mb-2">Descubre más</span>
+          <a href="#descubre-section" className="text-white/70 text-sm mb-2 block cursor-pointer hover:text-white transition">
+            Descubre más
+          </a>
           <motion.div
             animate={{ y: [0, 5, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}

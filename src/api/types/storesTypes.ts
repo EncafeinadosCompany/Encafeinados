@@ -17,3 +17,11 @@ export interface StoresResponse {
     stores: Store[];
   };
 }
+
+
+export interface responseStores  {
+  store: {
+      id: string;
+      name: string;
+  }
+}

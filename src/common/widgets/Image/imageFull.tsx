@@ -2,6 +2,7 @@ import { UseFormRegister } from "react-hook-form"
 import { useState, useRef, useEffect } from "react"
 import ImagenFull from "@/common/molecules/auth/imagenFull"
 
+
 interface registerStoreProps {
     register: UseFormRegister<any>
     errors: any
@@ -23,6 +24,7 @@ const Imagen = ({register, errors, direction, control}:registerStoreProps) =>{
                 
             };
             reader.readAsDataURL(file);
+                       
         }
     };
 

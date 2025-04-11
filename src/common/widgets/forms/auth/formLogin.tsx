@@ -1,34 +1,31 @@
 import { useLoginMutation, User, User_Data } from "@/api";
-
 import { loginSchema } from "@/common/utils/schemas/auth/loginShema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/common/molecules/hooks/useAuth";
-import { signInWithGoogle } from "@/api/firebase";
+import { useAuth } from "@/common/hooks/auth/useAuth";
 import { LoginCard } from "@/common/molecules/auth/LoginCard";
 
 const Formlogin = () => {
-  
-  const [isLoading, setIsLoading] = useState(false)  
-  const  useLogin = useLoginMutation()
+  const [isLoading, setIsLoading] = useState(false)
+  const useLogin = useLoginMutation()
   const navigate = useNavigate()
-  const {pagesPermissions} = useAuth()
-  
-  const {register, handleSubmit, formState:{errors}, reset} = useForm({
-  resolver: zodResolver(loginSchema),
-  defaultValues: {
-    email: '',
-    password: ''
-  }
-})
+  const { pagesPermissions } = useAuth()
 
-  const onSubmit = async (data:User) => {
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  })
+
+  const onSubmit = async (data: User) => {
     try {
       setIsLoading(true);
-  
+
       const response = await useLogin.mutateAsync(data as User_Data);
 
       toast.success("Inicio de sesión exitoso");
@@ -42,38 +39,24 @@ const Formlogin = () => {
       setIsLoading(false);
       reset();
     }
-}
-    
-  const handleGoogleSignIn = async() => {
-        setIsLoading(true)
-    
-          try {
-            const user = await signInWithGoogle();
-            console.log("Usuario logueado:", user);
-          } catch (error) {
-            console.error("Error en el login:", error);
-       
-        setTimeout(() => {
-          setIsLoading(false)
-        }, 1000)
-      }
-    }
+  }
 
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true)
+    window.open("http://localhost:3000/api/v2/auth/google", "_self");
+  }
 
-
-   
   return (
-    <div className="mx-4" >
-      <LoginCard 
+    <div className="" >
+      <LoginCard
         register={register}
         errors={errors}
-        isLoading={isLoading} 
-        onSubmit={handleSubmit(onSubmit)} 
+        isLoading={isLoading}
+        onSubmit={handleSubmit(onSubmit)}
         onGoogleSignIn={handleGoogleSignIn}>
       </LoginCard>
     </div>
   )
 }
-
 
 export default Formlogin;

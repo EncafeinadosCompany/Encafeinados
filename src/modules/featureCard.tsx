@@ -1,4 +1,4 @@
-import { FlameIcon as Fire } from "lucide-react";
+import { FlameIcon as Fire } from "@/common/ui/icons";
 import { Card, CardContent } from "@/common/ui/card";
 
 interface FeaturedCardProps {
@@ -16,6 +16,8 @@ export default function FeaturedCard({
   address = "103 Wright Court",
   tag = "Popular",
 }: FeaturedCardProps) {
+
+
   return (
     <div className="max-w-xs">
       <Card className="overflow-hidden border border-gray-200/60 shadow-md hover:shadow-lg transition-shadow duration-300 mb-2">

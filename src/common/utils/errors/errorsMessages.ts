@@ -1,3 +1,5 @@
+import { criteria } from "../lists/criteria";
+
 export const errorMessages: Record<number, string> = { 
     401: "Credenciales inválidas.",
     403: "Acceso denegado.",
@@ -5,16 +7,31 @@ export const errorMessages: Record<number, string> = {
     500: "Ha ocurrido un error en el servidor.",
     409: "El recurso ya existe.",
     422: "Datos no válidos.",
-    // Agregar más códigos según se necesiten
+    400: "Solicitud incorrecta."
   };
   
   export const moduleErrorMessages: Record<string, Record<number, string>> = {
     login: {
       401: "Credenciales inválidas.",
+      404: "Usuario no encontrado.",
       403: "Acceso denegado.",
     },
     registeCoffelover: {
         409: "El correo eléctronico ya se encuentra registrado"
+    },
+    registerAdminStores:{
+        409: "El correo eléctronico ya se encuentra registrado"
+    },
+    branches:{
+        409: "El nombre de la sucursal ya se encuentra registrado",
+        404: "La sucursal no se encuentra registrada"
+    },
+    images:{
+        409: "La imagen ya se encuentra registrada"
+    },
+    criteria:{
+        409: "El criterio ya se encuentra registrado",
+        404: "El criterio no se encuentra registrado"
     }
   
   };

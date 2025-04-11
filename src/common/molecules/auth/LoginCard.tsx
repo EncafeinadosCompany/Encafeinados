@@ -7,8 +7,7 @@ import { InputPassword } from "@/common/atoms/input-passwork"
 import { UseFormRegister } from "react-hook-form"
 import { User } from "@/api"
 import { useTranslation } from "react-i18next"
-import { ButtonGoogle } from "@/common/atoms/button-google"
-
+import { ButtonGoogle } from "@/common/atoms/buttonGoogle"
 
 type LoginCardProps = {
   register: UseFormRegister<User>
@@ -18,7 +17,6 @@ type LoginCardProps = {
   onGoogleSignIn: () => void
 
 }
-
 export const LoginCard = (
   {
     register,
@@ -28,12 +26,11 @@ export const LoginCard = (
     onGoogleSignIn }
     : LoginCardProps) => {
 
-
   const { t } = useTranslation()
 
   return (
     <div className="flex flex-col gap-5">
-      <Card className="overflow-hidden rounded-xl border-none sm:border border-amber-200/50 sm:shadow-lg backdrop-blur-sm sm:bg-white/90">
+      <Card className="overflow-hidden rounded-xl border-none sm:border border-amber-200/50 sm:shadow-lg  sm:bg-white/90">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form className="p-6 md:p-8" onSubmit={onSubmit}>
             <div className="flex flex-col gap-6">
@@ -72,17 +69,17 @@ export const LoginCard = (
               <Button type="submit" className="w-full rounded-full bg-amber-600 hover:bg-amber-700 border border-amber-800 text-white font-medium shadow-md transition-all duration-200 hover:shadow-lg" disabled={isLoading}>
                 {isLoading ? "Cargando..." : t("Ingresar")}
               </Button>
-              {/* <ButtonGoogle
+              <ButtonGoogle
                 variant="outline"
                 onClick={onGoogleSignIn}
                 disabled={isLoading}
                 className="border-amber-200 hover:bg-amber-50 text-amber-900"
               >
                 Continua con Google
-              </ButtonGoogle> */}
+              </ButtonGoogle>
               <div className="text-center text-sm text-amber-800">
                 ¿No tienes una cuenta?{" "}
-                <Link to="/register" className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700">
+                <Link  to="/register" data-testid="register-link"  className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700">
                   Registrate
                 </Link>
               </div>

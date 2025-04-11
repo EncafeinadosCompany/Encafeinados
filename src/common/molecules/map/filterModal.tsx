@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Coffee, Star, Clock } from 'lucide-react';
+import { X, Star, Clock } from '@/common/ui/icons';
 import { FilterOptions } from '@/common/hooks/map/useSearchFilter';
 
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  filterOptions: FilterOptions; // Usar la interfaz compartida
-  updateFilterOptions: (options: Partial<FilterOptions>) => void; // Usar Partial para actualizaciones parciales
+  filterOptions: FilterOptions; 
+  updateFilterOptions: (options: Partial<FilterOptions>) => void; 
   resetFilters: () => void;
   availableTags: string[];
 }
@@ -54,7 +54,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </button>
               </div>
               
-              {/* Ordenar por */}
+              {/* Order by */}
               <div className="mb-6">
                 <h4 className="font-medium text-[#6F4E37] mb-2">Ordenar por</h4>
                 <div className="flex gap-2 flex-wrap">
@@ -91,7 +91,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </div>
               </div>
               
-              {/* Calificación mínima */}
+              {/* Minimum Rating */}
               <div className="mb-6">
                 <h4 className="font-medium text-[#6F4E37] mb-2">Calificación mínima</h4>
                 <div className="flex items-center gap-4">
@@ -118,7 +118,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </div>
               </div>
               
-              {/* Tipo de cafetería */}
+              {/* Type of shop coffee */}
               <div className="mb-6">
                 <h4 className="font-medium text-[#6F4E37] mb-2">Tipo de cafetería</h4>
                 <div className="flex gap-2 flex-wrap">
@@ -143,7 +143,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </div>
               </div>
               
-              {/* Estado */}
+              {/* Status */}
               <div className="mb-8">
                 <h4 className="font-medium text-[#6F4E37] mb-2">Estado</h4>
                 <button

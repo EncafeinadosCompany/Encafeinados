@@ -5,5 +5,4 @@ export interface RegisterStoreSchemaType {
     type_document: number
     number_document: string
     phone_number: string
-    role_id: number
 }

@@ -10,8 +10,9 @@ import { RegisterAdminStoreSchema } from "@/common/utils/schemas/auth/registerAd
 import RegisterAdminStoreStep1 from "@/common/molecules/auth/stores/admin/registerAdminStoreStep1"
 import RegisterAdminStoreStep2 from "@/common/molecules/auth/stores/admin/registerAdminStoreStep2"
 
-import ProgressIndicator1 from "@/common/atoms/auth/ProgressIndicator1"
+
 import { LinkReturn } from "@/common/molecules/auth/LinkReturn"
+import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator"
 
 
 
@@ -64,7 +65,7 @@ const FormRegisterAdminStores = () => {
                         </TitleForm>
                     </div>
                     {/* Progress indicator */}
-                    <ProgressIndicator1 step={step} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator1>
+                    <ProgressIndicator step={step} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator>
                 </div>
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4 relative overflow-hidden">

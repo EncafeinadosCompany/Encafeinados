@@ -1,17 +1,19 @@
-import { all } from "cypress/types/bluebird";
-import { Navigate , Outlet } from "react-router-dom";
+
+import { queryClient } from "@/api/queryClient";
+import { getAuthStorage } from "@/common/utils/authStorage";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Navigate, Outlet } from "react-router-dom";
 
 type RouteProps = {
     allowedRoles: string[]
 }
 
-const RoleRoute = ({allowedRoles}: RouteProps) => {
-    const token = localStorage.getItem('token')
-    const user = JSON.parse(localStorage.getItem('user') || '{}')
-    if(!token) return <Navigate to="/login" replace />
-    if(!allowedRoles.includes(user.role)) return <Navigate to="/unauthorized" replace />
+const RoleRoute = ({ allowedRoles }: RouteProps) => {
+    const {user} = getAuthStorage() 
 
-    return <Outlet/> 
+    if (!user) return <Navigate to="/login" replace />
+    if (!allowedRoles.includes((user as { role: string }).role)) return <Navigate to="/unauthorized" replace />
+    return <Outlet />
 }
 
 export default RoleRoute

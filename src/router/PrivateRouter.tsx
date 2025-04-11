@@ -1,8 +1,10 @@
+
+import { getAuthStorage } from "@/common/utils/authStorage";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRoute = () =>{
-    const token = localStorage.getItem('token')
-    return token ? <Outlet /> : <Navigate to="/login" />
+    const {token} = getAuthStorage();
+    return token ? <Outlet /> : <Navigate to="/" replace/>
 }
 
 export default PrivateRoute

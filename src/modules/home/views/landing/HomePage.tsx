@@ -7,11 +7,14 @@ import { Navbar } from '@/common/molecules/home/navbar';
 
 const HomePage = () => {
   return (
-    <main className="min-h-screen bg-[#FAF3E0] relative overflow-hidden">
+    <main className="min-h-screen  bg-[#FAF3E0] relative">
       <Navbar />
       <div className="relative z-5"> 
         <HeroSection />
+
+
         <MapTeaser totalCafes={45} city="Medellín" />
+    
         <StoreCarousel />
         <BenefitsSection />
         <Footer />

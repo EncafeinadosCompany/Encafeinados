@@ -1,13 +1,10 @@
-
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft } from "@/common/ui/icons"
 import { Link } from "react-router-dom"
 
 interface LinkReturnProps {
     link: string
     className?:string
 }
-
-
 export const LinkReturn = ({link, className}:LinkReturnProps) => {
     return (
         <div className="sm:max-w-2xl mb-4 self-start">

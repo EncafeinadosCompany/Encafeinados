@@ -2,81 +2,66 @@
 
 import { Label } from "@/common/ui/label"
 import { UseFormRegister } from "react-hook-form"
-import { InputForm } from "@/common/atoms/auth/inputs-form"
-import { ButtonGoogle } from "@/common/atoms/button-google"
-
+import { InputForm } from "@/common/atoms/auth/inputForm"
+import { motion } from "framer-motion"
+import { pageVariants } from "@/common/atoms/auth/pageVariants"
+import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
+import { TextError } from "@/common/atoms/textError"
 
 interface RegisterCoffeloverStep1Props {
   register: UseFormRegister<any>
   errors: any
-  onGoogleSignIn: () => void
-  isLoading: boolean
+  direction: number
 }
 
 
-export default function RegisterCoffeloverStep1({ register, errors, onGoogleSignIn, isLoading }: RegisterCoffeloverStep1Props) {
+export default function RegisterCoffeloverStep1({ register, errors, direction }: RegisterCoffeloverStep1Props) {
+  const { focusedField, registerWithFocus } = useRegisterFocus()
+
   return (
-    <div>
+    <motion.div
+      key="step1"
+      custom={direction}
+      variants={pageVariants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      className="w-full"
+      style={{ perspective: "1000px" }}
+    >
       <div className="space-y-4 m-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="firstName">Nombre</Label>
+            <Label htmlFor="name" className={`flex items-center text-xs transition-colors ${focusedField === "name" ? "text-[#DB8935] " : "text-gray-600" }`}>Nombre</Label>
             <InputForm
-              {...register("personData.name")}
-              id="firstName" placeholder="Nombre completo"
+              {...registerWithFocus("name", register)}
+              id="name" 
+              placeholder="Nombre completo"
             />
-            {errors?.personData?.name && <p className="text-red-500">{errors.personData.name.message}</p>}
+            {errors?.name && <TextError>{errors.name.message}</TextError>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="lastName">Apellidos</Label>
+          <Label htmlFor="lastName" className={`flex items-center text-xs transition-colors ${focusedField === "lastname" ? "text-[#DB8935] " : "text-gray-600" }`}>Apellidos</Label>
             <InputForm id="lastName"
-              {...register('personData.lastname')}
+              {...registerWithFocus('lastname', register)}
               placeholder="Ingresa tus apellidos" />
-            {errors?.personData?.lastname && <p className="text-red-500">{errors.personData.lastname.message}</p>}
+            {errors?.lastname && <TextError>{errors.lastname.message}</TextError>}
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Correo Electrónico</Label>
+        <Label htmlFor="email" className={`flex items-center text-xs transition-colors ${focusedField === "email" ? "text-[#DB8935] " : "text-gray-600" }`}>Correo Electrónico</Label>
           <InputForm
             id="email"
             type="email"
-            {...register('userData.email')}
+            {...registerWithFocus('email', register)}
             placeholder="coffeelover@example.com"
           />
-          {errors?.userData?.email && <p className="text-red-500">{errors.userData.email.message}</p>}
+          {errors?.email && <TextError>{errors.email.message}</TextError>}
         </div>
-
-        {/* <div className="mt-8 space-y-4">
-          <div className="relative flex items-center justify-center">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-900"></div>
-            </div>
-            <div className="relative px-4 text-sm  bg-[#ffe4c4] text-gray-500 font-medium">
-              Opciones de registro
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-3">
-            <ButtonGoogle
-              variant="outline"
-              onClick={onGoogleSignIn}
-              disabled={isLoading}
-            >
-              <span className="flex items-center">
-                Continuar con Google
-              </span>
-            </ButtonGoogle>
-          </div>
-          
-          <div className="text-center text-xs text-gray-500 mt-10">
-            Al registrarte, aceptas nuestros <a href="#" className="text-amber-700 hover:underline">Términos de servicio</a> y <a href="#" className="text-amber-700 hover:underline">Política de privacidad</a>
-          </div>
-        </div> */}
       </div>
-
-    </div>
+    </motion.div>
   )
 }
 

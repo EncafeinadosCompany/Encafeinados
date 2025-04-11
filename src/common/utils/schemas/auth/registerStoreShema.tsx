@@ -12,7 +12,7 @@ export const RegisterStoreSchema = [
             .string({message:'Por favor ingresa tu tipo de documento'})
             .nonempty({ message: "El tipo de documento es esencial, como el café en la mañana" }),
         number_document: z.string()
-            .nonempty({ message: 'Necesitamos tu número de documento, como un barista necesita su molino' })
+            .nonempty({ message: 'Necesitamos tu número de documento' })
             .min(6, { message: 'Tu número de documento debe tener al menos 6 caracteres, como los ingredientes básicos de una buena receta' })
             .max(11, { message: 'Parece que tu número de documento es tan largo como la cola en una cafetería popular' }),
         phone_number: z.string()
@@ -24,24 +24,20 @@ export const RegisterStoreSchema = [
             .min(1, { message: "El correo electrónico es obligatorio" })
             .email({ message: "El formato del correo electrónico no es válido" })
     }),
-    
     z.object({
-        logo: 
-        z.any()
-        .refine((file) => file instanceof File, {
-            message: "Debes subir un archivo válido",
-        })
-        // .refine((file) => ["image/png", "image/jpeg", "image/jpg"].includes(file.type), {
-        //     message: "Solo se permiten archivos PNG, JPG o JPEG",
-        // }),
-    }),
-    z.object({
-        conditions: z.boolean().nullable()
-           .refine((value) => value === true, {
-            message: "Debes aceptar las condiciones para continuar",
-           }) 
+        logo: z
+        .any()
+        .optional()
+        .refine((file) => {
+          if (!file) return true; 
+          return file instanceof File;
+        }, {
+          message: "Debes subir un archivo válido",
+        }),
+        conditions: z.literal(true, {
+            errorMap: () => ({ message: "Debes aceptar los términos y condiciones" }),
+          })
     })
-    
 ]
 
 // Extraer el tipo inferido del esquema

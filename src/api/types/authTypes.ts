@@ -6,21 +6,22 @@ export interface User {
 export interface LoginResponse {
     accessToken: string;
     user: {
+      id?:0
       email: string;
       role: string;
-    };
+    },
+	storeOrBranchId?:0
   }
   
 export interface User_Data {
   id_google?: string,
   email: string,
-  password: string,
-  role_id: number
+  password?: string
 }
 
-interface PersonData {
+export interface PersonData {
   full_name: string,
-  type_document: number,
+  type_document: string,
   number_document:string,
   phone_number: string
 }
@@ -28,4 +29,20 @@ interface PersonData {
 export interface RegisterCoffelover {
     userData: User_Data,
     personData: PersonData
+}
+
+
+export interface RegisterCoffeloverResponse {
+	message: string,
+	client: {
+		id: number,
+		person: {
+			user_id: number,
+			user_email: string,
+			type_document: string,
+			number_document: string,
+			full_name: string,
+			phone_number: string
+		}
+	}
 }
