@@ -9,7 +9,7 @@ interface BranchCardProps {
   branch: {
     id: number;
     name: string;
-    address: string;
+    address?: string;
     status: string;
     latitude?: number;  // Hacer opcional
     longitude?: number; // Hacer opcional
@@ -18,10 +18,11 @@ interface BranchCardProps {
     store_email?: string;
   };
   index: number;
-  onView: (branch: any) => void;  // Usar tipo genérico temporalmente
+  onView: (branch: any) => void;
+  onApprove?: (branch: any) => void;
+  onReject?: (branch: any) => void;
   type: 'pending' | 'approved';
 }
-
 export const BranchCard = ({ branch, index, onView, type }: BranchCardProps) => {
   const borderHoverStyles = {
     pending: "hover:border-amber-200/50",
