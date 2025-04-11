@@ -43,7 +43,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
 
         append({
             social_network_id: networkIdStr,
-            url: "",
+            value: "",
             name: network.name,
             description: "",
         })
@@ -165,17 +165,17 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                                             {...register(`social_networks.${index}.social_network_id`, { valueAsNumber: true })}
                                         />
                                         <div className="grid gap-2">
-                                            <Label htmlFor={`url-${index}`} className="flex items-center gap-1.5 text-gray-700">
+                                            <Label htmlFor={`value-${index}`} className="flex items-center gap-1.5 text-gray-700">
                                                 {inputConfig.icon}
                                                 {inputConfig.label}
                                             </Label>
                                             <Input
-                                                id={`url-${index}`}
+                                                id={`value-${index}`}
                                                 type={inputConfig.type}
                                                 inputMode={inputConfig.inputMode}
                                                 placeholder={inputConfig.placeholder}
                                                 className="border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-200 focus:border-amber-400"
-                                                {...register(`social_networks.${index}.url`)}
+                                                {...register(`social_networks.${index}.value`)}
                                             />
                                         </div>
                                         <div className="grid gap-2">

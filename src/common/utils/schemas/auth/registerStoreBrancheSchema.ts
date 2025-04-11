@@ -46,7 +46,7 @@ export const RegisterStoreBrancheSchema = [
     .array(
       z.object({
         social_network_id: z.number(),
-        url: z.string(),
+        value: z.string(),
         description: z.string().optional(),
       })
     )

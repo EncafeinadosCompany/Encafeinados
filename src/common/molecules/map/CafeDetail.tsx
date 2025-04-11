@@ -132,7 +132,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
               {cafe.socialNetworks.map((social, idx) => (
                 <a 
                   key={idx}
-                  href={social.url}
+                  href={social.value}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 text-[#6F4E37] px-3 py-1.5 rounded-full transition-colors"

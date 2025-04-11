@@ -1,7 +1,7 @@
 // Interfaz para los datos de redes sociales
 export interface SocialBranch {
   social_network_name: string;
-  url: string;
+  value: string;
   description: string;
 }
 
