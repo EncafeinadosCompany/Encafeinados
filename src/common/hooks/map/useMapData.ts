@@ -4,10 +4,6 @@ import { calculateDistance } from "@/common/utils/map/mapUtils";
 import { Branch, BranchesResponse, SocialBranch } from "@/api/types/branchesTypes";
 import { Store, StoresResponse } from "@/api/types/storesTypes";
 
-
-/**
- * Hook personalizado para manejar todos los estados derivados y cálculos relacionados con el mapa
- */
 export const useMapData = (
   branchesData: BranchesResponse | undefined,
   filteredBranchesData: BranchesResponse | undefined,
@@ -36,7 +32,6 @@ export const useMapData = (
       .map((branch: Branch) => {
         if (!branch.latitude || !branch.longitude) return null;
        
-        // Usar directamente el logo de la tienda de la respuesta API
         const storeLogo = branch.store?.store_logo ||
           "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
@@ -51,7 +46,7 @@ export const useMapData = (
           tags: ["Coffee", "Specialty"],
           latitude: branch.latitude,
           longitude: branch.longitude,
-          isOpen: true, // Ya está filtrado por APPROVED
+          isOpen: true, 
           status: branch.status,
           phone: branch.phone_number,
           address: branch.address,
@@ -60,8 +55,6 @@ export const useMapData = (
           socialNetworks: branch.social_branches || []
         };
 
-
-        // Calcular distancia si la ubicación del usuario está disponible
         if (userLocation) {
           const distanceKm = calculateDistance(
             userLocation[0],
