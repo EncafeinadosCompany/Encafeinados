@@ -4,8 +4,6 @@ import { calculateDistance } from "@/common/utils/map/mapUtils";
 import { Branch, BranchesResponse, SocialBranch } from "@/api/types/branchesTypes";
 import { Store, StoresResponse } from "@/api/types/storesTypes";
 
-// This hook is used to manage the data for the map component, including branches, cafes, and user location.
-
 export const useMapData = (
   branchesData: BranchesResponse | undefined,
   filteredBranchesData: BranchesResponse | undefined,
