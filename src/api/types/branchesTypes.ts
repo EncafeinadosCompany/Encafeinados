@@ -1,8 +1,10 @@
 // Interfaz para los datos de redes sociales
 export interface SocialBranch {
-  social_network_name: string;
-  value: string;
-  description: string;
+  social_network_id?: string;    
+  social_network_name?: string;  
+  value?: string;                 
+  description?: string;          
+  url?: string;                  
 }
 
 export interface Store {
@@ -21,7 +23,7 @@ export interface Branch {
   name: string;
   phone_number?: string;
   average_rating?: string;
-  status: string; // Cambiado de boolean a string para reflejar valores como "PENDING"
+  status: string; 
   latitude: number;
   longitude: number;
   address?: string;
@@ -46,41 +48,12 @@ export interface BranchPost {
   criteria?: any;
 }
 
-// Interface específica para la respuesta de branches pendientes
-export interface PendingBranch {
-  id: number;
-  name: string;
-  address?: string;
-  status: string;
-  store_logo?: string;
-  store_email?: string;
-  phone_number?: string;
-  latitude?: number;
-  longitude?: number;
-  average_rating?: string;
-  store_name?: string;
-  store?: {
-    store_id: number;
-    store_name: string;
-    store_logo: string;
-    store_email: string;
-  };
-  social_branches?: SocialBranch[];
-}
 
-// Tipo para la respuesta completa de la API
-export type PendingBranchesResponse = PendingBranch[];
   
 export interface BranchesResponse {
   message: string;
-  branches: Branch[];
-  
+  branches: {
+    branches: Branch[];
+  }
 }
 
-export interface BranchesResponseList {
-  message: string;
-  branches:{
-    branches: Branch[]
-  }
-  
-}

@@ -28,11 +28,9 @@ import { useSearchFilter } from '@/common/hooks/map/useSearchFilter';
 import { useRouteNavigation } from '@/common/hooks/map/useRouteNavigation';
 
 // Components
-import UserLocationMarker from '@/common/atoms/map/UserLocationMarker';
 import MapFocus from '@/common/molecules/map/MapFocus';
 import FilterModal from '@/common/molecules/map/filterModal';
 import HighlightText from '@/common/atoms/common/HighlightText';
-import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
 import SmartClusterGroup from '@/common/molecules/map/SmartClusterGroup';
 import UserMarker from '@/common/molecules/map/UserMarker'; 
 import DirectRouteLine from '@/common/molecules/map/DirectRouteLine';

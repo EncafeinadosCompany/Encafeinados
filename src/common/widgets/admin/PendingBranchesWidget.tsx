@@ -10,8 +10,9 @@ import { StatusBadge } from "@/common/atoms/StatusBadge";
 import { BranchSearchBar } from "@/common/molecules/admin/branch/BranchSearchBar";
 import { BranchPagination } from "@/common/molecules/admin/branch/BranchPagination";
 import { BranchCard } from "@/common/molecules/admin/branch/BranchCard";
+import { BranchApprovalDialog } from "@/common/molecules/admin/branch/BranchApprovalDialog";
 import { usePendingBranchesWidget } from "@/common/hooks/usePendingBranchesWidget";
-import { PendingBranch, PendingBranchesResponse } from '@/api/types/branchesTypes';
+import { PendingBranch, PendingBranchesResponse } from '@/api/types/branchesApprovalTypes';
 
 export const PendingBranchesWidget = () => {
   const {
@@ -20,9 +21,9 @@ export const PendingBranchesWidget = () => {
     isLoading,
     error,
     refetch,
-    filteredBranches, // Agregar esta línea
-    paginatedBranches, // Agregar esta línea
-    totalPages, // Agregar esta línea
+    filteredBranches,
+    paginatedBranches,
+    totalPages,
     
     // State
     searchTerm,
@@ -31,6 +32,8 @@ export const PendingBranchesWidget = () => {
     refreshAnimation,
     currentPage,
     itemsPerPage,
+    detailsDialogOpen,
+    setDetailsDialogOpen,
     
     // Actions
     setSearchTerm,
@@ -42,6 +45,23 @@ export const PendingBranchesWidget = () => {
     handleViewDetails,
     handleRefresh,
   } = usePendingBranchesWidget();
+
+  // Crear adaptadores para las funciones
+  const handleApproveById = (branchId: number) => {
+    // Buscar el objeto branch completo usando el ID
+    const branch = data.find(b => b.id === branchId);
+    if (branch) {
+      handleApprove(branch);
+    }
+  };
+
+  const handleRejectById = (branchId: number) => {
+    // Buscar el objeto branch completo usando el ID
+    const branch = data.find(b => b.id === branchId);
+    if (branch) {
+      handleReject(branch);
+    }
+  };
 
   const renderEmptyState = () => {
     const originalBranches = filteredBranches.length === 0 && searchTerm 
@@ -223,7 +243,13 @@ export const PendingBranchesWidget = () => {
         </div>
       </Card>
       
-      {/* Los diálogos de detalles y confirmación se implementarán más tarde */}
+      <BranchApprovalDialog
+        branchId={selectedBranch?.id || null}
+        isOpen={detailsDialogOpen}
+        onClose={() => setDetailsDialogOpen(false)}
+        onApprove={handleApproveById} // Usar el adaptador
+        onReject={handleRejectById}   // Usar el adaptador
+      />
     </>
   );
 };

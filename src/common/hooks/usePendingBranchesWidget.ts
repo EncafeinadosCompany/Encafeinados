@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { toast } from 'react-hot-toast'
 import { usePendingBranchesQuery } from '@/api/queries/stores/branchesQueries'
-import { PendingBranch } from '@/api/types/branchesTypes'
+import { PendingBranch } from '@/api/types/branchesApprovalTypes'
 import { useForm } from 'react-hook-form'
 
 export const usePendingBranchesWidget = () => {
@@ -26,6 +26,9 @@ export const usePendingBranchesWidget = () => {
     action: '',
     branchId: 0
   })
+
+  // Estado para el diálogo de detalles
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   
   // Formulario de rechazo
   const methods = useForm({
@@ -79,6 +82,7 @@ export const usePendingBranchesWidget = () => {
   // Ver detalles de sucursal - Corregir el tipo de parámetro
   const handleViewDetails = (branch: PendingBranch) => {
     setSelectedBranch(branch)
+    setDetailsDialogOpen(true)
   }
   
   // Preparar para aprobar - Corregir el tipo de parámetro
@@ -145,6 +149,7 @@ export const usePendingBranchesWidget = () => {
     isSubmitting,
     currentPage,
     itemsPerPage,
+    detailsDialogOpen,
     
     // Form
     methods,
@@ -155,6 +160,7 @@ export const usePendingBranchesWidget = () => {
     setConfirmationDialog,
     setRejectFormOpen,
     setItemsPerPage,
+    setDetailsDialogOpen,
     handlePageChange,
     handleApprove,
     handleReject,

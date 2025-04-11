@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { BranchesResponse, BranchesResponseList, PendingBranchesResponse } from '../../types/branchesTypes'
+import { BranchesResponse } from '../../types/branchesTypes'
+import {  BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails } from '../../types/branchesApprovalTypes'
+
 import AuthClient from '../../client/axios'
 
 const authClient = new AuthClient()
@@ -44,5 +46,17 @@ export const usePendingBranchesQuery = () => {
     },
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false
+  })
+}
+
+export const useBranchApprovalDetails = (branchId: number | undefined) => {
+  return useQuery<BranchApprovalDetails, Error>({
+    queryKey: ['branch-approvals', 'detail', branchId],
+    queryFn: async () => {
+      const response = await authClient.get<BranchApprovalDetails>(`/branch-approvals/detail/${branchId}`)
+      return response
+    },
+    enabled: !!branchId,
+    staleTime: 5 * 60 * 1000, // 5 minutos
   })
 }

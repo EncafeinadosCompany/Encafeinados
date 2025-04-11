@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import { Cafe } from '@/common/types/map/mapTypes';
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
+import { normalizeSocialNetwork, SocialNetworkType } from '@/common/utils/socialNetworks';
+
 const determineNetworkType = (social: any): 'facebook' | 'instagram' | 'twitter' | 'other' => {
   if (!social || !social.url) return 'other';
   
@@ -40,6 +42,38 @@ const getNetworkDisplayName = (social: any, networkType: string): string => {
   }
 };
 
+const renderSocialIcon = (type: SocialNetworkType) => {
+  switch (type) {
+    case 'facebook':
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3V2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      );
+    case 'instagram':
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      );
+    case 'twitter':
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      );
+    default:
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      );
+  }
+};
+
 interface CafeDetailProps {
   cafe: Cafe;
   favorites: number[];
@@ -59,6 +93,42 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   copyToClipboard,
   copied
 }) => {
+  const renderSocialNetworks = () => {
+    if (!cafe.socialNetworks || cafe.socialNetworks.length === 0) {
+      return (
+        <div className="py-3 border-b border-gray-100">
+          <p className="text-sm text-gray-500">No hay redes sociales disponibles.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="py-3 border-b border-gray-100">
+        <h4 className="font-medium text-[#2C1810] mb-2">Encuéntranos en redes</h4>
+        <div className="flex flex-wrap gap-2">
+          {cafe.socialNetworks.map((social, idx) => {
+            const normalizedNetwork = normalizeSocialNetwork(social);
+            
+            return (
+              <a 
+                key={idx}
+                href={normalizedNetwork.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 text-[#6F4E37] px-3 py-1.5 rounded-full transition-colors"
+              >
+                {renderSocialIcon(normalizedNetwork.type)}
+                <span className="text-sm font-medium">
+                  {normalizedNetwork.displayName}
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div key={cafe.id} className="relative flex flex-col h-full">
       <div className="relative h-48 w-full md:h-64">
@@ -146,54 +216,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           <h4 className="font-medium text-[#2C1810] mb-1">Dirección</h4>
           <p className="text-gray-700">{cafe.address || "Dirección no disponible"}</p>
         </div>
-        {cafe.socialNetworks && cafe.socialNetworks.length > 0 ? (
-          <div className="py-3 border-b border-gray-100">
-            <h4 className="font-medium text-[#2C1810] mb-2">Encuéntranos en redes</h4>
-            <div className="flex flex-wrap gap-2">
-              {cafe.socialNetworks.map((social, idx) => (
-                <a 
-                  key={idx}
-                  href={social.value}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 text-[#6F4E37] px-3 py-1.5 rounded-full transition-colors"
-                >
-                  {social.social_network_name.toLowerCase().includes('facebook') && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3V2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                  {social.social_network_name.toLowerCase().includes('instagram') && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                  {social.social_network_name.toLowerCase().includes('twitter') && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  )}
-                  <span className="text-sm font-medium">{social.social_network_name}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="py-3 border-b border-gray-100">
-            <h4 className="font-medium text-[#2C1810] mb-2">Características</h4>
-            <div className="flex flex-wrap gap-2">
-              {cafe.tags.map((tag, i) => (
-                <span key={i} className="text-sm font-medium bg-gray-50 text-[#6F4E37] px-3 py-1 rounded-full">
-                  {tag}
-                </span>
-              ))}
-              <span className="text-sm font-medium bg-gray-50 text-[#6F4E37] px-3 py-1 rounded-full">
-                Wi-Fi
-              </span>
-            </div>
-          </div>
-        )}
+        {renderSocialNetworks()}
 
         {cafe.phone && (
           <div className="py-3 border-t border-gray-100">

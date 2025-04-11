@@ -16,19 +16,16 @@ export const useMapData = (
 ) => {
   const defaultCenter: LatLngTuple = [6.2476, -75.5658];
 
-  // 1. Memoizar branches por separado para evitar cálculos repetidos
   const branches = useMemo(() => 
     filteredBranchesData?.branches?.branches ||
     branchesData?.branches?.branches ||
     [],
   [filteredBranchesData?.branches?.branches, branchesData?.branches?.branches]);
   
-  // 2. Memoizar filteredBranches separadamente
   const filteredBranches = useMemo(() => 
     branches.filter((branch) => branch.status === "APPROVED"),
   [branches]);
 
-  // 3. Ahora memoizamos cafes basado en filteredBranches
   const cafes: Cafe[] = useMemo(() => {
     if (!branchesData?.branches?.branches) return [];
     
