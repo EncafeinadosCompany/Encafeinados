@@ -39,7 +39,7 @@ export const useLoginMutation = () => {
 
 
       if(data.user.id){
-        localStorage.setItem('userId', data.user.id.toString())
+        localStorage.setItem('userId', data.user.id)
       }
 
       
