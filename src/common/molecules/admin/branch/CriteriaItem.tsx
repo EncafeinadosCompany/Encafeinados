@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogFooter } from "@/common/ui/dialog";
+import { 
+  Dialog, DialogContent, DialogFooter, DialogOverlay 
+} from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
 import { CriteriaResponse } from '@/api/types/branchesApprovalTypes';
+import { ZoomIn, X } from 'lucide-react';
 
 interface CriteriaItemProps {
   criteriaResponse: CriteriaResponse;
@@ -35,34 +38,52 @@ export const CriteriaItem: React.FC<CriteriaItemProps> = ({ criteriaResponse }) 
       {criteriaResponse.imageUrl && (
         <>
           <div 
-            className="relative h-32 bg-gray-100 rounded overflow-hidden cursor-pointer border border-gray-200"
+            className="relative h-32 bg-gray-100 rounded overflow-hidden cursor-pointer border border-gray-200 group"
             onClick={() => setShowFullImage(true)}
           >
             <img 
               src={criteriaResponse.imageUrl} 
               alt={criteriaResponse.criteria.name}
-              className="w-full h-full object-cover hover:scale-105 transition-transform"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
             />
-            <div className="absolute bottom-0 left-0 right-0 bg-black/30 text-white text-xs py-1 px-2">
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+              <div className="bg-white/80 backdrop-blur-sm rounded-full p-2">
+                <ZoomIn className="h-5 w-5 text-gray-700" />
+              </div>
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs py-1.5 px-2 flex items-center">
+              <ZoomIn className="h-3.5 w-3.5 mr-1" />
               Click para ampliar
             </div>
           </div>
           
-          {/* Modal para ver imagen completa */}
+          {/* Modal para ver imagen completa - MEJORADO CON FONDO Y CONTROLES */}
           <Dialog open={showFullImage} onOpenChange={setShowFullImage}>
-            <DialogContent className="sm:max-w-[90vw] p-2 max-h-[90vh]">
-              <div className="relative h-[70vh] w-full flex items-center justify-center">
-                <img
-                  src={criteriaResponse.imageUrl}
-                  alt={criteriaResponse.criteria.name}
-                  className="max-h-full max-w-full object-contain"
-                />
-              </div>
-              <DialogFooter>
-                <Button size="sm" onClick={() => setShowFullImage(false)}>
-                  Cerrar
+            <DialogOverlay className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50" />
+            <DialogContent className="fixed inset-0 z-50 bg-transparent border-0 p-0 flex items-center justify-center">
+              <div className="relative max-w-[90vw] max-h-[90vh] bg-white/10 backdrop-blur-md rounded-lg overflow-hidden">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="absolute top-2 right-2 z-10 rounded-full bg-black/30 hover:bg-black/50 text-white"
+                  onClick={() => setShowFullImage(false)}
+                >
+                  <X className="h-5 w-5" />
                 </Button>
-              </DialogFooter>
+                
+                <div className="p-2">
+                  <img
+                    src={criteriaResponse.imageUrl}
+                    alt={criteriaResponse.criteria.name}
+                    className="max-h-[80vh] max-w-[80vw] object-contain rounded"
+                  />
+                </div>
+                
+                <div className="bg-black/50 p-3 text-white text-center">
+                  <p className="font-medium">{criteriaResponse.criteria.name}</p>
+                  <p className="text-sm text-white/80">{criteriaResponse.responseText}</p>
+                </div>
+              </div>
             </DialogContent>
           </Dialog>
         </>
