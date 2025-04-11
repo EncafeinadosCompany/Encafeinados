@@ -37,6 +37,13 @@ export const useLoginMutation = () => {
         localStorage.setItem('storeOrBranchId', data.storeOrBranchId);
       }
 
+
+      if(data.user.id){
+        localStorage.setItem('userId', data.user.id)
+      }
+
+      
+
       setAuthStorage(data.accessToken, data.user);
 
        pagesPermissions(data.user.role, navigate)
