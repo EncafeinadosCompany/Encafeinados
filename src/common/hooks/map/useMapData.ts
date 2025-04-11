@@ -22,7 +22,50 @@ export const useMapData = (
   const cafes: Cafe[] = useMemo(() => {
     if (!branchesData?.branches?.branches) return [];
 
-    // Determinar qué datos de branches usar (filtrados o todos)
+    
+    return filteredBranches
+      .map((branch: Branch) => {
+        if (!branch.latitude || !branch.longitude) return null;
+        
+        
+        const storeLogo = branch.store?.store_logo || 
+          "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+
+        const baseData = {
+          id: branch.id,
+          name: branch.name,
+          rating: parseFloat(branch.average_rating ?? "4.5") || 4.5,
+          reviewCount: Math.floor(Math.random() * 100) + 50,
+          openTime: "7:00 AM - 6:00 PM",
+          image: storeLogo,
+          tags: ["Coffee", "Specialty"],
+          latitude: branch.latitude,
+          longitude: branch.longitude,
+          isOpen: true, 
+          status: branch.status,
+          phone: branch.phone_number,
+          address: branch.address,
+          storeId: branch.store?.store_id ?? 0,
+          storeName: branch.store?.store_name ?? "",
+          socialNetworks: branch.social_branches || []
+        };
+
+     
+        if (userLocation) {
+          const distanceKm = calculateDistance(
+            userLocation[0],
+            userLocation[1],
+            branch.latitude,
+            branch.longitude
+          );
+          return {
+            ...baseData,
+            distance: `${distanceKm} km`,
+            distanceValue: parseFloat(distanceKm),
+          };
+        }
+
+
     const branches = filteredBranchesData?.branches?.branches || branchesData.branches.branches || [];
     
     return branches.map((branch: Branch) => {
