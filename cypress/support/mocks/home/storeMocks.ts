@@ -49,7 +49,7 @@ export const mockBranches: BranchesResponse = {
         name: "Sede Centro",
         phone_number: "+57 300 1234567",
         average_rating: "4.5",
-        status: true,
+        status: 'true',
         latitude: 4.624335,
         longitude: -74.063644,
         address: "Calle 10 # 5-51"
@@ -60,7 +60,7 @@ export const mockBranches: BranchesResponse = {
         name: "Sede Norte",
         phone_number: "+57 300 1234568",
         average_rating: "4.7",
-        status: true,
+        status: 'true',
         latitude: 4.724335,
         longitude: -74.053644,
         address: "Calle 100 # 15-20"
@@ -71,7 +71,7 @@ export const mockBranches: BranchesResponse = {
         name: "Sede Principal",
         phone_number: "+57 300 7654321",
         average_rating: "4.2",
-        status: true,
+        status: 'true',
         latitude: 4.654335,
         longitude: -74.083644,
         address: "Carrera 7 # 45-10"

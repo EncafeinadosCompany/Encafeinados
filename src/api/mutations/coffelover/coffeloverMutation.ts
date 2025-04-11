@@ -17,8 +17,6 @@ export const useRegisterCoffeloverMutation = () => {
 
       try {
         const response = await authClient.post<RegisterCoffeloverResponse>('/clients', formData);
-        console.log('AQUI', response)
-
         return response;
 
       } catch (error: any) {

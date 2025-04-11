@@ -1,5 +1,5 @@
 import AuthClient from '@/api/client/axios'
-import { BranchesResponse } from '@/api/types/branchesTypes'
+import { BranchesResponse, BranchesResponseStore } from '@/api/types/branchesTypes'
 import { StoresResponse } from '@/api/types/storesTypes'
 import { useQuery } from '@tanstack/react-query'
 
@@ -30,11 +30,10 @@ export const useBranchesByStore = (storeId: number | undefined) => {
 }
 
 export const useBranchByStore = (branchId: number | undefined) => {
-  return useQuery<BranchesResponse, Error>({
+  return useQuery<BranchesResponseStore, Error>({
     queryKey: ['branches', branchId],
     queryFn: async () => {
-      const response = await authClient.get<BranchesResponse>(`/branches/store/${branchId}`)
-      console.log(response)
+      const response = await authClient.get<BranchesResponseStore>(`/branches/store/${branchId}`)
       return response
     },
     enabled: !!branchId, 

@@ -32,7 +32,6 @@ return useMutation<ImageType, Error, File>({
         }
     },
     onSuccess: (data) => {
-        console.log("Imagen subida correctamente:", data);
         queryClient.invalidateQueries({ queryKey: ["imagen"] });
     },
     onError: (error: any) => {

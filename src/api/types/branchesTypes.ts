@@ -57,3 +57,9 @@ export interface BranchesResponse {
   }
 }
 
+
+export interface BranchesResponseStore {
+  message: string;
+    branches: Branch[];
+ 
+}

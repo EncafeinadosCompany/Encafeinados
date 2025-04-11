@@ -33,8 +33,6 @@ export function PrincipalStores() {
  
   const {data:branchesList} = useBranchByStore(Number(storeId)) 
   
-  console.log('hola',branchesList)
-  
   // Estado para el modal de agregar sucursal
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
@@ -61,7 +59,6 @@ useEffect(() => {
 
     setFilteredBranches(data)
     }
-    console.log(filteredBranches, 'gbbb')
 },[branchesList, searchQuery])
  
 
@@ -220,8 +217,7 @@ useEffect(() => {
                   Actualizar
                 </TooltipContent>
               </Tooltip>
-            </TooltipProvider>
-            
+            </TooltipProvider>         
             <Button 
               onClick={() => setIsAddModalOpen(true)}
               className="bg-[#DB8935] text-white"

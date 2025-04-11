@@ -34,7 +34,7 @@ export const FinistAdminStore = ({ register, errors }: registerAdminProps) => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className=" flex flex-col space-y-2">
-                    <Label className={`flex items-center text-xs transition-colors ${focusedField === "password" ? "text-[#DB8935]" : "text-gray-600"}`}>Contraseña</Label>
+                    <Label className={`flex items-center text-xs transition-colors ${focusedField === "password" ? "text-[#DB8935]" : "text-gray-600"}`}>Crea tu clave</Label>
                     
                     <InputPassword
 
@@ -47,7 +47,7 @@ export const FinistAdminStore = ({ register, errors }: registerAdminProps) => {
                 </div>
 
                 <div className="flex flex-col space-y-2">
-                    <Label className={`flex items-center text-xs transition-colors ${focusedField === "confirmPassword" ? "text-[#DB8935]" : "text-gray-600"}`}>Confirmar contraseña</Label>
+                    <Label className={`flex items-center text-xs transition-colors ${focusedField === "confirmPassword" ? "text-[#DB8935]" : "text-gray-600"}`}>Confirmar tu clave</Label>
 
                     <InputPassword
                         id="lastName"

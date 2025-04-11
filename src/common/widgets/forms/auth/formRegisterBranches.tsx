@@ -6,13 +6,9 @@ import { ArrowLeft, ArrowRight } from "@/common/ui/icons"
 import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
 
-import { RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
-
-import { CurrentBrancheSchema, registerBrancheSchema } from "@/common/utils/schemas/auth/registerBrancheSchema"
 import { RegisterBranchesStep1 } from "@/common/molecules/auth/stores/branches/registerBranchesStep1"
-import { RegisterBranchesStep2 } from "@/common/molecules/auth/stores/branches/registerBranchesStep2"
 import { RegisterBranchesStep3 } from "@/common/molecules/auth/stores/branches/registerBranchesStep3"
-import { BranchPost } from "@/api/types/branchesTypes"
+
 import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
 import { useCriteria } from "@/api/queries/stores/criteriaQueries"
 import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueries"
@@ -82,8 +78,6 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
 
     const onSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
-        console.log("Formulario enviado:", finalData);
-
         const social = finalData.social_networks || [];
         if (!social.length) {
           toast.error("Debes agregar al menos una red social.");
@@ -113,7 +107,6 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
 
 
     const onLocationSelect = (lat: number, lng: number, address: string) => {
-        console.log(lat, lng, address)
         methods.setValue("latitude", lat, { shouldValidate: true });
         methods.setValue("longitude", lng, { shouldValidate: true });
         methods.setValue("address", address, { shouldValidate: true });
@@ -139,7 +132,6 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                     {step === 0 && (
                                         <RegisterBranchesStep1
                                             register={methods.register}
-                                            control={methods.control}
                                             errors={methods.formState.errors}
                                         >
                                         </RegisterBranchesStep1>

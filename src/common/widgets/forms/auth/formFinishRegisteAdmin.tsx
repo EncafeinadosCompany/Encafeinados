@@ -14,6 +14,7 @@ import { useAdminStoreMutation } from "@/api/mutations/adminStores/adminStoresMu
 import { RegisterAdminStores } from "@/api/types/adminStoresTypes";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { TermConditions } from "./termConditions";
 
 export const FormFinishRegisteAdmin = ({ref}:any) => {
 
@@ -46,7 +47,6 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
 
     };
     const onSubmit = async (data: any) => {
-        // console.log("Formulario enviado:", formData, ref);
 
         const finalData = {...formData,...data };
         
@@ -70,7 +70,7 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
 
         try {
 
-            const response = await useRegisterAdminStore.mutateAsync(register);
+            await useRegisterAdminStore.mutateAsync(register);
             toast.success("Registro exitoso");
             navigate("/login");
         } catch (error) {
@@ -123,21 +123,15 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
 
                                 {
                                     step === 2 && (
-                                        <>
-                                        <p>Condiciones</p>
-                                        <div>
-                                            <p>
-                                                Política de privacidad
-                                                <br />
-                                                Términos y condiciones
-                                            </p>
-                                        </div>
-                                        <input type="checkbox" {...methods.register("conditions")} />
-                                        {step === 2 && "conditions" in methods.formState.errors && (
-                                            <p className=" text-red-500">{methods.formState.errors.conditions?.message}</p>
-                                        )}
+                                        <div className="flex flex-col justify-center items-center h-[20vh]">
+                                        <TermConditions
+                                               register={methods.register}
+                                               control={methods.control}
+                                               errors={methods.formState.errors}
 
-                                    </>
+                                           >
+                                       </TermConditions>
+                                      </div>
                                     )
                                 }
                             </AnimatePresence>

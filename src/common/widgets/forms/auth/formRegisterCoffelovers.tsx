@@ -20,6 +20,7 @@ import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/register
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { RegisterCoffelover } from "@/api";
 import { ButtonGoogle } from "@/common/atoms/buttonGoogle";
+import { TermConditions } from "./termConditions";
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(0);
@@ -76,7 +77,6 @@ const FormRegisterCoffeelover = () => {
     const onSubmit = async(data: any) => {
 
         const finalData = { ...formData, ...data };
-        // console.log(finalData);
         const dataCoffeelover = {
             personData: {
                 full_name: `${finalData.name} ${finalData.lastname}`,
@@ -89,8 +89,6 @@ const FormRegisterCoffeelover = () => {
                 password: finalData.password,
             }
         };
-
-        console.log('Coffelover', dataCoffeelover);
 
         try {
             await useRegisterCoffeelover.mutateAsync(dataCoffeelover)
@@ -121,14 +119,8 @@ const FormRegisterCoffeelover = () => {
                 },
             };
 
-            console.log('Coffelover', userData,);
-
             // Verificar si hay datos incompletos
             const datosIncompletos = !userData.personData.type_document || !userData.personData.number_document || !userData.personData.phone_number;
-
-
-            console.log('Datos incompletos:', datosIncompletos);
-            console.log('Nuevo usuario:', isNewUser);
 
             setIsLoading(false);
             if (isNewUser || datosIncompletos) {
@@ -203,21 +195,15 @@ const FormRegisterCoffeelover = () => {
                                 )}
                                 {
                                     step === 3 && (
-                                        <>
-                                            <p>Condiciones</p>
-                                            <div>
-                                                <p>
-                                                    Política de privacidad
-                                                    <br />
-                                                    Términos y condiciones
-                                                </p>
-                                            </div>
-                                            <input data-testid="conditions-checkbox" type="checkbox" {...methods.register("conditions")} />
-                                            {step === 3 && "conditions" in methods.formState.errors && (
-                                                <p className=" text-red-500">{methods.formState.errors.conditions?.message}</p>
-                                            )}
+                                       <div className="flex flex-col justify-center items-center h-[20vh]">
+                                         <TermConditions
+                                                register={methods.register}
+                                                control={methods.control}
+                                                errors={methods.formState.errors}
 
-                                        </>
+                                            >
+                                        </TermConditions>
+                                       </div>
                                     )
                                 }
                             </AnimatePresence>
@@ -266,7 +252,7 @@ const FormRegisterCoffeelover = () => {
                         >
                             {step > 0 ? (
                                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                    <Button type="button" variant="outline" onClick={prevStep} className="border-gray-200 bg-amber-50/50">
+                                    <Button type="button" variant="outline" onClick={prevStep} className="border-gray-200 ">
                                         <ArrowLeft className="w-4 h-4 mr-2" />
                                         Anterior
                                     </Button>
@@ -282,7 +268,7 @@ const FormRegisterCoffeelover = () => {
                                 >
                                     <Button
                                         type="button"
-                                        className={`bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white ${step === 0 ? 'w-full' : ''}`}
+                                        className={`bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white ${step === 0 ? 'w-full' : 'bg-amber-600 hover:bg-amber-500'}`}
                                         // disabled={!methods.formState.isValid} 
                                         data-testid="next-button"
                                         onClick={onNext} >

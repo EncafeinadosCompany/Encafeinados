@@ -12,7 +12,6 @@ const RoleRoute = ({ allowedRoles }: RouteProps) => {
     const {user} = getAuthStorage() 
 
     if (!user) return <Navigate to="/login" replace />
-    console.log(user)
     if (!allowedRoles.includes((user as { role: string }).role)) return <Navigate to="/unauthorized" replace />
     return <Outlet />
 }
