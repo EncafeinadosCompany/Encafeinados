@@ -4,10 +4,8 @@ import { calculateDistance } from "@/common/utils/map/mapUtils";
 import { Branch, BranchesResponse, SocialBranch } from "@/api/types/branchesTypes";
 import { Store, StoresResponse } from "@/api/types/storesTypes";
 
+// This hook is used to manage the data for the map component, including branches, cafes, and user location.
 
-/**
- * Hook personalizado para manejar todos los estados derivados y cálculos relacionados con el mapa
- */
 export const useMapData = (
   branchesData: BranchesResponse | undefined,
   filteredBranchesData: BranchesResponse | undefined,
@@ -36,7 +34,6 @@ export const useMapData = (
       .map((branch: Branch) => {
         if (!branch.latitude || !branch.longitude) return null;
        
-        // Usar directamente el logo de la tienda de la respuesta API
         const storeLogo = branch.store?.store_logo ||
           "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
@@ -51,7 +48,7 @@ export const useMapData = (
           tags: ["Coffee", "Specialty"],
           latitude: branch.latitude,
           longitude: branch.longitude,
-          isOpen: true, // Ya está filtrado por APPROVED
+          isOpen: true, 
           status: branch.status,
           phone: branch.phone_number,
           address: branch.address,
@@ -60,8 +57,6 @@ export const useMapData = (
           socialNetworks: branch.social_branches || []
         };
 
-
-        // Calcular distancia si la ubicación del usuario está disponible
         if (userLocation) {
           const distanceKm = calculateDistance(
             userLocation[0],
@@ -75,20 +70,16 @@ export const useMapData = (
             distanceValue: parseFloat(distanceKm),
           };
         }
-
-
-        // Distancia predeterminada cuando la ubicación del usuario no está disponible
+        
         return {
           ...baseData,
           distance: "Unknown distance",
-          distanceValue: 999, // Valor alto para ordenar al final
+          distanceValue: 999, 
         };
       })
       .filter(Boolean) as Cafe[];
   }, [filteredBranches, userLocation]);
 
-
-  // 4. Memoizar las posiciones de los marcadores
   const cafePositions: MarkerPosition[] = useMemo(
     () => cafes.map((cafe) => ({
       id: cafe.id,
@@ -98,8 +89,6 @@ export const useMapData = (
     [cafes]
   );
 
-
-  // 5. Ahora sí ordenamos correctamente por distancia
   const sortedCafes = useMemo(() => {
     if (!userLocation) return cafes;
     return [...cafes].sort((a, b) =>
@@ -107,15 +96,11 @@ export const useMapData = (
     );
   }, [cafes, userLocation]);
 
-
-  // 6. Memoizar activeCafeData
   const activeCafeData = useMemo(
     () => activeCafe ? cafes.find((cafe) => cafe.id === activeCafe) : null,
     [activeCafe, cafes]
   );
 
-
-  // 7. Memoizar las tiendas disponibles para el filtro
   const availableStores = useMemo(() => {
     if (!storesData?.stores?.stores) return [];
 
@@ -131,7 +116,7 @@ export const useMapData = (
     defaultCenter,
     cafes,
     cafePositions,
-    filteredCafes: cafes, // Para mantener la compatibilidad con el API existente
+    filteredCafes: cafes, 
     sortedCafes,
     activeCafeData,
     availableStores,
