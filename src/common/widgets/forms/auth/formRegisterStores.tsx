@@ -89,13 +89,14 @@ const FormRegisterStores = () => {
 
         } catch (error) {
             console.log("Error al registrar la tienda:", error);
+            setStep(0);
         }
 
        
     };
 
     return (
-        <Card className="w-full max-w-3xl overflow-x-hidden mx-auto h-screen max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent relative p-4 sm:p-6 border-none shadow-2xl bg-white/90">
+        <Card className="w-full max-w-3xl overflow-x-hidden mx-auto h-full max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent relative p-4 sm:p-6 border-none shadow-2xl bg-white/90">
             <FormProvider {...methods}>
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -118,7 +119,7 @@ const FormRegisterStores = () => {
                             })()}
                         />
                         {/* Indicador de progreso */}
-                        <div className="mt-2 ml-8 sm:ml-20  md:ml-36 grid grid-cols-1  justify-between">
+                        <div className="mt-2 ml-8 sm:ml-20  md:ml-48 grid grid-cols-1  justify-between">
                             <ProgressIndicator step={step + 1} totalSteps={RegisterStoreSchema.length} />
                         </div>
 
@@ -202,7 +203,7 @@ const FormRegisterStores = () => {
                                                 : "bg-gray-900 hover:bg-gray-800 text-white"
                                                 }`}
                                         >
-                                            Continuar registro
+                                            Listo
                                         </Button>
                                     </motion.div>
                                 )}

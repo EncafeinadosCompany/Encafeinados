@@ -17,6 +17,7 @@ export const useRegisterStoreMutation = () => {
       mutationFn: async (formData: RegisterStoreSchemaType): Promise<responseStores> => {
         try {
           const response = await authClient.post<responseStores>('/stores', formData);
+          localStorage.setItem('nameStore', response.store.name);
           return response;
     
         } catch (error: any) {

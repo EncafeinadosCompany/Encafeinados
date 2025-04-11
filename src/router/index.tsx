@@ -8,6 +8,7 @@ import { PrincipalStores } from "@/modules/stores/components/principalStorePage"
 import CompletePerfil from "@/common/widgets/forms/auth/formCompleteProfile";
 import RegisterStoreBranches from "@/common/widgets/forms/auth/registerStoreBranches";
 
+
 const LoadingSpinner = lazy(() => import ("@/common/atoms/LoadingSpinner"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));

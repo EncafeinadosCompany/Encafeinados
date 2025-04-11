@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { Suspense, lazy } from "react"
 import { ArrowRight } from "lucide-react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { FormProvider, useForm } from "react-hook-form"
 import { motion } from "framer-motion"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -25,16 +25,22 @@ const MapSearch = lazy(() => import("@/common/widgets/map/mapSearch"));
 import { useCriteria } from "@/api/queries/stores/criteriaQueries"
 import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueries"
 import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
+import { showSuccessToast } from "@/common/molecules/auth/cardSuccess"
+
 
 export default function RegisterStoreBranches() {
-
+    
     const [step, setStep] = useState(0)
-    const { data: criteria } = useCriteria();
-    const { data: socialNetworks } = useSocialNetworksQuery();
-    const useBranchesMutation = useRegisterBrandMutation();
+    const { storeId } = useParams();
+    const [formData, setFormData] = useState({})
     const [baseAddress, setBaseAddress] = useState("");
 
-    const { storeId } = useParams();
+    const navigate = useNavigate();
+    
+    const { data: socialNetworks } = useSocialNetworksQuery();
+    const { data: criteria } = useCriteria();
+    const useBranchesMutation = useRegisterBrandMutation();
+
 
     const methods = useForm<RegisterStoreBrancheSchemaType>({
         resolver: zodResolver(RegisterStoreBrancheSchema[step] as any),
@@ -62,9 +68,6 @@ export default function RegisterStoreBranches() {
     }, [criteria, methods]);
 
 
-    const [formData, setFormData] = useState({})
-
-
     const handleSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
         console.log(finalData.criteria)
@@ -89,6 +92,8 @@ export default function RegisterStoreBranches() {
                 criteria: finalData.criteria
             }
             await useBranchesMutation.mutateAsync(data)
+            const name = localStorage.getItem("nameStore");
+            showSuccessToast(name) 
 
         } catch (err) {
             console.log(err)
@@ -223,7 +228,7 @@ export default function RegisterStoreBranches() {
                                     ) : (
                                         <Button
                                             disabled={!methods.formState.isValid || !methods.getValues("social_networks")?.length}
-                                            type="submit" className="ml-auto">Guardar</Button>
+                                            type="submit" className="ml-auto bg-black text-white">Guardar</Button>
                                     )}
                                 </div>
                             </CardFooter>

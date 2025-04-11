@@ -12,7 +12,7 @@ import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffel
 import { registerCoffeeloverSchema, CurrentCoffeeLoverSchema } from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
 import { TitleForm } from "@/common/atoms/auth/titleForm";
 import { registerWithGoogle } from "@/api/firebase";
-import { LinkReturn } from "@/common/molecules/auth/LinkReturn";
+
 
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
@@ -152,7 +152,7 @@ const FormRegisterCoffeelover = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center p-4">
+        <div className="w-full flex flex-col items-center rounded-md max-w-3xl overflow-x-hidden mx-auto h-full max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent relative p-4 sm:p-6 border-none shadow-2xl bg-white/90">
             <motion.div
                 className="max-w-2xl w-full"
                 animate={{ opacity: 1, y: 0 }}
@@ -168,17 +168,15 @@ const FormRegisterCoffeelover = () => {
                         </TitleForm>
                     </div>
                     {/* Progress indicator */}
-                    <ProgressIndicator step={step + 1} totalSteps={registerCoffeeloverSchema.length}></ProgressIndicator>
+                    <ProgressIndicator className="md:mx-40" step={step + 1} totalSteps={registerCoffeeloverSchema.length}></ProgressIndicator>
                 </div>
 
                 <FormProvider {...methods}>
                     <form className="space-y-2 relative overflow-hidden" onSubmit={methods.handleSubmit(onSubmit)}>
-                        <div className="relative" style={step === 0 ? { minHeight: "200px" } : { minHeight: "300px" }}>
+                        <div className="relative" >
                             <AnimatePresence initial={false} custom={direction} mode="wait">
                                 {step === 0 && (
                                     <RegisterCoffeloverStep1
-                                        onGoogleSignIn={handleGoogleSignIn}
-                                        isLoading={isLoading}
                                         register={methods.register}
                                         errors={methods.formState.errors}
                                         direction={direction}
@@ -234,7 +232,7 @@ const FormRegisterCoffeelover = () => {
                                         <div className="absolute inset-0 flex items-center">
                                             <div className="w-full border-t border-gray-900"></div>
                                         </div>
-                                        <div className="relative px-4 text-sm  bg-[#ffe4c4] text-gray-500 font-medium">
+                                        <div className="relative px-4 text-sm  bg-white text-gray-500 font-medium">
                                             Opciones de registro
                                         </div>
                                     </div>
@@ -256,10 +254,6 @@ const FormRegisterCoffeelover = () => {
                                         </ButtonGoogle>
 
                                     </motion.div>
-
-                                    {/* <div className="text-center text-xs text-gray-500 mt-10">
-                                  Al registrarte, aceptas nuestros <a href="#" className="text-amber-700 hover:underline">Términos de servicio</a> y <a href="#" className="text-amber-700 hover:underline">Política de privacidad</a>
-                                </div> */}
                                 </div>
 
                             )

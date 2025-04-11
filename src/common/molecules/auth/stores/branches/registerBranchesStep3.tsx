@@ -1,9 +1,8 @@
-import { useFormContext } from "react-hook-form";
 import { Input } from "@/common/ui/input";
 import { Label } from "@/common/ui/label";
 import { Textarea } from "@/common/ui/textarea";
-import { useState } from "react";
 import { InputForm } from "@/common/atoms/auth/inputForm";
+import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus";
 
 interface RegisterBranchesStep3Props {
   baseAddress?: string;
@@ -13,20 +12,8 @@ interface RegisterBranchesStep3Props {
 }
 
 export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: RegisterBranchesStep3Props) => {
-  const [focusedField, setFocusedField] = useState<string | null>(null);
 
-
-  const registerWithFocus = (name: string) => {
-    const registration = register(name);
-    return {
-      ...registration,
-      onFocus: () => setFocusedField(name),
-      onBlur: (e: any) => {
-        setFocusedField(null);
-        registration.onBlur(e);
-      }
-    };
-  };
+  const { focusedField, registerWithFocus } = useRegisterFocus()
 
   return (
     <div className="space-y-6 mx-auto max-w-4xl p-6 overflow-hidden">
@@ -41,7 +28,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
         </Label>
         <Textarea
           id="baseAddress"
-          {...registerWithFocus("address")}
+          {...registerWithFocus("address", register)}
           defaultValue={baseAddress}
           readOnly
           rows={2}
@@ -61,7 +48,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
         </Label>
         <InputForm
           id="addressDetails"
-          {...registerWithFocus("addressDetails")}
+          {...registerWithFocus("addressDetails", register)}
           placeholder="Ej. Calle 123 #45-67"
           className="rounded-full text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#3e90a4] focus:border-transparent transition-all"
         />
@@ -81,7 +68,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
           </Label>
           <Input
             id="nearbyReference"
-            {...registerWithFocus("nearbyReference")}
+            {...registerWithFocus("nearbyReference", register)}
             placeholder="Ej. Frente a la panadería"
             className="rounded-full text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#3e90a4] focus:border-transparent transition-all"
           />
@@ -97,7 +84,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
         </Label>
         <Textarea
           id="additionalNotes"
-          {...registerWithFocus("additionalNotes")}
+          {...registerWithFocus("additionalNotes", register)}
           placeholder="Instrucciones especiales para la entrega, puntos de referencia, etc."
           className="rounded-md text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#3e90a4] focus:border-transparent transition-all"
           rows={2}/>
