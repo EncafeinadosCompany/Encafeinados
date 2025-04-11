@@ -39,7 +39,6 @@ export const useRegisterCriteriaMutation = () => {
               image_url: (value as { image_url?:{file: File} }).image_url?.file,
             }));
 
-
             try {
               const updatedCriteriaResponseData = await Promise.all(
                 criteriaResponseData.map(async (item) => {
@@ -55,8 +54,7 @@ export const useRegisterCriteriaMutation = () => {
                 ...formData,
                 criteriaResponseData: updatedCriteriaResponseData,
               };
-      
-              console.log("finalPayload", finalPayload);
+
               const response = await authClient.post<any>("/branch-approvals", finalPayload);
               return response;
             } catch (error: any) {

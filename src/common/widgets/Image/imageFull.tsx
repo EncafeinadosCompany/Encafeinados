@@ -24,9 +24,7 @@ const Imagen = ({register, errors, direction, control}:registerStoreProps) =>{
                 
             };
             reader.readAsDataURL(file);
-             
-            console.log("file", file);
-          
+                       
         }
     };
 

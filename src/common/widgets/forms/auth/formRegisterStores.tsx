@@ -43,7 +43,6 @@ const FormRegisterStores = () => {
 
     const onNext = () => {
         methods.trigger().then((isValid) => {
-            console.log("¿Paso válido?", isValid);
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
                 setStep(step + 1);
@@ -55,9 +54,7 @@ const FormRegisterStores = () => {
     const onSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
         let imageUploadPromise: string;
-
-        console.log("Formulario enviado:", finalData);
-      
+            
         if (finalData.logo) {
           imageUploadPromise = await useImageMutation
             .mutateAsync(finalData.logo)

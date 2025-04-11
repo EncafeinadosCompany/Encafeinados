@@ -22,7 +22,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
       <div className="space-y-2">
         <Label htmlFor="baseAddress"
          className={`flex items-center text-xs transition-colors ${
-            focusedField === "address" ? "text-[#3e90a4]" : ""
+            focusedField === "address" ? "text-[#DB8935]" : ""
           }`}>
            Dirección base
         </Label>
@@ -32,7 +32,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
           defaultValue={baseAddress}
           readOnly
           rows={2}
-          className="rounded-lg text-gray-400 border shadow-sm border-gray-200 bg-gray-50 focus:ring-2 focus:ring-[#3e90a4]  focus:border-transparent transition-all"
+          className="rounded-lg text-gray-400 border shadow-sm border-gray-200 bg-gray-50 focus:ring-2 focus:ring-[#DB8935]  focus:border-transparent transition-all"
         />
         {errors.address && (
           <p className="text-sm text-red-500">{errors.address.message as string}</p>
@@ -42,7 +42,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
       {/* Additional details and number */}
       <div className="space-y-2">
         <Label htmlFor="addressDetails" className={`flex items-center text-xs transition-colors ${
-            focusedField === "addressDetails" ? "text-[#3e90a4]" : "text-gray-600"
+            focusedField === "addressDetails" ? "text-[#DB8935]" : "text-gray-600"
           }`}>
           Número y detalles adicionales *
         </Label>
@@ -50,7 +50,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
           id="addressDetails"
           {...registerWithFocus("addressDetails", register)}
           placeholder="Ej. Calle 123 #45-67"
-          className="rounded-full text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#3e90a4] focus:border-transparent transition-all"
+          className="rounded-full text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
         />
         {errors.addressDetails && (
           <p className="text-sm text-red-500">{errors.addressDetails.message as string}</p>
@@ -62,7 +62,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
         {/* Nearby reference */}
         <div className="space-y-2">
           <Label htmlFor="nearbyReference"  className={`flex items-center text-xs transition-colors ${
-            focusedField === "nearbyReference" ? "text-[#3e90a4]" : "text-gray-600"
+            focusedField === "nearbyReference" ? "text-[#DB8935]" : "text-gray-600"
           }`}>
              Referencia cercana (Opcional)
           </Label>
@@ -70,7 +70,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
             id="nearbyReference"
             {...registerWithFocus("nearbyReference", register)}
             placeholder="Ej. Frente a la panadería"
-            className="rounded-full text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#3e90a4] focus:border-transparent transition-all"
+            className="rounded-full text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
           />
         </div>
       </div>
@@ -78,7 +78,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
       {/* Additional notes (Optional) */}
       <div className="space-y-2">
         <Label htmlFor="additionalNotes"className={`flex items-center text-xs transition-colors ${
-            focusedField === "additionalNotes" ? "text-[#3e90a4]" : "text-gray-600"
+            focusedField === "additionalNotes" ? "text-[#DB8935]" : "text-gray-600"
           }`}>
           <span className="mr-2">📜</span> Notas adicionales (Opcional)
         </Label>
@@ -86,7 +86,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
           id="additionalNotes"
           {...registerWithFocus("additionalNotes", register)}
           placeholder="Instrucciones especiales para la entrega, puntos de referencia, etc."
-          className="rounded-md text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#3e90a4] focus:border-transparent transition-all"
+          className="rounded-md text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
           rows={2}/>
       </div>
     </div>

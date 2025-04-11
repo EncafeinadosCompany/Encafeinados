@@ -2,10 +2,9 @@ import { Input } from "@/common/ui/input";
 import { Label } from "@/common/ui/label";
 import { Controller } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
-import { Pencil } from "lucide-react";
 import { renderRadioGroup } from "@/common/atoms/RenderRadio";
 import { criteriaResponseData } from "@/api/queries/stores/criteriaQueries";
-import { useState } from "react";
+
 
 
 interface RegisterStoreBrancheStep2Props {
@@ -15,7 +14,6 @@ interface RegisterStoreBrancheStep2Props {
 
 export default function RegisterStoreBrancheStep2({ methods, criteria }: RegisterStoreBrancheStep2Props) {
   const watchedCriteria = methods.watch("criteria");
-  const [previewUrls, setPreviewUrls] = useState<Record<number, string>>({});
 
   return (
     <>

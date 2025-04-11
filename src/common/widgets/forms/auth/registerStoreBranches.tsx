@@ -34,9 +34,8 @@ export default function RegisterStoreBranches() {
     const { storeId } = useParams();
     const [formData, setFormData] = useState({})
     const [baseAddress, setBaseAddress] = useState("");
-
-    const navigate = useNavigate();
     
+    const navigate = useNavigate();
     const { data: socialNetworks } = useSocialNetworksQuery();
     const { data: criteria } = useCriteria();
     const useBranchesMutation = useRegisterBrandMutation();
@@ -70,8 +69,7 @@ export default function RegisterStoreBranches() {
 
     const handleSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
-        console.log(finalData.criteria)
-
+      
         const social = finalData.social_networks || [];
 
         if (!social.length) {
@@ -94,7 +92,7 @@ export default function RegisterStoreBranches() {
             await useBranchesMutation.mutateAsync(data)
             const name = localStorage.getItem("nameStore");
             showSuccessToast(name) 
-
+            navigate("/")
         } catch (err) {
             console.log(err)
         }
@@ -124,7 +122,6 @@ export default function RegisterStoreBranches() {
     }
 
     const onLocationSelect = (lat: number, lng: number, address: string) => {
-        console.log(lat, lng, address)
         methods.setValue("latitude", lat, { shouldValidate: true });
         methods.setValue("longitude", lng, { shouldValidate: true });
         methods.setValue("address", address, { shouldValidate: true });
@@ -133,7 +130,7 @@ export default function RegisterStoreBranches() {
     }
 
     return (<div className="min-h-screen flex items-center justify-center p-4  bg-gradient-to-b from-orange-100 to-orange-300 sm:to-orange-200" translate="no">
-        <Card className="relative w-full max-w-3xl mx-auto min-h-[50vh] max-h-[90vh]   md:max-h-[85vh] flex flex-col overflow-y-auto border-none shadow-2xl bg-white/90">
+        <Card className="relative w-full max-w-3xl mx-auto min-h-[50vh] max-h-[90vh]  md:max-h-[85vh] flex flex-col overflow-y-auto border-none shadow-2xl bg-white/90">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -157,8 +154,8 @@ export default function RegisterStoreBranches() {
                     />
                 </CardHeader>
                 <FormProvider {...methods}>
-                    <Suspense fallback={<div className="text-center">Loading...</div>}>
-                        <form className="space-y-9 md:space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent px-4 sm:px-6 " onSubmit={methods.handleSubmit(handleSubmit)}>
+                    <Suspense fallback={<div className="text-center">Cargando...</div>}>
+                        <form className="space-y-9 md:space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent  sm:px-6 " onSubmit={methods.handleSubmit(handleSubmit)}>
                             <CardContent className="flex-1 max-h[10vh] ">
                                 {step === 0 && (
                                     <RegisterStoreBrancheStep1

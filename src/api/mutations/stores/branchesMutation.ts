@@ -16,9 +16,7 @@ export const useRegisterBrandMutation = () => {
     return useMutation<any, Error, BranchPost>({
       mutationFn: async (formData: BranchPost): Promise<LoginResponse> => {
         try {
-          const response = await authClient.post<any>('/branches', formData);
-          console.log('AQUI', response)
-          
+          const response = await authClient.post<any>('/branches', formData);        
           return response;
     
         } catch (error: any) {
@@ -26,8 +24,6 @@ export const useRegisterBrandMutation = () => {
         }
       },
       onSuccess: (data, value:BranchPost) => {
-
-        console.log('AQUI', data)
 
          useCriteriaMutation.mutateAsync({
           branchId: data.branch.id,

@@ -44,8 +44,6 @@ const CompletePerfil = () => {
     const tempUserData = JSON.parse(sessionStorage.getItem("tempUserData") || "{}");
     const updatedUserData = { ...tempUserData, personData: data };
 
-
-    console.log(updatedUserData);
     await useRegisterCoffeelover.mutateAsync(updatedUserData).then((response) => {
       toast.success("Perfil completado correctamente. ¡Bienvenido!");
       sessionStorage.removeItem("tempUserData");

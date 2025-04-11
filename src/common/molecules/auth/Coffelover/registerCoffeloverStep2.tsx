@@ -29,7 +29,7 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
             initial="enter"
             animate="center"
             exit="exit"
-            className="p-6  w-full"
+            className="p-1 w-full"
             style={{ perspective: "1000px" }}
         >
             <div className="space-y-6 m-3">

@@ -14,9 +14,7 @@ export const useAdminStoreMutation = () => {
       mutationFn: async (formData: RegisterAdminStores): Promise<any> => {
   
         try {
-          const response = await authClient.post<any>('/admin/store-admin', formData);
-          console.log('AQUI', response)
-          
+          const response = await authClient.post<any>('/admin/store-admin', formData); 
           return response.data;
     
         } catch (error: any) {

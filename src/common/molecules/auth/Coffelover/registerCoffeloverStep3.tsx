@@ -3,6 +3,8 @@ import { InputPassword } from "@/common/atoms/input-passwork";
 import { Label } from "@radix-ui/react-label";
 import { UseFormRegister } from "react-hook-form";
 import { motion } from "framer-motion";
+import { TextError } from "@/common/atoms/textError";
+import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus";
 
 interface RegisterCoffeloverStep3Props {
   register: UseFormRegister<any>;
@@ -11,6 +13,7 @@ interface RegisterCoffeloverStep3Props {
 }
 
 const RegisterCoffeloverStep3 = ({ register, errors, direction }: RegisterCoffeloverStep3Props) => {
+  const { focusedField, registerWithFocus } = useRegisterFocus();
 
   return (
     <motion.div
@@ -23,32 +26,32 @@ const RegisterCoffeloverStep3 = ({ register, errors, direction }: RegisterCoffel
       className="pb-6 w-full"
       style={{ perspective: "1000px" }}
     >
-      <div className="space-y-4 m-3">
+      <div className="space-y-4 m-3 space-x-2  grid grid-cols-1 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="password">Crea tu contraseña</Label>
+        <Label htmlFor="password" className={`flex items-center text-xs transition-colors ${focusedField === "password" ? "text-[#DB8935] " : "text-gray-600" }`}>Crea tu clave</Label>
           <InputPassword
             id="password"
             placeholder="Contraseña"
-            className={`text-gray-500 bg-white/60 shadow-sm focus:shadow-md border ${errors?.password ? "border-red-500" : "focus:border-amber-500 border-gray-300"
-              } rounded-lg`}
-            {...register("password")}
+            className={`text-gray-500 border ${errors?.password ? "border-red-500" : "focus:border-amber-500 border-gray-300"
+              } rounded-full`}
+            {...registerWithFocus("password", register)}
           />
           {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+            <TextError>{errors.password.message}</TextError>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword">Confirma tu contraseña</Label>
+        <Label htmlFor="confirmPassword" className={`flex items-center text-xs transition-colors ${focusedField === "confirmPassword" ? "text-[#DB8935] " : "text-gray-600" }`}>Confirma tu clave</Label>
           <InputPassword
             id="confirmPassword"
             placeholder="Confirma tu contraseña"
-            className={`text-gray-500 bg-white/60 shadow-sm focus:shadow-md border ${errors.confirmPassword ? "border-red-500" : "focus:border-amber-500 border-gray-300"
-              } rounded-lg`}
-            {...register("confirmPassword")}
+            className={`text-gray-500 border ${errors.confirmPassword ? "border-red-500" : "focus:border-amber-500 border-gray-300 "
+              }rounded-full`}
+            {...registerWithFocus("confirmPassword", register)}
           />
           {errors.confirmPassword && (
-            <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
+            <TextError>{errors.confirmPassword.message}</TextError>
           )}
         </div>
       </div>

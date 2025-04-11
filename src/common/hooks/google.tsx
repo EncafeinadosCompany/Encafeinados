@@ -26,8 +26,6 @@ const GoogleCallback = () => {
         // Almacenar el token y los datos del usuario
         setAuthStorageGoogle(tokenResponse, userData);
 
-        console.log("Usuario autenticado:", userData);
-
         toast.success("Inicio de sesión exitoso");
         navigate("/coffeelover");
       } catch (error) {
