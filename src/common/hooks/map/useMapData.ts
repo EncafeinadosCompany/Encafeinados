@@ -4,12 +4,6 @@ import { calculateDistance } from "@/common/utils/map/mapUtils";
 import { Branch, BranchesResponse, SocialBranch } from "@/api/types/branchesTypes";
 import { Store, StoresResponse } from "@/api/types/storesTypes";
 
-import { useMemo } from "react";
-import { LatLngTuple, Cafe, MarkerPosition } from "@/common/types/map/mapTypes";
-import { calculateDistance } from "@/common/utils/map/mapUtils";
-import { Branch, BranchesResponse, SocialBranch } from "@/api/types/branchesTypes";
-import { Store, StoresResponse } from "@/api/types/storesTypes";
-
 
 /**
  * Hook personalizado para manejar todos los estados derivados y cálculos relacionados con el mapa
@@ -35,21 +29,8 @@ export const useMapData = (
   [branches]);
 
 
-
-  const branches = useMemo(() =>
-    filteredBranchesData?.branches?.branches ||
-    branchesData?.branches?.branches ||
-    [],
-  [filteredBranchesData?.branches?.branches, branchesData?.branches?.branches]);
- 
-  const filteredBranches = useMemo(() =>
-    branches.filter((branch) => branch.status === "APPROVED"),
-  [branches]);
-
-
   const cafes: Cafe[] = useMemo(() => {
     if (!branchesData?.branches?.branches) return [];
-   
    
     return filteredBranches
       .map((branch: Branch) => {
@@ -57,11 +38,7 @@ export const useMapData = (
        
         // Usar directamente el logo de la tienda de la respuesta API
         const storeLogo = branch.store?.store_logo ||
-       
-        // Usar directamente el logo de la tienda de la respuesta API
-        const storeLogo = branch.store?.store_logo ||
           "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-
 
 
         const baseData = {
@@ -75,7 +52,6 @@ export const useMapData = (
           latitude: branch.latitude,
           longitude: branch.longitude,
           isOpen: true, // Ya está filtrado por APPROVED
-          isOpen: true, // Ya está filtrado por APPROVED
           status: branch.status,
           phone: branch.phone_number,
           address: branch.address,
@@ -84,8 +60,6 @@ export const useMapData = (
           socialNetworks: branch.social_branches || []
         };
 
-
-        // Calcular distancia si la ubicación del usuario está disponible
 
         // Calcular distancia si la ubicación del usuario está disponible
         if (userLocation) {
@@ -136,15 +110,10 @@ export const useMapData = (
     if (!storesData?.stores?.stores) return [];
 
 
-
-
     return storesData.stores.stores.map((store: Store) => ({
       id: store.id,
       name: store.name,
-      name: store.name,
     }));
-  }, [storesData?.stores?.stores]);
-
   }, [storesData?.stores?.stores]);
 
 
@@ -158,10 +127,6 @@ export const useMapData = (
     availableStores,
   };
 };
-
-
-
-
 
 
 
