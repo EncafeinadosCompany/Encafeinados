@@ -6,7 +6,7 @@ import logoIcon from "@/assets/images/logo.ico";
 
 export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const [scrolled, setScrolled] = useState(false);
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -40,7 +40,7 @@ export const Navbar: React.FC = () => {
     visible: { opacity: 1, x: 0 }
   };
 
-  const [scrolled, setScrolled] = useState(false);
+
 
   useEffect(() => {
     const handleScroll = () => {
