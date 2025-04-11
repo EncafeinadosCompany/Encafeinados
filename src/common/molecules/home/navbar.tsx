@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { UserIcon, HomeIcon, InfoIcon, MenuIcon, XIcon } from '@/common/ui/icons';
 import logoIcon from "@/assets/images/logo.ico";
 
+
 export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -12,9 +13,9 @@ export const Navbar: React.FC = () => {
   };
 
   const navLinks = [
-    { href: '/', label: 'Inicio', icon: <HomeIcon className="w-4 h-4" /> },
-    { href: '/about', label: 'Acerca de', icon: <InfoIcon className="w-4 h-4" /> },
-    { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-4 h-4" /> }
+    { href: '/', label: 'Inicio', icon: <HomeIcon className="w-5 h-5" /> },
+    { href: '/about', label: 'Acerca de', icon: <InfoIcon className="w-5 h-5" /> },
+    { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-5 h-5" /> }
   ];
 
   const mobileMenuVariants = {
@@ -41,17 +42,21 @@ export const Navbar: React.FC = () => {
   };
 
 
-
   useEffect(() => {
     const handleScroll = () => {
+      // Use a smaller threshold to ensure the effect triggers more reliably
       const scrollPosition = window.scrollY;
-      if (scrollPosition > 50) {
+      if (scrollPosition > 10) {
         setScrolled(true);
       } else {
         setScrolled(false);
       }
     };
-
+  
+    // Call handleScroll immediately to set initial state
+    handleScroll();
+    
+    // Add event listener
     window.addEventListener('scroll', handleScroll);
   
     return () => {
@@ -59,11 +64,12 @@ export const Navbar: React.FC = () => {
     };
   }, []);
 
+
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out
       ${scrolled 
         ? 'bg-[#2C1810]/90 backdrop-blur-md shadow-lg' 
-        : 'bg-transparent'}`}>
+        : 'bg-[#2C1810]/90'}`}>
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <Link
           to="/"

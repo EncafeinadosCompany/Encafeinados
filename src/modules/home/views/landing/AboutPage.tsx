@@ -6,8 +6,9 @@ import { TeamSection } from '@/common/widgets/home/TeamSection';
 
 const AboutPage = () => {
   return (
-    <main className="min-h-screen bg-[#FAF3E0] relative overflow-hidden pt-5">
+    <main className="min-h-screen bg-[#FAF3E0] relative overflow-y-auto  pt-5">
       <Navbar />
+      
       <AboutSection />
       <TeamSection />
       <Footer />

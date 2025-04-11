@@ -18,16 +18,16 @@ export const useStores = () => {
 }
 
 
-// export const useBranchesByStore = (storeId: number | undefined) => {
-//     return useQuery<BranchesResponse>({
-//       queryKey: ['stores', storeId, 'branches'],
-//       queryFn: async () => {
-//         const response = await authClient.get<BranchesResponse>(`/stores/${storeId}/branches`)
-//         return response
-//       },
-//       enabled: !!storeId, 
-//     })
-// }
+export const useBranchesByStore = (storeId: number | undefined) => {
+    return useQuery<BranchesResponse>({
+      queryKey: ['stores', storeId, 'branches'],
+      queryFn: async () => {
+        const response = await authClient.get<BranchesResponse>(`/stores/${storeId}/branches`)
+        return response
+      },
+      enabled: !!storeId, 
+    })
+}
 
 export const useBranchByStore = (branchId: number | undefined) => {
   return useQuery<BranchesResponse, Error>({

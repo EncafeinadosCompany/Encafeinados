@@ -5,9 +5,9 @@ import NavbarGeneral from "@/common/widgets/nav/nav";
 const HomeCoffeelover = () => {
     return (
         <div className="bg-gray-200/40">
-             <NavbarGeneral
-        navItems={CoffeloverItems}>
-        </NavbarGeneral>
+            <NavbarGeneral
+                navItems={CoffeloverItems}>
+            </NavbarGeneral>
         </div>
     )
 }

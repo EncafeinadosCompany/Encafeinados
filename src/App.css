@@ -55,7 +55,7 @@ input[type="number"] {
   scrollbar-color: #F3D19E transparent;
 }
 
-/* Agregar estos estilos al archivo CSS global */
+Agregar estos estilos al archivo CSS global
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -85,9 +85,9 @@ input[type="number"] {
 }
 
 /* Evitar que body scrollee en iOS cuando hay modales o paneles activos */
-body.modal-open {
+/* body.modal-open {
   position: fixed;
   width: 100%;
   height: 100%;
   overflow: hidden;
-}
+} */

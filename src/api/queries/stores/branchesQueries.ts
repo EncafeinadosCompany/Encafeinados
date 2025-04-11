@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
-import { BranchesResponse } from '../../types/branchesTypes'
+import { BranchesResponse, BranchesResponseList } from '../../types/branchesTypes'
 import AuthClient from '../../client/axios'
 
 const authClient = new AuthClient()
 
 export const useBranches = () => {
-  return useQuery<BranchesResponse>({
+  return useQuery<BranchesResponseList>({
     queryKey: ['branches'],
     queryFn: async () => {
-      const response = await authClient.get<BranchesResponse>('/branches')
+      const response = await authClient.get<BranchesResponseList>('/branches')
       return response
     },
     

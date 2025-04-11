@@ -36,7 +36,7 @@ describe('TitleForm', () => {
     render(<TitleForm {...testProps} />);
 
     const titleElement = screen.getByTestId('motion-h1');
-    expect(titleElement).toHaveClass('text-2xl');
+    expect(titleElement).toHaveClass('sm:text-2xl');
     expect(titleElement).toHaveClass('font-medium');
     expect(titleElement).toHaveClass('text-amber-900');
   });

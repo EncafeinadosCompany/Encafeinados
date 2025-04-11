@@ -51,3 +51,11 @@ export interface BranchesResponse {
   branches: Branch[];
   
 }
+
+export interface BranchesResponseList {
+  message: string;
+  branches:{
+    branches: Branch[]
+  }
+  
+}

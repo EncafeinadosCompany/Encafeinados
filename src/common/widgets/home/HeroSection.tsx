@@ -10,8 +10,10 @@ export const HeroSection: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       setScrollPosition(window.scrollY);
+      
     };
     window.addEventListener("scroll", handleScroll);
+    
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
