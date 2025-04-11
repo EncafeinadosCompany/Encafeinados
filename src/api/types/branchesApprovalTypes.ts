@@ -84,3 +84,14 @@ export interface BranchApprovalDetails {
   criteriaResponses: CriteriaResponse[];
   approvedBy: string | null;
 }
+
+export interface ApprovedBranch {
+  id: number;
+  name: string;
+  address: string;
+  status: string;
+  store_logo: string;
+  store_email: string;
+}
+
+export type ApprovedBranchesResponse = ApprovedBranch[];

@@ -1,5 +1,4 @@
 import React from 'react';
-import { PendingBranch } from "@/api/types/branchesApprovalTypes"; 
 import { Card, CardContent } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
@@ -7,25 +6,28 @@ import { motion } from "framer-motion";
 import { Eye, CheckCircle2, XCircle, MapPin } from "lucide-react";
 
 interface BranchCardProps {
-  branch: PendingBranch; 
+  branch: {
+    id: number;
+    name: string;
+    address: string;
+    status: string;
+    latitude?: number;  // Hacer opcional
+    longitude?: number; // Hacer opcional
+    phoneNumber?: string;
+    store_logo?: string;
+    store_email?: string;
+  };
   index: number;
-  onView: (branch: PendingBranch) => void; 
-  onApprove: (branch: PendingBranch) => void; 
-  onReject: (branch: PendingBranch) => void; 
-  type?: 'pending' | 'approved' | 'rejected';
+  onView: (branch: any) => void;  // Usar tipo genérico temporalmente
+  type: 'pending' | 'approved';
 }
 
-export const BranchCard = ({ branch, index, onView, onApprove, onReject, type = 'pending' }: BranchCardProps) => {
+export const BranchCard = ({ branch, index, onView, type }: BranchCardProps) => {
   const borderHoverStyles = {
     pending: "hover:border-amber-200/50",
-    approved: "hover:border-green-200/50",
-    rejected: "hover:border-red-200/50"
+    approved: "hover:border-green-200/50"
   };
 
-  // Manejar la estructura inconsistente de la API
-  const branchLogo = branch.store_logo || (branch.store && branch.store.store_logo) || "";
-  const branchEmail = branch.store_email || (branch.store && branch.store.store_email) || "";
-  
   // Café SVG base64 para fallback de imagen
   const COFFEE_FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%236F4E37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 8h1a4 4 0 0 1 0 8h-1'%3E%3C/path%3E%3Cpath d='M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z'%3E%3C/path%3E%3Cline x1='6' y1='1' x2='6' y2='4'%3E%3C/line%3E%3Cline x1='10' y1='1' x2='10' y2='4'%3E%3C/line%3E%3Cline x1='14' y1='1' x2='14' y2='4'%3E%3C/line%3E%3C/svg%3E";
   
@@ -42,11 +44,10 @@ export const BranchCard = ({ branch, index, onView, onApprove, onReject, type = 
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2.5 overflow-hidden">
               <div className={`w-10 h-10 rounded-md overflow-hidden flex-shrink-0 bg-${
-                type === 'pending' ? 'amber' : 
-                type === 'approved' ? 'green' : 'red'
+                type === 'pending' ? 'amber' : 'green'
               }-50/70 flex items-center justify-center`}>
                 <img
-                  src={branchLogo}
+                  src={branch.store_logo || COFFEE_FALLBACK}
                   alt={branch.name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -89,7 +90,6 @@ export const BranchCard = ({ branch, index, onView, onApprove, onReject, type = 
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => onApprove(branch)}
                           className="h-7 w-7 text-green-600 hover:bg-green-50/50 hover:text-green-700"
                         >
                           <CheckCircle2 className="h-3.5 w-3.5" />
@@ -105,7 +105,6 @@ export const BranchCard = ({ branch, index, onView, onApprove, onReject, type = 
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => onReject(branch)}
                           className="h-7 w-7 text-red-600 hover:bg-red-50/50 hover:text-red-700"
                         >
                           <XCircle className="h-3.5 w-3.5" />

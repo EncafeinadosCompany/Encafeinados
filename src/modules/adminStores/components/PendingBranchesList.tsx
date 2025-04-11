@@ -1,5 +1,7 @@
 import React from "react";
 import { PendingBranchesWidget } from '@/common/widgets/admin/PendingBranchesWidget';
+import { ApprovedBranchesWidget } from '@/common/widgets/admin/ApprovedBranchesWidget';
+
 
 const PendingBranchesList = () => {
     return (
@@ -10,7 +12,7 @@ const PendingBranchesList = () => {
               <PendingBranchesWidget />
             </div>
             <div className="h-full rounded-lg border border-green-100 overflow-hidden bg-green-50/10">
-              <PendingBranchesWidget />
+              <ApprovedBranchesWidget />
             </div>
           
           </div>
