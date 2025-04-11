@@ -11,7 +11,16 @@ export const useBranches = () => {
       const response = await authClient.get<BranchesResponseList>('/branches')
       return response
     },
-    
+  })
+}
+
+export const usePendingBranches = () => {
+  return useQuery<BranchesResponse>({
+    queryKey: ['branches', 'PENDING'],
+    queryFn: async () => {
+      const response = await authClient.get<BranchesResponse>('/branches/status/PENDING')
+      return response
+    },
   })
 }
 
@@ -26,4 +35,14 @@ export const useBranch = (branchId: number | undefined) => {
   })
 }
 
-
+export const usePendingBranchesQuery = () => {
+  return useQuery<PendingBranchesResponse>({
+    queryKey: ['branches', 'pending'],
+    queryFn: async () => {
+      const response = await authClient.get<PendingBranchesResponse>('/branches/status/PENDING')
+      return response
+    },
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
+  })
+}
