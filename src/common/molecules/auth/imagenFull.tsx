@@ -41,6 +41,7 @@ const ImagenFull = ({ register, direction, errors, control, isDragging, previewI
                             ref={fileInputRef}
                             className="hidden"
                             accept="image/*"
+                            name={field.name}
 
                             onChange={(e) => {
                                 handleImageChange(e);

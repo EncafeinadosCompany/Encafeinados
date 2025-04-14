@@ -64,6 +64,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
         methods.trigger(undefined, { shouldFocus: false }).then((isValid) => {
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
+                
                 if (step === 1) {
                     const error = validateImageRequirements(Array.isArray(criteria) ? criteria : [], methods.getValues("criteria"));
                     if (error) {

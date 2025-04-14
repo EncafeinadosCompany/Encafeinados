@@ -30,7 +30,8 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
             </Label>
             <Textarea
               id="baseAddress"
-              {...registerWithFocus("address", register)}
+              {...register("address")}
+              {...registerWithFocus("address")}
               defaultValue={baseAddress}
               readOnly
               rows={2}
@@ -49,7 +50,8 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
             </Label>
             <InputForm
               id="addressDetails"
-              {...registerWithFocus("addressDetails", register)}
+              {...register("addressDetails")}
+              {...registerWithFocus("addressDetails")}
               placeholder="Ej. Calle 123 #45-67"
               className="rounded-full text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
             />
@@ -67,7 +69,8 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
               </Label>
               <Input
                 id="nearbyReference"
-                {...registerWithFocus("nearbyReference", register)}
+                {...register("nearbyReference")}
+                {...registerWithFocus("nearbyReference")}
                 placeholder="Ej. Frente a la panadería"
                 className="rounded-full text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
               />
@@ -83,7 +86,8 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
             </Label>
             <Textarea
               id="additionalNotes"
-              {...registerWithFocus("additionalNotes", register)}
+              {...register("additionalNotes")}
+              {...registerWithFocus("additionalNotes")}
               placeholder="Instrucciones especiales para la entrega, puntos de referencia, etc."
               className="rounded-md text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
               rows={2}/>

@@ -198,7 +198,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                 </div>
             </AnimatePresence>
         </CardContent>
-    </Card>
+        </Card>
 
     )
 }

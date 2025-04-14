@@ -40,7 +40,8 @@ export default function RegisterStoreBrancheStep1({ register, control, error }: 
                             <Store className="absolute top-3 left-4 text-gray-400" size={18} />
                             <InputForm
                                 id="branchName"
-                                {...registerWithFocus('name', register)}
+                                {...register('name')}
+                                {...registerWithFocus('name')}
                                 className="pl-10"
                                 placeholder="Ingrese el nombre de la sucursal"
                             />
@@ -58,7 +59,8 @@ export default function RegisterStoreBrancheStep1({ register, control, error }: 
 
                             <InputForm
                                 id="phoneNumber"
-                                {...registerWithFocus('phone_number', register)}
+                                {...register('phone_number')}
+                                {...registerWithFocus('phone_number')}
                                 placeholder="Ingrese el número de teléfono"
                                 className="pl-10"
                             />

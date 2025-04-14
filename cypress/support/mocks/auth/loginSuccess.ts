@@ -1,4 +1,3 @@
- import { use } from "chai";
 import { API_URL } from "../../constants";
 
 interface MockUser {
@@ -13,11 +12,12 @@ export function mockLoginSuccess( user:MockUser) {
     body: {
       token: "fake-jwt-token",
       user: {
-        id: "1",
+        id: 1,
         email: user.email,
         name: user.name ,
         role: user.role,
       },
     },
+    storeOrBranchId: 1
   }).as("login");
 }

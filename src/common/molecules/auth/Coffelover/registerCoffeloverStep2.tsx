@@ -87,7 +87,8 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                         <InputForm
                             id="number_document"
                             type="number"
-                            {...registerWithFocus("number_document", register)}
+                            {...register("number_document")}
+                            {...registerWithFocus("number_document")}
                             placeholder="Ingresa tu número de documento"
                         />
                         {errors?.number_document && <TextError>{errors.number_document.message}</TextError>}
@@ -97,7 +98,8 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                         <InputForm
                             id="phone_number"
                             type="tel"
-                            {...registerWithFocus("phone_number", register)}
+                            {...register("phone_number")}
+                            {...registerWithFocus("phone_number")}
                             placeholder="Número de teléfono"
                         />
                         {errors?.phone_number && <TextError>{errors.phone_number.message}</TextError>}

@@ -25,7 +25,8 @@ export const FinistAdminStore = ({ register, errors }: registerAdminProps) => {
                 <InputEmail
                     id="email"
                     type="email"
-                    {...registerWithFocus('email', register)}
+                    {...register('email')}
+                    {...registerWithFocus('email')}
                     placeholder="TiendaEspecialidad@example.com"
                     className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
 
@@ -37,8 +38,8 @@ export const FinistAdminStore = ({ register, errors }: registerAdminProps) => {
                     <Label className={`flex items-center text-xs transition-colors ${focusedField === "password" ? "text-[#DB8935]" : "text-gray-600"}`}>Crea tu clave</Label>
                     
                     <InputPassword
-
-                        {...registerWithFocus('password', register)}
+                        {...register('password')}
+                        {...registerWithFocus('password')}
                         id="firstName" placeholder="Ingresa tu contraseña"
                         className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
 
@@ -51,7 +52,8 @@ export const FinistAdminStore = ({ register, errors }: registerAdminProps) => {
 
                     <InputPassword
                         id="lastName"
-                        {...registerWithFocus('confirmPassword', register)}
+                        {...register('confirmPassword')}
+                        {...registerWithFocus('confirmPassword')}
                         placeholder="Confirma tu contraseña"
                         className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
 

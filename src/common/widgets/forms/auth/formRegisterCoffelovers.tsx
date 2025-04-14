@@ -199,9 +199,7 @@ const FormRegisterCoffeelover = () => {
                                          <TermConditions
                                                 register={methods.register}
                                                 control={methods.control}
-                                                errors={methods.formState.errors}
-
-                                            >
+                                                errors={methods.formState.errors}>
                                         </TermConditions>
                                        </div>
                                     )

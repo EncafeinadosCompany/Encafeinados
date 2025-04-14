@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
  */
 export const StoreCardSkeleton = () => {
   return (
-    <Card className="overflow-hidden h-full bg-white rounded-2xl border-0 shadow-md">
+    <Card  className="overflow-hidden h-full bg-white rounded-2xl border-0 shadow-md">
       <CardContent className="p-0 flex flex-col h-full">
         {/* Skeleton para la imagen */}
         <div className="relative h-48 sm:h-52 overflow-hidden rounded-t-2xl bg-gray-300 animate-pulse">

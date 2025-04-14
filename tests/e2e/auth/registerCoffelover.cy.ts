@@ -1,12 +1,23 @@
-import { mockRegisterCoffelover } from "../../../cypress/support/mocks/auth/register";
+import { mockRegisterCoffelover } from "cypress/support/mocks/auth/register";
+import { mockLoginSuccess } from "cypress/support/mocks/auth/loginSuccess";
 
 describe("Coffee Lover Registration", () => {
   beforeEach(() => {
+    
     mockRegisterCoffelover();
+    
+    mockLoginSuccess(
+      {
+        email: "coffelover@gmail.com",
+        name: "Coffelover",
+        role: "Cliente"
+      }
+     )
     cy.visit("/coffee-lover-registration");
+
   });
 
-  it("should mock the API request and handle success", () => {
+  it("Should complete the client registration flow and handle successful API responses", () => {
     // Step 1: Fill personal data
     cy.get('input[name="name"]').type('John');
     cy.get('input[name="lastname"]').type('Doe');
@@ -24,7 +35,6 @@ describe("Coffee Lover Registration", () => {
     cy.get('button[data-testid="next-button"]').click();
 
     //   // Step 3: Fill user data autentication
-
     cy.get('input[name="password"]').type('1234');
     cy.get('input[name="confirmPassword"]').type('1234');
     cy.get('button[data-testid="next-button"]').click();
@@ -34,7 +44,8 @@ describe("Coffee Lover Registration", () => {
 
     //   // Step 4: Confirm and submit
     cy.get('button[data-testid="submit-button"]').click();
-
     cy.wait("@registerCoffelover").its("response.statusCode").should("eq", 201);
+    cy.wait("@login");
+  
   });
 });

@@ -25,7 +25,8 @@ export const RegisterBranchesStep1 = ({ register,errors }: registerAdminProps) =
                         <InputForm
                             id="name"
                             type="text"
-                            {...registerWithFocus('name', register)}
+                            {...register('name')}
+                            {...registerWithFocus('name')}
                             placeholder="Ingresa tu nombre"
                             className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
                         />
@@ -41,7 +42,8 @@ export const RegisterBranchesStep1 = ({ register,errors }: registerAdminProps) =
                             <InputForm
                                 id="phone_number"
                                 type="tel"
-                                {...registerWithFocus("phone_number", register)}
+                                {...register("phone_number")}
+                                {...registerWithFocus("phone_number")}
                                 placeholder="Número de teléfono"
                                 className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
                             />

@@ -47,7 +47,6 @@ const Formlogin = () => {
   }
 
   return (
-    <div className="" >
       <LoginCard
         register={register}
         errors={errors}
@@ -55,7 +54,7 @@ const Formlogin = () => {
         onSubmit={handleSubmit(onSubmit)}
         onGoogleSignIn={handleGoogleSignIn}>
       </LoginCard>
-    </div>
+ 
   )
 }
 
