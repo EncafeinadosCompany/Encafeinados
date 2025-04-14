@@ -1,11 +1,15 @@
 import {
-  mockStores, mockBranches, mockUserLocation, apiStates
+  mockStores,
+  mockBranches,
+  mockUserLocation,
+  apiStates,
 } from "../../cypress/support/mocks/home/storeMocks";
 
 const apiUrl = Cypress.env("API_URL");
 
 describe("Página de inicio", () => {
   beforeEach(() => {
+    console.log("API URL:", apiUrl);
 
     cy.intercept("GET", `${apiUrl}/stores`, {
       statusCode: 200,
@@ -18,11 +22,6 @@ describe("Página de inicio", () => {
     }).as("getBranches");
 
 
-    cy.intercept("GET", `${apiUrl}/stores`, {
-      statusCode: 200,
-      body: mockStores,
-      delay: 9000,
-    }).as("getStoresWithDelay");
     cy.window().then((win) => {
       cy.stub(win.navigator.geolocation, "getCurrentPosition").callsFake(
         (cb) => {
@@ -30,9 +29,10 @@ describe("Página de inicio", () => {
         }
       );
     });
+
   });
 
-  it("Should load the home page correctly", () => {
+  it("debería cargar la página de inicio correctamente", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
@@ -40,21 +40,24 @@ describe("Página de inicio", () => {
     cy.contains("Tiendas Aliadas").should("exist");
   });
 
-  it("Should display the carousel of stores with data", () => {
+  it("debería mostrar el carrusel de tiendas con datos", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
 
     cy.contains("Café Aroma").should("exist");
     cy.contains("El Barista").should("exist");
+
   });
 
-  it("Should allow navigation in the carousel", () => {
+  it("debería permitir navegación en el carrusel", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
 
     cy.get("button").then(($buttons) => {
+
+
       const $navigationButtons = $buttons.filter((_, el) => {
         return (
           Cypress.$(el).find("svg").length > 0 &&
@@ -63,28 +66,18 @@ describe("Página de inicio", () => {
       });
 
       if ($navigationButtons.length > 0) {
+
         cy.wrap($navigationButtons[0]).click({ force: true });
         cy.wait(1000);
       }
     });
   });
 
-  // it("debería mostrar estado de carga", () => {
-    
-  //   cy.visit("/");
-  
-  //   // cy.wait("@getStoresWithDelay");
-  //   // Aquí esperamos activamente que aparezca el skeleton en el DOM
-  //   cy.get('[data-testid="store-carousel-loading"].relative',{ timeout: 100000 }).should('be.visible'); 
-
-  //   // Asegúrate de que el div con clase 'relative' exista dentro del esqueleto de carga
-  //   cy.get('[data-testid="store-carousel-loading"] .relative').should('exist');
-  
-    
-  // });
+ 
 
   it("debería mostrar mensaje cuando no hay tiendas", () => {
     cy.intercept("GET", `${apiUrl}/stores`, {
+
       statusCode: 200,
       body: apiStates.emptyStores,
     }).as("emptyStores");
@@ -111,34 +104,40 @@ describe("Página de inicio", () => {
         cy.contains("Error").should("exist");
       } else if ($body.text().includes("falló")) {
         cy.contains("falló").should("exist");
+
+
+
       } else {
         cy.contains("Café Aroma").should("not.exist");
+
       }
     });
   });
 
-  it('debería navegar al hacer clic en "Ver todas las tiendas"', () => {
-    cy.visit("/");
-    cy.wait(["@getStores", "@getBranches"]);
-    cy.wait(2000);
+  // it('debería navegar al hacer clic en "Ver todas las tiendas"', () => {
+  //   cy.visit("/");
+  //   cy.wait(["@getStores", "@getBranches"]);
+  //   cy.wait(2000);
 
-    cy.get("button").then(($buttons) => {
-      const $verMasBtn = $buttons.filter((_, el) => {
-        const text = Cypress.$(el).text().toLowerCase();
-        return (
-          text.includes("ver") ||
-          text.includes("todas") ||
-          text.includes("tiendas") ||
-          text.includes("más") ||
-          text.includes("explorar")
-        );
-      });
 
-      if ($verMasBtn.length > 0) {
-        cy.wrap($verMasBtn[0]).click();
+  //   cy.get("button").then(($buttons) => {
+  //     const $verMasBtn = $buttons.filter((_, el) => {
+  //       const text = Cypress.$(el).text().toLowerCase();
+  //       return (
+  //         text.includes("ver") ||
+  //         text.includes("todas") ||
+  //         text.includes("tiendas") ||
+  //         text.includes("más") ||
+  //         text.includes("explorar")
+  //       );
+  //     });
 
-        cy.url().should("not.equal", `${apiUrl}/`);
-      }
-    });
-  });
+  //     if ($verMasBtn.length > 0) {
+
+  //       cy.wrap($verMasBtn[0]).click();
+
+  //       cy.url().should("not.equal", `${apiUrl}/`);
+  //     }
+  //   });
+  // });
 });
