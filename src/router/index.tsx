@@ -46,7 +46,7 @@ const AuthRoutes = () => {
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/map" element={<MapView />} />
+            <Route path="/map" element={<MapView view={true} />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path='/register' element={<CuestionCard />} />

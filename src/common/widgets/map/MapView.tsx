@@ -43,7 +43,7 @@ import { containerVariants, cardVariants, pulseVariants } from './mapAnimations'
 import { useBranchesByStore } from '@/api/queries/stores/storesQueries';
 
 // Componente para capturar la instancia del mapa
-const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance }) => {
+const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance}) => {
   const map = useMap();
   
   useEffect(() => {
@@ -82,7 +82,12 @@ const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ set
 // MAIN COMPONENT
 // ==============================
 
-const MapView: React.FC = () => {
+
+export interface MapViewProps {
+  view?: boolean;
+}
+
+const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   // ==============================
   // STATE MANAGEMENT
   // ==============================
@@ -103,6 +108,7 @@ const MapView: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [showRouteControls, setShowRouteControls] = useState<boolean>(false);
   const [shouldResetMapOnClose, setShouldResetMapOnClose] = useState(false);
+  const [view, setView] = useState(true)
 
   // Custom hooks
   const { favorites, toggleFavorite } = useFavorites();
@@ -703,13 +709,15 @@ return (
     {/* Header with search and navigation */}
     <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-white/95 via-white/80 to-white/0 pt-4 pb-12 px-4">
       <div className="flex items-center justify-between">
-        <Link
+        {showView ? (<Link
           to="/"
           className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg flex items-center gap-2 hover:bg-white transition-all duration-300 group"
         >
           <ArrowLeft size={20} className="text-[#6F4E37] group-hover:-translate-x-1 transition-transform duration-300" />
           <span className="pr-2 text-[#6F4E37] font-medium hidden md:inline">Volver</span>
-        </Link>
+        </Link>):(
+          <div></div>
+        )}
 
         <motion.div
           className={`relative transition-all duration-300 ${searchFocused ? 'w-full md:w-96' : 'w-48 md:w-64'}`}

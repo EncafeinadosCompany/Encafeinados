@@ -18,7 +18,7 @@ export function doLogin({
 
   mockLoginSuccess({ email, role, name });
   cy.get("input[name=email]").type(email);
-  cy.get("input[name=password]").type(password);
+  cy.get("[data-testid='custom-input-password']").type(password);
   cy.get("button[type=submit]").click();
   cy.wait("@login");
 }
