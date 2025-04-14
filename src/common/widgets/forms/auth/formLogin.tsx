@@ -14,7 +14,7 @@ const Formlogin = () => {
   const navigate = useNavigate()
   const { pagesPermissions } = useAuth()
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const { register, handleSubmit, control, formState: { errors }, reset } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -56,6 +56,7 @@ const Formlogin = () => {
       <LoginCard
         register={register}
         errors={errors}
+        control={control}
         isLoading={isLoading}
         onSubmit={handleSubmit(onSubmit)}
         onGoogleSignIn={handleGoogleSignIn}>

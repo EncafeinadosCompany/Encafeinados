@@ -4,10 +4,15 @@ import { Link } from "react-router-dom"
 import { InputEmail } from "@/common/atoms/Input-email"
 import { Label } from "@/common/ui/label"
 import { InputPassword } from "@/common/atoms/input-passwork"
-import { UseFormRegister } from "react-hook-form"
+import { Controller, UseFormRegister } from "react-hook-form"
 import { User } from "@/api"
 import { useTranslation } from "react-i18next"
 import { ButtonGoogle } from "@/common/atoms/buttonGoogle"
+import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/common/ui/input-otp"
+import { TextError } from "@/common/atoms/textError"
+import { useState } from "react"
+import { Eye, EyeOff } from "lucide-react"
 
 type LoginCardProps = {
   register: UseFormRegister<User>
@@ -15,6 +20,7 @@ type LoginCardProps = {
   errors: any
   onSubmit: (e: React.FormEvent) => void
   onGoogleSignIn: () => void
+  control: any
 
 }
 export const LoginCard = (
@@ -23,10 +29,14 @@ export const LoginCard = (
     isLoading,
     errors,
     onSubmit,
+    control,
     onGoogleSignIn }
     : LoginCardProps) => {
 
   const { t } = useTranslation()
+
+  const { registerWithFocus, focusedField } = useRegisterFocus()
+  const [isVisible, setIsVisible] = useState(false)
 
   return (
     <div className="flex flex-col gap-5">
@@ -39,36 +49,6 @@ export const LoginCard = (
                 <h1 className="text-2xl font-bold text-amber-800">{t("¡Bienvenido!")}</h1>
                 <p className="text-balance text-muted-foreground text-sm text-gray-600 mt-2">Inicia sesión Encafeinados</p>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="email" className="text-sm text-gray-800 font-medium">Correo</Label>
-                <InputEmail
-                  id="email"
-                  autoComplete="email"
-                  placeholder="coffelover@gmail.com"
-                  required
-                  {...register("email")}
-                />
-                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password" className="text-[#3D3D3D] font-medium">Clave</Label>
-                  <a href="#" className="ml-auto text-sm text-amber-800 underline-offset-2 hover:underline">
-                    {t("¿Olvidaste tu contraseña?")}
-                  </a>
-                </div>
-                <InputPassword
-                  id="password"
-                  autoComplete="current-password"
-                  placeholder="* * * *"
-                  required
-                  {...register("password")}
-                />
-                {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-              </div>
-              <Button type="submit" className="w-full rounded-full bg-amber-600 hover:bg-amber-700 border border-amber-800 text-white font-medium shadow-md transition-all duration-200 hover:shadow-lg" disabled={isLoading}>
-                {isLoading ? "Cargando..." : t("Ingresar")}
-              </Button>
               <ButtonGoogle
                 variant="outline"
                 onClick={onGoogleSignIn}
@@ -77,9 +57,91 @@ export const LoginCard = (
               >
                 Continua con Google
               </ButtonGoogle>
+              <div className="relative flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-900"></div>
+                </div>
+                <div className="relative px-4 text-sm  bg-white text-gray-500">
+                  Opciones de registro
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="email" className="text-sm text-gray-800 font-medium">Correo</Label>
+                <InputEmail
+                  id="email"
+                  autoComplete="email"
+                  placeholder="coffelover@gmail.com"
+                  className="border bg-white rounded-full border-gray-300 placeholder:text-xs"
+                  {...registerWithFocus("email")}
+                  {...register("email")}
+                />
+                {errors.email && <TextError>{errors.email.message}</TextError>}
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password" className="text-[#3D3D3D] font-medium">Clave</Label>
+                <div className="flex  mx-auto">
+                  {/* <a href="#" className="ml-auto text-sm text-amber-800 underline-offset-2 hover:underline">
+                    {t("¿Olvidaste tu contraseña?")}
+                  </a> */}
+                </div>
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field }) => (
+                    <div className="mx-auto">
+                      <div className="relative w-fit space-x-12">
+                        <InputOTP
+                          maxLength={4}
+                          value={field.value}
+                          onChange={field.onChange}
+                          {...registerWithFocus("password")}
+                          data-testid="custom-input-password"
+                        >
+                          <InputOTPGroup
+                            className="space-x-1"
+                          >
+                            <InputOTPSlot index={0} isVisible={isVisible} />
+                            <InputOTPSlot index={1} isVisible={isVisible} />
+                          </InputOTPGroup>
+                          {/* <InputOTPSeparator className="text-gray-400" /> */}
+                          <InputOTPGroup  className="space-x-1">
+                            <InputOTPSlot index={2} isVisible={isVisible} />
+                            <InputOTPSlot index={3} isVisible={isVisible} />
+                          </InputOTPGroup>
+                        </InputOTP>
+                        {/* <button
+                          type="button"
+                          onClick={() => setIsVisible((prev) => !prev)}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                          aria-label={isVisible ? "Ocultar código" : "Mostrar código"}
+                          title={isVisible ? "Ocultar código" : "Mostrar código"}
+                        >
+                          {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button> */}
+                      </div>
+                      <div className="text-center text-sm p-2">
+                        {field.value === "" ? (
+                          <>Introduzca su clave</>
+                        ) : (
+                          <>
+
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                >
+                </Controller>
+                {errors.password && <TextError>{errors.password.message}</TextError>}
+
+              </div>
+              <Button type="submit" className="w-full rounded-full bg-[#D4A76A]  hover:bg-[#bb9765]  hover:text-white/80 border-amber-800 text-amber-950 font-medium shadow-md transition-all duration-200 hover:shadow-lg" disabled={isLoading}>
+                {isLoading ? "Cargando..." : t("Ingresar")}
+              </Button>
+              
               <div className="text-center text-sm text-amber-800">
                 ¿No tienes una cuenta?{" "}
-                <Link  to="/register" data-testid="register-link"  className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700">
+                <Link to="/register" data-testid="register-link" className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700">
                   Registrate
                 </Link>
               </div>

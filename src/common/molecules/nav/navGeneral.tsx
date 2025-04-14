@@ -56,7 +56,7 @@ export const NavGeneral = ({ isMobile, isExpanded, navItems, setIsExpanded }: Na
               {location.pathname === "/" && (
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
               )}
-              <div className="flex-shrink-0 text-gray-300"><LogOutIcon /></div>
+              <div className="flex-shrink-0 text-gray-300"><LogOutIcon className="h-4 w-4" /></div>
             </Link>
           </nav>
         </div>
@@ -115,7 +115,7 @@ export const NavGeneral = ({ isMobile, isExpanded, navItems, setIsExpanded }: Na
               )}
               onClick={clearAuthStorage}
             >
-              <div className="flex-shrink-0 text-gray-500"><LogOutIcon /></div>
+              <div className="flex-shrink-0 text-gray-500"><LogOutIcon className="h-4 w-4" /></div>
               <span 
                 className={cn(
                   "font-medium text-gray-600 whitespace-nowrap transition-opacity duration-300",
