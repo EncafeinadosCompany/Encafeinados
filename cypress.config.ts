@@ -14,7 +14,7 @@ export default defineConfig({
       return config;
     },
     env: {
-      API_URL: process.env.VITE_API_URL || "http://localhost:3300",
+      API_URL: process.env.VITE_API_URL || "http://localhost:3000",
     },
   },
 });
