@@ -4,6 +4,7 @@ import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "../auth/authMutations";
+import toast from "react-hot-toast";
 
 const authClient = new AuthClient();
 
@@ -31,6 +32,7 @@ export const useRegisterCoffeloverMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error: any) => {
+      toast.remove();
       useErrors(error);
     }
   })

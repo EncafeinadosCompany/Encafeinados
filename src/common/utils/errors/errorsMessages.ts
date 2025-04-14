@@ -19,6 +19,9 @@ export const errorMessages: Record<number, string> = {
     registeCoffelover: {
         409: "El correo eléctronico ya se encuentra registrado"
     },
+    stores: {
+        409: "Ya existe una tienda con esa información"
+    },
     registerAdminStores:{
         409: "El correo eléctronico ya se encuentra registrado"
     },
@@ -30,8 +33,7 @@ export const errorMessages: Record<number, string> = {
         409: "La imagen ya se encuentra registrada"
     },
     criteria:{
-        409: "El criterio ya se encuentra registrado",
-        404: "El criterio no se encuentra registrado"
+        409: "El criterio ya se encuentra registrado"
     }
   
   };

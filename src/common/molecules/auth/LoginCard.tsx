@@ -3,13 +3,12 @@ import { Card, CardContent } from "@/common/ui/card"
 import { Link } from "react-router-dom"
 import { InputEmail } from "@/common/atoms/Input-email"
 import { Label } from "@/common/ui/label"
-import { InputPassword } from "@/common/atoms/input-passwork"
 import { Controller, UseFormRegister } from "react-hook-form"
 import { User } from "@/api"
 import { useTranslation } from "react-i18next"
 import { ButtonGoogle } from "@/common/atoms/buttonGoogle"
 import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
-import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/common/ui/input-otp"
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/common/ui/input-otp"
 import { TextError } from "@/common/atoms/textError"
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
@@ -43,12 +42,24 @@ export const LoginCard = (
       <Card className="overflow-hidden rounded-xl border-none sm:border border-amber-200/50 sm:shadow-lg  sm:bg-white/90">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form className="p-6 md:p-8" onSubmit={onSubmit}>
+            <div className="relative sm:hidden h-36 w-full overflow-hidden">
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
+                <video
+                  src="/video_cafeino.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  className="h-40 w-full object-contain opacity-90"
+                />
+              </div>
+            </div>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
-
                 <h1 className="text-2xl font-bold text-amber-800">{t("¡Bienvenido!")}</h1>
                 <p className="text-balance text-muted-foreground text-sm text-gray-600 mt-2">Inicia sesión Encafeinados</p>
               </div>
+
+
               <ButtonGoogle
                 variant="outline"
                 onClick={onGoogleSignIn}
@@ -104,29 +115,29 @@ export const LoginCard = (
                             <InputOTPSlot index={1} isVisible={isVisible} />
                           </InputOTPGroup>
                           {/* <InputOTPSeparator className="text-gray-400" /> */}
-                          <InputOTPGroup  className="space-x-1">
+                          <InputOTPGroup className="space-x-1">
                             <InputOTPSlot index={2} isVisible={isVisible} />
                             <InputOTPSlot index={3} isVisible={isVisible} />
                           </InputOTPGroup>
                         </InputOTP>
-                        {/* <button
-                          type="button"
-                          onClick={() => setIsVisible((prev) => !prev)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                          aria-label={isVisible ? "Ocultar código" : "Mostrar código"}
-                          title={isVisible ? "Ocultar código" : "Mostrar código"}
-                        >
-                          {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
-                        </button> */}
-                      </div>
-                      <div className="text-center text-sm p-2">
-                        {field.value === "" ? (
-                          <>Introduzca su clave</>
-                        ) : (
-                          <>
 
-                          </>
-                        )}
+                        <div className="text-center text-sm">
+                          {field.value === "" ? (
+                            <>Introduzca su clave</>
+                          ) : (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => setIsVisible((prev) => !prev)}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                aria-label={isVisible ? "Ocultar código" : "Mostrar código"}
+                                title={isVisible ? "Ocultar código" : "Mostrar código"}
+                              >
+                                {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -135,10 +146,10 @@ export const LoginCard = (
                 {errors.password && <TextError>{errors.password.message}</TextError>}
 
               </div>
-              <Button type="submit" className="w-full rounded-full bg-[#D4A76A]  hover:bg-[#bb9765]  hover:text-white/80 border-amber-800 text-amber-950 font-medium shadow-md transition-all duration-200 hover:shadow-lg" disabled={isLoading}>
+              <Button type="submit" className="w-full  shadow rounded-full bg-[#D4A76A]  hover:bg-[#bb9765]  hover:text-white/80  border-amber-800 text-amber-950 font-medium transition-all duration-200 hover:shadow-lg" disabled={isLoading}>
                 {isLoading ? "Cargando..." : t("Ingresar")}
               </Button>
-              
+
               <div className="text-center text-sm text-amber-800">
                 ¿No tienes una cuenta?{" "}
                 <Link to="/register" data-testid="register-link" className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700">
@@ -147,6 +158,7 @@ export const LoginCard = (
               </div>
             </div>
           </form>
+
           <div className="relative hidden  md:block">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-700/80 to-amber-300/50 z-10"></div>
 

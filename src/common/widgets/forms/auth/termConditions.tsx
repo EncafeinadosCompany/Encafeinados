@@ -1,3 +1,4 @@
+import { TextError } from "@/common/atoms/textError";
 import { TermsDialog } from "@/common/molecules/auth/TermsDialog";
 import { Checkbox } from "@/common/ui/checkbox";
 import { useState } from "react";
@@ -61,11 +62,13 @@ export function TermConditions({ register, errors, control }: TermConditionsProp
               }}
             />
 
+            <div className="mt-3">
             {errors.conditions && (
-              <p className="text-red-500 text-sm mt-1">
+              <TextError>
                 {errors.conditions.message}
-              </p>
+              </TextError>
             )}
+            </div>
           </>
         )}
       />
