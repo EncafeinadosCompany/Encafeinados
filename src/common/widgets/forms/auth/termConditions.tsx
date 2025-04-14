@@ -17,6 +17,7 @@ export function TermConditions({ register, errors, control }: TermConditionsProp
       <Controller
         control={control}
         name="conditions"
+       
         rules={{
           validate: (value) => value || "Debes aceptar los términos y condiciones",
         }}
@@ -25,6 +26,7 @@ export function TermConditions({ register, errors, control }: TermConditionsProp
             <div className="flex items-start space-x-2 mt-4">
               <Checkbox
                 id="terms"
+                data-testid="conditions-checkbox"
                 checked={!!value}
                 onCheckedChange={onChange}
                 className="border-[#D4A76A] text-[#6F4E37] mt-0.5"

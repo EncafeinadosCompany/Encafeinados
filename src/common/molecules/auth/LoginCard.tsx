@@ -52,7 +52,7 @@ export const LoginCard = (
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password" className="text-[#3D3D3D] font-medium">Contraseña</Label>
+                  <Label htmlFor="password" className="text-[#3D3D3D] font-medium">Clave</Label>
                   <a href="#" className="ml-auto text-sm text-amber-800 underline-offset-2 hover:underline">
                     {t("¿Olvidaste tu contraseña?")}
                   </a>
@@ -100,9 +100,9 @@ export const LoginCard = (
           </div>
         </CardContent>
       </Card>
-      <div className="text-balance text-center text-xs text-gray-500 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-amber-600">
+      {/* <div className="text-balance text-center text-xs text-gray-500 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-amber-600">
         By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -34,7 +34,8 @@ const RegisterCoffeloverStep3 = ({ register, errors, direction }: RegisterCoffel
             placeholder="Contraseña"
             className={`text-gray-500 border ${errors?.password ? "border-red-500" : "focus:border-amber-500 border-gray-300"
               } rounded-full`}
-            {...registerWithFocus("password", register)}
+              {...register("password")}
+            {...registerWithFocus("password")}
           />
           {errors.password && (
             <TextError>{errors.password.message}</TextError>
@@ -48,7 +49,8 @@ const RegisterCoffeloverStep3 = ({ register, errors, direction }: RegisterCoffel
             placeholder="Confirma tu contraseña"
             className={`text-gray-500 border ${errors.confirmPassword ? "border-red-500" : "focus:border-amber-500 border-gray-300 "
               }rounded-full`}
-            {...registerWithFocus("confirmPassword", register)}
+              {...register("confirmPassword")}
+            {...registerWithFocus("confirmPassword")}
           />
           {errors.confirmPassword && (
             <TextError>{errors.confirmPassword.message}</TextError>

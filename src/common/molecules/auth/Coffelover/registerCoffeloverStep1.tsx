@@ -5,8 +5,9 @@ import { UseFormRegister } from "react-hook-form"
 import { InputForm } from "@/common/atoms/auth/inputForm"
 import { motion } from "framer-motion"
 import { pageVariants } from "@/common/atoms/auth/pageVariants"
-import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
+
 import { TextError } from "@/common/atoms/textError"
+import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 
 interface RegisterCoffeloverStep1Props {
   register: UseFormRegister<any>
@@ -34,7 +35,8 @@ export default function RegisterCoffeloverStep1({ register, errors, direction }:
           <div className="space-y-2">
             <Label htmlFor="name" className={`flex items-center text-xs transition-colors ${focusedField === "name" ? "text-[#DB8935] " : "text-gray-600" }`}>Nombre</Label>
             <InputForm
-              {...registerWithFocus("name", register)}
+              {...register("name")}
+              {...registerWithFocus("name")}
               id="name" 
               placeholder="Nombre completo"
             />
@@ -44,7 +46,8 @@ export default function RegisterCoffeloverStep1({ register, errors, direction }:
           <div className="space-y-2">
           <Label htmlFor="lastName" className={`flex items-center text-xs transition-colors ${focusedField === "lastname" ? "text-[#DB8935] " : "text-gray-600" }`}>Apellidos</Label>
             <InputForm id="lastName"
-              {...registerWithFocus('lastname', register)}
+              {...register('lastname')}
+              {...registerWithFocus('lastname')}
               placeholder="Ingresa tus apellidos" />
             {errors?.lastname && <TextError>{errors.lastname.message}</TextError>}
           </div>
@@ -55,7 +58,8 @@ export default function RegisterCoffeloverStep1({ register, errors, direction }:
           <InputForm
             id="email"
             type="email"
-            {...registerWithFocus('email', register)}
+            {...register('email')}
+            {...registerWithFocus('email')}
             placeholder="coffeelover@example.com"
           />
           {errors?.email && <TextError>{errors.email.message}</TextError>}

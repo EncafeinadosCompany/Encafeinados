@@ -30,7 +30,8 @@ export const FinistAdminStore2 = ({ register, control, errors }: registerAdminPr
                             <InputForm
                                 id="name"
                                 type="text"
-                                {...registerWithFocus('name', register)}
+                                {...register('name')}
+                                {...registerWithFocus('name')}
                                 placeholder="Ingresa tu nombre"
                                 className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
                             />
@@ -43,7 +44,8 @@ export const FinistAdminStore2 = ({ register, control, errors }: registerAdminPr
                             <InputForm
                                 id="apellidos"
                                 type="text"
-                                {...registerWithFocus('last_name', register)}
+                                {...register('last_name')}
+                                {...registerWithFocus('last_name')}
                                 placeholder="Ingresa tus apellídos"
                                 className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
 
@@ -80,7 +82,8 @@ export const FinistAdminStore2 = ({ register, control, errors }: registerAdminPr
                             <InputForm
                                 id="number_document"
                                 type="number"
-                                {...registerWithFocus("number_document", register)}
+                                {...register("number_document")}
+                                {...registerWithFocus("number_document")}
                                 placeholder="Ingresa tu número de documento"
                                 className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
                             />
@@ -94,6 +97,7 @@ export const FinistAdminStore2 = ({ register, control, errors }: registerAdminPr
                                 id="phone_number"
                                 type="tel"
                                 {...register("phone_number")}
+                                {...registerWithFocus("phone_number")}
                                 placeholder="Número de teléfono"
                                 className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
 

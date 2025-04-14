@@ -103,6 +103,7 @@ export default function RegisterStoreBranches() {
         methods.trigger(undefined, { shouldFocus: false }).then((isValid) => {
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
+                
                 if (step === 1) {
                     const error = validateImageRequirements(Array.isArray(criteria) ? criteria : [], methods.getValues("criteria"));
                     if (error) {
@@ -216,7 +217,7 @@ export default function RegisterStoreBranches() {
                                     )}
                                     {step < RegisterStoreBrancheSchema.length - 1 ? (
 
-                                        <Button type="button" onClick={nextStep} className={`${step > 0 ? "" : "ml-auto"} bg-amber-600 text-white `}>
+                                        <Button  data-testid="next-button" type="button" onClick={nextStep} className={`${step > 0 ? "" : "ml-auto"} bg-amber-600 text-white `}>
 
                                             Siguiente
                                             <ArrowRight className="ml-2 text-white " />

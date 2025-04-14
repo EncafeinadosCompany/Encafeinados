@@ -36,7 +36,8 @@ const RegisterStoreStep1 = ({ register, errors, direction, control }: registerSt
                         <Label className={`flex items-center text-xs transition-colors ${focusedField === "name" ? "text-[#DB8935]" : "text-gray-600"}`}>Nombre de la cafetería</Label>
                         <Store className="absolute top-9 left-4 text-gray-400" size={16}></Store>
                         <InputForm
-                            {...registerWithFocus("name", register)}
+                            {...register("name")}
+                            {...registerWithFocus("name")}
                             id="firstName" placeholder="Ingresa el nombre de tu cafetería"
                             className="pl-10"
                         />
@@ -50,7 +51,8 @@ const RegisterStoreStep1 = ({ register, errors, direction, control }: registerSt
                             id="email"
                             type="email"
                             className="pl-10"
-                            {...registerWithFocus('email', register)}
+                            {...register('email')}
+                            {...registerWithFocus('email')}
                             placeholder="coffeelover@example.com"
                         />
                         {errors?.email && <TextError>{errors.email.message}</TextError>}
@@ -81,7 +83,8 @@ const RegisterStoreStep1 = ({ register, errors, direction, control }: registerSt
                             id="numero_documento"
                             type="number"
                             className="pl-10"
-                            {...registerWithFocus('number_document', register)}
+                            {...register('number_document')}
+                            {...registerWithFocus('number_document')}
                             placeholder="Ingrese su número de documento"
                         />
                         </div>
@@ -94,7 +97,8 @@ const RegisterStoreStep1 = ({ register, errors, direction, control }: registerSt
                             id="phone_number"
                             type="number"
                             className="pl-10"
-                            {...registerWithFocus('phone_number', register)}
+                            {...register('phone_number')}
+                            {...registerWithFocus('phone_number')}
                             placeholder="Ingrese su número de teléfono"
                         />
                         {errors?.phone_number && <TextError>{errors.phone_number.message}</TextError>}

@@ -10,10 +10,8 @@ import { TitleForm } from "@/common/atoms/auth/titleForm"
 import RegisterStoreStep1 from "@/common/molecules/auth/stores/store/registerStoreStep1"
 import RegisterStoreStep2 from "@/common/molecules/auth/stores/store/registerStoreStep2"
 
-
 import { useNavigate } from "react-router-dom"
 
-import { useImagenMutation } from "@/api/mutations/imageMutations"
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator"
 import { useRegisterStoreMutation } from "@/api/mutations/stores/storesMutation"
 import { Card, CardContent, CardFooter, CardHeader } from "@/common/ui/card"
@@ -26,7 +24,6 @@ const FormRegisterStores = () => {
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
     const useRegiterStore = useRegisterStoreMutation();
-    const useImageMutation = useImagenMutation()
     const navigate = useNavigate();
 
     const methods = useForm<CurrentSchema>({
@@ -53,43 +50,19 @@ const FormRegisterStores = () => {
 
     const onSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
-        let imageUploadPromise: string;
-            
-        if (finalData.logo) {
-          imageUploadPromise = await useImageMutation
-            .mutateAsync(finalData.logo)
-            .then((response) => response.image.url)
-            .catch(() => {
-              toast.error("No se pudo subir la imagen. Se usará una por defecto.");
-              return "https://res.cloudinary.com/dtnnyqa0g/image/upload/v1743628429/images-coffee/Captura%20de%20pantalla%202025-03-20%20184910.png.png";
-            });
-        } else {
-          imageUploadPromise =
-            "https://res.cloudinary.com/dtnnyqa0g/image/upload/v1743628429/images-coffee/Captura%20de%20pantalla%202025-03-20%20184910.png.png";
-        }
-            
+
         try {
-            await useRegiterStore.mutateAsync({
-                email: finalData.email,
-                name: finalData.name,
-                type_document: finalData.type_document,
-                number_document: finalData.number_document,
-                phone_number: finalData.phone_number,
-                logo: imageUploadPromise
-         
-            }).then((response) => {
-                toast.success("Registro exitoso, por favor revisa tu correo electrónico");
-                methods.reset();
-                navigate(`/stores-registration/branches/${response.store.id}`)
-           
-            })
+            const response = await useRegiterStore.mutateAsync(finalData)
+            toast.success("Registro exitoso, por favor revisa tu correo electrónico");
+            methods.reset();
+            navigate(`/stores-registration/branches/${response.store.id}`)
 
         } catch (error) {
             console.log("Error al registrar la tienda:", error);
             setStep(0);
         }
 
-       
+
     };
 
     return (
@@ -179,11 +152,12 @@ const FormRegisterStores = () => {
                                     <div />
                                 )}
 
-                                {step < RegisterStoreSchema.length -1 ? (
+                                {step < RegisterStoreSchema.length - 1 ? (
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                         <Button
                                             type="button"
                                             onClick={onNext}
+                                            data-testid="next-button"
                                             className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white"
                                         >
                                             Siguiente
@@ -195,6 +169,7 @@ const FormRegisterStores = () => {
                                         <Button
                                             type="submit"
                                             disabled={!methods.formState.isValid}
+                                            data-testid="submit-button"
                                             className={`rounded-lg px-6 py-2 ${!methods.formState.isValid
                                                 ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                                                 : "bg-gray-900 hover:bg-gray-800 text-white"
