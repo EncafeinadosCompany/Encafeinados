@@ -1,6 +1,8 @@
 import { pageVariants } from "@/common/atoms/auth/pageVariants"
+
 import { UseFormRegister } from "react-hook-form"
 import { motion } from "framer-motion"
+
 import { useState } from "react"
 import MapSearch from "@/common/widgets/map/mapSearch"
 
@@ -32,9 +34,11 @@ const RegisterAdminStoreStep2 = ({ register, errors, direction, control }: regis
             className="absolute w-full"
             style={{ perspective: "1000px" }}
         >
+
             <div className="w-max-[500px]">
                 <MapSearch onLocationSelect={(lat, lng, address) => console.log(lat, lng, address)} />
             </div>
+
 
         </motion.div>
     )
