@@ -5,7 +5,7 @@ import { StoreCardSkeleton } from "@/common/molecules/home/StoreCardSkeleton";
 import {Carousel,CarouselContent,CarouselItem,CarouselNext,CarouselPrevious} from "@/common/ui/carousel";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import type { CarouselApi } from "@/common/ui/carousel";
-import { Coffee, ChevronRight} from "@/common/ui/icons";
+import { Coffee} from "@/common/ui/icons";
 import { useGeolocation } from "@/common/hooks/map/useGeolocation";
 import { calculateDistance } from "@/common/utils/map/mapUtils";
 import L from 'leaflet';
@@ -327,6 +327,7 @@ export const StoreCarousel = () => {
     <section
       ref={sectionRef}
       className="relative py-16 md:py-20 overflow-hidden bg-[#FAF3E0]/50"
+        
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -374,6 +375,7 @@ export const StoreCarousel = () => {
                 align: "start",
                 loop: true,
               }}
+            
               className="w-full"
             >
               <CarouselContent className="-ml-2 md:-ml-4 pt-1 pb-0.5">
@@ -486,6 +488,7 @@ export const StoreCarousel = () => {
         )}
       </div>
       <motion.div
+      
         className="absolute top-20 right-2 w-20 h-20 md:w-32 md:h-32 rounded-full bg-[#D4A76A]/10 -z-10"
         animate={{
           scale: [1, 1.05, 1],
