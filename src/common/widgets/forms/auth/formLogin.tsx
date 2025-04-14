@@ -42,9 +42,15 @@ const Formlogin = () => {
   }
 
   const handleGoogleSignIn = async () => {
-    setIsLoading(true)
-    window.open("http://localhost:3000/api/v2/auth/google", "_self");
-  }
+    try {
+      setIsLoading(true);
+      window.open(`${import.meta.env.VITE_API_URL}/auth/google`, "_self");
+    } catch (error) {
+      console.error("Error during Google authentication:", error);
+      toast.error("No se pudo conectar con Google. Intenta nuevamente.");
+      setIsLoading(false);
+    }
+  };
 
   return (
       <LoginCard

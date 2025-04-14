@@ -1058,12 +1058,12 @@ return (
     <AnimatePresence>
       {activeCafe && (
         <motion.div
-          className="absolute left-0 right-0 bottom-0 md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[65%] lg:w-[55%] xl:w-[820px] md:h-auto md:max-h-[90vh] bg-white md:rounded-2xl shadow-2xl z-[200] overflow-hidden"
-          initial={{ y: "100%", opacity: 0, scale: 0.9 }}
-          animate={{ y: 0, opacity: 1, scale: 1 }}
-          exit={{ y: "100%", opacity: 0, scale: 0.9 }}
-          transition={{ type: 'spring', damping: 30 }}
-        >
+        className="absolute left-0 right-0 bottom-0 md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[90%] lg:w-[80%] xl:w-[1000px] md:h-auto md:max-h-[100vh] bg-white md:rounded-2xl shadow-2xl z-[200] flex flex-col overflow-hidden"
+        initial={{ y: "100%", opacity: 0, scale: 0.9 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        exit={{ y: "100%", opacity: 0, scale: 0.9 }}
+        transition={{ type: 'spring', damping: 30 }}
+      >
           {activeCafeData && (
             <CafeDetail
               cafe={activeCafeData}
