@@ -51,18 +51,18 @@ const FormRegisterStores = () => {
     const onSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
 
-        try {
-            const response = await useRegiterStore.mutateAsync(finalData)
-            toast.success("Registro exitoso, por favor revisa tu correo electrónico");
-            methods.reset();
-            navigate(`/stores-registration/branches/${response.store.id}`)
-
-        } catch (error) {
-            console.log("Error al registrar la tienda:", error);
-            setStep(0);
-        }
-
-
+        
+            await useRegiterStore.mutateAsync(finalData).then((response) => {
+              
+                methods.reset();
+                navigate(`/stores-registration/branches/${response.store.id}`)
+            })
+              
+            .finally(() => {   
+               
+            setStep(0); 
+            })
+        
     };
 
     return (
@@ -136,7 +136,6 @@ const FormRegisterStores = () => {
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                         <Button
                                             type="button"
-
                                             variant="default"
                                             onClick={() => {
                                                 setStep(step - 1);

@@ -95,6 +95,7 @@ const FormRegisterCoffeelover = () => {
         } catch (error) {
             console.log(error);
         }finally{
+            toast.remove();
             toast.success("Coffelover creado exitosamente.¡Bienvenido!")       
         }
     };
@@ -127,16 +128,6 @@ const FormRegisterCoffeelover = () => {
                 sessionStorage.setItem("tempUserData", JSON.stringify(userData));
                 navigate("/completar-perfil");
             }
-
-
-            // await useRegisterCoffeelover.mutateAsync(userData).then((response) => {
-            //     toast.success("Coffelover creado exitosamente. ¡Bienvenido!");
-            //     navigate("/login");
-            // }).catch((error) => {
-            //     console.error("Error al registrar el usuario:", error);
-            //     setIsLoading(false);
-
-            // });
 
         } catch (error) {
             setIsLoading(false);

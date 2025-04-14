@@ -23,7 +23,7 @@ import { Badge } from "@/common/ui/badge"
 
 
 
-export function PrincipalStores() {
+export default function PrincipalStores() {
   // Estado para las sucursales
   // const [branches, setBranches] = useState<Branch[]>([])
   const [loading, setLoading] = useState(true)

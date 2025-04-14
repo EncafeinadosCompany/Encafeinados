@@ -3,6 +3,7 @@ import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { uploadImage} from "../imageMutations";
+import toast from "react-hot-toast";
 
 const authClient = new AuthClient();
 
@@ -65,6 +66,7 @@ export const useRegisterCriteriaMutation = () => {
         queryClient.invalidateQueries({ queryKey: ['criteria'] });
       },
       onError: (error: any) => {
+        toast.remove();
         useErrors(error);
       }
     })
