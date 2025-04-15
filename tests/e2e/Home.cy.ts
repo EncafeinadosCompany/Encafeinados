@@ -32,7 +32,7 @@ describe("Página de inicio", () => {
 
   });
 
-  it("debería cargar la página de inicio correctamente", () => {
+  it("should load the home page correctly", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
@@ -40,7 +40,7 @@ describe("Página de inicio", () => {
     cy.contains("Tiendas Aliadas").should("exist");
   });
 
-  it("debería mostrar el carrusel de tiendas con datos", () => {
+  it("should display the store carousel with data", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
@@ -50,7 +50,7 @@ describe("Página de inicio", () => {
 
   });
 
-  it("debería permitir navegación en el carrusel", () => {
+  it("should allow navigation in the carousel", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
@@ -75,7 +75,7 @@ describe("Página de inicio", () => {
 
  
 
-  it("debería mostrar mensaje cuando no hay tiendas", () => {
+  it("should display message when there are no stores", () => {
     cy.intercept("GET", `${apiUrl}/stores`, {
 
       statusCode: 200,
@@ -84,11 +84,9 @@ describe("Página de inicio", () => {
 
     cy.visit("/");
     cy.wait("@emptyStores");
-
-    // cy.contains("No se encontraron tiendas").should("be.visible");
   });
 
-  it("debería mostrar error cuando falla la API", () => {
+  it("should display error when API fails", () => {
     cy.intercept("GET", `${apiUrl}/stores`, apiStates.errorResponse).as(
       "errorStores"
     );
@@ -113,31 +111,4 @@ describe("Página de inicio", () => {
       }
     });
   });
-
-  // it('debería navegar al hacer clic en "Ver todas las tiendas"', () => {
-  //   cy.visit("/");
-  //   cy.wait(["@getStores", "@getBranches"]);
-  //   cy.wait(2000);
-
-
-  //   cy.get("button").then(($buttons) => {
-  //     const $verMasBtn = $buttons.filter((_, el) => {
-  //       const text = Cypress.$(el).text().toLowerCase();
-  //       return (
-  //         text.includes("ver") ||
-  //         text.includes("todas") ||
-  //         text.includes("tiendas") ||
-  //         text.includes("más") ||
-  //         text.includes("explorar")
-  //       );
-  //     });
-
-  //     if ($verMasBtn.length > 0) {
-
-  //       cy.wrap($verMasBtn[0]).click();
-
-  //       cy.url().should("not.equal", `${apiUrl}/`);
-  //     }
-  //   });
-  // });
 });
