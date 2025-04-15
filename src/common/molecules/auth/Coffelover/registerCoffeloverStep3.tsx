@@ -28,7 +28,7 @@ const RegisterCoffeloverStep3 = ({ register, errors, direction }: RegisterCoffel
     >
       <div className="space-y-4 m-3 space-x-2  grid grid-cols-1 md:grid-cols-2">
         <div className="space-y-2">
-        <Label htmlFor="password" className={`flex items-center text-xs transition-colors ${focusedField === "password" ? "text-[#DB8935] " : "text-gray-600" }`}>Crea tu clave</Label>
+        <Label htmlFor="password" className={`flex items-center text-xs transition-colors ${focusedField === "password" ? "text-[#DB8935] " : "text-gray-600" }`}>Crea tu PIN</Label>
           <InputPassword
             id="password"
             placeholder="Contraseña"
@@ -43,10 +43,10 @@ const RegisterCoffeloverStep3 = ({ register, errors, direction }: RegisterCoffel
         </div>
 
         <div className="space-y-2">
-        <Label htmlFor="confirmPassword" className={`flex items-center text-xs transition-colors ${focusedField === "confirmPassword" ? "text-[#DB8935] " : "text-gray-600" }`}>Confirma tu clave</Label>
+        <Label htmlFor="confirmPassword" className={`flex items-center text-xs transition-colors ${focusedField === "confirmPassword" ? "text-[#DB8935] " : "text-gray-600" }`}>Confirma tu PIN</Label>
           <InputPassword
             id="confirmPassword"
-            placeholder="Confirma tu contraseña"
+            placeholder="Confirma tu PIN"
             className={`text-gray-500 border ${errors.confirmPassword ? "border-red-500" : "focus:border-amber-500 border-gray-300 "
               }rounded-full`}
               {...register("confirmPassword")}

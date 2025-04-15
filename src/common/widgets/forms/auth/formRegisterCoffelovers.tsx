@@ -145,8 +145,8 @@ const FormRegisterCoffeelover = () => {
                 <div>
                     <div className="mt-8 mb-2">
                         <TitleForm
-                            title="Conviértete en un verdadero Coffelover"
-                            subtitle=" Descubre un mundo de aromas y sabores. Únete a la comunidad donde el café es más que una bebida, es una pasión."
+                            title="Inicia esta nueva aventura como CoffeeLover"
+                            subtitle="Descubre las mejores cafeterías de especialidad y los mejores planes para los amantes del café"
                         >
                         </TitleForm>
                     </div>

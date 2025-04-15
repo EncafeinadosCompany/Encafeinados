@@ -228,7 +228,7 @@ export const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin size={18} className="text-[#D4A76A] mr-2 mt-0.5" />
-                <span className="text-white/70">Calle 10 #43-12, Medellín, Colombia</span>
+                <span className="text-white/70">Calle 10 #42-45, Poblado, Medellín, Colombia</span>
               </li>
               {/* <li className="flex items-center">
                 <Phone size={18} className="text-[#D4A76A] mr-2" />
@@ -238,11 +238,15 @@ export const Footer = () => {
                 <Mail size={18} className="text-[#D4A76A] mr-2" />
                 <span className="text-white/70">encafeinadoscompany@gmail.com</span>
               </li>
+              <li className="flex items-center">
+                <Mail size={18} className="text-[#D4A76A] mr-2" />
+                <span className="text-white/70">3166093889</span>
+              </li>
             </ul>
           </motion.div>
 
           {/* Newsletter */}
-          <motion.div
+          {/* <motion.div
             variants={itemVariants}
             className="md:col-span-3"
           >
@@ -251,7 +255,7 @@ export const Footer = () => {
               Recibe actualizaciones, ofertas exclusivas y noticias del mundo del café.
             </p>
             <NewsletterForm />
-          </motion.div>
+          </motion.div> */}
         </motion.div>
 
         {/* Separador con gradiente */}
