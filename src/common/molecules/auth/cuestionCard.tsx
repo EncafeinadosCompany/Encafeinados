@@ -44,15 +44,16 @@ export default function CuestionCard() {
               <CardRegister
                 link="/coffee-lover-registration"
                 title="CoffeeLover"
-                subtitle="Amante del Café"
-                description="Para catadores, entusiastas y conocedores del buen café"
+                subtitle="Inicia esta nueva aventura como CoffeeLover"
+                description="Descubre las mejores cafeterías de especialidad y los mejores planes para los amantes del café."
               ></CardRegister>
               <CardRegister
                 link="/store-registration"
                 title="Tienda"
                
                 subtitle="Cafetería de Especialidad"
-                description="Para baristas, tostadores y amantes del café de origen"
+                description="Únete al club exclusivo de cafeterías que celebran el arte del café de especialidad. 
+                Conquista a los coffeelovers con tus experiencias únicas, tu pasión por el café y las especialidades que ofreces con amor en cada taza."
               ></CardRegister>
 
             </div>

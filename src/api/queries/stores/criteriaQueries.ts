@@ -1,16 +1,11 @@
 import AuthClient from "@/api/client/axios"
+import { criteriaResponseData } from "@/api/types/criteriaTypes"
 import { useQuery } from "@tanstack/react-query"
 
 const authClient = new AuthClient()
 
 
-export interface criteriaResponseData {
-id: number,
-name: string,
-description: string,
-active: boolean,
-requires_image: boolean,
-}
+
 
 export const useCriteria= () => {
     return useQuery<criteriaResponseData[], Error>({

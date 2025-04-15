@@ -65,7 +65,6 @@ describe('Stores Registration', () => {
      cy.wait("@uploadImage")
      cy.wait("@registerStores").its("response.statusCode").should("eq", 201);
      
-
   });
 
 });

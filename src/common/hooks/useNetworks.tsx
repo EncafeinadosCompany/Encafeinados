@@ -14,7 +14,7 @@ export const UseNetworkInputConfig = (networkName: string) => {
     }  
     return {
         icon: <LinkIcon className="h-3.5 w-3.5 text-muted-foreground" />,
-        label: "URL",
+        label: "Agrega la URL de tu perfil",
         placeholder: "https://ejemplo.com/pagina",
         type: "url",
         inputMode: "url" as const

@@ -59,6 +59,7 @@ export const CardMapStore = ({
   <input
     ref={searchInputRef}
     type="text"
+    data-testid="search-input-location"
     value={searchQuery}
     onChange={(e) => HandleSearch(e.target.value)}
     onFocus={handleSearchFocus}

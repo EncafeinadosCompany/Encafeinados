@@ -76,11 +76,11 @@ const FormRegisterStores = () => {
                     <CardHeader className="flex flex-col">
                         {/* Título y subtítulo */}
                         <TitleForm
-                            title="Formulario de registro para cafeterías de especialidad"
+                            title="¡Regístrate y déjanos contarle al mundo lo especial que es tu café!"
                             subtitle={(() => {
                                 switch (step) {
                                     case 0:
-                                        return "Registra tu cafetería de especialidad en nuestra plataforma y empieza a formar parte de una comunidad que valora el buen café. Da visibilidad a tu negocio, conecta con nuevos clientes y haz crecer tu pasión emprendedora.";
+                                        return "¡Regístrate y déjanos contarle al mundo lo especial que es tu café!";
                                     case 1:
                                         return ""
                                     default:

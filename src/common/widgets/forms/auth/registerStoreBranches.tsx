@@ -29,12 +29,12 @@ import { showSuccessToast } from "@/common/molecules/auth/cardSuccess"
 
 
 export default function RegisterStoreBranches() {
-    
+
     const [step, setStep] = useState(0)
     const { storeId } = useParams();
     const [formData, setFormData] = useState({})
     const [baseAddress, setBaseAddress] = useState("");
-    
+
     const navigate = useNavigate();
     const { data: socialNetworks } = useSocialNetworksQuery();
     const { data: criteria } = useCriteria();
@@ -69,7 +69,7 @@ export default function RegisterStoreBranches() {
 
     const handleSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
-      
+
         const social = finalData.social_networks || [];
 
         if (!social.length) {
@@ -91,7 +91,7 @@ export default function RegisterStoreBranches() {
             }
             await useBranchesMutation.mutateAsync(data)
             const name = localStorage.getItem("nameStore");
-            showSuccessToast(name) 
+            showSuccessToast(name)
             navigate("/")
         } catch (err) {
             console.log(err)
@@ -103,7 +103,7 @@ export default function RegisterStoreBranches() {
         methods.trigger(undefined, { shouldFocus: false }).then((isValid) => {
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
-                
+
                 if (step === 1) {
                     const error = validateImageRequirements(Array.isArray(criteria) ? criteria : [], methods.getValues("criteria"));
                     if (error) {
@@ -146,7 +146,10 @@ export default function RegisterStoreBranches() {
                                 case 0:
                                     return "Estás a un paso de hacer que tu cafetería crezca y se conecte con más amantes del café como vos. Este formulario nos ayuda a conocer mejor tu sucursal, sus sabores, su esencia y todo eso que la hace única.";
                                 case 1:
-                                    return "No hay respuestas correctas ni incorrectas - solo queremos conocerte mejor para acompañarte. Respondé con 'Sí', 'No' u 'Otro', y si podés, ¡sumá una imagen!";
+                                    return "Cuidamos que cada sucursal nueva que se registra en Encafeinados ofrezca toda la experiencia de una cafetería de especialidad, para eso te solicitamos responder las siguientes preguntas:";
+
+                                case 2:
+                                    return "Selecciona con el marcador del mapa el lugar exacto donde se encuentra la sucursal para que los coffeelovers te encuentren con exactitud. (Importante: verifica que la ubicación en el mapa corresponde con el lugar de tu sucursal)"
                                 default:
                                     return "";
                             }
@@ -170,9 +173,9 @@ export default function RegisterStoreBranches() {
                                 {step === 1 && (
                                     <div className=" ">
                                         <RegisterStoreBrancheStep2
-                                        methods={methods}
-                                        criteria={criteria || []}
-                                    ></RegisterStoreBrancheStep2>
+                                            methods={methods}
+                                            criteria={criteria || []}
+                                        ></RegisterStoreBrancheStep2>
                                     </div>
 
                                 )}
@@ -217,7 +220,7 @@ export default function RegisterStoreBranches() {
                                     )}
                                     {step < RegisterStoreBrancheSchema.length - 1 ? (
 
-                                        <Button  data-testid="next-button" type="button" onClick={nextStep} className={`${step > 0 ? "" : "ml-auto"} bg-amber-600 text-white `}>
+                                        <Button data-testid="next-button" type="button" onClick={nextStep} className={`${step > 0 ? "" : "ml-auto"} bg-amber-600 text-white `}>
 
                                             Siguiente
                                             <ArrowRight className="ml-2 text-white " />
