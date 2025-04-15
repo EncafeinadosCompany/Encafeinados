@@ -74,8 +74,8 @@ const AuthRoutes = () => {
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
               <Route path="/admin" element={<HomeAdminStores />} >
-                <Route index element={<PendingStoresView />} />
-                <Route path="branches" element={< PendingBranchesView/>} /> 
+                {/* <Route index element={<PendingStoresView />} /> */}
+                <Route index element={< PendingBranchesView/>} /> 
                </Route>
               </Route>
 
