@@ -34,7 +34,9 @@ const buttonVariants = {
   tap: { scale: 0.97 }
 };
 
-export const StoreCard = memo(({ id, name, imageUrl, distance, email, phone, description = "Descubre sabores excepcionales y momentos únicos en nuestro espacio." }: StoreCardProps) => {
+export const StoreCard = memo(({ id,name,imageUrl,distance,email,phone, description = "Descubre sabores excepcionales y momentos únicos en nuestro espacio."}:
+  
+  StoreCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -42,6 +44,7 @@ export const StoreCard = memo(({ id, name, imageUrl, distance, email, phone, des
     e.stopPropagation();
     setIsFavorite(prev => !prev);
   };
+
 
   const specialties = ["Café de origen", "Métodos artesanales", "Pasteles caseros"];
 
@@ -53,7 +56,6 @@ export const StoreCard = memo(({ id, name, imageUrl, distance, email, phone, des
       animate="animate"
       transition={{ duration: 0.4 }}
       className="h-full"
-      data-testid="store-card"
     >
       <Card
         className="overflow-hidden h-full bg-white rounded-2xl border-0 shadow-md hover:shadow-lg transition-shadow duration-300"
@@ -111,9 +113,7 @@ export const StoreCard = memo(({ id, name, imageUrl, distance, email, phone, des
 
           <div className="p-4 flex-grow flex flex-col">
             <div className="flex justify-between items-start mb-2">
-              <h3 className="text-2xl md:text-3xl font-medium font-bold text-lg sm:text-xl text-[#2C1810] truncate">
-                {name}
-              </h3>
+              <Text variant="h3" className="font-bold text-lg sm:text-xl text-[#2C1810] truncate">{name}</Text>
             </div>
 
             <div className="flex flex-col space-y-2 mt-1">
