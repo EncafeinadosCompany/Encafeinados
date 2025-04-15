@@ -18,10 +18,8 @@ export const CriteriaItem: React.FC<CriteriaItemProps> = ({
 }) => {
   const [showFullImage, setShowFullImage] = useState(false);
 
-  // Manejo seguro de responseText que podría ser null/undefined
   const responseText = criteriaResponse?.responseText || "";
   
-  // Determinar si la respuesta es afirmativa de forma segura
   const isAffirmative = 
     responseText.toLowerCase?.() === "yes" || 
     responseText.toLowerCase?.() === "si" || 
@@ -80,11 +78,10 @@ export const CriteriaItem: React.FC<CriteriaItemProps> = ({
           >
             <img
               src={criteriaResponse.imageUrl}
-              alt={criteriaResponse.criteria.name}
+              alt={criteriaResponse.criteria?.name || "Vista previa"}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform"
               onError={(e) => {
-                e.currentTarget.src = "https://via.placeholder.com/300x200?text=Imagen+no+disponible";
-                e.currentTarget.alt = "Imagen no disponible";
+                e.currentTarget.src = "https://placehold.co/600x400?text=Imagen+No+disponible";
               }}
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -98,43 +95,41 @@ export const CriteriaItem: React.FC<CriteriaItemProps> = ({
             </div>
           </div>
 
-          {/* Modal para ver imagen completa - MEJORADO CON FONDO Y CONTROLES */}
-          <Dialog open={showFullImage} onOpenChange={setShowFullImage}>
-            <DialogOverlay className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50" />
-            <DialogContent className="fixed inset-0 z-50 bg-transparent border-0 p-0 flex items-center justify-center">
-              <div className="relative max-w-[90vw] max-h-[90vh] bg-white/10 backdrop-blur-md rounded-lg overflow-hidden">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 z-10 rounded-full bg-black/30 hover:bg-black/50 text-white"
+          {/* Modal mejorado para visualización de imagen */}
+          {showFullImage && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+              {/* Overlay de fondo con verdadera opacidad */}
+              <div 
+                className="absolute inset-0 bg-black opacity-80" 
+                onClick={() => setShowFullImage(false)}
+              />
+              
+              {/* Contenedor principal con posicionamiento absoluto */}
+              <div className="relative z-10 max-w-[90%] max-h-[90%] bg-white rounded-lg shadow-2xl overflow-hidden mx-auto my-auto">
+                {/* Botón de cierre */}
+                <button
+                  className="absolute top-2 right-2 z-20 rounded-full bg-black/50 hover:bg-black/70 text-white p-2 transition-colors"
                   onClick={() => setShowFullImage(false)}
                 >
                   <X className="h-5 w-5" />
-                </Button>
+                </button>
 
-                <div className="p-2">
+                {/* Contenedor de la imagen con fondo claro para imágenes transparentes */}
+                <div className="bg-gray-100 w-full h-full flex items-center justify-center p-4">
                   <img
                     src={criteriaResponse.imageUrl}
-                    alt={criteriaResponse.criteria.name}
-                    className="max-h-[80vh] max-w-[80vw] object-contain rounded"
+                    alt={criteriaResponse.criteria?.name || "Imagen ampliada"}
+                    className="max-w-full max-h-[70vh] object-contain"
                     onError={(e) => {
-                      e.currentTarget.src = "https://via.placeholder.com/800x600?text=Imagen+no+disponible";
-                      e.currentTarget.alt = "Imagen no disponible";
+                      e.currentTarget.src = "https://placehold.co/800x600?text=Imagen+no+disponible";
                     }}
                   />
                 </div>
 
-                <div className="bg-black/50 p-3 text-white text-center">
-                  <p className="font-medium">
-                    {criteriaResponse.criteria.name}
-                  </p>
-                  <p className="text-sm text-white/80">
-                    {responseText || "Sin respuesta"}
-                  </p>
-                </div>
+            
               </div>
-            </DialogContent>
-          </Dialog>
+            </div>
+          )}
         </>
       )}
     </div>
