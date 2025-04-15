@@ -273,7 +273,7 @@ const FormRegisterCoffeelover = () => {
                                         data-testid="submit-button"
                                         disabled={!methods.formState.isValid}
                                         className={`rounded-lg px-6 py-2 ${!methods.formState.isValid ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800 text-white"}`}>
-                                        Complete Registration
+                                        Completar el registro
                                     </Button>
                                 </motion.div>
                             )}

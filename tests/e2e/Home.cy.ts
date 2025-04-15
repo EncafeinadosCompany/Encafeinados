@@ -83,8 +83,6 @@ describe("Home Page", () => {
 
     cy.visit("/");
     cy.wait("@emptyStores");
-
-    // cy.contains("No se encontraron tiendas").should("be.visible");
   });
 
   it("Should show error when API fails", () => {
@@ -112,31 +110,4 @@ describe("Home Page", () => {
       }
     });
   });
-
-  // it('debería navegar al hacer clic en "Ver todas las tiendas"', () => {
-  //   cy.visit("/");
-  //   cy.wait(["@getStores", "@getBranches"]);
-  //   cy.wait(2000);
-
-
-  //   cy.get("button").then(($buttons) => {
-  //     const $verMasBtn = $buttons.filter((_, el) => {
-  //       const text = Cypress.$(el).text().toLowerCase();
-  //       return (
-  //         text.includes("ver") ||
-  //         text.includes("todas") ||
-  //         text.includes("tiendas") ||
-  //         text.includes("más") ||
-  //         text.includes("explorar")
-  //       );
-  //     });
-
-  //     if ($verMasBtn.length > 0) {
-
-  //       cy.wrap($verMasBtn[0]).click();
-
-  //       cy.url().should("not.equal", `${apiUrl}/`);
-  //     }
-  //   });
-  // });
 });
