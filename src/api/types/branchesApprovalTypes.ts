@@ -45,7 +45,8 @@ export interface PendingBranch {
     social_branches?: SocialBranch[];
   }
   
-  export type PendingBranchesResponse = PendingBranch[];
+export type PendingBranchesResponse = PendingBranch[];
+
 
 export interface BranchesResponseList {
     message: string;

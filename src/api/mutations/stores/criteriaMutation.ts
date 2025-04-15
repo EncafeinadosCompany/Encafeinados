@@ -4,22 +4,11 @@ import { handleApiError } from "@/common/utils/errors/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { uploadImage} from "../imageMutations";
 import toast from "react-hot-toast";
+import { criteria } from "@/api/types/criteriaTypes";
 
 const authClient = new AuthClient();
 
-interface criteriaList {
-    criteriaId: number,
-    response_text: string;
-    image_url? :{
-        file: File;
-        preview: string;
-    };
-}
 
-interface criteria {
-    branchId: number;
-    criteriaResponseData: criteriaList[];
-}
 
 export const useRegisterCriteriaMutation = () => {
     const useErrors = useError("criteria")

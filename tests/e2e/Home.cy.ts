@@ -7,7 +7,7 @@ import {
 
 const apiUrl = Cypress.env("API_URL");
 
-describe("Página de inicio", () => {
+describe("Home Page", () => {
   beforeEach(() => {
     console.log("API URL:", apiUrl);
 
@@ -32,7 +32,7 @@ describe("Página de inicio", () => {
 
   });
 
-  it("debería cargar la página de inicio correctamente", () => {
+  it("Should load the home page correctly", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
@@ -40,7 +40,7 @@ describe("Página de inicio", () => {
     cy.contains("Tiendas Aliadas").should("exist");
   });
 
-  it("debería mostrar el carrusel de tiendas con datos", () => {
+  it("It should display the store carousel with data", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
@@ -50,7 +50,7 @@ describe("Página de inicio", () => {
 
   });
 
-  it("debería permitir navegación en el carrusel", () => {
+  it("It should allow navigation in the carousel", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
@@ -73,9 +73,8 @@ describe("Página de inicio", () => {
     });
   });
 
- 
 
-  it("debería mostrar mensaje cuando no hay tiendas", () => {
+  it("It should display a menssage when there aren't store", () => {
     cy.intercept("GET", `${apiUrl}/stores`, {
 
       statusCode: 200,
@@ -88,7 +87,7 @@ describe("Página de inicio", () => {
     // cy.contains("No se encontraron tiendas").should("be.visible");
   });
 
-  it("debería mostrar error cuando falla la API", () => {
+  it("Should show error when API fails", () => {
     cy.intercept("GET", `${apiUrl}/stores`, apiStates.errorResponse).as(
       "errorStores"
     );

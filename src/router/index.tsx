@@ -6,7 +6,7 @@ import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 const CompletePerfil = lazy( ()=> import("@/common/widgets/forms/auth/formCompleteProfile"));
 const PrincipalStores = lazy(() => import("@/modules/stores/components/principalStorePage"));
-const RegisterStoreBranches =  lazy (()=> import("@/common/widgets/forms/auth/registerStoreBranches"));
+const RegisterStoreBranches = lazy (()=> import("@/common/widgets/forms/auth/registerStoreBranches"));
 const LoadingSpinner = lazy(() => import ("@/common/atoms/LoadingSpinner"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));

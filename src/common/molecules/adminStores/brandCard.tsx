@@ -1,17 +1,9 @@
 "use client"
 
-import React from "react"
-import { MapPin, Phone, Store, Coffee, Clock, ArrowRight, Calendar, Star, Users } from "lucide-react"
+import { MapPin, Phone, Store, Coffee, Clock,Calendar, Star, Users } from "lucide-react"
 import { Card, CardContent, CardFooter } from "@/common/ui/card"
-import { Button } from "@/common/ui/button"
 import { Badge } from "@/common/ui/badge"
-import { motion, AnimatePresence } from "framer-motion"
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger 
-} from "@/common/ui/tooltip"
+import { motion} from "framer-motion"
 
 interface BranchCardProps {
   branch: any

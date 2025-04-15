@@ -59,7 +59,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                 Redes Sociales
             </CardTitle>
             <CardDescription className="text-amber-700">
-                Connect your store with your social media presence
+                Agrega tus redes sociales favoritas para que los coffeelovers puedan conocer más sobre ti
             </CardDescription>
         </CardHeader>
 

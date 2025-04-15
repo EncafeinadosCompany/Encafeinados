@@ -80,7 +80,7 @@ const FormRegisterStores = () => {
                             subtitle={(() => {
                                 switch (step) {
                                     case 0:
-                                        return "Registra tu cafetería de especialidad en nuestra plataforma y empieza a formar parte de una comunidad que valora el buen café. Da visibilidad a tu negocio, conecta con nuevos clientes y haz crecer tu pasión emprendedora.";
+                                        return "¡Regístrate y déjanos contarle al mundo lo especial que es tu café!";
                                     case 1:
                                         return ""
                                     default:
