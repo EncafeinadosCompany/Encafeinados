@@ -36,44 +36,12 @@ export const NavGeneral = ({
   }, [location.pathname, setIsExpanded]);
 
   return (
-    <>
-      {isMobile ? (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] z-[100] rounded-t-2xl border-t border-gray-100">
-          <nav className="flex justify-around items-center h-16 px-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={cn(
-                  "flex flex-col items-center justify-center px-2 py-2 rounded-xl transition-all duration-300 relative",
-                  location.pathname.startsWith(item.href)
-                    ? "text-amber-800 bg-amber-50/70 transform scale-105 shadow-sm"
-                    : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
-                )}
-              >
-                <span className="m-1">{item.icon}</span>
-                <span className="text-[10px] font-medium truncate max-w-[50px] text-center">
-                  {item.title}
-                </span>
-                {location.pathname.startsWith(item.href) && (
-                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-amber-500 rounded-full"></div>
-                )}
-              </Link>
-            ))}
-            <Link
-              to="/"
-              className="flex flex-col items-center justify-center px-2 py-2 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
-              onClick={clearAuthStorage}
-            >
-              <LogOutIcon className="h-4 w-4 m-1" />
-              <span className="text-[10px] font-medium">Salir</span>
-            </Link>
-          </nav>
-        </div>
-      ) : (
+    <div className="flex min-h-screen w-full">
+      {/* Sidebar para desktop */}
+      {!isMobile && (
         <div
           className={cn(
-            "hidden md:flex flex-col fixed left-0 top-0 bottom-0 bg-white shadow-lg border-r border-gray-100 z-50 transition-all duration-400 overflow-hidden",
+            "md:flex flex-col sticky top-0 h-screen bg-white shadow-lg border-r border-gray-100 z-50 transition-all duration-400 overflow-hidden flex-shrink-0",
             isExpanded ? "w-56" : "w-16"
           )}
         >
@@ -222,21 +190,48 @@ export const NavGeneral = ({
         </div>
       )}
 
-      {/* Main content area */}
-      <main
-        className={cn(
-          "transition-all duration-300",
-          isMobile
-            ? "pb-20" // Padding para navegación móvil
-            : isExpanded
-            ? "md:ml-56" // Margen cuando sidebar está expandido
-            : "md:ml-16" // Margen cuando sidebar está colapsado
-        )}
-      >
-        <div className="h-full w-full">
+      {/* Contenido principal */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <main className="flex-1 w-full">
           <Outlet />
-        </div>
-      </main>
-    </>
+        </main>
+        
+        {/* Navbar móvil abajo */}
+        {isMobile && (
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] z-[100] rounded-t-2xl border-t border-gray-100">
+            <nav className="flex justify-around items-center h-16 px-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={cn(
+                    "flex flex-col items-center justify-center px-2 py-2 rounded-xl transition-all duration-300 relative",
+                    location.pathname.startsWith(item.href)
+                      ? "text-amber-800 bg-amber-50/70 transform scale-105 shadow-sm"
+                      : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
+                  )}
+                >
+                  <span className="m-1">{item.icon}</span>
+                  <span className="text-[10px] font-medium truncate max-w-[50px] text-center">
+                    {item.title}
+                  </span>
+                  {location.pathname.startsWith(item.href) && (
+                    <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-amber-500 rounded-full"></div>
+                  )}
+                </Link>
+              ))}
+              <Link
+                to="/"
+                className="flex flex-col items-center justify-center px-2 py-2 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
+                onClick={clearAuthStorage}
+              >
+                <LogOutIcon className="h-4 w-4 m-1" />
+                <span className="text-[10px] font-medium">Salir</span>
+              </Link>
+            </nav>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };

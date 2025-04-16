@@ -43,14 +43,13 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                             aria-expanded={showInfo}
                         >
                             <HelpCircle className="h-4 w-4 mr-1" />
-                            <span className="text-xs">¿Por qué lo solicitamos?</span>
+                            <span className="text-xs">¿Para qué te solicitamos estos datos?</span>
                         </button>
 
                         {showInfo && (
                             <div className="absolute z-10 bg-white text-gray-700 p-3 rounded-lg shadow-lg w-64 text-sm mt-1 left-0 sm:left-auto border border-gray-300">
                                 <p className="text-sm">
-                                    Solicitamos esta información para mejorar la gestión de puntos y stickers en tu cuenta. Puedes
-                                    modificar estos datos una vez inicies sesión.
+                                El número de documento será tu clave única con la que obtendrás y acumularás Coffeecoins disponibles que podrás usarlos en la plataforma
                                 </p>
                                 <button
                                     onClick={toggleInfo}

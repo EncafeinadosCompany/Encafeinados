@@ -7,7 +7,7 @@ import {
 
 const apiUrl = Cypress.env("API_URL");
 
-describe("Home Page", () => {
+describe("Home page", () => {
   beforeEach(() => {
     console.log("API URL:", apiUrl);
 
@@ -21,7 +21,6 @@ describe("Home Page", () => {
       body: mockBranches,
     }).as("getBranches");
 
-
     cy.window().then((win) => {
       cy.stub(win.navigator.geolocation, "getCurrentPosition").callsFake(
         (cb) => {
@@ -29,10 +28,9 @@ describe("Home Page", () => {
         }
       );
     });
-
   });
 
-  it("Should load the home page correctly", () => {
+  it("should load the home page correctly", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
@@ -40,24 +38,25 @@ describe("Home Page", () => {
     cy.contains("Tiendas Aliadas").should("exist");
   });
 
-  it("It should display the store carousel with data", () => {
+  it("should display the store carousel with data", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
 
-    cy.contains("Café Aroma").should("exist");
-    cy.contains("El Barista").should("exist");
-
+    // Use a better selector strategy
+    cy.get("h3").should("exist"); // First verify any h3 exists
+    
+    // Use contains with the specific element type
+    cy.get("h3").contains("Café Aroma").should("exist");
+    cy.get("h3").contains("El Barista").should("exist");
   });
 
-  it("It should allow navigation in the carousel", () => {
+  it("should allow navigation in the carousel", () => {
     cy.visit("/");
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
 
     cy.get("button").then(($buttons) => {
-
-
       const $navigationButtons = $buttons.filter((_, el) => {
         return (
           Cypress.$(el).find("svg").length > 0 &&
@@ -66,26 +65,27 @@ describe("Home Page", () => {
       });
 
       if ($navigationButtons.length > 0) {
-
         cy.wrap($navigationButtons[0]).click({ force: true });
         cy.wait(1000);
       }
     });
   });
 
-
-  it("It should display a menssage when there aren't store", () => {
+  it("should display message when there are no stores", () => {
     cy.intercept("GET", `${apiUrl}/stores`, {
-
       statusCode: 200,
       body: apiStates.emptyStores,
     }).as("emptyStores");
 
     cy.visit("/");
     cy.wait("@emptyStores");
+    cy.wait(2000);
+    
+    // Check for the no stores message
+    cy.contains("No se encontraron tiendas").should("exist");
   });
 
-  it("Should show error when API fails", () => {
+  it("should display error when API fails", () => {
     cy.intercept("GET", `${apiUrl}/stores`, apiStates.errorResponse).as(
       "errorStores"
     );
@@ -95,19 +95,17 @@ describe("Home Page", () => {
     cy.wait(2000);
 
     cy.get("body").then(($body) => {
-      if ($body.text().includes("Error al cargar las tiendas")) {
-        cy.contains("Error al cargar las tiendas").should("exist");
+      if ($body.text().includes("Error loading stores")) {
+        cy.contains("Error loading stores").should("exist");
       } else if ($body.text().includes("Error")) {
         cy.contains("Error").should("exist");
-      } else if ($body.text().includes("falló")) {
-        cy.contains("falló").should("exist");
-
-
-
+      } else if ($body.text().includes("failed")) {
+        cy.contains("failed").should("exist");
       } else {
         cy.contains("Café Aroma").should("not.exist");
-
       }
     });
   });
+
+
 });
