@@ -120,15 +120,14 @@ const FormRegisterCoffeelover = () => {
                 },
             };
 
-            // Verificar si hay datos incompletos
             const datosIncompletos = !userData.personData.type_document || !userData.personData.number_document || !userData.personData.phone_number;
 
-            setIsLoading(false);
             if (isNewUser || datosIncompletos) {
                 sessionStorage.setItem("tempUserData", JSON.stringify(userData));
                 navigate("/completar-perfil");
             }
-
+            setIsLoading(false);
+        
         } catch (error) {
             setIsLoading(false);
         }

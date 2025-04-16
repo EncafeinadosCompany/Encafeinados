@@ -10,18 +10,22 @@ const authClient = new AuthClient();
 
 export const useRegisterBrandMutation = () => {
   const useCriteriaMutation = useRegisterCriteriaMutation();
-    const useErrors = useError("stores")
+    const useErrors = useError("branches")
     const queryClient = useQueryClient()
   
     return useMutation<any, Error, BranchPost>({
       mutationFn: async (formData: BranchPost): Promise<LoginResponse> => {
         try {
-          const response = await authClient.post<any>('/branches', formData);        
+          console.log('AQUI',formData)
+          const response = await authClient.post<any>('/branches', formData);    
+          console.log(response)    
           return response;
-    
+       
         } catch (error: any) {
           throw handleApiError(error)
         }
+
+       
       },
       onSuccess: (data, value:BranchPost) => {
 
@@ -32,6 +36,7 @@ export const useRegisterBrandMutation = () => {
         queryClient.invalidateQueries({ queryKey: ['branches'] });
       },
       onError: (error: any) => {
+  
         useErrors(error);
       }
     })

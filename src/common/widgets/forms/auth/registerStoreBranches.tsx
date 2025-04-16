@@ -27,10 +27,9 @@ import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueri
 import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
 import { showSuccessToast } from "@/common/molecules/auth/cardSuccess"
 
-
 export default function RegisterStoreBranches() {
 
-    const [step, setStep] = useState(0)
+    const [step, setStep] = useState(4)
     const { storeId } = useParams();
     const [formData, setFormData] = useState({})
     const [baseAddress, setBaseAddress] = useState("");
@@ -38,6 +37,7 @@ export default function RegisterStoreBranches() {
     const navigate = useNavigate();
     const { data: socialNetworks } = useSocialNetworksQuery();
     const { data: criteria } = useCriteria();
+    const [invalid , setInvalid] = useState(false)
     const useBranchesMutation = useRegisterBrandMutation();
 
 
@@ -64,19 +64,22 @@ export default function RegisterStoreBranches() {
                 return acc;
             }, {} as Record<string, { response_text: string; image_url?: string; other_text?: string }>));
         }
-    }, [criteria, methods]);
+        setInvalid(false)
+    }, [criteria, methods, invalid]);
 
 
     const handleSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
 
         const social = finalData.social_networks || [];
+  
+            if (!social.length) {
+                toast.error("Debes agregar al menos una red social.");
+                return;
+            }
+        
 
-        if (!social.length) {
-            toast.error("Debes agregar al menos una red social.");
-            return;
-        }
-
+            console.log("data", finalData)
         try {
             storeId ? storeId : toast.error('no cuenta con el id')
             const data = {
@@ -93,14 +96,20 @@ export default function RegisterStoreBranches() {
             const name = localStorage.getItem("nameStore");
             showSuccessToast(name)
             navigate("/")
-        } catch (err) {
-            console.log(err)
+        } catch (err ) {
+            setStep(0)
+            setInvalid(true)
+            if ((err as { statusCode?: number })?.statusCode === 404) {
+                return methods.reset()
+            }
+            
+            
         }
 
     }
 
     const nextStep = () => {
-        methods.trigger(undefined, { shouldFocus: false }).then((isValid) => {
+        methods.trigger().then((isValid) => {
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
 
@@ -113,6 +122,7 @@ export default function RegisterStoreBranches() {
                         return;
                     }
                 }
+
                 setStep((prev) => prev + 1)
             }
         })
@@ -126,7 +136,6 @@ export default function RegisterStoreBranches() {
         methods.setValue("latitude", lat, { shouldValidate: true });
         methods.setValue("longitude", lng, { shouldValidate: true });
         methods.setValue("address", address, { shouldValidate: true });
-
         setBaseAddress(address);
     }
 
@@ -140,7 +149,7 @@ export default function RegisterStoreBranches() {
             >
                 <CardHeader className="mb-1 text-center" >
                     <TitleForm
-                        title="Formulario de registro de sucursal"
+                        title={step != 4 ? "Formulario de registro de sucursal": ""}
                         subtitle={(() => {
                             switch (step) {
                                 case 0:
@@ -188,6 +197,7 @@ export default function RegisterStoreBranches() {
                                             initialLng={methods.watch("longitude")}
                                             onLocationSelect={onLocationSelect}>
                                         </MapSearch>
+                                        
                                     </div>
                                 )}
 
@@ -238,7 +248,7 @@ export default function RegisterStoreBranches() {
                 </FormProvider>
             </motion.div>
         </Card>
-    </div>
+    </div >
     )
 }
 

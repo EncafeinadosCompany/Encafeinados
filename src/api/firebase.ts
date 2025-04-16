@@ -24,12 +24,17 @@ export const registerWithGoogle = async () => {
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const token = credential?.accessToken;
     const user = result.user;
-
     const isNewUser = (result as any).additionalUserInfo?.isNewUser || false;
 
-    return { user, token, isNewUser };
-  } catch (error) {
-    console.error("Error en registro con Google:", error);
+    return { user, token, isNewUser }; // 🔥 esto sí devuelve los datos
+  } catch (error: any) {
+    if (error.code === 'auth/popup-closed-by-user') {
+      console.warn('El usuario cerró el popup antes de iniciar sesión.');
+    } else {
+      console.error('Error de login:', error);
+    }
+
+    // Podés lanzar el error si querés que lo manejen desde afuera
     throw error;
   }
 };
