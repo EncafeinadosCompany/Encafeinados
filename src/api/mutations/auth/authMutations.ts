@@ -7,6 +7,7 @@ import { handleApiError } from '@/common/utils/errors/handleApiError'
 import { useAuth } from '@/common/hooks/auth/useAuth'
 import { useNavigate } from 'react-router-dom'
 
+ 
 
 const authClient = new AuthClient()
 
@@ -55,15 +56,12 @@ export const useLoginMutation = () => {
 }
 
 export const useLoginGoogleMutation = () => {
-  return useQuery<any>({
-    queryKey: ['google'],
-    queryFn: async () => {
-      const response = window.location.href = 'http://localhost:3300/api/v2/auth/google';
-      return response
-    },
-    
-  })
-}
+  return useMutation({
+    mutationFn: async () => {
+      window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+    }
+  });
+};
 
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient()

@@ -4,11 +4,9 @@ import { ROLES } from "@/common/utils/lists/roles";
 
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
-import { PrincipalStores } from "@/modules/stores/components/principalStorePage";
-import CompletePerfil from "@/common/widgets/forms/auth/formCompleteProfile";
-import RegisterStoreBranches from "@/common/widgets/forms/auth/registerStoreBranches";
-
-
+const CompletePerfil = lazy( ()=> import("@/common/widgets/forms/auth/formCompleteProfile"));
+const PrincipalStores = lazy(() => import("@/modules/stores/components/principalStorePage"));
+const RegisterStoreBranches = lazy (()=> import("@/common/widgets/forms/auth/registerStoreBranches"));
 const LoadingSpinner = lazy(() => import ("@/common/atoms/LoadingSpinner"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
@@ -46,7 +44,7 @@ const AuthRoutes = () => {
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/map" element={<MapView />} />
+            <Route path="/map" element={<MapView view={true} />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path='/register' element={<CuestionCard />} />
@@ -76,8 +74,8 @@ const AuthRoutes = () => {
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
               <Route path="/admin" element={<HomeAdminStores />} >
-                <Route index element={<PendingStoresView />} />
-                <Route path="branches" element={< PendingBranchesView/>} /> 
+                {/* <Route index element={<PendingStoresView />} /> */}
+                <Route index element={< PendingBranchesView/>} /> 
                </Route>
               </Route>
 

@@ -95,6 +95,7 @@ const FormRegisterCoffeelover = () => {
         } catch (error) {
             console.log(error);
         }finally{
+            toast.remove();
             toast.success("Coffelover creado exitosamente.¡Bienvenido!")       
         }
     };
@@ -119,25 +120,14 @@ const FormRegisterCoffeelover = () => {
                 },
             };
 
-            // Verificar si hay datos incompletos
             const datosIncompletos = !userData.personData.type_document || !userData.personData.number_document || !userData.personData.phone_number;
 
-            setIsLoading(false);
             if (isNewUser || datosIncompletos) {
                 sessionStorage.setItem("tempUserData", JSON.stringify(userData));
                 navigate("/completar-perfil");
             }
-
-
-            // await useRegisterCoffeelover.mutateAsync(userData).then((response) => {
-            //     toast.success("Coffelover creado exitosamente. ¡Bienvenido!");
-            //     navigate("/login");
-            // }).catch((error) => {
-            //     console.error("Error al registrar el usuario:", error);
-            //     setIsLoading(false);
-
-            // });
-
+            setIsLoading(false);
+        
         } catch (error) {
             setIsLoading(false);
         }
@@ -154,8 +144,8 @@ const FormRegisterCoffeelover = () => {
                 <div>
                     <div className="mt-8 mb-2">
                         <TitleForm
-                            title="Conviértete en un verdadero Coffelover"
-                            subtitle=" Descubre un mundo de aromas y sabores. Únete a la comunidad donde el café es más que una bebida, es una pasión."
+                            title="Inicia esta nueva aventura como CoffeeLover"
+                            subtitle="Descubre las mejores cafeterías de especialidad y los mejores planes para los amantes del café"
                         >
                         </TitleForm>
                     </div>
@@ -282,7 +272,7 @@ const FormRegisterCoffeelover = () => {
                                         data-testid="submit-button"
                                         disabled={!methods.formState.isValid}
                                         className={`rounded-lg px-6 py-2 ${!methods.formState.isValid ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-gray-900 hover:bg-gray-800 text-white"}`}>
-                                        Complete Registration
+                                        Completar el registro
                                     </Button>
                                 </motion.div>
                             )}

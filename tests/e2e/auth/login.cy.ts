@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { mockLoginSuccess } from "cypress/support/mocks/auth/loginSuccess";
+import { mockLoginSuccess } from "cypress/support/api/login";
 import { doLogin } from "cypress/support/flows/auth/loginFlow";
 
 console.log("mockLoginSuccess", mockLoginSuccess);

@@ -10,20 +10,13 @@ import { Skeleton } from "@/common/ui/skeleton"
 import { BranchCard } from "@/common/molecules/adminStores/brandCard"
 import { AddBranchModal } from "./addBranches"
 import {  AnimatePresence } from "framer-motion"
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger 
-} from "@/common/ui/tooltip"
+import {Tooltip,TooltipContent,TooltipProvider,TooltipTrigger} from "@/common/ui/tooltip"
 import { useBranchByStore } from "@/api/queries/stores/storesQueries"
-import { Branch, BranchesResponse } from "@/api/types/branchesTypes"
-import { use } from "chai"
+import { Branch } from "@/api/types/branchesTypes"
+
 import { Badge } from "@/common/ui/badge"
 
-
-
-export function PrincipalStores() {
+export default function PrincipalStores() {
   // Estado para las sucursales
   // const [branches, setBranches] = useState<Branch[]>([])
   const [loading, setLoading] = useState(true)
@@ -152,8 +145,7 @@ useEffect(() => {
         ) : (
           <Button 
             onClick={() => setIsAddModalOpen(true)}
-            className="bg-gradient-to-r from-[#D4A76A] to-[#6F4E37] hover:opacity-90 text-white"
-          >
+            className="bg-gradient-to-r from-[#D4A76A] to-[#6F4E37] hover:opacity-90 text-white">
             <PlusCircle className="h-4 w-4 mr-2" />
             Agregar primera sucursal
           </Button>

@@ -27,17 +27,17 @@ import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueri
 import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
 import { showSuccessToast } from "@/common/molecules/auth/cardSuccess"
 
-
 export default function RegisterStoreBranches() {
-    
+
     const [step, setStep] = useState(0)
     const { storeId } = useParams();
     const [formData, setFormData] = useState({})
     const [baseAddress, setBaseAddress] = useState("");
-    
+
     const navigate = useNavigate();
     const { data: socialNetworks } = useSocialNetworksQuery();
     const { data: criteria } = useCriteria();
+    const [invalid , setInvalid] = useState(false)
     const useBranchesMutation = useRegisterBrandMutation();
 
 
@@ -64,19 +64,22 @@ export default function RegisterStoreBranches() {
                 return acc;
             }, {} as Record<string, { response_text: string; image_url?: string; other_text?: string }>));
         }
-    }, [criteria, methods]);
+        setInvalid(false)
+    }, [criteria, methods, invalid]);
 
 
     const handleSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
-      
+
         const social = finalData.social_networks || [];
+  
+            if (!social.length) {
+                toast.error("Debes agregar al menos una red social.");
+                return;
+            }
+        
 
-        if (!social.length) {
-            toast.error("Debes agregar al menos una red social.");
-            return;
-        }
-
+            console.log("data", finalData)
         try {
             storeId ? storeId : toast.error('no cuenta con el id')
             const data = {
@@ -91,19 +94,25 @@ export default function RegisterStoreBranches() {
             }
             await useBranchesMutation.mutateAsync(data)
             const name = localStorage.getItem("nameStore");
-            showSuccessToast(name) 
+            showSuccessToast(name)
             navigate("/")
-        } catch (err) {
-            console.log(err)
+        } catch (err ) {
+            setStep(0)
+            setInvalid(true)
+            if ((err as { statusCode?: number })?.statusCode === 404) {
+                return methods.reset()
+            }
+            
+            
         }
 
     }
 
     const nextStep = () => {
-        methods.trigger(undefined, { shouldFocus: false }).then((isValid) => {
+        methods.trigger().then((isValid) => {
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
-                
+
                 if (step === 1) {
                     const error = validateImageRequirements(Array.isArray(criteria) ? criteria : [], methods.getValues("criteria"));
                     if (error) {
@@ -113,6 +122,7 @@ export default function RegisterStoreBranches() {
                         return;
                     }
                 }
+
                 setStep((prev) => prev + 1)
             }
         })
@@ -126,7 +136,6 @@ export default function RegisterStoreBranches() {
         methods.setValue("latitude", lat, { shouldValidate: true });
         methods.setValue("longitude", lng, { shouldValidate: true });
         methods.setValue("address", address, { shouldValidate: true });
-
         setBaseAddress(address);
     }
 
@@ -140,13 +149,16 @@ export default function RegisterStoreBranches() {
             >
                 <CardHeader className="mb-1 text-center" >
                     <TitleForm
-                        title="Formulario de registro de sucursal"
+                        title={step != 4 ? "Formulario de registro de sucursal": ""}
                         subtitle={(() => {
                             switch (step) {
                                 case 0:
                                     return "Estás a un paso de hacer que tu cafetería crezca y se conecte con más amantes del café como vos. Este formulario nos ayuda a conocer mejor tu sucursal, sus sabores, su esencia y todo eso que la hace única.";
                                 case 1:
-                                    return "No hay respuestas correctas ni incorrectas - solo queremos conocerte mejor para acompañarte. Respondé con 'Sí', 'No' u 'Otro', y si podés, ¡sumá una imagen!";
+                                    return "Cuidamos que cada sucursal nueva que se registra en Encafeinados ofrezca toda la experiencia de una cafetería de especialidad, para eso te solicitamos responder las siguientes preguntas:";
+
+                                case 2:
+                                    return "Selecciona con el marcador del mapa el lugar exacto donde se encuentra la sucursal para que los coffeelovers te encuentren con exactitud. (Importante: verifica que la ubicación en el mapa corresponde con el lugar de tu sucursal)"
                                 default:
                                     return "";
                             }
@@ -170,9 +182,9 @@ export default function RegisterStoreBranches() {
                                 {step === 1 && (
                                     <div className=" ">
                                         <RegisterStoreBrancheStep2
-                                        methods={methods}
-                                        criteria={criteria || []}
-                                    ></RegisterStoreBrancheStep2>
+                                            methods={methods}
+                                            criteria={criteria || []}
+                                        ></RegisterStoreBrancheStep2>
                                     </div>
 
                                 )}
@@ -185,6 +197,7 @@ export default function RegisterStoreBranches() {
                                             initialLng={methods.watch("longitude")}
                                             onLocationSelect={onLocationSelect}>
                                         </MapSearch>
+                                        
                                     </div>
                                 )}
 
@@ -217,7 +230,7 @@ export default function RegisterStoreBranches() {
                                     )}
                                     {step < RegisterStoreBrancheSchema.length - 1 ? (
 
-                                        <Button  data-testid="next-button" type="button" onClick={nextStep} className={`${step > 0 ? "" : "ml-auto"} bg-amber-600 text-white `}>
+                                        <Button data-testid="next-button" type="button" onClick={nextStep} className={`${step > 0 ? "" : "ml-auto"} bg-amber-600 text-white `}>
 
                                             Siguiente
                                             <ArrowRight className="ml-2 text-white " />
@@ -235,7 +248,7 @@ export default function RegisterStoreBranches() {
                 </FormProvider>
             </motion.div>
         </Card>
-    </div>
+    </div >
     )
 }
 

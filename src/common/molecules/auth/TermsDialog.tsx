@@ -160,7 +160,7 @@ export const TermsDialog = ({
                 <h3 className="font-medium text-[#6F4E37] mb-1 text-sm sm:text-base">6. Contacto</h3>
                 <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
                   Para consultas o solicitudes, comuníquese vía 
-                  <a href="mailto:encafeinados4@gmail.com" className="text-amber-700 font-medium"> email</a> o 
+                  <a href="mailto:encafeinadoscompany@gmail.com" className="text-amber-700 font-medium"> email</a> o 
                   al celular <span className="text-amber-700 font-medium">300 629 2795</span>.
                 </p>
               </div>

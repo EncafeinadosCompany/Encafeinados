@@ -3,7 +3,8 @@ import { Label } from "@/common/ui/label";
 import { Controller } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import { renderRadioGroup } from "@/common/atoms/RenderRadio";
-import { criteriaResponseData } from "@/api/queries/stores/criteriaQueries";
+import { criteriaResponseData } from "@/api/types/criteriaTypes";
+
 
 
 
@@ -41,6 +42,7 @@ export default function RegisterStoreBrancheStep2({ methods, criteria }: Registe
                 render={({ field }) => (
                   <Input
                     placeholder="Escribe tu respuesta"
+                    data-testid={`criteria-${criteriaId}-other-text`}
                     value={field.value ?? ""}
                     onChange={field.onChange}
                   />
@@ -58,6 +60,7 @@ export default function RegisterStoreBrancheStep2({ methods, criteria }: Registe
                     <Input
                       type="file"
                       accept="image/*"
+                      data-testid={`criteria-${criteriaId}-image-upload`}
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {

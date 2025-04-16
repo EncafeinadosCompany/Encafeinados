@@ -14,7 +14,7 @@ const Formlogin = () => {
   const navigate = useNavigate()
   const { pagesPermissions } = useAuth()
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const { register, handleSubmit, control, formState: { errors }, reset } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -42,14 +42,21 @@ const Formlogin = () => {
   }
 
   const handleGoogleSignIn = async () => {
-    setIsLoading(true)
-    window.open("http://localhost:3000/api/v2/auth/google", "_self");
-  }
+    try {
+      setIsLoading(true);
+      window.open(`${import.meta.env.VITE_API_URL}/auth/google`, "_self");
+    } catch (error) {
+      console.error("Error during Google authentication:", error);
+      toast.error("No se pudo conectar con Google. Intenta nuevamente.");
+      setIsLoading(false);
+    }
+  };
 
   return (
       <LoginCard
         register={register}
         errors={errors}
+        control={control}
         isLoading={isLoading}
         onSubmit={handleSubmit(onSubmit)}
         onGoogleSignIn={handleGoogleSignIn}>

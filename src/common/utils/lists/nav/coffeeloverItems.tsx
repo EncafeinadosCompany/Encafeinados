@@ -5,7 +5,7 @@ export const CoffeloverItems: NavItemType[] = [
     {
       title: "Inicio",
       href: "/coffeelover",
-      icon: <Home className="h-5 w-5" />,
+      icon: <Home className="h-4 w-4" />,
     },
     // {
     //   title: "Buscar",

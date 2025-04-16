@@ -51,18 +51,18 @@ const FormRegisterStores = () => {
     const onSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
 
-        try {
-            const response = await useRegiterStore.mutateAsync(finalData)
-            toast.success("Registro exitoso, por favor revisa tu correo electrónico");
-            methods.reset();
-            navigate(`/stores-registration/branches/${response.store.id}`)
-
-        } catch (error) {
-            console.log("Error al registrar la tienda:", error);
-            setStep(0);
-        }
-
-
+        
+            await useRegiterStore.mutateAsync(finalData).then((response) => {
+              
+                methods.reset();
+                navigate(`/stores-registration/branches/${response.store.id}`)
+            })
+              
+            .finally(() => {   
+               
+            setStep(0); 
+            })
+        
     };
 
     return (
@@ -76,11 +76,11 @@ const FormRegisterStores = () => {
                     <CardHeader className="flex flex-col">
                         {/* Título y subtítulo */}
                         <TitleForm
-                            title="Formulario de registro para cafeterías de especialidad"
+                            title="¡Regístrate y déjanos contarle al mundo lo especial que es tu café!"
                             subtitle={(() => {
                                 switch (step) {
                                     case 0:
-                                        return "Registra tu cafetería de especialidad en nuestra plataforma y empieza a formar parte de una comunidad que valora el buen café. Da visibilidad a tu negocio, conecta con nuevos clientes y haz crecer tu pasión emprendedora.";
+                                        return "¡Regístrate y déjanos contarle al mundo lo especial que es tu café!";
                                     case 1:
                                         return ""
                                     default:
@@ -136,7 +136,6 @@ const FormRegisterStores = () => {
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                         <Button
                                             type="button"
-
                                             variant="default"
                                             onClick={() => {
                                                 setStep(step - 1);

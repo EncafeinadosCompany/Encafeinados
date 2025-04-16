@@ -4,6 +4,7 @@ import { formatAddress } from "@/common/utils/map/formatAddress";
 import { MapController } from "@/common/utils/map/MapController";
 import { Loader2, MapPin, Navigation, Search, X } from "@/common/ui/icons";
 import { MapContainer, Marker, TileLayer, ZoomControl } from "react-leaflet";
+import { Button } from "@/common/ui/button";
 
 interface SearchProps {
   mapRef: React.RefObject<L.Map | null>;
@@ -59,6 +60,7 @@ export const CardMapStore = ({
   <input
     ref={searchInputRef}
     type="text"
+    data-testid="search-input-location"
     value={searchQuery}
     onChange={(e) => HandleSearch(e.target.value)}
     onFocus={handleSearchFocus}
@@ -83,6 +85,7 @@ export const CardMapStore = ({
 {/* Botón ubicación actual */}
 <button
   onClick={UseCurrentLocation}
+  type="button"
   className=" flex mt-2 items-center text-blue-600 hover:text-blue-800 text-sm"
 >
   <Navigation className="h-4 w-4 mr-2" />
@@ -132,13 +135,15 @@ export const CardMapStore = ({
       </div>
     ) : null}
 
-    <div
+    <Button
+      type="button"
+
       onClick={UseCurrentLocation}
-      className="p-2 hover:bg-gray-100 cursor-pointer flex items-center border-t"
+      className="p-2 hover:bg-gray-100 cursor-pointer flex items-center border-none"
     >
       <Navigation className="h-4 w-4 text-blue-500 mr-2" />
       <span className="text-sm text-blue-600">Usar mi ubicación actual</span>
-    </div>
+    </Button>
   </div>
 )}
 </div>

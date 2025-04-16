@@ -16,6 +16,7 @@ import '@/common/styles/desktopDetails.css';
 // API imports
 import { useBranches } from '@/api/queries/stores/branchesQueries';
 import { useApprovedStores } from '@/api/queries/stores/storesQueries';
+import { useBranchesByStore } from '@/api/queries/stores/storesQueries';
 
 // Types
 import { Cafe } from '@/common/types/map/mapTypes';
@@ -37,30 +38,23 @@ import DirectRouteLine from '@/common/molecules/map/DirectRouteLine';
 import RouteControls from '@/common/molecules/map/RouteControls';
 import '@/common/styles/mapMarkers.css';
 import CafeDetail from '@/common/molecules/map/CafeDetail';
-
-// Animations
+import MapSidebar from '@/common/molecules/map/MapSidebar';
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
-import { useBranchesByStore } from '@/api/queries/stores/storesQueries';
 
-// Componente para capturar la instancia del mapa
-const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance }) => {
+const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance}) => {
   const map = useMap();
   
   useEffect(() => {
     if (map) {
       setMapInstance(map);
-      
-      // Asegurar que los controles personalizados estén por encima del mapa
-      setTimeout(() => {
+            setTimeout(() => {
         const mapContainer = map.getContainer();
         const controlContainer = mapContainer.querySelector('.leaflet-control-container') as HTMLElement;
         if (controlContainer) {
           controlContainer.style.zIndex = '400';
         }
         
-        // Solución para eventos táctiles: prevenir eventos problemáticos
         function handleTouchMove(e: TouchEvent) {
-          // Si el evento tiene múltiples toques (gesto de zoom/pinch)
           if (e.touches.length > 1) {
             e.stopPropagation();
           }
@@ -82,7 +76,12 @@ const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ set
 // MAIN COMPONENT
 // ==============================
 
-const MapView: React.FC = () => {
+
+export interface MapViewProps {
+  view?: boolean;
+}
+
+const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   // ==============================
   // STATE MANAGEMENT
   // ==============================
@@ -103,6 +102,7 @@ const MapView: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [showRouteControls, setShowRouteControls] = useState<boolean>(false);
   const [shouldResetMapOnClose, setShouldResetMapOnClose] = useState(false);
+  const [view, setView] = useState(true)
 
   // Custom hooks
   const { favorites, toggleFavorite } = useFavorites();
@@ -163,7 +163,6 @@ const MapView: React.FC = () => {
     return [...new Set(allTags)];
   }, [cafes]);
 
-  // Usar nuestro nuevo hook para búsqueda y filtrado
   const {
     searchTerm: filterSearchTerm,
     setSearchTerm: setFilterSearchTerm,
@@ -286,18 +285,12 @@ const MapView: React.FC = () => {
 
     return () => clearTimeout(filterTimer);
   }, [debouncedSearchValue, userLocation, mapInstance, sortedCafes.length]);
-
-  // Modificar la función hasActiveFilters para excluir filtros predeterminados
   const hasActiveFilters = useMemo(() => {
-    // Verificar si hay un término de búsqueda activo
     const hasSearchTerm = Boolean(searchTerm);
     
-    // Verificar si hay filtros personalizados aplicados (excluyendo la ordenación por defecto)
     const hasCustomFilters = Object.entries(filterOptions).some(([key, value]) => {
-      // Ignorar el filtro de ordenación por distancia que es el predeterminado
       if (key === 'sortBy' && value === 'distance') return false;
       
-      // Ignorar valores por defecto o vacíos
       if (
         (key === 'minRating' && value === 0) ||
         (key === 'maxDistance' && value === 100) ||
@@ -311,33 +304,12 @@ const MapView: React.FC = () => {
       return true;
     });
     
-    // Solo mostrar el indicador si hay búsqueda o filtros personalizados
     return hasSearchTerm || hasCustomFilters;
   }, [searchTerm, filterOptions]);
 
   // ==============================
   // CALLBACKS
   // ==============================
-
-/**
- * Handles sharing cafe location
- */
-const handleShare = useCallback((cafe: Cafe) => {
-  const googleMapsUrl = `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}&z=17&t=m&hl=es&q=${encodeURIComponent(cafe.name)}`;
-  if (navigator.share) {
-    navigator.share({
-      title: `${cafe.name} - Encafeina2`,
-      text: `¡Visita ${cafe.name} en ${cafe.address || 'esta ubicación'}!`,
-      url: googleMapsUrl
-    }).catch(error => {
-      console.log('Error compartiendo', error);
-      window.open(googleMapsUrl, '_blank');
-    });
-  } else {
-    window.open(googleMapsUrl, '_blank');
-  }
-}, []);
-
 /**
  * Starts navigation to a cafe
  */
@@ -421,36 +393,26 @@ const handleCloseDetails = useCallback(() => {
   }
 }, [shouldResetMapOnClose, showRouteControls, mapInstance]);
 
-// Asegurarnos de que clearAllFilters funcione correctamente
 const clearAllFilters = useCallback(() => {
-  // Limpiar filtros del hook
   resetFilters();
   
-  // Restablecer input y búsqueda
   setSearchInputValue('');
   setDebouncedSearchValue('');
   setSearchTermLocal('');
   setFilterSearchTerm('');
   
-  // Limpiar estado de procesamiento
   setIsSearchProcessing(false);
   setIsTyping(false);
+    lastToastRef.current = '';
   
-  // Resetear referencia de toast
-  lastToastRef.current = '';
-  
-  // Si estamos mostrando resultados filtrados, volver a mostrar todos
   if (sortedCafes.length !== cafes.length) {
-    // Restablecer vista del mapa a una posición que muestre todas las cafeterías
     if (mapInstance) {
-      // Si hay ubicación del usuario, centrar ahí
       if (userLocation) {
         mapInstance.setView(userLocation, 13, {
           animate: true,
           duration: 1
         });
       } else {
-        // Si no hay ubicación, usar vista predeterminada
         mapInstance.setView(defaultCenter, 13, {
           animate: true,
           duration: 1
@@ -510,31 +472,23 @@ useEffect(() => {
   }
 }, [mapInstance]);
 
-// Añade este useEffect para mejorar el flujo de interacción
 useEffect(() => {
-  // Si estamos mostrando detalles de una cafetería, asegurarnos de que no hay elementos de UI que interfieran
   if (activeCafe) {
-    // Cerrar la barra lateral en móvil, pero mantenerla en desktop si está en modo lista
     if (window.innerWidth < 768) {
       setShowSidebar(false);
     }
-    // Si se están mostrando controles de ruta, ocultarlos
     if (showRouteControls) {
       setShowRouteControls(false);
     }
   }
   
-  // Si se muestran controles de ruta, ocultar otros elementos de UI que puedan interferir
   if (showRouteControls) {
     setShowSidebar(false);
   }
 }, [activeCafe, showRouteControls]);
 
-// Añadir este useEffect para ajustar la vista del mapa cuando cambian los filtros
 useEffect(() => {
-  // Solo ajustar cuando hay resultados filtrados y son menos que el total
   if (mapInstance && sortedCafes.length > 0 && sortedCafes.length < cafes.length) {
-    // Si solo hay un resultado, hacer zoom a ese café
     if (sortedCafes.length === 1) {
       const onlyCafe = sortedCafes[0];
       mapInstance.flyTo(
@@ -543,14 +497,11 @@ useEffect(() => {
         { duration: 1.5, animate: true }
       );
     } 
-    // Con múltiples resultados, ajustar el mapa para mostrarlos todos
     else if (sortedCafes.length > 1) {
       const bounds = new L.LatLngBounds(
         sortedCafes.map(cafe => [cafe.latitude, cafe.longitude])
       );
-      
-      // Añadir un pequeño padding
-      mapInstance.fitBounds(bounds, {
+            mapInstance.fitBounds(bounds, {
         padding: [50, 50],
         animate: true,
         duration: 1
@@ -563,95 +514,6 @@ useEffect(() => {
 // RENDER FUNCTIONS
 // ==============================
 
-/**
- * Renders a cafe card for the sidebar
- */
-const renderCafeCard = (cafe: Cafe, index: number) => (
-  <motion.div
-    key={cafe.id}
-    custom={index}
-    variants={cardVariants}
-    initial="hidden"
-    animate="visible"
-    className={`rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden shadow-sm hover:shadow-md ${activeCafe === cafe.id ? 'ring-2 ring-[#D4A76A]' : 'ring-1 ring-gray-100'}`}
-    onClick={() => setActiveCafe(cafe.id)}
-  >
-    <div className="relative">
-      <img
-        src={cafe.image}
-        alt={cafe.name}
-        className="w-full h-36 object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-      <div className="absolute bottom-3 left-3 flex items-center gap-2">
-        {cafe.tags.map((tag, i) => (
-          <span key={i} className="text-xs font-medium bg-white/90 text-[#6F4E37] px-2 py-1 rounded-full">
-            {tag}
-          </span>
-        ))}
-      </div>
-      <motion.button
-        className="absolute top-3 right-3 bg-white/90 rounded-full p-1.5"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={(e) => {
-          e.stopPropagation();
-          toggleFavorite(cafe.id);
-        }}
-      >
-        <Heart
-          size={16}
-          className={`${favorites.includes(cafe.id) ? 'fill-red-500 text-red-500' : 'text-[#6F4E37]'}`}
-        />
-      </motion.button>
-    </div>
-
-    <div className="p-4 bg-white">
-      <div className="flex justify-between items-start">
-        <h3 className="font-bold text-lg text-[#2C1810] line-clamp-1">
-          <HighlightText text={cafe.name} highlight={searchTerm} />
-        </h3>
-        <div className="flex items-center gap-1 text-amber-500">
-          <Star size={16} className="fill-amber-500" />
-          <span className="font-medium">{cafe.rating}</span>
-          <span className="text-xs text-gray-500">({cafe.reviewCount})</span>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-        <div className="flex items-center gap-1">
-          <MapPin size={14} className="text-[#6F4E37]" />
-          <span>{cafe.distance}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Clock size={14} className="text-[#6F4E37]" />
-          <span>{cafe.openTime}</span>
-        </div>
-      </div>
-
-      <div className="flex gap-2 mt-3">
-        <motion.button
-          className="flex-1 bg-[#6F4E37] text-white py-2 rounded-lg font-medium hover:bg-[#5d4230] transition-colors"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          Ver detalles
-        </motion.button>
-        <motion.button
-          className="w-10 h-10 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-lg hover:bg-[#6F4E37] hover:text-white transition-colors"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={(e) => {
-            e.stopPropagation();
-            navigateToCafe(cafe.id);
-          }}
-        >
-          <Route size={18} />
-        </motion.button>
-      </div>
-    </div>
-  </motion.div>
-);
 
 // ==============================
 // COMPONENT RENDER
@@ -666,8 +528,6 @@ return (
     initial="hidden"
     animate="visible"
   >
-    {/* Nota: quité overflow-hidden para evitar problemas de scroll */}
-
     {/* Loading overlay */}
     <AnimatePresence>
       {!mapLoaded && (
@@ -699,17 +559,17 @@ return (
         </motion.div>
       )}
     </AnimatePresence>
-
-    {/* Header with search and navigation */}
     <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-white/95 via-white/80 to-white/0 pt-4 pb-12 px-4">
       <div className="flex items-center justify-between">
-        <Link
+        {showView ? (<Link
           to="/"
           className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg flex items-center gap-2 hover:bg-white transition-all duration-300 group"
         >
           <ArrowLeft size={20} className="text-[#6F4E37] group-hover:-translate-x-1 transition-transform duration-300" />
           <span className="pr-2 text-[#6F4E37] font-medium hidden md:inline">Volver</span>
-        </Link>
+        </Link>):(
+          <div></div>
+        )}
 
         <motion.div
           className={`relative transition-all duration-300 ${searchFocused ? 'w-full md:w-96' : 'w-48 md:w-64'}`}
@@ -720,9 +580,7 @@ return (
               type="text"
               value={searchInputValue} 
               onChange={(e) => {
-                // Actualizar el valor, pero el debounce controlará cuándo se aplica
                 setSearchInputValue(e.target.value);
-                // Mostrar el estado de "escribiendo"
                 setIsTyping(true);
               }}
               placeholder={searchInputValue.length < 3 && searchInputValue.length > 0 
@@ -819,17 +677,14 @@ return (
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
-        {/* User location marker */}
-        <UserMarker position={userLocation} pulsing={true} />
+                <UserMarker position={userLocation} pulsing={true} />
         <SmartClusterGroup
-          cafes={sortedCafes} // Cambiamos cafes por sortedCafes (cafés ya filtrados)
+          cafes={sortedCafes} 
           activeCafe={activeCafe} 
           setActiveCafe={setActiveCafe}
           setShowSidebar={setShowSidebar}
         />
         
-        {/* Direct route line */}
         {routeOrigin && routeDestination && (
           <DirectRouteLine
             from={routeOrigin}
@@ -840,14 +695,11 @@ return (
           />
         )}
 
-        {/* Component to manage map focus */}
         <MapFocus
           cafeId={activeCafe}
           positions={cafePositions}
           userLocation={userLocation}
         />
-
-        {/* Map controller to capture map instance */}
         <MapController setMapInstance={setMapInstance} />
       </MapContainer>
 
@@ -871,7 +723,6 @@ return (
         </motion.button>
       </div>
 
-      {/* User location button - with extremely high z-index */}
       <motion.button
         className="absolute bottom-28 right-4 z-[999] bg-white rounded-full p-3 shadow-lg pointer-events-auto"
         style={{ 
@@ -886,7 +737,6 @@ return (
         <Navigation size={20} className={`${locatingUser ? 'animate-pulse' : ''} text-[#6F4E37]`} />
       </motion.button>
 
-      {/* Indicator for active filters */}
       <AnimatePresence>
         {hasActiveFilters && (
           <motion.div 
@@ -911,7 +761,6 @@ return (
         )}
       </AnimatePresence>
 
-      {/* Button to view all results */}
       <AnimatePresence>
         {searchTerm && sortedCafes.length > 1 && !isSearchProcessing && (
           <motion.button
@@ -949,77 +798,20 @@ return (
         )}
       </AnimatePresence>
     </div>
-    <AnimatePresence>
-      {(
-        (showSidebar && window.innerWidth < 768) ||
-        (viewMode === 'list' && window.innerWidth >= 768)
-      ) && (
-        <motion.div
-          className={`absolute top-0 bottom-0 ${viewMode === 'list' && window.innerWidth >= 768
-            ? 'right-0 w-1/2 md:max-w-[390px] xl:max-w-[390px] ' 
-            : 'right-0 w-full md:w-96'
-            } bg-white z-20 shadow-2xl rounded-l-3xl md:rounded-l-3xl overflow-hidden`}
-          initial={{ x: '100%', opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: '100%', opacity: 0 }}
-          transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-        >
-          <div className="h-full flex flex-col">
-            <div className="flex-none p-6 pt-20 md:pt-24 flex justify-between items-center border-b border-gray-100">
-              <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
-                <Coffee size={20} className="text-[#6F4E37]" />
-                <span>Cafeterías cercanas</span>
-                {sortedCafes.length > 0 && (
-                  <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
-                    {sortedCafes.length}
-                  </span>
-                )}
-              </h2>
-              <button
-                onClick={() => {
-                  setShowSidebar(false);
-                  // Para dispositivos móviles, también cambiamos el modo de vista
-                  if (window.innerWidth < 768) {
-                    setViewMode('map');
-                  }
-                }}
-                className="text-[#6F4E37] md:hidden bg-gray-50 rounded-full p-2 hover:bg-gray-100 transition-colors"
-              >
-                <ArrowLeft size={20} />
-              </button>
-            </div>
-
-            {/* Cambios para arreglar scroll móvil */}
-            <div 
-              className="flex-1 h-full overflow-y-auto p-4 pb-32" 
-              style={{ 
-                WebkitOverflowScrolling: 'touch', 
-                touchAction: 'pan-y',
-                overscrollBehavior: 'contain',
-                height: 'calc(100% - 80px)' // Resta la altura del header
-              }}
-            >
-              {sortedCafes.length > 0 ? (
-                <div className="space-y-4 pb-16">
-                  {sortedCafes.map((cafe, index) => renderCafeCard(cafe, index))}
-                </div>
-              ) : (
-                <div className="mt-8 text-center">
-                  <Coffee size={48} className="mx-auto text-gray-300" />
-                  <p className="mt-4 text-gray-500">No se encontraron cafeterías con los filtros actuales</p>
-                  <button
-                    className="mt-2 text-[#6F4E37] underline"
-                    onClick={resetFilters}
-                  >
-                    Limpiar filtros
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <MapSidebar
+      viewMode={viewMode}
+      showSidebar={showSidebar}
+      sortedCafes={sortedCafes}
+      activeCafe={activeCafe}
+      favorites={favorites}
+      searchTerm={searchTerm}
+      setShowSidebar={setShowSidebar}
+      setViewMode={setViewMode}
+      setActiveCafe={setActiveCafe}
+      toggleFavorite={toggleFavorite}
+      navigateToCafe={navigateToCafe}
+      resetFilters={resetFilters}
+    />
 
     {/* Filter Modal */}
     <FilterModal
@@ -1050,12 +842,12 @@ return (
     <AnimatePresence>
       {activeCafe && (
         <motion.div
-          className="absolute left-0 right-0 bottom-0 md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[65%] lg:w-[55%] xl:w-[820px] md:h-auto md:max-h-[90vh] bg-white md:rounded-2xl shadow-2xl z-[200] overflow-hidden"
-          initial={{ y: "100%", opacity: 0, scale: 0.9 }}
-          animate={{ y: 0, opacity: 1, scale: 1 }}
-          exit={{ y: "100%", opacity: 0, scale: 0.9 }}
-          transition={{ type: 'spring', damping: 30 }}
-        >
+        className="absolute left-0 right-0 bottom-0 md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[90%] lg:w-[80%] xl:w-[1000px] md:h-auto md:max-h-[100vh] bg-white md:rounded-2xl shadow-2xl z-[200] flex flex-col overflow-hidden"
+        initial={{ y: "100%", opacity: 0, scale: 0.9 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        exit={{ y: "100%", opacity: 0, scale: 0.9 }}
+        transition={{ type: 'spring', damping: 30 }}
+      >
           {activeCafeData && (
             <CafeDetail
               cafe={activeCafeData}

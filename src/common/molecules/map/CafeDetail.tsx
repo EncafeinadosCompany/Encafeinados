@@ -95,30 +95,38 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 }) => {
   const renderSocialNetworks = () => {
     if (!cafe.socialNetworks || cafe.socialNetworks.length === 0) {
-      return (
-        <div className="py-3 border-b border-gray-100">
-          <p className="text-sm text-gray-500">No hay redes sociales disponibles.</p>
-        </div>
-      );
+      return null;
     }
+    const hasManyNetworks = cafe.socialNetworks.length > 3;
 
     return (
-      <div className="py-3 border-b border-gray-100">
-        <h4 className="font-medium text-[#2C1810] mb-2">Encuéntranos en redes</h4>
-        <div className="flex flex-wrap gap-2">
+      <div className={`py-3 ${!hasManyNetworks ? 'border-b border-gray-100' : ''}`}>
+        <h4 className="font-medium text-[#2C1810] mb-2 flex items-center justify-between">
+          <span>Redes sociales</span>
+          {hasManyNetworks && (
+            <span className="text-xs text-[#6F4E37]/70">
+              {cafe.socialNetworks.length} disponibles
+            </span>
+          )}
+        </h4>
+        
+        <div className={`${hasManyNetworks ? 'grid grid-cols-2 md:grid-cols-3 gap-2' : 'flex flex-wrap gap-2'}`}>
           {cafe.socialNetworks.map((social, idx) => {
             const normalizedNetwork = normalizeSocialNetwork(social);
-            
             return (
               <a 
                 key={idx}
                 href={normalizedNetwork.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 text-[#6F4E37] px-3 py-1.5 rounded-full transition-colors"
+                className={`
+                  flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 text-[#6F4E37] 
+                  ${hasManyNetworks ? 'px-3 py-2 rounded-md' : 'px-3 py-1.5 rounded-full'} 
+                  transition-colors hover:shadow-sm
+                `}
               >
                 {renderSocialIcon(normalizedNetwork.type)}
-                <span className="text-sm font-medium">
+                <span className={`${hasManyNetworks ? 'text-xs' : 'text-sm'} font-medium truncate`}>
                   {normalizedNetwork.displayName}
                 </span>
               </a>
@@ -130,8 +138,8 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   };
 
   return (
-    <div key={cafe.id} className="relative flex flex-col h-full">
-      <div className="relative h-48 w-full md:h-64">
+    <div className="flex flex-col md:flex-row min-h-full max-h-full">
+      <div className="relative h-48 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3">
         <img
           src={cafe.image}
           alt={cafe.name}
@@ -141,18 +149,18 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors"
+          aria-label="Cerrar detalles"
+          className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors z-10"
         >
           <ArrowLeft size={20} className="text-[#6F4E37] transform rotate-45" />
         </button>
-
         <div className="absolute bottom-0 left-0 p-4 w-full">
-          <h3 className="font-bold text-2xl md:text-3xl text-white">{cafe.name}</h3>
+          <h3 className="font-bold text-2xl md:text-3xl lg:text-3xl text-white line-clamp-2">{cafe.name}</h3>
           <div className="flex items-center justify-between mt-1">
             <div className="flex items-center gap-1 text-amber-400">
-              <Star size={18} className="fill-amber-400" />
+              <Star size={16} className="fill-amber-400" />
               <span className="font-medium text-white">{cafe.rating}</span>
-              <span className="text-sm text-white/80">({cafe.reviewCount} reseñas)</span>
+              <span className="text-xs text-white/80">({cafe.reviewCount} reseñas)</span>
             </div>
             <motion.button
               className="bg-white/20 backdrop-blur-sm p-1.5 rounded-full"
@@ -162,6 +170,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 e.stopPropagation();
                 toggleFavorite(cafe.id);
               }}
+              aria-label={favorites.includes(cafe.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
             >
               <Heart
                 size={18}
@@ -171,126 +180,136 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           </div>
         </div>
       </div>
-
-      <div className="p-4 overflow-auto md:p-6 md:pb-8 flex-1">
-        <div className="md:mb-3 text-[#6F4E37]/80 text-sm md:text-base">
-          <span className="font-medium">{cafe.storeName}</span>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-4 mb-4">
-          <div className="flex justify-between items-center py-3 border-b border-gray-100">
-            <div className="flex items-center gap-2 text-[#6F4E37]">
-              <Clock size={18} />
-              <span className="font-medium">{cafe.openTime}</span>
+      
+      {/* Contenido principal con scroll optimizado */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <div className="p-4 md:p-5 lg:p-6">
+          {/* Título visible solo en móvil */}
+          <h2 className="text-xl font-bold text-[#2C1810] md:hidden">{cafe.name}</h2>
+          
+          {/* Calificación visible solo en móvil */}
+          <div className="flex items-center gap-1 text-amber-500 mb-4 md:hidden">
+            <Star size={16} className="fill-amber-500" />
+            <span className="font-medium">{cafe.rating}</span>
+            <span className="text-sm text-gray-500">({cafe.reviewCount} reseñas)</span>
+          </div>
+          
+          {/* Grid adaptativo para diferentes tamaños de pantalla */}
+          <div className="md:grid md:grid-cols-2 md:gap-6 lg:gap-6 xl:grid-cols-12">
+            {/* Primera columna (información principal) */}
+            <div className="xl:col-span-5">
+              {/* Dirección */}
+              <div className="mb-4 bg-gray-50 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                <h4 className="font-medium text-[#2C1810] mb-1 flex items-center gap-1.5">
+                  <MapPin size={14} className="text-[#6F4E37]" />
+                  <span>Dirección</span>
+                </h4>
+                <p className="text-gray-700 pl-5">{cafe.address || "Dirección no disponible"}</p>
+              </div>
+      
+              <div className="bg-white rounded-lg">
+                {renderSocialNetworks()}
+              </div>
             </div>
-            <span className={`text-xs py-0.5 px-2 rounded-full font-medium ${cafe.status === "APPROVED" 
-                ? 'bg-green-50 text-green-600' 
-                : cafe.status === "PENDING" 
-                  ? 'bg-amber-50 text-amber-600'
-                  : 'bg-red-50 text-red-600'
-              }`}>
-              {cafe.status === "APPROVED" 
-                ? 'Abierto ahora' 
-                : cafe.status === "PENDING" 
-                  ? 'En revisión' 
-                  : 'Cerrado'}
-            </span>
-          </div>
-
-          <div className="flex justify-between items-center py-3 border-b border-gray-100">
-            <div className="flex items-center gap-2 text-[#6F4E37]">
-              <MapPin size={18} />
-              <span className="font-medium">{cafe.distance} de distancia</span>
-            </div>
-            <motion.button
-              className="text-[#6F4E37] bg-[#FAF3E0] p-2 rounded-lg hover:bg-[#FAF3E0]/70 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigateToCafe(cafe.id)}
-            >
-              <Navigation size={18} />
-            </motion.button>
-          </div>
-        </div>
-        <div className="mb-5 bg-gray-50 p-3 rounded-lg">
-          <h4 className="font-medium text-[#2C1810] mb-1">Dirección</h4>
-          <p className="text-gray-700">{cafe.address || "Dirección no disponible"}</p>
-        </div>
-        {renderSocialNetworks()}
-
-        {cafe.phone && (
-          <div className="py-3 border-t border-gray-100">
-            <h4 className="font-medium text-[#2C1810] mb-2">Contacto</h4>
-            <p className="text-[#6F4E37]">{cafe.phone || 'No disponible'}</p>
-          </div>
-        )}
-
-        <div className="flex gap-3 py-4">
-          {cafe.phone ? (
-            <motion.a
-              href={`tel:${cafe.phone}`}
-              className="flex-1 bg-[#6F4E37] text-white py-3 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-2"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="white"/>
-              </svg>
-              <span>Llamar</span>
-            </motion.a>
-          ) : (
-            <motion.button
-              className="flex-1 bg-[#6F4E37] text-white py-3 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-2"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => navigateToCafe(cafe.id)}
-            >
-              <Navigation size={18} />
-              <span>Navegar</span>
-            </motion.button>
-          )}
-          <div className="relative">
-            <Popover>
-              <PopoverTrigger asChild>
-                <motion.button
-                  className="w-12 h-12 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-xl hover:bg-[#6F4E37] hover:text-white transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Share2 size={18} />
-                </motion.button>
-              </PopoverTrigger>
-              <PopoverContent 
-                className="w-64 z-[500] p-0 bg-white shadow-xl border border-gray-200 rounded-xl" 
-                align="end"
-                side="top"
-                sideOffset={16}
-                avoidCollisions={true}
-              >
-                <div className="p-4">
-                  <h3 className="font-medium text-gray-900 mb-3">Compartir cafetería</h3>
-                  <div className="flex flex-col gap-3">
-                    <button
-                      className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors w-full text-left"
-                      onClick={() => copyToClipboard(`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`)}
-                    >
-                      <Copy size={18} className="text-[#6F4E37]" />
-                      <span className="flex-1">{copied ? 'Link copiado! ✓' : 'Copiar enlace'}</span>
-                    </button>
-                    
-                    <a 
-                      className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors"
-                      href={`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`}
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink size={18} className="text-[#6F4E37]" />
-                      <span>Abrir en Google Maps</span>
-                    </a>
+            <div className="xl:col-span-7 md:pl-0 lg:pl-1">
+              {cafe.phone && (
+                <div className="py-3 mt-3 md:mt-0 border-t md:border-t-0 border-gray-100">
+                  <h4 className="font-medium text-[#2C1810] mb-2 flex items-center gap-1.5">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#6F4E37]">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span>Contacto</span>
+                  </h4>
+                  <div className="flex items-center gap-2 bg-gray-50 p-2.5 pl-5 rounded-lg hover:bg-gray-100 transition-colors">
+                    <span className="text-[#6F4E37] font-medium">{cafe.phone}</span>
                   </div>
                 </div>
-              </PopoverContent>
-            </Popover>
+              )}
+              
+              {/* Etiquetas/Tags si existen - Presentación mejorada */}
+              {cafe.tags && cafe.tags.length > 0 && (
+                <div className="py-3 border-t md:border-t-0 border-gray-100">
+                  <h4 className="font-medium text-[#2C1810] mb-2">Características</h4>
+                  <div className={`flex flex-wrap gap-2 ${cafe.tags.length > 6 ? 'max-h-24 overflow-y-auto pr-1' : ''}`}>
+                    {cafe.tags.map((tag, idx) => (
+                      <span key={idx} className="inline-block px-2.5 py-1 bg-[#F3D19E]/20 text-[#6F4E37] text-xs rounded-full whitespace-nowrap">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Botones de acción - Mejorados para mejor usabilidad */}
+              <div className="flex gap-3 py-4 md:mt-auto sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 -mx-4 md:-mx-5 lg:-mx-6 px-4 md:px-5 lg:px-6">
+                {cafe.phone ? (
+                  <motion.a
+                    href={`tel:${cafe.phone}`}
+                    className="flex-1 bg-[#6F4E37] text-white py-3 md:py-3 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="white"/>
+                    </svg>
+                    <span>Llamar</span>
+                  </motion.a>
+                ) : (
+                  <motion.button
+                    className="flex-1 bg-[#6F4E37] text-white py-3 md:py-3 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => navigateToCafe(cafe.id)}
+                  >
+                    <Navigation size={16} />
+                    <span>Navegar</span>
+                  </motion.button>
+                )}
+                <div className="relative">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <motion.button
+                        className="w-12 h-12 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-xl hover:bg-[#6F4E37] hover:text-white transition-colors"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Share2 size={16} />
+                      </motion.button>
+                    </PopoverTrigger>
+                    <PopoverContent 
+                      className="w-64 md:w-72 z-[500] p-0 bg-white shadow-xl border border-gray-200 rounded-xl" 
+                      align="end"
+                      side="top"
+                      sideOffset={16}
+                      avoidCollisions={true}
+                    >
+                      <div className="p-4">
+                        <h3 className="font-medium text-gray-900 mb-3">Compartir cafetería</h3>
+                        <div className="flex flex-col gap-3">
+                          <button
+                            className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors w-full text-left"
+                            onClick={() => copyToClipboard(`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`)}
+                          >
+                            <Copy size={16} className="text-[#6F4E37]" />
+                            <span className="flex-1">{copied ? 'Link copiado! ✓' : 'Copiar enlace'}</span>
+                          </button>
+                          
+                          <a 
+                            className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors"
+                            href={`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink size={16} className="text-[#6F4E37]" />
+                            <span>Abrir en Google Maps</span>
+                          </a>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

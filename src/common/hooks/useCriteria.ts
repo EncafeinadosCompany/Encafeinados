@@ -1,4 +1,5 @@
-import { criteriaResponseData } from "@/api/queries/stores/criteriaQueries";
+import { criteriaResponseData } from "@/api/types/criteriaTypes";
+
 
 
 export const validateImageRequirements = (
