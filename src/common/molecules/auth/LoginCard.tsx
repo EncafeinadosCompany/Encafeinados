@@ -66,7 +66,7 @@ export const LoginCard = (
                 disabled={isLoading}
                 className="border-amber-200 hover:bg-amber-50 text-amber-900"
               >
-                Continua con Google
+                Iniciar sesión con Google
               </ButtonGoogle>
               <div className="relative flex items-center justify-center">
                 <div className="absolute inset-0 flex items-center">
