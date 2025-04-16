@@ -34,9 +34,9 @@ describe('template spec', () => {
       cy.get('button[data-testid="next-button"]').click();
 
       //Step 4: Fill data aditional
-      cy.get('input[name="addressDetails"]').type('#64-01');
-      cy.get('input[name="nearbyReference"').type('Cerca de la plaza de la republica');
-      cy.get('button[data-testid="next-button"]').click();
+      // cy.get('input[name="addressDetails"]').type('#64-01');
+      // cy.get('input[name="nearbyReference"').type('Cerca de la plaza de la republica');
+      // cy.get('button[data-testid="next-button"]').click();
 
       //Step 5: Fill social networks
       

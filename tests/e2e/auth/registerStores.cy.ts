@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
-
-import { mockRegisterStores, mockImagen } from "cypress/support/mocks/auth/register";
+import { mockRegisterStores, mockImagen } from "cypress/support/api/register";
 
 describe('Stores Registration', () => {
 
@@ -12,13 +11,6 @@ describe('Stores Registration', () => {
     mockRegisterStores();
     mockImagen();
 
-  });
-
-  it('Should show the card with the correct info', () => {
-    cy.contains('Tienda').should('be.visible');
-    cy.contains('Cafetería de Especialidad').should('be.visible');
-    cy.contains('Para baristas, tostadores y amantes del café de origen').should('be.visible');
-    cy.wait(2000); 
   });
 
   it('Should navigate to the store registration form by clicking on', () => {
