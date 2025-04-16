@@ -29,7 +29,7 @@ import { showSuccessToast } from "@/common/molecules/auth/cardSuccess"
 
 export default function RegisterStoreBranches() {
 
-    const [step, setStep] = useState(4)
+    const [step, setStep] = useState(0)
     const { storeId } = useParams();
     const [formData, setFormData] = useState({})
     const [baseAddress, setBaseAddress] = useState("");
