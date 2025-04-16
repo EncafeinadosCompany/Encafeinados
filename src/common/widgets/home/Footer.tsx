@@ -169,12 +169,12 @@ export const Footer = () => {
           variants={containerVariants}
           initial="hidden"
           animate={controls}
-          className="grid grid-cols-1 md:grid-cols-12 gap-8"
+          className="flex flex-wrap justify-between gap-8"
         >
           {/* Logo y About */}
           <motion.div
             variants={itemVariants}
-            className="md:col-span-4"
+            className="flex-grow basis-64 max-w-md"
           >
             <div className="flex items-center mb-6">
               <img src={logoIcon} alt="Encafeinados Logo" className="h-8 w-8 mr-2" />
@@ -198,7 +198,7 @@ export const Footer = () => {
           {/* Enlaces rápidos */}
           <motion.div
             variants={itemVariants}
-            className="md:col-span-2"
+            className="flex-grow basis-40 max-w-xs"
           >
             <h3 className="text-lg font-semibold mb-4 text-[#D4A76A]">Enlaces</h3>
             <ul className="space-y-2">
@@ -222,7 +222,7 @@ export const Footer = () => {
           {/* Contacto */}
           <motion.div
             variants={itemVariants}
-            className="md:col-span-3"
+            className="flex-grow basis-64 max-w-md"
           >
             <h3 className="text-lg font-semibold mb-4 text-[#D4A76A]">Contacto</h3>
             <ul className="space-y-3">
@@ -244,24 +244,10 @@ export const Footer = () => {
               </li>
             </ul>
           </motion.div>
-
-          {/* Newsletter */}
-          {/* <motion.div
-            variants={itemVariants}
-            className="md:col-span-3"
-          >
-            <h3 className="text-lg font-semibold mb-4 text-[#D4A76A]">Suscríbete</h3>
-            <p className="text-white/70 mb-4">
-              Recibe actualizaciones, ofertas exclusivas y noticias del mundo del café.
-            </p>
-            <NewsletterForm />
-          </motion.div> */}
         </motion.div>
 
-        {/* Separador con gradiente */}
         <div className="h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent my-8"></div>
 
-        {/* Copyright y Go to Top */}
         <div className="flex flex-col sm:flex-row justify-between items-center text-white/60 text-sm">
           <motion.p variants={itemVariants}>
             © {new Date().getFullYear()} Encafeinados. Todos los derechos reservados.
@@ -284,7 +270,6 @@ export const Footer = () => {
         </div>
       </div>
 
-      {/* Efecto de onda decorativa */}
       <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-0 transform translate-y-1">
         <svg
           className="relative block w-full h-12 sm:h-16"

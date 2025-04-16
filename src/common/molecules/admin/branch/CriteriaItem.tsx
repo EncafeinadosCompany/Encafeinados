@@ -25,11 +25,9 @@ export const CriteriaItem: React.FC<CriteriaItemProps> = ({
     responseText.toLowerCase?.() === "si" || 
     responseText.toLowerCase?.() === "sí" ||
     responseText.toLowerCase?.() === "true";
-
-  // Verificar si tenemos un criterio válido
-  const hasCriteria = criteriaResponse?.criteria?.name != null;
   
-  // Si no tenemos criterios válidos, mostrar un placeholder
+    const hasCriteria = criteriaResponse?.criteria?.name != null;
+  
   if (!hasCriteria) {
     return (
       <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
@@ -95,18 +93,14 @@ export const CriteriaItem: React.FC<CriteriaItemProps> = ({
             </div>
           </div>
 
-          {/* Modal mejorado para visualización de imagen */}
           {showFullImage && (
             <div className="fixed inset-0 z-[9999] flex items-center justify-center">
-              {/* Overlay de fondo con verdadera opacidad */}
               <div 
                 className="absolute inset-0 bg-black opacity-80" 
                 onClick={() => setShowFullImage(false)}
               />
               
-              {/* Contenedor principal con posicionamiento absoluto */}
               <div className="relative z-10 max-w-[90%] max-h-[90%] bg-white rounded-lg shadow-2xl overflow-hidden mx-auto my-auto">
-                {/* Botón de cierre */}
                 <button
                   className="absolute top-2 right-2 z-20 rounded-full bg-black/50 hover:bg-black/70 text-white p-2 transition-colors"
                   onClick={() => setShowFullImage(false)}
@@ -114,7 +108,6 @@ export const CriteriaItem: React.FC<CriteriaItemProps> = ({
                   <X className="h-5 w-5" />
                 </button>
 
-                {/* Contenedor de la imagen con fondo claro para imágenes transparentes */}
                 <div className="bg-gray-100 w-full h-full flex items-center justify-center p-4">
                   <img
                     src={criteriaResponse.imageUrl}
