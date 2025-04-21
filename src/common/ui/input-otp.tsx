@@ -14,7 +14,6 @@ function InputOTP({
   return (
     <div className="relative w-fit space-x-12">
       <OTPInput    
-       
         data-slot="input-otp"
         containerClassName={cn(
           "flex items-center gap-2 has-disabled:opacity-50 ",
@@ -55,24 +54,28 @@ function InputOTPSlot({
 
   return (
     <div
-      data-slot="input-otp-slot"
-      data-active={isActive}
-      className={cn(
-        "relative flex h-11 w-11 items-center bg-white/90 justify-center border border-gray-300 text-xl text-gray-600 shadow-xs outline-none transition-all",
-        "first:rounded-l-md last:rounded-r-md",
-        "data-[active=true]:border-ring data-[active=true]:ring-[1px] data-[active=true]:z-10",
-        "data-[active=true]:ring-ring/50 aria-invalid:border-destructive data-[active=true]:aria-invalid:ring-destructive/20",
-        className
-      )}
-      {...props}
-    >
-      {displayChar}
-      {hasFakeCaret && (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="animate-caret-blink bg-foreground h-4 w-px" />
-        </div>
-      )}
+  data-slot="input-otp-slot"
+  data-active={isActive}
+  className={cn(
+    "relative flex h-11 w-11 items-center bg-white/90 justify-center border border-gray-300 text-xl text-gray-600 shadow-xs outline-none transition-all",
+    "first:rounded-l-md last:rounded-r-md",
+    "data-[active=true]:border-ring data-[active=true]:ring-[1px] data-[active=true]:z-10",
+    "data-[active=true]:ring-ring/50 aria-invalid:border-destructive data-[active=true]:aria-invalid:ring-destructive/20",
+    className
+  )}
+  role="textbox"
+  tabIndex={0}
+  inputMode="numeric"
+  aria-label={`Digit ${index + 1}`}
+  {...props}
+>
+  {displayChar}
+  {hasFakeCaret && (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <div className="animate-caret-blink bg-foreground h-4 w-px" />
     </div>
+  )}
+</div>
   )
 }
 

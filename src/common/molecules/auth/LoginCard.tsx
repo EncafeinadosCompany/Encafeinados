@@ -99,46 +99,36 @@ export const LoginCard = (
                   control={control}
                   name="password"
                   render={({ field }) => (
-                    <div className="mx-auto">
-                      <div className="relative w-fit space-x-12">
-                        <InputOTP
-                          maxLength={4}
-                          value={field.value}
-                          onChange={field.onChange}
-                          {...registerWithFocus("password")}
-                          data-testid="custom-input-password"
-                        >
-                          <InputOTPGroup
-                            className="space-x-1"
-                          >
-                            <InputOTPSlot index={0} isVisible={isVisible} />
-                            <InputOTPSlot index={1} isVisible={isVisible} />
-                          </InputOTPGroup>
-                          {/* <InputOTPSeparator className="text-gray-400" /> */}
-                          <InputOTPGroup className="space-x-1">
-                            <InputOTPSlot index={2} isVisible={isVisible} />
-                            <InputOTPSlot index={3} isVisible={isVisible} />
-                          </InputOTPGroup>
-                        </InputOTP>
+                    <div className="relative w-fit space-x-12 mx-auto ">
+                      <InputOTP
+                        maxLength={4}
+                        value={field.value}
+                        onChange={field.onChange}
+                        {...registerWithFocus("password")}
+                        data-testid="custom-input-password"
+                      >
+                        <InputOTPGroup className="space-x-1">
+                          <InputOTPSlot index={0} isVisible={isVisible} />
+                          <InputOTPSlot index={1} isVisible={isVisible} />
+                        </InputOTPGroup>
+                        <InputOTPGroup className="space-x-1">
+                          <InputOTPSlot index={2} isVisible={isVisible} />
+                          <InputOTPSlot index={3} isVisible={isVisible} />
+                        </InputOTPGroup>
+                      </InputOTP>
 
-                        <div className="text-center text-sm">
-                          {field.value === "" ? (
-                            <>Introduzca su clave</>
-                          ) : (
-                            <>
-                              <button
-                                type="button"
-                                onClick={() => setIsVisible((prev) => !prev)}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                aria-label={isVisible ? "Ocultar código" : "Mostrar código"}
-                                title={isVisible ? "Ocultar código" : "Mostrar código"}
-                              >
-                                {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </div>
+                      {/* Mueve el botón fuera del flujo que interfiera */}
+                      {field.value !== "" && (
+                        <button
+                          type="button"
+                          onClick={() => setIsVisible((prev) => !prev)}
+                          className="absolute top-3 right-0 text-gray-500 hover:text-gray-700 text-sm"
+                          aria-label={isVisible ? "Ocultar código" : "Mostrar código"}
+                          title={isVisible ? "Ocultar código" : "Mostrar código"}
+                        >
+                          {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      )}
                     </div>
                   )}
                 >
