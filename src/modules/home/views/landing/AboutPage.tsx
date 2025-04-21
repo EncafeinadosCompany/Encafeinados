@@ -6,11 +6,18 @@ import { TeamSection } from '@/common/widgets/home/TeamSection';
 
 const AboutPage = () => {
   return (
-    <main className="min-h-screen bg-[#FAF3E0] relative overflow-y-auto  pt-5">
+    <main className="min-h-screen bg-[#FAF3E0] relative">
       <Navbar />
       
-      <AboutSection />
-      <TeamSection />
+      <div className=""> 
+        <AboutSection />
+        <div className=" bg-[#FAF3E0]"></div>
+        <div id="team-container" className="w-full bg-[#FAF3E0]">
+          <TeamSection />
+        </div>
+        
+        <div className="bg-[#FAF3E0]"></div>
+      </div>
       <Footer />
     </main>
   );

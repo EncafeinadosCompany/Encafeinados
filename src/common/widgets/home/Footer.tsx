@@ -5,12 +5,15 @@ import { NewsletterForm } from '@/common/molecules/home/NewsletterForm';
 import { Instagram, ArrowUp, Coffee, MapPin, Music2, Mail, ChevronDown } from '@/common/ui/icons';
 import { SocialIcon } from '@/common/atoms/SocialIcon';
 import logoIcon from "@/assets/images/logo.ico";
+import { useScrollNavigation } from '@/common/hooks/useScrollNavigation';
 
 export const Footer = () => {
   const controls = useAnimation();
   const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
   const [instagramMenuOpen, setInstagramMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  const { scrollToSection, isActive } = useScrollNavigation();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | any) => {
@@ -30,6 +33,15 @@ export const Footer = () => {
       controls.start('visible');
     }
   }, [controls, inView]);
+
+  useEffect(() => {
+    // Verificar si las secciones existen
+    const sections = ['home', 'map', 'stores', 'benefits'];
+    sections.forEach(id => {
+      const element = document.getElementById(id);
+      console.log(`Sección "${id}": ${element ? 'Encontrada' : 'NO ENCONTRADA'}`);
+    });
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -130,6 +142,14 @@ export const Footer = () => {
     </div>
   );
 
+  // Define tus enlaces con IDs que coincidan con los de tus secciones
+  const navLinks = [
+    { name: 'Inicio', id: 'home' },
+    { name: 'Mapa', id: 'map' },
+    { name: 'Tiendas', id: 'stores' },
+    { name: 'Beneficios', id: 'benefits' }
+  ];
+
   return (
     <footer
       className="relative bg-gradient-to-br from-[#2C1810] to-[#6F4E37] text-white overflow-hidden"
@@ -202,18 +222,20 @@ export const Footer = () => {
           >
             <h3 className="text-lg font-semibold mb-4 text-[#D4A76A]">Enlaces</h3>
             <ul className="space-y-2">
-              {['Inicio', 'Cafeterías', 'Productos', 'Blog', 'Contacto'].map((item, index) => (
+              {navLinks.map((link, index) => (
                 <motion.li
                   key={index}
                   whileHover={{ x: 5 }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
-                  <a
-                    href="#"
-                    className="text-white/70 hover:text-[#D4A76A] transition-colors inline-block py-1"
+                  <button
+                    className={`text-white/70 hover:text-[#D4A76A] transition-colors inline-block py-1 cursor-pointer ${
+                      isActive(link.id) ? 'text-[#D4A76A]' : ''
+                    }`}
+                    onClick={() => scrollToSection(link.id, { offset: -80 })}
                   >
-                    {item}
-                  </a>
+                    {link.name}
+                  </button>
                 </motion.li>
               ))}
             </ul>
