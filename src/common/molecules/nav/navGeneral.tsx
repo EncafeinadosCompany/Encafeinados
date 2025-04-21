@@ -192,7 +192,7 @@ export const NavGeneral = ({
 
       {/* Contenido principal */}
       <div className="flex-1 flex flex-col min-w-0">
-        <main className="flex-1 w-full">
+        <main className="flex-1 w-full relative">
           <Outlet />
         </main>
         
@@ -207,7 +207,7 @@ export const NavGeneral = ({
                   className={cn(
                     "flex flex-col items-center justify-center px-2 py-2 rounded-xl transition-all duration-300 relative",
                     location.pathname.startsWith(item.href)
-                      ? "text-amber-800 bg-amber-50/70 transform scale-105 shadow-sm"
+                      ? "text-amber-800 transform scale-105"
                       : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
                   )}
                 >

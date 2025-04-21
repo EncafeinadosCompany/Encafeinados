@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, MapPin, Clock, Heart, Route } from 'lucide-react';
 import { Cafe } from '@/common/types/map/mapTypes';
-import HighlightText from '@/common/atoms/common/HighlightText';
+import HighlightText from '@/common/atoms/HighlightText';
 
 interface CafeCardProps {
   cafe: Cafe;

@@ -31,7 +31,7 @@ import { useRouteNavigation } from '@/common/hooks/map/useRouteNavigation';
 // Components
 import MapFocus from '@/common/molecules/map/MapFocus';
 import FilterModal from '@/common/molecules/map/filterModal';
-import HighlightText from '@/common/atoms/common/HighlightText';
+import HighlightText from '@/common/atoms/HighlightText';
 import SmartClusterGroup from '@/common/molecules/map/SmartClusterGroup';
 import UserMarker from '@/common/molecules/map/UserMarker'; 
 import DirectRouteLine from '@/common/molecules/map/DirectRouteLine';

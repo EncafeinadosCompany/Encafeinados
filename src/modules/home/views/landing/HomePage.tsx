@@ -15,6 +15,8 @@ const HomePage = () => {
 
         <MapTeaser totalCafes={45} city="Medellín" />
     
+
+    
         <StoreCarousel />
         <BenefitsSection />
         <Footer />
