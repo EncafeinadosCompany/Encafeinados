@@ -23,15 +23,23 @@ interface BranchCardProps {
   onReject?: (branch: any) => void;
   type: 'pending' | 'approved';
 }
-export const BranchCard = ({ branch, index, onView, type }: BranchCardProps) => {
+export const BranchCard = ({ branch, index, onView, onApprove, onReject, type }: BranchCardProps) => {
   const borderHoverStyles = {
     pending: "hover:border-amber-200/50",
     approved: "hover:border-green-200/50"
   };
 
-  // Café SVG base64 para fallback de imagen
   const COFFEE_FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%236F4E37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 8h1a4 4 0 0 1 0 8h-1'%3E%3C/path%3E%3Cpath d='M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z'%3E%3C/path%3E%3Cline x1='6' y1='1' x2='6' y2='4'%3E%3C/line%3E%3Cline x1='10' y1='1' x2='10' y2='4'%3E%3C/line%3E%3Cline x1='14' y1='1' x2='14' y2='4'%3E%3C/line%3E%3C/svg%3E";
   
+  // Manejadores de eventos con verificación de null
+  const handleApprove = () => {
+    if (onApprove) onApprove(branch);
+  };
+  
+  const handleReject = () => {
+    if (onReject) onReject(branch);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -91,6 +99,7 @@ export const BranchCard = ({ branch, index, onView, type }: BranchCardProps) => 
                         <Button
                           variant="ghost"
                           size="icon"
+                          onClick={handleApprove} // Añadido el onClick
                           className="h-7 w-7 text-green-600 hover:bg-green-50/50 hover:text-green-700"
                         >
                           <CheckCircle2 className="h-3.5 w-3.5" />
@@ -106,6 +115,7 @@ export const BranchCard = ({ branch, index, onView, type }: BranchCardProps) => 
                         <Button
                           variant="ghost"
                           size="icon"
+                          onClick={handleReject} // Añadido el onClick
                           className="h-7 w-7 text-red-600 hover:bg-red-50/50 hover:text-red-700"
                         >
                           <XCircle className="h-3.5 w-3.5" />
