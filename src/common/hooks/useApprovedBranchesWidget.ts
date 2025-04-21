@@ -3,25 +3,20 @@ import { useApprovedBranches } from '@/api/queries/stores/branchesQueries';
 import { ApprovedBranch } from '@/api/types/branchesApprovalTypes';
 
 export const useApprovedBranchesWidget = () => {
-  // Estado para búsqueda y paginación
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedBranch, setSelectedBranch] = useState<ApprovedBranch | null>(null);
   const [refreshAnimation, setRefreshAnimation] = useState(false);
 
-  // Consulta para obtener sucursales aprobadas
   const { data, isLoading, error, refetch } = useApprovedBranches();
 
-  // Manejar el refrescar datos
   const handleRefresh = useCallback(async () => {
     setRefreshAnimation(true);
     await refetch();
-    // Simular un pequeño retraso para que la animación sea visible
     setTimeout(() => setRefreshAnimation(false), 500);
   }, [refetch]);
 
-  // Calcular datos filtrados y paginados
   const originalBranches = useMemo(() => data || [], [data]);
 
   const filteredBranches = useMemo(() => {
@@ -39,12 +34,10 @@ export const useApprovedBranchesWidget = () => {
     [filteredBranches, itemsPerPage]
   );
 
-  // Resetear página cuando cambian los filtros
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, itemsPerPage]);
 
-  // Ajustar página si la actual excede el total después de filtrar
   useEffect(() => {
     if (currentPage > totalPages) {
       setCurrentPage(totalPages);

@@ -19,7 +19,6 @@ const RegisterCoffeloverPage = lazy(() => import("@/modules/home/views/Login/reg
 const RegisterStorePage = lazy(() => import("@/modules/home/views/Login/registerStoresPage"));
 
 const HomeStores = lazy(() => import ("@/modules/stores/views/homeStores"));
-const PendingStoresView = lazy(() => import("@/modules/adminStores/components/PendingStoresList"));
 const PendingBranchesView = lazy(() => import("@/modules/adminStores/components/PendingBranchesList"));
 
 const HomeAdminStores = lazy(() => import("@/modules/adminStores/views/homeAdmin"));
@@ -57,13 +56,13 @@ const AuthRoutes = () => {
             <Route path="/404" element={<NotFound />} />
 
 
-            <Route element={<PrivateRoute/>}>
-
-              <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
                 <Route path="/coffeelover" element={<HomeCoffeelover />}>
                   <Route index element={<CoffeeLoverDashboard />} />
                   <Route path="map-coffelover" element={<MapCoffelover />} />
                 </Route>
+            <Route element={<PrivateRoute/>}>
+
+              <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>

@@ -22,8 +22,7 @@ const GoogleCallback = () => {
       try {
         // Decodificar los datos del usuario recibidos en la URL
         const userData = JSON.parse(decodeURIComponent(userDataParam));
-
-        // Almacenar el token y los datos del usuario
+        
         setAuthStorageGoogle(tokenResponse, userData);
 
         toast.success("Inicio de sesión exitoso");

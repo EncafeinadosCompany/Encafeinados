@@ -75,3 +75,8 @@ body.modal-open {
   height: 100%;
   overflow: hidden;
 }
+
+
+.touch-pan-x {
+  touch-action: pan-x;
+}

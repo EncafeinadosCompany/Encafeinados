@@ -14,17 +14,14 @@ const HomePage = () => {
           <HeroSection />
         </section>
 
-        <section id="map" className="scroll-mt-20 min-h-[50vh]">
-          <MapTeaser totalCafes={45} city="Medellín" />
-        </section>
 
-        <section id="stores" className="scroll-mt-20 min-h-[50vh]">
-          <StoreCarousel />
-        </section>
+        <MapTeaser totalCafes={45} city="Medellín" />
+    
 
-        <section id="benefits" className="scroll-mt-20 min-h-[50vh]">
-          <BenefitsSection />
-        </section>
+    
+        <StoreCarousel />
+        <BenefitsSection />
+        <Footer />
       </div>
       <Footer />
     </main>

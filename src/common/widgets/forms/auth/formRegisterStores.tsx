@@ -74,7 +74,6 @@ const FormRegisterStores = () => {
                     transition={{ duration: 0.5 }}
                 >
                     <CardHeader className="flex flex-col">
-                        {/* Título y subtítulo */}
                         <TitleForm
                             title="¡Regístrate y déjanos contarle al mundo lo especial que es tu café!"
                             subtitle={(() => {
@@ -88,7 +87,6 @@ const FormRegisterStores = () => {
                                 }
                             })()}
                         />
-                        {/* Indicador de progreso */}
                         <div className="mt-2 ml-8 sm:ml-20  md:ml-48 grid grid-cols-1  justify-between">
                             <ProgressIndicator step={step + 1} totalSteps={RegisterStoreSchema.length} />
                         </div>
@@ -128,8 +126,6 @@ const FormRegisterStores = () => {
                             </AnimatePresence>
 
                         </CardContent>
-
-                        {/* Footer con botones */}
                         <CardFooter>
                             <div className=" self-end flex justify-between w-full flex-wrap gap-2">
                                 {step > 0 ? (

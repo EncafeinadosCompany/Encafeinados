@@ -74,8 +74,6 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
             />
           </div>
         </div>
-
-        {/* Additional notes (Optional) */}
         <div className="space-y-2">
           <Label htmlFor="additionalNotes" className={`flex items-center text-xs transition-colors ${focusedField === "additionalNotes" ? "text-[#DB8935]" : "text-gray-600"
             }`}>
