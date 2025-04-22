@@ -101,23 +101,22 @@ export const TeamSection = () => {
               <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 left-1/2 w-2 h-2 rounded-full bg-[#D4A76A]/50"></div>
             </div>
             
-            {/* Botón Desarrolladores */}
+          
             <CategoryButton 
               icon={<Coffee size={24} />}
-              label="Desarrolladores"
+              label="CoffeeSolvers"
               isActive={activeTab === "developers"}
               onClick={() => setActiveTab("developers")}
             />
-            
-            {/* Línea decorativa en forma de grano de café */}
+              
             <div className="hidden md:block h-10 w-px bg-[#D4A76A]/30 relative">
               <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 left-1/2 w-2 h-2 rounded-full bg-[#D4A76A]/50"></div>
             </div>
             
-            {/* Botón Socios */}
+       
             <CategoryButton 
               icon={<Handshake size={24} />}
-              label="Socios"
+              label="CoffeeThinkers"
               isActive={activeTab === "partners"}
               onClick={() => setActiveTab("partners")}
             />
@@ -158,9 +157,6 @@ export const TeamSection = () => {
                 className="w-full"
               >
                 <div className="mb-10 text-center">
-                  <h3 className="text-xl md:text-2xl font-bold text-[#6F4E37] mb-2">
-                    Equipo Técnico
-                  </h3>
                   <p className="text-[#6F4E37]/80 max-w-xl mx-auto">
                     Mentes creativas construyendo la plataforma del futuro para los amantes del café.
                   </p>
@@ -179,9 +175,9 @@ export const TeamSection = () => {
                 className="w-full"
               >
                 <div className="mb-10 text-center">
-                  <h3 className="text-xl md:text-2xl font-bold text-[#6F4E37] mb-2">
+                  {/* <h3 className="text-xl md:text-2xl font-bold text-[#6F4E37] mb-2">
                     Aliados Estratégicos
-                  </h3>
+                  </h3> */}
                   <p className="text-[#6F4E37]/80 max-w-xl mx-auto">
                     Colaboradores clave que hacen posible nuestra misión cafetera.
                   </p>

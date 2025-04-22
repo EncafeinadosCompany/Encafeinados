@@ -36,9 +36,6 @@ const UnauthorizedPage = lazy(() => import("@/modules/settings/authorizationPage
 const AuthRoutes = () => {
   return (
     <>
-      {/* <div className='fixed  bottom-4 right-4 z-50'>
-    <LanguageSwitcher />
-   </div> */}
       <Router>
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
@@ -54,8 +51,6 @@ const AuthRoutes = () => {
             <Route path="/completar-perfil" element={<CompletePerfil />} />
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
             <Route path="/404" element={<NotFound />} />
-
-
                 <Route path="/coffeelover" element={<HomeCoffeelover />}>
                   <Route index element={<CoffeeLoverDashboard />} />
                   <Route path="map-coffelover" element={<MapCoffelover />} />

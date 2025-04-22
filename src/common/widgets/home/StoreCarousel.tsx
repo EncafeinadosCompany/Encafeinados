@@ -346,7 +346,7 @@ export const StoreCarousel = () => {
               variant="h2"
               className="text-center font-bold text-[#6F4E37] text-3xl md:text-4xl"
             >
-              Tiendas Aliadas
+              Cafeterías Aliadas
             </Text>
             <div className="w-3 h-3 rounded-full bg-[#D4A76A]"></div>
           </motion.div>
