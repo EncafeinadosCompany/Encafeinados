@@ -3,7 +3,7 @@ import { Badge } from "@/common/ui/badge";
 import { Button } from "@/common/ui/button";
 import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/common/ui/dialog";
 import { Dispatch, SetStateAction } from "react";
-import { MapPin, Mail, Coffee } from "lucide-react";
+import { MapPin, Mail } from "lucide-react";
 
 interface detailsProps {
     setIsOpen: Dispatch<SetStateAction<boolean>>,
@@ -12,7 +12,8 @@ interface detailsProps {
 
 export const DialogDetailStores = ({details, setIsOpen}: detailsProps) => {
   return (
-    <DialogContent className="sm:max-w-md max-w-[95vw]  bg-white border-none rounded-xl shadow-lg p-4 sm:p-6">
+    <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
+        max-h-[90vh]  bg-white shadow-xl border-none rounded-lg p-4 sm:p-6 md:p-8">
       <DialogHeader className="pb-2 border-b">
         <DialogTitle className="text-lg sm:text-xl font-bold text-[#5F4B32] break-words">{details.name}</DialogTitle>
       </DialogHeader>
