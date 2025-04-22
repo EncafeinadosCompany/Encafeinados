@@ -6,6 +6,13 @@ import { MapTeaser } from "@/common/molecules/home/MapTeaser";
 import { Navbar } from "@/common/molecules/home/navbar";
 
 const HomePage = () => {
+  const homeSections = [
+    { name: 'Inicio', id: 'home' },
+    { name: 'Mapa', id: 'map' },
+    { name: 'Tiendas', id: 'stores' },
+    { name: 'Beneficios', id: 'benefits' }
+  ];
+
   return (
     <main className="min-h-screen bg-[#FAF3E0] relative overflow-x-hidden">
       <Navbar />
@@ -26,7 +33,7 @@ const HomePage = () => {
           <BenefitsSection />
         </section>
       </div>
-      <Footer />
+      <Footer sections={homeSections} />
     </main>
   );
 };

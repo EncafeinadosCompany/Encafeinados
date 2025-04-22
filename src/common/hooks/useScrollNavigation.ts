@@ -5,10 +5,16 @@ interface ScrollOptions {
   behavior?: ScrollBehavior;
 }
 
-export function useScrollNavigation() {
-  const [activeSection, setActiveSection] = useState<string>("home");
+export function useScrollNavigation(sectionIds?: string[]) {
+  const [activeSection, setActiveSection] = useState<string>("");
+
+  const sections = sectionIds || [];
+
   useEffect(() => {
-    const sectionIds = ["home", "map", "stores", "benefits"];
+    if (sections.length > 0) {
+      setActiveSection(sections[0]);
+    }
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
@@ -20,38 +26,39 @@ export function useScrollNavigation() {
       threshold: [0.3, 0.5, 0.7]
     });
 
-    sectionIds.forEach((id) => {
+    sections.forEach(id => {
       const element = document.getElementById(id);
-      if (element) observer.observe(element);
+      if (element) {
+        observer.observe(element);
+      }
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [sections]);
 
   const scrollToSection = useCallback((id: string, options: ScrollOptions = {}) => {
     const { offset = -80, behavior = "smooth" } = options;
-    
+
     const targetElement = document.getElementById(id);
     if (!targetElement) {
       return false;
     }
-    
+
     try {
       targetElement.scrollIntoView({
         behavior,
         block: "start"
       });
-      
+
       setTimeout(() => {
         window.scrollBy({
           top: offset,
           behavior: "auto"
         });
       }, 100);
-      
+
       return true;
     } catch (error) {
-      
       try {
         const elementPosition = targetElement.offsetTop;
         window.scrollTo({
@@ -69,5 +76,9 @@ export function useScrollNavigation() {
     return id === activeSection;
   }, [activeSection]);
 
-  return { scrollToSection, isActive, activeSection };
+  return { 
+    scrollToSection, 
+    isActive, 
+    activeSection 
+  };
 }

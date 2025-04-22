@@ -1,19 +1,35 @@
 import React, { useState, useEffect, useRef, MouseEvent } from 'react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { NewsletterForm } from '@/common/molecules/home/NewsletterForm';
 import { Instagram, ArrowUp, Coffee, MapPin, Music2, Mail, ChevronDown } from '@/common/ui/icons';
 import { SocialIcon } from '@/common/atoms/SocialIcon';
 import logoIcon from "@/assets/images/logo.ico";
 import { useScrollNavigation } from '@/common/hooks/useScrollNavigation';
 
-export const Footer = () => {
+interface FooterProps {
+  sections?: Array<{
+    name: string;
+    id: string;
+  }>;
+}
+
+export const Footer = ({ sections }: FooterProps) => {
   const controls = useAnimation();
   const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
   const [instagramMenuOpen, setInstagramMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  const { scrollToSection, isActive } = useScrollNavigation();
+  const defaultSections = [
+    { name: 'Inicio', id: 'home' },
+    { name: 'Mapa', id: 'map' },
+    { name: 'Tiendas', id: 'stores' },
+    { name: 'Beneficios', id: 'benefits' }
+  ];
+
+  const navLinks = sections || defaultSections;
+
+  const sectionIds = navLinks.map(link => link.id);
+  const { scrollToSection, isActive } = useScrollNavigation(sectionIds);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | any) => {
@@ -35,13 +51,13 @@ export const Footer = () => {
   }, [controls, inView]);
 
   useEffect(() => {
-    // Verificar si las secciones existen
-    const sections = ['home', 'map', 'stores', 'benefits'];
-    sections.forEach(id => {
-      const element = document.getElementById(id);
-      console.log(`Sección "${id}": ${element ? 'Encontrada' : 'NO ENCONTRADA'}`);
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      sectionIds.forEach(id => {
+        const element = document.getElementById(id);
+        console.log(`Sección "${id}": ${element ? 'Encontrada' : 'NO ENCONTRADA'}`);
+      });
+    }
+  }, [sectionIds]);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -142,21 +158,12 @@ export const Footer = () => {
     </div>
   );
 
-  // Define tus enlaces con IDs que coincidan con los de tus secciones
-  const navLinks = [
-    { name: 'Inicio', id: 'home' },
-    { name: 'Mapa', id: 'map' },
-    { name: 'Tiendas', id: 'stores' },
-    { name: 'Beneficios', id: 'benefits' }
-  ];
-
   return (
     <footer
       className="relative bg-gradient-to-br from-[#2C1810] to-[#6F4E37] text-white overflow-hidden"
       style={{ backgroundImage: `url("${footerBackground}")` }}
       ref={ref}
     >
-      {/* Elementos decorativos - granos de café flotantes */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(8)].map((_, i) => (
           <motion.div
@@ -204,7 +211,6 @@ export const Footer = () => {
               Conectamos a los amantes del café con las mejores cafeterías locales de Medellín, promoviendo la rica cultura cafetera de Colombia.
             </p>
             <div className="flex space-x-4 relative">
-              {/* Instagram con menú desplegable usando el mismo estilo que SocialIcon */}
               <InstagramMenuButton />
               
               <SocialIcon
@@ -215,7 +221,6 @@ export const Footer = () => {
             </div>
           </motion.div>
 
-          {/* Enlaces rápidos */}
           <motion.div
             variants={itemVariants}
             className="flex-grow basis-40 max-w-xs"
