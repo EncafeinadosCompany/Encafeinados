@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, MouseEvent } from 'react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Instagram, ArrowUp, Coffee, MapPin, Music2, Mail, ChevronDown } from '@/common/ui/icons';
+import { Instagram, ArrowUp, Coffee, MapPin, Music2, Mail, ChevronDown, Phone } from '@/common/ui/icons';
 import { SocialIcon } from '@/common/atoms/SocialIcon';
 import logoIcon from "@/assets/images/logo.ico";
 import { useScrollNavigation } from '@/common/hooks/useScrollNavigation';
@@ -198,7 +198,6 @@ export const Footer = ({ sections }: FooterProps) => {
           animate={controls}
           className="flex flex-wrap justify-between gap-8"
         >
-          {/* Logo y About */}
           <motion.div
             variants={itemVariants}
             className="flex-grow basis-64 max-w-md"
@@ -246,7 +245,6 @@ export const Footer = ({ sections }: FooterProps) => {
             </ul>
           </motion.div>
 
-          {/* Contacto */}
           <motion.div
             variants={itemVariants}
             className="flex-grow basis-64 max-w-md"
@@ -257,16 +255,13 @@ export const Footer = ({ sections }: FooterProps) => {
                 <MapPin size={18} className="text-[#D4A76A] mr-2 mt-0.5" />
                 <span className="text-white/70">Calle 10 #42-45, Poblado, Medellín, Colombia</span>
               </li>
-              {/* <li className="flex items-center">
-                <Phone size={18} className="text-[#D4A76A] mr-2" />
-                <span className="text-white/70">+57 (604) 123-4567</span>
-              </li> */}
+              
               <li className="flex items-center">
                 <Mail size={18} className="text-[#D4A76A] mr-2" />
                 <span className="text-white/70">encafeinadoscompany@gmail.com</span>
               </li>
               <li className="flex items-center">
-                <Mail size={18} className="text-[#D4A76A] mr-2" />
+                <Phone size={18} className="text-[#D4A76A] mr-2" />
                 <span className="text-white/70">3166093889</span>
               </li>
             </ul>

@@ -49,11 +49,7 @@ export const AboutSection = () => {
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
             viewport={{ once: true, margin: "-100px" }}
           >
-            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#2C1810]/5 text-[#6F4E37] text-sm font-medium mb-4">
-              <Sparkles size={16} className="mr-2 text-[#D4A76A]" />
-              Nuestra Misión
-            </div>
-            
+        
             <h2 className="text-3xl md:text-4xl font-bold text-[#2C1810] mb-6 leading-tight">
               Conectamos amantes del café con experiencias auténticas
             </h2>

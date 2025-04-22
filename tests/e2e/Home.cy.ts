@@ -35,7 +35,7 @@ describe("Home page", () => {
     cy.wait(["@getStores", "@getBranches"]);
     cy.wait(2000);
 
-    cy.contains("Tiendas Aliadas").should("exist");
+    cy.contains("Cafeterías Aliadas").should("exist");
   });
 
   it("should display the store carousel with data", () => {

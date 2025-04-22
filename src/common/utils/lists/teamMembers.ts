@@ -1,5 +1,5 @@
 export const teamMembers = [
-  { name: 'Santiago Florez', role: 'Frontend Developer', imagenUrl: '/Santi.jpg', bio: 'Lider y desarrollo frontend con React.' },
+  { name: 'Santiago Florez', role: 'Frontend Developer', imagenUrl: '/Santi.png', bio: 'Lider y desarrollo frontend con React.' },
   { name: 'Valentina Córdoba', role: 'Frontend Developer', imagenUrl: '/Valen.jpg', bio: 'Experta en diseño de experiencias de usuario y componentes interactivos.' },
   { name: 'Jose Camacho', role: 'Frontend Developer', imagenUrl: '/Jose.jpg', bio: 'Experto en animaciones y experiencias interactivas en la web.' },
   { name: 'Crony López', role: 'Backend Developer', imagenUrl: '/Crony.png', bio: 'Arquitecto de soluciones y especialista en bases de datos.' },
