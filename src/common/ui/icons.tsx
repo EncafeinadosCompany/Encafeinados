@@ -18,6 +18,7 @@ export {
     MapPin,
     Search,
     Store,
+    Globe,
     Check,
     Coffee,
     Upload,

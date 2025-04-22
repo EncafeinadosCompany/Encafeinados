@@ -1,15 +1,14 @@
 import { Branch } from "@/api/types/branchesTypes"
-import { DialogFooter, DialogHeader, Dialog, DialogContent, DialogTitle } from "@/common/ui/dialog"
-import { Coffee, Mail, MapPin, X, Phone, Star, Store, Globe } from "lucide-react"
+import { DialogHeader, Dialog, DialogContent, DialogTitle } from "@/common/ui/dialog"
+import {  Mail, MapPin, X, Phone, Star, Store, Globe } from "@/common/ui/icons"
 
 interface DetailsBranchModalProps {
   isOpen: boolean
   onClose: () => void
   branch: Branch
-  onAdd?: (branch: Omit<any, "id" | "isOpen">) => void
 }
 
-export function BranchDetails({ isOpen, onClose, onAdd, branch }: DetailsBranchModalProps) {
+export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 

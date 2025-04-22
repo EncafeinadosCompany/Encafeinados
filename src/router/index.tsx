@@ -29,9 +29,7 @@ const HomeAdminStores = lazy(() => import("@/modules/adminStores/views/homeAdmin
 
 // COFFEELOVER
 const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/homeCoffeelovers"));
-const PrincipalCoffeelover= lazy(() => import("@/modules/coffeelover/components/principalCoffeeLover"));
-const MapCoffelover = lazy(() => import("@/modules/coffeelover/components/mapCoffelover"));
-
+const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/components/principalCoffeeLover"));
 
 // MAP
 const MapView = lazy(() => import("@/common/widgets/map/MapView"));
@@ -60,24 +58,25 @@ const AuthRoutes = () => {
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
             <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches />} />
-            <Route path="/completar-perfil" element={<CompleteProfile/>} />
+            <Route path="/completar-perfil" element={<CompleteProfile />} />
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
             <Route path="/404" element={<NotFound />} />
 
-                <Route path="/stores" element={<HomeStores />}>
-                  <Route index element={<PrincipalStores />} />
-                </Route>
-             {/* PRIVATE ROUTES  */}
+
+            {/* PRIVATE ROUTES  */}
             <Route element={<PrivateRoute />}>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
                 <Route path="/coffeelover" element={<HomeCoffeelover />}>
                   <Route index element={<PrincipalCoffeelover />} />
-                  <Route path="map-coffelover" element={<MapCoffelover />} />
+                  <Route path="map-coffelover" element={<MapView />} />
                 </Route>
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
+                <Route path="/stores" element={<HomeStores />}>
+                  <Route index element={<PrincipalStores />} />
+                </Route>
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
