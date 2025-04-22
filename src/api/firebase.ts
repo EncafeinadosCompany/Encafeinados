@@ -18,6 +18,8 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
 
+
+
 export const registerWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
@@ -26,15 +28,14 @@ export const registerWithGoogle = async () => {
     const user = result.user;
     const isNewUser = (result as any).additionalUserInfo?.isNewUser || false;
 
-    return { user, token, isNewUser }; // 🔥 esto sí devuelve los datos
+  
+    return { user, token, isNewUser };
   } catch (error: any) {
     if (error.code === 'auth/popup-closed-by-user') {
       console.warn('El usuario cerró el popup antes de iniciar sesión.');
     } else {
       console.error('Error de login:', error);
     }
-
-    // Podés lanzar el error si querés que lo manejen desde afuera
     throw error;
   }
 };

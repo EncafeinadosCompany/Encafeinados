@@ -1,7 +1,7 @@
 "use client"
 
 import { useFieldArray, useFormContext, UseFormRegister } from "react-hook-form"
-import { Trash2, Globe, Link as LinkIcon, MessageSquare, Phone } from "lucide-react"
+import { Trash2, Globe, Link as MessageSquare  } from "@/common/ui/icons"
 import type { SocialNetworksType } from "@/api/queries/stores/socialNetworksQueries"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/common/ui/card"
 import { Label } from "@/common/ui/label"
@@ -22,10 +22,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
 
     const { watch } = useFormContext()
 
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "social_networks",
-    })
+    const { fields, append, remove } = useFieldArray({control, name: "social_networks",})
 
     const socialNetworksWatched = watch("social_networks") ?? []
 

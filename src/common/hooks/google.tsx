@@ -20,16 +20,13 @@ const GoogleCallback = () => {
       }
 
       try {
-        // Decodificar los datos del usuario recibidos en la URL
         const userData = JSON.parse(decodeURIComponent(userDataParam));
-        
-        setAuthStorageGoogle(tokenResponse, userData);
 
+        setAuthStorageGoogle(tokenResponse, userData);
         toast.success("Inicio de sesión exitoso");
         navigate("/coffeelover");
       } catch (error) {
         console.error("Error al procesar los datos de autenticación:", error);
-        // toast.error("Error en la autenticación.");
         navigate("/login");
       }
     };

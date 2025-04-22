@@ -5,6 +5,8 @@ export {
     Mail,
     Bell,
     User,
+    Trash2,
+    Link,
     Home,
     Gift,
     Phone,

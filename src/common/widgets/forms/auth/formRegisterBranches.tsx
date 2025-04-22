@@ -64,7 +64,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
         methods.trigger(undefined, { shouldFocus: false }).then((isValid) => {
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
-                
+
                 if (step === 1) {
                     const error = validateImageRequirements(Array.isArray(criteria) ? criteria : [], methods.getValues("criteria"));
                     if (error) {
@@ -80,28 +80,29 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
     const onSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
         const social = finalData.social_networks || [];
+
         if (!social.length) {
-          toast.error("Debes agregar al menos una red social.");
-          return;
+            toast.error("Debes agregar al menos una red social.");
+            return;
         }
-        try{
-            
-        storeId? storeId : toast.error('no cuenta con el id') 
-        const data ={
-            store_id: Number(storeId),
-            name: finalData.name,
-            phone_number: finalData.phone_number,
-            latitude: finalData.latitude,
-            longitude: finalData.longitude,
-            address: finalData.address,
-            social_branches:finalData.social_networks,
-            criteria: finalData.criteria
+        try {
+
+            storeId ? storeId : toast.error('no cuenta con el id')
+            const data = {
+                store_id: Number(storeId),
+                name: finalData.name,
+                phone_number: finalData.phone_number,
+                latitude: finalData.latitude,
+                longitude: finalData.longitude,
+                address: finalData.address,
+                social_branches: finalData.social_networks,
+                criteria: finalData.criteria
+            }
+
+            await useBranchesMutation.mutateAsync(data)
+            onClose();
         }
-        await useBranchesMutation.mutateAsync(data).then((res) => {
-            toast.success("Sucursal registrada con éxito");
-            onClose(); 
-        })
-        }catch(error){
+        catch (error) {
             toast.error("Error al registrar la sucursal");
         }
     };
@@ -113,7 +114,6 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
         methods.setValue("address", address, { shouldValidate: true });
         setBaseAddress(address);
     }
-
 
     return (
         <div >
@@ -177,13 +177,13 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                                 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300/50 hover:scrollbar-thumb-amber-400 
                                                 scrollbar-track-transparent px-2 sm:px-4 md:px-6 lg:px-8 
                                                 pb-4 transition-all duration-300 rounded-md">
-                                            <SocialNetworksForm
-                                                register={methods.register}
-                                                control={methods.control}
-                                                availableSocialNetworks={socialNetworks}
+                                                <SocialNetworksForm
+                                                    register={methods.register}
+                                                    control={methods.control}
+                                                    availableSocialNetworks={socialNetworks}
 
-                                            >
-                                            </SocialNetworksForm>
+                                                >
+                                                </SocialNetworksForm>
                                             </div>
                                         )
                                     }

@@ -105,18 +105,15 @@ const FormRegisterCoffeelover = () => {
 
     const handleGoogleSignIn = async () => {
         try {
-            setIsLoading(true);
             const { user, token, isNewUser } = await registerWithGoogle();
-
             const userData: RegisterCoffelover = {
                 userData: {
-                    id_google: user.
-                        providerData[0]?.uid,
+                    id_google: user.providerData[0]?.uid,
                     email: user.email || "",
                 },
                 personData: {
                     full_name: user.displayName || "",
-                    type_document: "",  // Datos vacíos
+                    type_document: "",  
                     number_document: "",
                     phone_number: "",
                 },
