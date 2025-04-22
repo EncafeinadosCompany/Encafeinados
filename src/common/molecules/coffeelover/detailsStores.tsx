@@ -1,9 +1,9 @@
 import { ApprovedBranch } from "@/api/types/branchesApprovalTypes";
 import { Badge } from "@/common/ui/badge";
 import { Button } from "@/common/ui/button";
-import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/common/ui/dialog";
-import { Dispatch, SetStateAction } from "react";
-import { MapPin, Mail } from "lucide-react";
+import { DialogContent, DialogFooter} from "@/common/ui/dialog";
+import { Dispatch, SetStateAction, useState } from "react";
+import { MapPin, Mail, MapPinIcon, X, Coffee} from "lucide-react";
 
 interface detailsProps {
     setIsOpen: Dispatch<SetStateAction<boolean>>,
@@ -11,50 +11,117 @@ interface detailsProps {
 }
 
 export const DialogDetailStores = ({details, setIsOpen}: detailsProps) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
-        max-h-[90vh]  bg-white shadow-xl border-none rounded-lg p-4 sm:p-6 md:p-8">
-      <DialogHeader className="pb-2 border-b">
-        <DialogTitle className="text-lg sm:text-xl font-bold text-[#5F4B32] break-words">{details.name}</DialogTitle>
-      </DialogHeader>
+        max-h-[90vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden
+        flex flex-col">
       
-      <div className="grid gap-4 sm:gap-5 py-3 sm:py-4">
-        <div className="relative h-48 sm:h-64 w-full rounded-lg overflow-hidden shadow-md">
-          <img 
-            src={details.store_logo || "/placeholder.svg"} 
-            alt={details.name}  
-            className="object-cover w-full h-full hover:scale-105 transition-transform duration-300" 
-          />
+      {/* Close button */}
+      <button 
+        onClick={() => setIsOpen(false)}
+        className="absolute right-4 top-4 z-10 bg-white/80 backdrop-blur-sm p-1.5 rounded-full 
+          hover:bg-white transition-all duration-300 text-[#5F4B32] hover:text-[#8B5A2B]"
+      >
+        <X className="h-5 w-5" />
+      </button>
+      
+      {/* Hero image section */}
+      <div className="relative w-full h-48 sm:h-56 md:h-64 overflow-hidden flex-shrink-0">
+        <div className={`absolute inset-0 bg-[#8B5A2B]/20 backdrop-blur-sm flex items-center justify-center transition-opacity duration-500 ${imageLoaded ? 'opacity-0' : 'opacity-100'}`}>
+          <Coffee className="h-10 w-10 text-[#8B5A2B] animate-pulse" />
         </div>
-        
-        <div className="space-y-3 sm:space-y-4 px-0 sm:px-1">
-          <h3 className="font-semibold text-[#5F4B32] text-sm sm:text-base border-b pb-2">Información de la tienda</h3>
-          
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-gray-700">
-            <div className="flex items-center gap-1">
-              <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-[#8B5A2B] flex-shrink-0" />
-              <span className="text-xs sm:text-sm font-medium">Dirección:</span>
-            </div>
-            <span className="text-xs sm:text-sm text-muted-foreground pl-5 sm:pl-0 sm:flex-1 break-words">{details.address}</span>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-gray-700">
-            <div className="flex items-center gap-1">
-              <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-[#8B5A2B] flex-shrink-0" />
-              <span className="text-xs sm:text-sm font-medium">Email:</span>
-            </div>
-            <Badge className="bg-[#F5E4D2] text-[#8B5A2B] hover:bg-[#EAD7C1] text-xs sm:text-sm w-fit ml-5 sm:ml-0 break-all">{details.store_email}</Badge>
-          </div>
-        
+        <img 
+          src={details.store_logo || "/placeholder.svg"} 
+          alt={details.name}
+          onLoad={() => setImageLoaded(true)}
+          className="object-cover w-full h-full transition-transform duration-700 hover:scale-110" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/60 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-white drop-shadow-md">{details.name}</h2>
         </div>
       </div>
       
-      <DialogFooter className="pt-2 border-t flex justify-center sm:justify-end mt-2">
+      {/* Content area with scroll */}
+      <div className="flex-grow overflow-y-auto custom-scrollbar">
+        <div className="p-4 sm:p-6 space-y-5">
+          {/* Store information */}
+          <div className="space-y-4">
+            <h3 className="font-medium text-[#5F4B32] text-base sm:text-lg flex items-center gap-2 border-b border-[#E6D7C3] pb-2">
+              <Coffee className="h-5 w-5 text-[#8B5A2B]" />
+              <span>Información de la tienda</span>
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+              {/* Address */}
+              <div className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
+                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#DB8935]/10 transition-transform duration-300 group-hover:scale-150" />
+                <div className="relative flex items-start gap-4">
+                  <div className="rounded-full bg-[#DB8935]/10 p-2.5">
+                    <MapPin className="h-5 w-5 text-[#DB8935]" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <span className="block font-medium text-[#5F4B32]">Dirección</span>
+                    <p className="text-sm text-gray-600/90 leading-relaxed">{details.address}</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Email */}
+              <div className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
+                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#DB8935]/10 transition-transform duration-300 group-hover:scale-150" />
+                <div className="relative flex items-start gap-4">
+                  <div className="rounded-full bg-[#DB8935]/10 p-2.5">
+                    <Mail className="h-5 w-5 text-[#DB8935]" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <span className="block font-medium text-[#5F4B32]">Email</span>
+                    <p className="text-sm text-gray-600/90 leading-relaxed break-all">{details.store_email}</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Phone - Placeholder, add real data if available */}
+              {/* <div className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
+                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#DB8935]/10 transition-transform duration-300 group-hover:scale-150" />
+                <div className="relative flex items-start gap-4">
+                  <div className="rounded-full bg-[#DB8935]/10 p-2.5">
+                    <Phone className="h-5 w-5 text-[#DB8935]" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <span className="block font-medium text-[#5F4B32]">Teléfono</span>
+                    <p className="text-sm text-gray-600/90 leading-relaxed">{}</p>
+                  </div>
+                </div>
+              </div> */}
+            </div>
+          </div>
+          
+          {/* Specialties - Placeholder, add real data if available */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-[#5F4B32]">Especialidades</h4>
+            <div className="flex flex-wrap gap-2">
+              <Badge className="bg-[#F5E4D2] text-[#8B5A2B] hover:bg-[#EAD7C1]">Café de especialidad</Badge>
+              <Badge className="bg-[#F5E4D2] text-[#8B5A2B] hover:bg-[#EAD7C1]">Postres artesanales</Badge>
+              <Badge className="bg-[#F5E4D2] text-[#8B5A2B] hover:bg-[#EAD7C1]">Ambiente acogedor</Badge>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Footer with buttons - now fixed at bottom */}
+      <DialogFooter className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 
+        flex flex-col sm:flex-row gap-3 sm:gap-4 bg-[#FBF7F4]">
         <Button 
-          className="bg-[#8B5A2B] hover:bg-[#6F4823] text-white font-medium px-4 sm:px-6 py-1.5 sm:py-2 rounded-full transition-colors w-full sm:w-auto"
+          className="bg-[#DB8935] hover:bg-[#C77830] text-white font-medium rounded-full 
+            transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg 
+            w-full flex items-center justify-center gap-2 order-1 sm:order-2"
           onClick={() => setIsOpen(false)}
         >
-          Cerrar
+          <MapPinIcon className="h-5 w-5" />
+          <span>Visitar {details.name}</span>
         </Button>
       </DialogFooter>
     </DialogContent>

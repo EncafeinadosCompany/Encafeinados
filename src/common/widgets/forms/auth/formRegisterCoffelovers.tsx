@@ -1,26 +1,28 @@
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { Button } from "@/common/ui/button";
 import { FormProvider, useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "@/common/ui/icons";
 import { motion, AnimatePresence } from "framer-motion";
-
-import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffeloverMutation";
-import { registerCoffeeloverSchema, CurrentCoffeeLoverSchema } from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
+import { Button } from "@/common/ui/button";
+import { ButtonGoogle } from "@/common/atoms/buttonGoogle";
 import { TitleForm } from "@/common/atoms/auth/titleForm";
+
 import { registerWithGoogle } from "@/api/firebase";
-
-
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
-import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
-import { RegisterCoffelover } from "@/api";
-import { ButtonGoogle } from "@/common/atoms/buttonGoogle";
 import { TermConditions } from "./termConditions";
+
+import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
+
+// SCHEMAS AND TYPES
+import { registerCoffeeloverSchema, CurrentCoffeeLoverSchema } from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
+import { RegisterCoffelover } from "@/api";
+
+// MUTATIONS
+import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffeloverMutation";
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(0);
