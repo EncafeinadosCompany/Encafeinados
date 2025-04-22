@@ -72,3 +72,11 @@ export const useApprovedBranches = () => {
     refetchOnWindowFocus: false
   })
 }
+
+export const useValidateVisit = () => {
+  return {
+    data: "success",
+    isLoading: false,
+    isError: false,
+  }
+}
