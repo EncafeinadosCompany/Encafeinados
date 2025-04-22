@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Coffee, Sparkles, Heart } from 'lucide-react';
+import { Coffee, Sparkles, Heart } from '@/common/ui/icons';
 import { Separator } from '@/common/ui/separator';
 import coffeeBgPattern from '@/assets/images/logo.png'; 
 

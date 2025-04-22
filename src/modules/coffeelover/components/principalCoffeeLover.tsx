@@ -1,6 +1,6 @@
 
 import { FeaturedCarouselStores } from '@/common/molecules/coffeelover/featuredStores'
-const CoffeeLoverDashboard = () => {
+const PrincipalCoffeelover = () => {
   return (
     <div className='min-h-screen flex flex-col p-4 max-w-full overflow-hidden'>
           <FeaturedCarouselStores />
@@ -8,4 +8,4 @@ const CoffeeLoverDashboard = () => {
   )
 }
 
-export default CoffeeLoverDashboard
+export default PrincipalCoffeelover

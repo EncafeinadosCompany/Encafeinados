@@ -1,36 +1,46 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { ROLES } from "@/common/utils/lists/roles";
-
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
-const CompletePerfil = lazy( ()=> import("@/common/widgets/forms/auth/formCompleteProfile"));
-const PrincipalStores = lazy(() => import("@/modules/stores/components/principalStorePage"));
-const RegisterStoreBranches = lazy (()=> import("@/common/widgets/forms/auth/registerStoreBranches"));
-const LoadingSpinner = lazy(() => import ("@/common/atoms/LoadingSpinner"));
+
+// LAYOUTS
+const LoadingSpinner = lazy(() => import("@/common/atoms/LoadingSpinner"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
 
+// AUTH
 const LoginPage = lazy(() => import("@/modules/home/views/Login/loginPage"));
 const CuestionCard = lazy(() => import("@/common/molecules/auth/cuestionCard"));
-const FinishAdminRegistration = lazy(() => import("@/modules/stores/components/FinishAdminRegistration"));
 const GoogleCallback = lazy(() => import("@/common/hooks/google"));
+const CompleteProfile = lazy(() => import("@/common/widgets/forms/auth/formCompleteProfile"));
 const RegisterCoffeloverPage = lazy(() => import("@/modules/home/views/Login/registerCoffeloverPage"));
 const RegisterStorePage = lazy(() => import("@/modules/home/views/Login/registerStoresPage"));
+const RegisterStoreBranches = lazy(() => import("@/common/widgets/forms/auth/registerStoreBranches"));
+const FinishAdminRegistration = lazy(() => import("@/modules/stores/adminStores/components/FinishAdminRegistration"));
 
-const HomeStores = lazy(() => import ("@/modules/stores/views/homeStores"));
+// STORES
+const HomeStores = lazy(() => import("@/modules/stores/adminStores/views/homeStores"));
+const PrincipalStores = lazy(() => import("@/modules/stores/adminStores/components/principalStorePage"));
 const PendingBranchesView = lazy(() => import("@/modules/adminStores/components/PendingBranchesList"));
 
+// ADMIN STORES
 const HomeAdminStores = lazy(() => import("@/modules/adminStores/views/homeAdmin"));
 
-const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/components/homeCoffeelover"));
-const CoffeeLoverDashboard = lazy(() => import("@/modules/coffeelover/views/CoffeeLoverDashboard"));
+// COFFEELOVER
+const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/homeCoffeelovers"));
+const PrincipalCoffeelover= lazy(() => import("@/modules/coffeelover/components/principalCoffeeLover"));
 const MapCoffelover = lazy(() => import("@/modules/coffeelover/components/mapCoffelover"));
 
+
+// MAP
 const MapView = lazy(() => import("@/common/widgets/map/MapView"));
 
+// SETTINGS
 const NotFound = lazy(() => import("@/modules/settings/404"));
 const UnauthorizedPage = lazy(() => import("@/modules/settings/authorizationPage"));
+
+// LANGUAGES
 // const LanguageSwitcher = lazy(() => import("@/common/molecules/settings/button-languages"));
 
 const AuthRoutes = () => {
@@ -39,6 +49,8 @@ const AuthRoutes = () => {
       <Router>
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
+
+            {/* PUBLIC ROUTES */}
             <Route path="/" element={<HomePage />} />
             <Route path="/map" element={<MapView view={true} />} />
             <Route path="/about" element={<AboutPage />} />
@@ -47,30 +59,31 @@ const AuthRoutes = () => {
             <Route path="/google/callback" element={<GoogleCallback />} />
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
-            <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches/>} />
-            <Route path="/completar-perfil" element={<CompletePerfil />} />
+            <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches />} />
+            <Route path="/completar-perfil" element={<CompleteProfile/>} />
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
             <Route path="/404" element={<NotFound />} />
-                <Route path="/coffeelover" element={<HomeCoffeelover />}>
-                  <Route index element={<CoffeeLoverDashboard />} />
-                  <Route path="map-coffelover" element={<MapCoffelover />} />
-                </Route>
-            <Route element={<PrivateRoute/>}>
+
+             {/* PRIVATE ROUTES  */}
+            <Route element={<PrivateRoute />}>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
+                <Route path="/coffeelover" element={<HomeCoffeelover />}>
+                  <Route index element={<PrincipalCoffeelover />} />
+                  <Route path="map-coffelover" element={<MapCoffelover />} />
+                </Route>
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
-                <Route path="/stores" element={<HomeStores />}> 
-                <Route index element={<PrincipalStores />} />
+                <Route path="/stores" element={<HomeStores />}>
+                  <Route index element={<PrincipalStores />} />
                 </Route>
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
-              <Route path="/admin" element={<HomeAdminStores />} >
-                {/* <Route index element={<PendingStoresView />} /> */}
-                <Route index element={< PendingBranchesView/>} /> 
-               </Route>
+                <Route path="/admin" element={<HomeAdminStores />} >
+                  <Route index element={< PendingBranchesView />} />
+                </Route>
               </Route>
 
             </Route>
