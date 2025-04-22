@@ -67,6 +67,9 @@ const AuthRoutes = () => {
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
             <Route path="/404" element={<NotFound />} />
 
+                <Route path="/stores" element={<HomeStores />}>
+                  <Route index element={<PrincipalStores />} />
+                </Route>
              {/* PRIVATE ROUTES  */}
             <Route element={<PrivateRoute />}>
 
@@ -78,9 +81,6 @@ const AuthRoutes = () => {
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
-                <Route path="/stores" element={<HomeStores />}>
-                  <Route index element={<PrincipalStores />} />
-                </Route>
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>

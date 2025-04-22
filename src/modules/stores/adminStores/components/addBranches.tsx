@@ -1,86 +1,41 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/common/ui/dialog"
-import { Button } from "@/common/ui/button"
-import { Input } from "@/common/ui/input"
-import { Label } from "@/common/ui/label"
-import MapSearch from "@/common/widgets/map/mapSearch"
+import { Dialog, DialogContent, DialogHeader, DialogTitle} from "@/common/ui/dialog"
 import FormRegisterBrands from "@/common/widgets/forms/auth/formRegisterBranches"
+import { Branch } from "@/api/types/branchesTypes"
 
 
 interface AddBranchModalProps {
   isOpen: boolean
   onClose: () => void
-  onAdd?: (branch: Omit<any, "id" | "isOpen">) => void
+  initialData: Branch | null
+  mode: "add" | "edit"
 }
 
-export function AddBranchModal({ isOpen, onClose }: AddBranchModalProps) {
-  const [formData, setFormData] = useState({
-    name: "",
-    phone_number: "",
-    latitude: "",
-    longitude: "",
-    address: "",
-  })
+export function AddBranchModal({ isOpen, onClose, initialData, mode }: AddBranchModalProps) {
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-
-    // Limpiar error al editar
-    if (errors[name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev }
-        delete newErrors[name]
-        return newErrors
-      })
-    }
-  }
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {}
-
-    if (!formData.name.trim()) {
-      newErrors.name = "El nombre es requerido"
-    }
-
-    if (!formData.phone_number.trim()) {
-      newErrors.phone_number = "El número de teléfono es requerido"
-    }
-
-    if (!formData.latitude) {
-      newErrors.latitude = "La latitud es requerida"
-    } else if (isNaN(Number(formData.latitude))) {
-      newErrors.latitude = "La latitud debe ser un número"
-    }
-
-    if (formData.longitude && isNaN(Number(formData.longitude))) {
-      newErrors.longitude = "La longitud debe ser un número"
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-
+console.log("initialData", initialData, "mode", mode)
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-     <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
-        max-h-[90vh]  bg-white shadow-xl border-none rounded-lg p-4 sm:p-6 md:p-8">
-        <DialogHeader className="flex flex-col items-center">
-          <DialogTitle className="text-amber-950">AGREGAR NUEVA SUCURSAL</DialogTitle>
-        </DialogHeader>
-          <FormRegisterBrands
-          onClose={onClose}
-         >
-          </FormRegisterBrands>
-      </DialogContent>
-    </Dialog>
+    <DialogContent
+      aria-describedby="branch-dialog-description"
+      className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
+      max-h-[90vh]  bg-white shadow-xl border-none rounded-lg p-4 sm:p-6 md:p-8"
+    >
+      <DialogHeader className="flex flex-col items-center">
+        <DialogTitle className="text-amber-950">
+          {mode === "add" ? "AGREGAR NUEVA SUCURSAL" : "EDITAR SUCURSAL"}
+        </DialogTitle>
+      </DialogHeader>
+
+      {/* Descripción accesible */}
+      <p id="branch-dialog-description" className="sr-only">
+        Formulario para {mode === "add" ? "agregar" : "editar"} una sucursal.
+      </p>
+
+      <FormRegisterBrands onClose={onClose} />
+    </DialogContent>
+  </Dialog>
   )
 }
 

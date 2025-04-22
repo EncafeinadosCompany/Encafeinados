@@ -1,59 +1,60 @@
 import { ApprovedBranch } from "@/api/types/branchesApprovalTypes";
 import { Badge } from "@/common/ui/badge";
-import { Button } from "@/common/ui/button";
-import { DialogContent, DialogFooter} from "@/common/ui/dialog";
+import { DialogContent, DialogFooter } from "@/common/ui/dialog";
 import { Dispatch, SetStateAction, useState } from "react";
-import { MapPin, Mail, MapPinIcon, X, Coffee} from "lucide-react";
+import { MapPin, Mail, X, Coffee } from "@/common/ui/icons";
+import { GoToButton } from "@/common/atoms/map/GoToButton";
+
 
 interface detailsProps {
-    setIsOpen: Dispatch<SetStateAction<boolean>>,
-    details: ApprovedBranch
+  setIsOpen: Dispatch<SetStateAction<boolean>>,
+  details: ApprovedBranch
 }
 
-export const DialogDetailStores = ({details, setIsOpen}: detailsProps) => {
+export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
+  
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
         max-h-[90vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden
         flex flex-col">
-      
+
       {/* Close button */}
-      <button 
+      <button
         onClick={() => setIsOpen(false)}
         className="absolute right-4 top-4 z-10 bg-white/80 backdrop-blur-sm p-1.5 rounded-full 
           hover:bg-white transition-all duration-300 text-[#5F4B32] hover:text-[#8B5A2B]"
       >
         <X className="h-5 w-5" />
       </button>
-      
-      {/* Hero image section */}
+
       <div className="relative w-full h-48 sm:h-56 md:h-64 overflow-hidden flex-shrink-0">
         <div className={`absolute inset-0 bg-[#8B5A2B]/20 backdrop-blur-sm flex items-center justify-center transition-opacity duration-500 ${imageLoaded ? 'opacity-0' : 'opacity-100'}`}>
           <Coffee className="h-10 w-10 text-[#8B5A2B] animate-pulse" />
         </div>
-        <img 
-          src={details.store_logo || "/placeholder.svg"} 
+        <img
+          src={details.store_logo || "/placeholder.svg"}
           alt={details.name}
           onLoad={() => setImageLoaded(true)}
-          className="object-cover w-full h-full transition-transform duration-700 hover:scale-110" 
+          className="object-cover w-full h-full transition-transform duration-700 hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/60 to-transparent"></div>
         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
           <h2 className="text-xl sm:text-2xl font-bold text-white drop-shadow-md">{details.name}</h2>
         </div>
       </div>
-      
-      {/* Content area with scroll */}
+
       <div className="flex-grow overflow-y-auto custom-scrollbar">
         <div className="p-4 sm:p-6 space-y-5">
+
           {/* Store information */}
           <div className="space-y-4">
             <h3 className="font-medium text-[#5F4B32] text-base sm:text-lg flex items-center gap-2 border-b border-[#E6D7C3] pb-2">
               <Coffee className="h-5 w-5 text-[#8B5A2B]" />
               <span>Información de la tienda</span>
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
               {/* Address */}
               <div className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
@@ -68,7 +69,7 @@ export const DialogDetailStores = ({details, setIsOpen}: detailsProps) => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Email */}
               <div className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
                 <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#DB8935]/10 transition-transform duration-300 group-hover:scale-150" />
@@ -82,24 +83,9 @@ export const DialogDetailStores = ({details, setIsOpen}: detailsProps) => {
                   </div>
                 </div>
               </div>
-              
-              {/* Phone - Placeholder, add real data if available */}
-              {/* <div className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
-                <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#DB8935]/10 transition-transform duration-300 group-hover:scale-150" />
-                <div className="relative flex items-start gap-4">
-                  <div className="rounded-full bg-[#DB8935]/10 p-2.5">
-                    <Phone className="h-5 w-5 text-[#DB8935]" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <span className="block font-medium text-[#5F4B32]">Teléfono</span>
-                    <p className="text-sm text-gray-600/90 leading-relaxed">{}</p>
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
-          
-          {/* Specialties - Placeholder, add real data if available */}
+
           <div className="space-y-3">
             <h4 className="text-sm font-medium text-[#5F4B32]">Especialidades</h4>
             <div className="flex flex-wrap gap-2">
@@ -110,19 +96,13 @@ export const DialogDetailStores = ({details, setIsOpen}: detailsProps) => {
           </div>
         </div>
       </div>
-      
-      {/* Footer with buttons - now fixed at bottom */}
+
       <DialogFooter className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 
         flex flex-col sm:flex-row gap-3 sm:gap-4 bg-[#FBF7F4]">
-        <Button 
-          className="bg-[#DB8935] hover:bg-[#C77830] text-white font-medium rounded-full 
-            transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg 
-            w-full flex items-center justify-center gap-2 order-1 sm:order-2"
-          onClick={() => setIsOpen(false)}
-        >
-          <MapPinIcon className="h-5 w-5" />
-          <span>Visitar {details.name}</span>
-        </Button>
+        <GoToButton
+          text={details.name}
+          onClick={() => setIsOpen(false)}>
+        </GoToButton>
       </DialogFooter>
     </DialogContent>
   )

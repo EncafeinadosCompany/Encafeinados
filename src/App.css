@@ -80,3 +80,8 @@ body.modal-open {
 .touch-pan-x {
   touch-action: pan-x;
 }
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  display: none;
+}
