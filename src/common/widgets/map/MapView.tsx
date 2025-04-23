@@ -102,7 +102,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   const [copied, setCopied] = useState(false);
   const [showRouteControls, setShowRouteControls] = useState<boolean>(false);
   const [shouldResetMapOnClose, setShouldResetMapOnClose] = useState(false);
-  const [view, setView] = useState(true)
+  const [view, setView] = useState(true);
+  const [activeCafeData, setActiveCafeData] = useState<Cafe | null>(null);
 
   // Custom hooks
   const { favorites, toggleFavorite } = useFavorites();
@@ -124,6 +125,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     setIsCalculatingRoute: setIsRouteLoading,
     routeInfo,
     setRouteInfo,
+    routeCoordinates, // Añadir esto
     clearRoute,
     isRouteActive
   } = useRouteNavigation();
@@ -144,7 +146,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     cafePositions,
     filteredCafes,
     sortedCafes: mapDataSortedCafes,
-    activeCafeData,
+    activeCafeData: derivedActiveCafeData,
     availableStores
   } = useMapData(
     branchesData,
@@ -310,16 +312,14 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   // ==============================
   // CALLBACKS
   // ==============================
-/**
- * Starts navigation to a cafe
- */
+
 const navigateToCafe = useCallback((cafeId: number): void => {
-  if (activeCafe && activeCafe !== cafeId) {
-    setActiveCafe(null);
-    setTimeout(() => {
-      setActiveCafe(cafeId);
-    }, 100);
-  } else {
+  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  if (!selectedCafe) return;
+  
+  if (activeCafe !== cafeId) {
+    setActiveCafeData(selectedCafe);
+    
     setActiveCafe(cafeId);
   }
 
@@ -333,15 +333,12 @@ const navigateToCafe = useCallback((cafeId: number): void => {
     return;
   }
 
-  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
-  if (selectedCafe) {
-    mapInstance?.flyTo(
-      [selectedCafe.latitude, selectedCafe.longitude],
-      16,
-      { duration: 1.5, animate: true }
-    );
-  }
-}, [userLocation, cafes, setActiveCafe, mapInstance, getUserLocation, activeCafe]);
+  mapInstance?.flyTo(
+    [selectedCafe.latitude, selectedCafe.longitude],
+    16,
+    { duration: 1.5, animate: true }
+  );
+}, [userLocation, cafes, mapInstance, getUserLocation, activeCafe]);
 
 const setupRoute = useCallback((cafeId: number) => {
   if (!userLocation) {
@@ -353,19 +350,48 @@ const setupRoute = useCallback((cafeId: number) => {
   const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
   if (selectedCafe) {
     setActiveCafe(null);
+    setIsRouteLoading(true); 
+    
     setTimeout(() => {
       setRouteOrigin(userLocation);
       setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
       setShowRouteControls(true);
+    }, 100);
+  }
+}, [userLocation, cafes, setRouteOrigin, setRouteDestination, getUserLocation, setIsRouteLoading]);
 
+const startRoute = useCallback((cafeId: number) => {
+  if (!userLocation) {
+    toast.error("Necesitamos tu ubicación para trazar la ruta");
+    getUserLocation();
+    return;
+  }
+
+  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  if (selectedCafe) {
+    setTimeout(() => {
+      setActiveCafe(null);
+    }, 300);
+
+    setTimeout(() => {
+      setRouteOrigin(userLocation);
+      setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
+      setActiveCafeData(selectedCafe);
+      setShowRouteControls(true);
+      
       if (mapInstance) {
-        const bounds = L.latLngBounds(
-          L.latLng(userLocation[0], userLocation[1]),
-          L.latLng(selectedCafe.latitude, selectedCafe.longitude)
-        );
+        const bounds = L.latLngBounds([
+          userLocation,
+          [selectedCafe.latitude, selectedCafe.longitude]
+        ]);
         mapInstance.fitBounds(bounds, { padding: [50, 50] });
       }
-    }, 300);
+    }, 500);
+
+    toast.success("¡Calculando la mejor ruta para ti!", {
+      icon: '🧭',
+      duration: 3000,
+    });
   }
 }, [userLocation, cafes, mapInstance, setRouteOrigin, setRouteDestination, getUserLocation]);
 
@@ -509,6 +535,18 @@ useEffect(() => {
     }
   }
 }, [sortedCafes, cafes.length, mapInstance]);
+
+// Sincronizar activeCafeData con el ID activeCafe
+useEffect(() => {
+  if (activeCafe) {
+    const selectedCafe = cafes.find(cafe => cafe.id === activeCafe);
+    if (selectedCafe) {
+      setActiveCafeData(selectedCafe);
+    }
+  } else {
+    setActiveCafeData(null);
+  }
+}, [activeCafe, cafes]);
 
 // ==============================
 // RENDER FUNCTIONS
@@ -688,9 +726,11 @@ return (
           <DirectRouteLine
             from={routeOrigin}
             to={routeDestination}
-            color="#6F4E37"
+            routeCoordinates={routeCoordinates}
+            color="#6F4E37" 
             weight={4}
             opacity={0.7}
+            transportMode={transportMode}
           />
         )}
 
@@ -853,6 +893,7 @@ return (
               favorites={favorites}
               toggleFavorite={toggleFavorite}
               navigateToCafe={setupRoute}
+              startRoute={startRoute}
               onClose={handleCloseDetails}
               copyToClipboard={copyToClipboard}
               copied={copied}

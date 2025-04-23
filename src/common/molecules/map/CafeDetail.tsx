@@ -79,6 +79,7 @@ interface CafeDetailProps {
   favorites: number[];
   toggleFavorite: (id: number) => void;
   navigateToCafe: (id: number) => void;
+  startRoute: (id: number) => void;
   onClose: () => void;
   copyToClipboard: (text: string) => void;
   copied: boolean;
@@ -89,6 +90,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   favorites,
   toggleFavorite,
   navigateToCafe,
+  startRoute,
   onClose,
   copyToClipboard,
   copied
@@ -240,73 +242,92 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 </div>
               )}
               
-              {/* Action buttons - Enhanced for better usability */}
-              <div className="flex gap-3 py-4 md:mt-auto sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 -mx-4 md:-mx-5 lg:-mx-6 px-4 md:px-5 lg:px-6">
-                {cafe.phone ? (
-                  <motion.a
-                    href={`tel:${cafe.phone}`}
-                    className="flex-1 bg-[#6F4E37] text-white py-3 md:py-3 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-2"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="white"/>
-                    </svg>
-                    <span>Llamar</span>
-                  </motion.a>
-                ) : (
+              {/* Botones de acción - Mejorados para mejor usabilidad */}
+              <div className="flex flex-col gap-3 py-4 md:mt-auto sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 -mx-4 md:-mx-5 lg:-mx-6 px-4 md:px-5 lg:px-6">
+                {/* Botones principales en flex para móvil, grid para escritorio */}
+                <div className="flex flex-col sm:grid sm:grid-cols-2 gap-3">
+                  {/* Botón de iniciar ruta (nuevo botón principal) */}
                   <motion.button
                     className="flex-1 bg-[#6F4E37] text-white py-3 md:py-3 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-2"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => navigateToCafe(cafe.id)}
+                    onClick={() => startRoute(cafe.id)}
                   >
                     <Navigation size={16} />
-                    <span>Navegar</span>
+                    <span>Iniciar ruta</span>
                   </motion.button>
-                )}
-                <div className="relative">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <motion.button
-                        className="w-12 h-12 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-xl hover:bg-[#6F4E37] hover:text-white transition-colors"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Share2 size={16} />
-                      </motion.button>
-                    </PopoverTrigger>
-                    <PopoverContent 
-                      className="w-64 md:w-72 z-[500] p-0 bg-white shadow-xl border border-gray-200 rounded-xl" 
-                      align="end"
-                      side="top"
-                      sideOffset={16}
-                      avoidCollisions={true}
+                  
+                  {/* Botón secundario: Llamar o navegar */}
+                  {cafe.phone ? (
+                    <motion.a
+                      href={`tel:${cafe.phone}`}
+                      className="flex-1 bg-white border border-[#6F4E37] text-[#6F4E37] py-3 md:py-3 rounded-xl font-medium hover:bg-[#6F4E37]/5 transition-colors flex items-center justify-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <div className="p-4">
-                        <h3 className="font-medium text-gray-900 mb-3">Compartir cafetería</h3>
-                        <div className="flex flex-col gap-3">
-                          <button
-                            className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors w-full text-left"
-                            onClick={() => copyToClipboard(`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`)}
-                          >
-                            <Copy size={16} className="text-[#6F4E37]" />
-                            <span className="flex-1">{copied ? 'Link copiado! ✓' : 'Copiar enlace'}</span>
-                          </button>
-                          
-                          <a 
-                            className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors"
-                            href={`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`}
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                          >
-                            <ExternalLink size={16} className="text-[#6F4E37]" />
-                            <span>Abrir en Google Maps</span>
-                          </a>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <span>Llamar</span>
+                    </motion.a>
+                  ) : (
+                    <motion.button
+                      className="flex-1 bg-white border border-[#6F4E37] text-[#6F4E37] py-3 md:py-3 rounded-xl font-medium hover:bg-[#6F4E37]/5 transition-colors flex items-center justify-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => navigateToCafe(cafe.id)}
+                    >
+                      <MapPin size={16} />
+                      <span>Ver en mapa</span>
+                    </motion.button>
+                  )}
+                </div>
+                
+                {/* Fila inferior con botón de compartir */}
+                <div className="flex justify-end">
+                  <div className="relative">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <motion.button
+                          className="w-12 h-12 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-xl hover:bg-[#6F4E37] hover:text-white transition-colors"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Share2 size={16} />
+                        </motion.button>
+                      </PopoverTrigger>
+                      <PopoverContent 
+                        className="w-64 md:w-72 z-[500] p-0 bg-white shadow-xl border border-gray-200 rounded-xl" 
+                        align="end"
+                        side="top"
+                        sideOffset={16}
+                        avoidCollisions={true}
+                      >
+                        <div className="p-4">
+                          <h3 className="font-medium text-gray-900 mb-3">Compartir cafetería</h3>
+                          <div className="flex flex-col gap-3">
+                            <button
+                              className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors w-full text-left"
+                              onClick={() => copyToClipboard(`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`)}
+                            >
+                              <Copy size={16} className="text-[#6F4E37]" />
+                              <span className="flex-1">{copied ? 'Link copiado! ✓' : 'Copiar enlace'}</span>
+                            </button>
+                            
+                            <a 
+                              className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors"
+                              href={`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`}
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                            >
+                              <ExternalLink size={16} className="text-[#6F4E37]" />
+                              <span>Abrir en Google Maps</span>
+                            </a>
+                          </div>
                         </div>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
               </div>
             </div>
