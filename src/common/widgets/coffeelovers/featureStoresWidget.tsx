@@ -68,6 +68,7 @@ const { data: branches, isLoading, isError } = useApprovedBranches();
     setSearchTerm(e.target.value);
   };
   return (
+    
     <FeaturedCarouselStores
     handleSearchChange={handleSearchChange}
     searchTerm={searchTerm}

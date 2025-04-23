@@ -28,7 +28,7 @@ export const RegisterBranchesStep1 = ({ register,errors }: registerAdminProps) =
                             {...register('name')}
                             {...registerWithFocus('name')}
                             placeholder="Ingresa tu nombre"
-                            className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+                            className="rounded-full pl-10 text-gray-600 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
                         />
                     </div>
                     {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
@@ -45,7 +45,7 @@ export const RegisterBranchesStep1 = ({ register,errors }: registerAdminProps) =
                                 {...register("phone_number")}
                                 {...registerWithFocus("phone_number")}
                                 placeholder="Número de teléfono"
-                                className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+                                className="rounded-full pl-10 text-gray-600 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
                             />
                         </div>
                         {errors?.phone_number && <p className="text-red-500 text-sm">{errors.phone_number.message}</p>}

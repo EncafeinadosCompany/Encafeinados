@@ -63,13 +63,13 @@ const circles: CircleConfig[] = [
 const AnimatedBackground: React.FC = () => {
   return (
     <div style={backgroundStyle}>
-      {/* Gradiente de fondo */}
+      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#FAF3E0]/30 to-[#D4A76A]/10" />
 
-      {/* Textura de granos de café */}
+      {/* Coffee beans texture */}
       <div className="absolute inset-0 opacity-20 bg-coffee-beans-texture" />
 
-      {/* Círculos animados */}
+      {/* Animated circles */}
       {circles.map((circle, index) => (
         <motion.div
           key={index}

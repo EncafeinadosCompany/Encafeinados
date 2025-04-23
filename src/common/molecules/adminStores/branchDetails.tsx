@@ -1,6 +1,7 @@
+import { useBranchApprovalDetails } from "@/api/queries/stores/branchesQueries"
 import { Branch } from "@/api/types/branchesTypes"
 import { DialogHeader, Dialog, DialogContent, DialogTitle } from "@/common/ui/dialog"
-import {  Mail, MapPin, X, Phone, Star, Store, Globe } from "@/common/ui/icons"
+import { Mail, MapPin, X, Phone, Star, Store, Globe } from "@/common/ui/icons"
 
 interface DetailsBranchModalProps {
   isOpen: boolean
@@ -9,9 +10,12 @@ interface DetailsBranchModalProps {
 }
 
 export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalProps) {
+
+
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
+      <DialogContent aria-describedby={undefined} className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
         max-h-[90vh] bg-white shadow-xl border-none rounded-lg p-4 sm:p-6 md:p-8">
 
         {/* Header with store name */}
@@ -88,7 +92,10 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
 
                 {/* Phone */}
                 {branch.phone_number && (
-                  <div className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
+                  <a 
+                    href={`tel:${branch.phone_number}`}
+                    className="block group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1"
+                  >
                     <div className="relative flex items-start gap-4">
                       <div className="rounded-full bg-[#DB8935]/10 p-2.5">
                         <Phone className="h-5 w-5 text-[#DB8935]" />
@@ -98,7 +105,7 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
                         <p className="text-sm text-gray-600/90 leading-relaxed">{branch.phone_number}</p>
                       </div>
                     </div>
-                  </div>
+                  </a>
                 )}
 
                 {/* Rating */}
@@ -120,7 +127,7 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
                 <div className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
                   <div className="relative flex items-start gap-4">
                     <div className="rounded-full bg-[#DB8935]/10 p-2.5">
-                      <div className={`h-5 w-5 rounded-full ${branch.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`} />
+                      <div className={`h-5 w-5 rounded-full ${branch.status === 'active' ? 'bg-green-500' : 'bg-red-800'}`} />
                     </div>
                     <div className="space-y-1.5">
                       <span className="block font-medium text-[#5F4B32]">Estado</span>
@@ -133,6 +140,7 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
 
             {/* Social Media Section */}
             {branch.social_branches && branch.social_branches.length > 0 && (
+
               <div className="space-y-4 mt-6">
                 <h3 className="font-medium text-[#5F4B32] text-base sm:text-lg flex items-center gap-2 border-b border-[#E6D7C3] pb-2">
                   <Globe className="h-5 w-5 text-[#8B5A2B]" />
@@ -141,25 +149,24 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {branch.social_branches.map((social, index) => (
-                    <div key={index} className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
-                      <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#DB8935]/10 transition-transform duration-300 group-hover:scale-150" />
-                      <div className="relative flex items-start gap-4">
-                        <div className="rounded-full bg-[#DB8935]/10 p-2.5">
-                          <Globe className="h-5 w-5 text-[#DB8935]" />
-                        </div>
-                        <div className="space-y-1.5">
-                          <span className="block font-medium text-[#5F4B32] capitalize">{social.social_network_name ? social.social_network_name : "Red Social"}</span>
-                          <a
-                            href={social.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm text-blue-600 hover:text-blue-800 hover:underline leading-relaxed break-all"
-                          >
-                            {social.url}
-                          </a>
+                    <a
+                      href={social.value}
+                      target="_blank"
+                      rel="noopener noreferrer"
+
+                    >
+                      <div key={index} className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
+                        <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#DB8935]/10 transition-transform duration-300 group-hover:scale-150" />
+                        <div className="relative flex items-start gap-4">
+                          <div className="rounded-full bg-[#DB8935]/10 p-2.5">
+                            <Globe className="h-5 w-5 text-[#DB8935]" />
+                          </div>
+                          <div className="space-y-1.5">
+                            <span className="block font-medium text-[#5F4B32] capitalize">{social.description ? social.description : "Red Social"}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </a>
                   ))}
                 </div>
               </div>
@@ -175,11 +182,11 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
 
                 <div className="aspect-video w-full rounded-xl overflow-hidden shadow-md">
                   <iframe
-                      title="Branch Location"
-                      width="100%"
-                      height="100%"
-                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${branch.longitude - 0.002}%2C${branch.latitude - 0.002}%2C${branch.longitude + 0.002}%2C${branch.latitude + 0.002}&layer=mapnik&marker=${branch.latitude}%2C${branch.longitude}`}
-                      allowFullScreen
+                    title="Branch Location"
+                    width="100%"
+                    height="100%"
+                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${branch.longitude - 0.002}%2C${branch.latitude - 0.002}%2C${branch.longitude + 0.002}%2C${branch.latitude + 0.002}&layer=mapnik&marker=${branch.latitude}%2C${branch.longitude}`}
+                    allowFullScreen
                   ></iframe>
                 </div>
               </div>

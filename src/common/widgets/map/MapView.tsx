@@ -594,8 +594,7 @@ return (
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
             />
-            
-            {/* Icono que cambia según el estado */}
+   
             {isTyping || isSearchProcessing ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -621,7 +620,7 @@ return (
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
             )}
             
-            {/* Mostrar contador de caracteres si está escribiendo y no alcanza el mínimo */}
+         
             {searchInputValue.length > 0 && searchInputValue.length < 3 && (
               <div className="absolute right-12 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
                 {searchInputValue.length}/3
@@ -769,13 +768,13 @@ return (
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             onClick={() => {
-              // Ajustar el mapa para mostrar todos los resultados
+              // Adjust map to show all search results
               if (mapInstance && sortedCafes.length > 1) {
                 const bounds = new L.LatLngBounds(
                   sortedCafes.map(cafe => [cafe.latitude, cafe.longitude])
                 );
                 
-                // Añadir un pequeño padding
+                // Add padding to bounds
                 mapInstance.fitBounds(bounds, {
                   padding: [50, 50],
                   animate: true,
@@ -783,10 +782,10 @@ return (
                 });
               }
               
-              // Cerrar cualquier detalle abierto
+              // Close any open cafe details
               setActiveCafe(null);
               
-              // En móvil mostrar la lista de resultados
+              // Show sidebar list on mobile
               if (window.innerWidth < 768) {
                 setShowSidebar(true);
               }

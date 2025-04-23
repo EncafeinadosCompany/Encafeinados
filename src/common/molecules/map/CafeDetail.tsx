@@ -102,10 +102,10 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
     return (
       <div className={`py-3 ${!hasManyNetworks ? 'border-b border-gray-100' : ''}`}>
         <h4 className="font-medium text-[#2C1810] mb-2 flex items-center justify-between">
-          <span>Redes sociales</span>
+          <span>Social Networks</span>
           {hasManyNetworks && (
             <span className="text-xs text-[#6F4E37]/70">
-              {cafe.socialNetworks.length} disponibles
+              {cafe.socialNetworks.length} available
             </span>
           )}
         </h4>
@@ -149,7 +149,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 
         <button
           onClick={onClose}
-          aria-label="Cerrar detalles"
+          aria-label="Close details"
           className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors z-10"
         >
           <ArrowLeft size={20} className="text-[#6F4E37] transform rotate-45" />
@@ -160,7 +160,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
             <div className="flex items-center gap-1 text-amber-400">
               <Star size={16} className="fill-amber-400" />
               <span className="font-medium text-white">{cafe.rating}</span>
-              <span className="text-xs text-white/80">({cafe.reviewCount} reseñas)</span>
+              <span className="text-xs text-white/80">({cafe.reviewCount} reviews)</span>
             </div>
             <motion.button
               className="bg-white/20 backdrop-blur-sm p-1.5 rounded-full"
@@ -170,7 +170,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 e.stopPropagation();
                 toggleFavorite(cafe.id);
               }}
-              aria-label={favorites.includes(cafe.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
+              aria-label={favorites.includes(cafe.id) ? "Remove from favorites" : "Add to favorites"}
             >
               <Heart
                 size={18}
@@ -181,22 +181,22 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
         </div>
       </div>
       
-      {/* Contenido principal con scroll optimizado */}
+      {/* Main content with optimized scroll */}
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         <div className="p-4 md:p-5 lg:p-6">
-          {/* Título visible solo en móvil */}
+          {/* Title visible only on mobile */}
           <h2 className="text-xl font-bold text-[#2C1810] md:hidden">{cafe.name}</h2>
           
-          {/* Calificación visible solo en móvil */}
+          {/* Rating visible only on mobile */}
           <div className="flex items-center gap-1 text-amber-500 mb-4 md:hidden">
             <Star size={16} className="fill-amber-500" />
             <span className="font-medium">{cafe.rating}</span>
-            <span className="text-sm text-gray-500">({cafe.reviewCount} reseñas)</span>
+            <span className="text-sm text-gray-500">({cafe.reviewCount} reviews)</span>
           </div>
           
-          {/* Grid adaptativo para diferentes tamaños de pantalla */}
+          {/* Adaptive grid for different screen sizes */}
           <div className="md:grid md:grid-cols-2 md:gap-6 lg:gap-6 xl:grid-cols-12">
-            {/* Primera columna (información principal) */}
+            {/* First column (main information) */}
             <div className="xl:col-span-5">
               {/* Dirección */}
               <div className="mb-4 bg-gray-50 p-3 rounded-lg hover:bg-gray-100 transition-colors">
@@ -240,7 +240,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 </div>
               )}
               
-              {/* Botones de acción - Mejorados para mejor usabilidad */}
+              {/* Action buttons - Enhanced for better usability */}
               <div className="flex gap-3 py-4 md:mt-auto sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 -mx-4 md:-mx-5 lg:-mx-6 px-4 md:px-5 lg:px-6">
                 {cafe.phone ? (
                   <motion.a

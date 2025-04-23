@@ -5,6 +5,7 @@ import { Separator } from '@/common/ui/separator';
 import coffeeBgPattern from '@/assets/images/logo.png'; 
 
 export const AboutSection = () => {
+  
   return (
     <section 
       id="about" 
@@ -27,7 +28,7 @@ export const AboutSection = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid md:grid-cols-2 gap-10 items-center">
           
-          {/* Columna izquierda: imagen */}
+          {/* Left column: image */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -37,12 +38,12 @@ export const AboutSection = () => {
           >
             <img 
               src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2670&q=80" 
-              alt="Café colombiano" 
+              alt="Colombian coffee" 
               className="w-full h-full object-cover aspect-[4/3]"
             />
           </motion.div>
           
-          {/* Columna derecha: contenido */}
+          {/* Right column: content */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -51,18 +52,18 @@ export const AboutSection = () => {
           >
         
             <h2 className="text-3xl md:text-4xl font-bold text-[#2C1810] mb-6 leading-tight">
-              Conectamos amantes del café con experiencias auténticas
+              Connecting coffee lovers with authentic experiences
             </h2>
             
             <Separator className="w-16 h-1 bg-[#D4A76A] mb-6" />
             
             <div className="space-y-4 text-[#6F4E37] leading-relaxed">
               <p className="text-lg">
-                Coffeelovers apasionados que disfrutan creando soluciones para todo el ecosistema de café: conectamos, soñamos y cocreamos parches alrededor del café.
+                Passionate coffee lovers who enjoy creating solutions for the entire coffee ecosystem: we connect, dream, and co-create coffee communities.
               </p>
               
               <p>
-                Queremos convertirnos en la plataforma de referencia para descubrir, valorar y disfrutar de las experiencias cafeteras más auténticas, mientras creamos una comunidad apasionada por el buen café.
+                We aim to become the reference platform for discovering, valuing, and enjoying the most authentic coffee experiences, while building a community passionate about good coffee.
               </p>
             </div>
             
@@ -76,22 +77,22 @@ export const AboutSection = () => {
             >
               <div className="flex items-center bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm border border-[#D4A76A]/10">
                 <Heart size={18} className="text-[#D4A76A] mr-2" />
-                <span className="text-sm font-medium text-[#6F4E37]">Pasión</span>
+                <span className="text-sm font-medium text-[#6F4E37]">Passion</span>
               </div>
               <div className="flex items-center bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm border border-[#D4A76A]/10">
                 <Coffee size={18} className="text-[#D4A76A] mr-2" />
-                <span className="text-sm font-medium text-[#6F4E37]">Calidad</span>
+                <span className="text-sm font-medium text-[#6F4E37]">Quality</span>
               </div>
               <div className="flex items-center bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm border border-[#D4A76A]/10">
                 <Sparkles size={18} className="text-[#D4A76A] mr-2" />
-                <span className="text-sm font-medium text-[#6F4E37]">Autenticidad</span>
+                <span className="text-sm font-medium text-[#6F4E37]">Authenticity</span>
               </div>
             </motion.div>
           </motion.div>
         </div>
       </div>
       
-      {/* Separador para asegurar que no haya problemas con la siguiente sección */}
+      {/* Separator to ensure no issues with the next section */}
       <div className="h-1 w-full"></div>
     </section>
   );

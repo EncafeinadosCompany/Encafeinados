@@ -37,7 +37,7 @@ export const NavGeneral = ({
 
   return (
     <div className="flex min-h-screen w-full">
-      {/* Sidebar para desktop */}
+      {/* Sidebar by desktop */}
       {!isMobile && (
         <div
           className={cn(
@@ -95,7 +95,7 @@ export const NavGeneral = ({
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsExpanded(false)}
-                  aria-label="Colapsar menú"
+                  aria-label="Collapse menu"
                   className="h-7 w-7 hover:bg-amber-50 rounded-lg text-amber-700"
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -103,24 +103,24 @@ export const NavGeneral = ({
               )}
             </div>
 
-            {/* Botón de expandir */}
+            {/* Expand button */}
             {!isExpanded && (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsExpanded(true)}
-                aria-label="Expandir menú"
+                aria-label="Expand menu"
                 className="w-full flex justify-center mt-2 text-amber-700 hover:bg-amber-50"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
             )}
 
-            {/* Decoración separadora */}
+            {/* Separator decoration */}
             <div className="mt-3 mx-3 h-[1px] bg-gradient-to-r from-transparent via-amber-200 to-transparent"></div>
           </div>
 
-          {/* Navegación principal - Mejorada */}
+          {/* Main navigation - Enhanced */}
           <nav className="flex flex-col gap-1 p-2 mt-1 flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200">
             {navItems.map((item) => (
               <Link
@@ -153,7 +153,7 @@ export const NavGeneral = ({
                   {item.title}
                 </span>
 
-                {/* Indicador visual para ítem activo */}
+                {/* Visual indicator for active item */}
                 {location.pathname.startsWith(item.href) && !isExpanded && (
                   <div className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full"></div>
                 )}
@@ -161,7 +161,7 @@ export const NavGeneral = ({
             ))}
           </nav>
 
-          {/* Botón de cerrar sesión - Con diseño mejorado */}
+          {/* Logout button - With enhanced design */}
           <div className="mt-auto border-t border-gray-100">
             <div className="px-2 py-3">
               <Link
@@ -182,7 +182,7 @@ export const NavGeneral = ({
                     isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
                   )}
                 >
-                  Cerrar sesión
+                  Logout
                 </span>
               </Link>
             </div>
@@ -190,13 +190,13 @@ export const NavGeneral = ({
         </div>
       )}
 
-      {/* Contenido principal */}
+      {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         <main className="flex-1 w-full relative">
           <Outlet />
         </main>
         
-        {/* Navbar móvil abajo */}
+        {/* Mobile navbar at bottom */}
         {isMobile && (
           <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] z-[100] rounded-t-2xl border-t border-gray-100">
             <nav className="flex justify-around items-center h-16 px-2">
@@ -226,7 +226,7 @@ export const NavGeneral = ({
                 onClick={clearAuthStorage}
               >
                 <LogOutIcon className="h-4 w-4 m-1" />
-                <span className="text-[10px] font-medium">Salir</span>
+                <span className="text-[10px] font-medium">Exit</span>
               </Link>
             </nav>
           </div>

@@ -21,7 +21,7 @@ const FinishAdminRegistration = lazy(() => import("@/modules/stores/adminStores/
 
 // STORES
 const HomeStores = lazy(() => import("@/modules/stores/adminStores/views/homeStores"));
-const PrincipalStores = lazy(() => import("@/modules/stores/adminStores/components/principalStorePage"));
+const BranchManagement= lazy(() => import("@/common/widgets/adminStores/branchManagement"));
 const PendingBranchesView = lazy(() => import("@/modules/adminStores/components/PendingBranchesList"));
 
 // ADMIN STORES
@@ -75,7 +75,7 @@ const AuthRoutes = () => {
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
                 <Route path="/stores" element={<HomeStores />}>
-                  <Route index element={<PrincipalStores />} />
+                  <Route index element={<BranchManagement/>} />
                 </Route>
               </Route>
 
@@ -87,7 +87,7 @@ const AuthRoutes = () => {
 
             </Route>
             <Route path="*" element={<Navigate to="/404" replace />} />
-            <Route path="unauthorized" element={<UnauthorizedPage />} />
+            <Route path="unauthorized" element={ <UnauthorizedPage />} />
           </Routes>
         </Suspense>
       </Router>

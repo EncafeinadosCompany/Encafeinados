@@ -17,7 +17,7 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
 
   return (
     <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
-        max-h-[90vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden
+        min-h-[73vh]  sm:max-h[90vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden 
         flex flex-col">
 
       {/* Close button */}

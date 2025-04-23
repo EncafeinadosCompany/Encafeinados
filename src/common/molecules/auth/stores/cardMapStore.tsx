@@ -51,7 +51,7 @@ export const CardMapStore = ({
     <div className="w-full max-w-6xl bg-white rounded-xl  space-y-4 [container-type:inline-size]">
       <div className=" map-grid">
 
-{/* Input de búsqueda */}
+{/* Search input */}
 <div >
 <div className="relative">
   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -82,24 +82,24 @@ export const CardMapStore = ({
   </div>
 </div>
 
-{/* Botón ubicación actual */}
+{/* Current location button */}
 <button
   onClick={UseCurrentLocation}
   type="button"
   className=" flex mt-2 items-center text-blue-600 hover:text-blue-800 text-sm"
 >
   <Navigation className="h-4 w-4 mr-2" />
-  {isLocating ? "Obteniendo ubicación..." : "Usar mi ubicación actual"}
+  {isLocating ? "Obteniendo ubicación..." : "Use my current location"}
   {isLocating && <Loader2 className="h-4 w-4 ml-2 animate-spin" />}
 </button>
 
-{/* Sugerencias */}
+{/* Suggestions */}
 {showSuggestions && (
   <div className="bg-white border rounded-lg shadow-md max-h-80 overflow-auto">
     {searchQuery.length < 2 && recentSearches.length > 0 && (
       <div className="p-2">
         <div className="text-xs font-medium text-gray-500 mb-2">
-          Búsquedas recientes
+          Recent searches
         </div>
         {recentSearches.map((item, index) => (
           <div
@@ -131,7 +131,7 @@ export const CardMapStore = ({
       ))
     ) : searchQuery.length >= 2 && !isSearching ? (
       <div className="p-4 text-center text-gray-500 text-sm">
-        No se encontraron resultados para "{searchQuery}"
+        No results found for "{searchQuery}"
       </div>
     ) : null}
 
@@ -142,14 +142,14 @@ export const CardMapStore = ({
       className="p-2 hover:bg-gray-100 cursor-pointer flex items-center border-none"
     >
       <Navigation className="h-4 w-4 text-blue-500 mr-2" />
-      <span className="text-sm text-blue-600">Usar mi ubicación actual</span>
+      <span className="text-sm text-blue-600">Use my current location</span>
     </Button>
   </div>
 )}
 </div>
 
 <div>
-  {/* Mapa responsivo */}
+  {/* Responsive map */}
 <div className="h-[250px] md:h-[250px] w-full rounded-lg overflow-hidden shadow-md border">
   <MapContainer
     center={selectedPosition || currentPosition || [4.6097, -74.0817]}
@@ -207,19 +207,19 @@ export const CardMapStore = ({
   </MapContainer>
 </div>
 
-{/* Dirección seleccionada */}
+{/* Selected address */}
 {searchQuery && (
   <div className="bg-gray-50 p-3 rounded-md border text-sm">
-    <div className="text-xs text-gray-500 mb-1">Dirección seleccionada:</div>
+    <div className="text-xs text-gray-500 mb-1">Selected address:</div>
     <div className="font-medium">{searchQuery}</div>
   </div>
 )}
 
-{/* Indicaciones */}
+{/* Instructions */}
 <div className="mt-3 text-xs text-gray-600 space-y-1">
   <p className="flex items-center">
     <MapPin className="h-4 w-4 text-red-500 mr-2" />
-    Marcador rojo: ubicación seleccionada
+    Red marker: selected location
   </p>
   {currentPosition &&
     selectedPosition &&
@@ -227,10 +227,10 @@ export const CardMapStore = ({
       currentPosition[1] !== selectedPosition[1]) && (
       <p className="flex items-center">
         <MapPin className="h-4 w-4 text-blue-500 mr-2" />
-        Marcador azul: tu ubicación actual
+        Blue marker: your current location
       </p>
     )}
-  <p>Haz clic en el mapa o arrastra el marcador para ajustar la posición.</p>
+  <p>Click on the map or drag the marker to adjust the position.</p>
 </div>
 </div>
 </div>
