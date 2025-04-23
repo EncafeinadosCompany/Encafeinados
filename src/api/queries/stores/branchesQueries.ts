@@ -73,7 +73,11 @@ export const useApprovedBranches = () => {
   })
 }
 
-export const useValidateVisit = () => {
+export const useValidateVisit = (coordinates: any, shopId: any) => {
+
+  console.log("Coordinates", coordinates)
+  console.log("ShopId", shopId)
+
   return {
     data: "success",
     isLoading: false,

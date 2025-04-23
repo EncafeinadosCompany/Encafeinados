@@ -1,24 +1,44 @@
-import { useEffect, useState } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
-import { useValidateVisit } from "@/api/queries/stores/branchesQueries"
+import { useRegisterVisitMutation } from "@/api/mutations/branchApprovalMutations";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const ValidateVisitPage = () => {
-  const { data: status, isLoading, isError } = useValidateVisit()
-  const [searchParams] = useSearchParams()
-  const shopId = searchParams.get('shop_id')
-  const [message, setMessage] = useState('')
+  const [searchParams] = useSearchParams();
+  const shopId = searchParams.get("shop_id");
+
+  const {
+    mutate: validateVisit,
+    isError,
+    isIdle: isLoading,
+    status,
+  } = useRegisterVisitMutation();
 
   useEffect(() => {
+    if (!shopId) return;
 
+    if (navigator.geolocation) {
+      console.log("Obteniendo ubicación...");
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          validateVisit({
+            shop_id: shopId,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error al obtener ubicación:", error);
+        },
+        { enableHighAccuracy: true }
+      );
+    }
+  }, []);
 
-  }, [shopId])
+  if (isLoading) return <p>⏳ Validando tu visita...</p>;
+  if (isError) return <p>❌ Hubo un problema registrando tu visita</p>;
+  if (status === "success") return <p>🎉 ¡Visita registrada con éxito!</p>;
 
-  if(isLoading) return "Cargando..."
-  if(isError) return "Error al cargar la tienda"
-  if(!status) return "No hay tienda registrada"
-  if(status === "success") return "Visita registrada con éxito"
+  return <p>🔍 Preparando validación...</p>;
+};
 
-  return null
-}
-
-export default ValidateVisitPage
+export default ValidateVisitPage;
