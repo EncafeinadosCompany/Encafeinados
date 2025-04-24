@@ -4,7 +4,8 @@ export const RegisterStoreBrancheSchema = [
   z.object({
     name: z.string()
       .nonempty({ message: 'Queremos conocerte, ¿cúal es el nombre de la sucursal?' })
-      .min(3, { message: 'El nombre de la sucursal debe tener al menos 3 letras' }),
+      .min(3, { message: 'El nombre de la sucursal debe tener al menos 3 letras' })
+      .regex(/^[a-záéíóúüñ\s,]*$/i, { message: 'El nombre solo puede contener letras, espacios, comas y tildes' }),
     phone_number: z.string()
       .nonempty({ message: "El número de teléfono es clave" })
       .min(7, { message: "Tu número debe tener al menos 7 dígitos, como los pasos para hacer un buen pour-over" })
@@ -20,7 +21,7 @@ export const RegisterStoreBrancheSchema = [
             file: z.instanceof(File),
             preview: z.string().url(),
           }),
-          z.string().url(), // caso en el que ya venga una URL lista del backend
+          z.string().url(), 
           z.literal(undefined),
           z.null(),
         ]).optional(),

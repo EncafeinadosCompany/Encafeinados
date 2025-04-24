@@ -12,7 +12,7 @@ export const useError = (moduleName?: string) => {
 
     toast.remove();
     toast.error(userFriendlyMessage, {
-      duration: 2000,
+      duration: 1500,
       position: "top-center",
       id: "error"
     });
