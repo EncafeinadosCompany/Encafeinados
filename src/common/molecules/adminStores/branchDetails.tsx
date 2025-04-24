@@ -16,13 +16,13 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent aria-describedby={undefined} className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
-        max-h-[90vh] bg-white shadow-xl border-none rounded-lg p-4 sm:p-6 md:p-8">
+         h-[74vh] sm:max-h-[90vh] bg-white shadow-xl border-none rounded-lg p-4 sm:p-6 md:p-8">
 
         {/* Header with store name */}
         <DialogHeader className="pb-4 border-b border-[#E6D7C3]">
-          <DialogTitle className="text-xl font-semibold text-[#5F4B32] flex items-center gap-2">
+          <DialogTitle className="sm:text-xl font-semibold text-[#5F4B32] flex items-center gap-2">
             <Store className="h-6 w-6 text-[#DB8935]" />
-            Información de la {branch.name || branch.store_name || branch.store?.store_name || "Detalles de la Sucursal"}
+            Información de {branch.name || branch.store_name || branch.store?.store_name || "Detalles de la Sucursal"}
           </DialogTitle>
         </DialogHeader>
 
@@ -36,7 +36,7 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
         </button>
 
         {/* Content area with scroll */}
-        <div className="flex-grow overflow-y-auto custom-scrollbar max-h-[60vh] my-4">
+        <div className="flex-grow overflow-y-auto custom-scrollbar max-h-[70vh] my-4">
           <div className="p-2 sm:p-6 space-y-6">
             {/* Store information */}
             <div className="space-y-2">

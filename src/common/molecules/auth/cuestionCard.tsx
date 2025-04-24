@@ -4,15 +4,15 @@ import { LinkReturn } from "./LinkReturn"
 
 export default function CuestionCard() {
   return (
-    <div className=" bg-gradient-to-b from-orange-100 to-orange-200">
+    // <div className="bg-gradient-to-b from-orange-100 to-orange-200">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="min-h-screen">
-        <LinkReturn link="/login" className="m-2 xl:m-10"></LinkReturn>
-        <div className="flex flex-col items-center justify-center p-4 sm:p-3">
-          <div className="w-full max-w-sm sm:max-w-md ">
+        className="bg-gradient-to-b from-orange-100 to-orange-200 h-full flex flex-col">
+        <LinkReturn link="/login" className="m-4"></LinkReturn>
+        <div className="flex flex-col  items-center justify-center">
+          <div className="w-full  max-w-sm sm:max-w-md lg:max-w-4xl ">
 
             <motion.div
               initial={{ y: -20 }}
@@ -40,7 +40,7 @@ export default function CuestionCard() {
             </motion.div>
 
             {/* Tarjetas con diseño inspirado en la imagen */}
-            <div className="grid gap-4 ">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
               <CardRegister
                 link="/coffee-lover-registration"
                 title="CoffeeLover"
@@ -70,7 +70,7 @@ export default function CuestionCard() {
         </div>
 
       </motion.div>
-    </div>
+    // </div>
   )
 
 }

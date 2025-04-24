@@ -18,7 +18,7 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
 
   return (
     <DialogContent aria-describedby={undefined} className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
-        min-h-[73vh]  sm:max-h[90vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden 
+        h-[73vh]  sm:max-h[90vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden 
         flex flex-col">
       <DialogTitle className="hidden"></DialogTitle>
 
@@ -101,10 +101,10 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
 
       <DialogFooter className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 
         flex flex-col sm:flex-row gap-3 sm:gap-4 bg-[#FBF7F4]">
-        <GoToButton
+        {/* <GoToButton
           text={details.name}
           onClick={() => setIsOpen(false)}>
-        </GoToButton>
+        </GoToButton> */}
       </DialogFooter>
     </DialogContent>
   )

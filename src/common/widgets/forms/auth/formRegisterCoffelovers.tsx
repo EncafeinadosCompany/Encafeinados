@@ -101,8 +101,7 @@ const FormRegisterCoffeelover = () => {
         } catch (error) {
             console.log(error);
         }finally{
-            toast.remove();
-            toast.success("Coffelover creado exitosamente.¡Bienvenido!")       
+            toast.remove();     
         }
     };
 
@@ -201,7 +200,7 @@ const FormRegisterCoffeelover = () => {
                         </div>
 
                         {/* Navigation buttons */}
-                        {
+                        {/* {
                             step === 0 && (
 
                                 <div className="mt-2 space-y-6">
@@ -234,7 +233,7 @@ const FormRegisterCoffeelover = () => {
                                 </div>
 
                             )
-                        }
+                        } */}
                         <motion.div
                             className=" m-5 flex justify-between"
                             initial={{ opacity: 0 }}
@@ -262,7 +261,7 @@ const FormRegisterCoffeelover = () => {
                                         className={`bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white ${step === 0 ? 'w-full' : 'bg-amber-600 hover:bg-amber-500'}`}
                                         data-testid="next-button"
                                         onClick={onNext} >
-                                        {step === 0 ? "Continuar registro manual" : "Siguiente"}
+                                        {step === 0 ? "Continuar registro" : "Siguiente"}
                                         {/* {isLoading ? "Cargando..." : "Siguiente"} */}
                                         <ArrowRight className="w-4 h-4 ml-2" />
                                     </Button>
