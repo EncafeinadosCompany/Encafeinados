@@ -40,6 +40,7 @@ import '@/common/styles/mapMarkers.css';
 import CafeDetail from '@/common/molecules/map/CafeDetail';
 import MapSidebar from '@/common/molecules/map/MapSidebar';
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
+import { createPortal } from 'react-dom';
 
 const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance}) => {
   const map = useMap();
@@ -885,7 +886,6 @@ return (
       resetFilters={resetFilters}
     />
 
-    {/* Filter Modal */}
     <FilterModal
       isOpen={isFilterModalOpen}
       onClose={toggleFilterModal}
@@ -895,14 +895,13 @@ return (
       availableTags={availableTags}
     />
 
-    {/* Toggle sidebar button (mobile) - increased z-index */}
     {!showSidebar && (
       <motion.button
         className="absolute bottom-16 right-4 z-[100] text-white bg-[#6F4E37] p-3 rounded-full shadow-lg md:hidden"
         onClick={() => {
           setShowSidebar(true);
           if (activeCafe) {
-            setActiveCafe(null); // Cerrar detalles al abrir la lista
+            setActiveCafe(null);
           }
         }}
         initial={{ scale: 0, rotate: -180 }}
@@ -915,42 +914,54 @@ return (
       </motion.button>
     )}
 
-    {/* Selected Cafe Popup/Details */}
     <AnimatePresence>
       {activeCafe && (
         <>
-          {/* Backdrop oscuro solo en desktop */}
-          {window.innerWidth >= 768 && (
-            <motion.div
-              className="fixed inset-0 bg-black/30 backdrop-blur-[2px] z-[199]"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={handleCloseDetails} // Cerrar al hacer clic en el backdrop
-            />
-          )}
-          
-          {/* Modal de detalles */}
+          {/* Backdrop oscuro para cerrar al hacer clic */}
           <motion.div
-            className="absolute left-0 right-0 bottom-0 md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[90%] lg:w-[80%] xl:w-[1000px] md:h-auto md:max-h-[90vh] bg-white md:rounded-2xl shadow-2xl z-[200] flex flex-col overflow-hidden"
-            initial={{ y: "100%", opacity: 0, scale: 0.9 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: "100%", opacity: 0, scale: 0.9 }}
-            transition={{ type: 'spring', damping: 30 }}
-            onClick={(e) => e.stopPropagation()} // Prevenir cierre al hacer clic dentro
+            className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-[9997]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleCloseDetails}
+          />
+          
+          {/* Contenedor del modal simplificado */}
+          <motion.div
+            className="fixed inset-0 z-[9998] flex items-end md:items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
           >
-            {activeCafeData && (
-              <CafeDetail
-                cafe={activeCafeData}
-                favorites={favorites}
-                toggleFavorite={toggleFavorite}
-                navigateToCafe={setupRoute}
-                startRoute={startRoute}
-                onClose={handleCloseDetails}
-                copyToClipboard={copyToClipboard}
-                copied={copied}
-              />
-            )}
+            <motion.div 
+              className="w-full md:w-[90%] lg:w-[80%] xl:w-[1000px] max-h-[90vh] bg-white md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: 'spring', damping: 30 }}
+            >
+              {/* Barra de arrastre con indicador visual */}
+              <div className="sticky top-0 w-full flex justify-center py-2 bg-white md:hidden z-10">
+                <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+              </div>
+              
+              {/* Wrapper para scroll */}
+              <div className="flex-1 overflow-hidden">
+                {activeCafeData && (
+                  <CafeDetail
+                    cafe={activeCafeData}
+                    favorites={favorites}
+                    toggleFavorite={toggleFavorite}
+                    navigateToCafe={navigateToCafe}
+                    startRoute={startRoute}
+                    onClose={handleCloseDetails}
+                    copyToClipboard={copyToClipboard}
+                    copied={copied}
+                  />
+                )}
+              </div>
+            </motion.div>
           </motion.div>
         </>
       )}
