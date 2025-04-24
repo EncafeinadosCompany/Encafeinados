@@ -126,7 +126,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     setIsCalculatingRoute: setIsRouteLoading,
     routeInfo,
     setRouteInfo,
-    routeCoordinates, // Añadir esto
+    routeCoordinates,
     clearRoute,
     isRouteActive
   } = useRouteNavigation();
@@ -984,6 +984,9 @@ return (
           isCalculating={isRouteLoading}
           onClose={handleCloseRouteControls}
           cafeName={activeCafeData.name}
+          origin={routeOrigin}
+          destination={routeDestination}
+          routeInfo={routeInfo}
         />
       )}
     </AnimatePresence>
