@@ -7,11 +7,8 @@ export const teamMembers = [
   { name: 'Juan Pablo', role: 'Backend Developer', imagenUrl: '/JuanPa.jpg', bio: 'Especialista en APIs y arquitectura.' },
 ];
 
-export const coLeaders = [
-  { name: 'Jader Rojas Jimenez', role: 'Co-fundador', imagenUrl: '/Diana.jpg', bio: 'Visionaria y estratega de negocios con pasión por el café colombiano.' },
-  { name: 'Alber Arango', role: 'Co-fundador', imagenUrl: '/Andres.jpg', bio: 'Innovador tecnológico con amplia experiencia en plataformas digitales.' },
-];
-
 export const partners = [
   { name: 'Santiago Herrera Velasquez', role: 'Lider tecnico', imagenUrl: '/Partner.jpg', bio: 'Empresa líder en la producción y distribución de café premium colombiano.' },
+  { name: 'Jader Rojas Jimenez', role: 'Co-fundador', imagenUrl: '/Diana.jpg', bio: 'Visionaria y estratega de negocios con pasión por el café colombiano.' },
+  { name: 'Alber Arango', role: 'Co-fundador', imagenUrl: '/Andres.jpg', bio: 'Innovador tecnológico con amplia experiencia en plataformas digitales.' },
 ];

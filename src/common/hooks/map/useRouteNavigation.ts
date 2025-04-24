@@ -25,10 +25,10 @@ const formatDuration = (minutes: number): string => {
   return `${hours} h ${remainingMinutes} min`;
 };
 
+export type TransportMode = 'walking' | 'cycling' | 'driving';
+
 export const useRouteNavigation = () => {
-  const [transportMode, setTransportMode] = useState<
-    "walking" | "cycling" | "driving"
-  >("walking");
+  const [transportMode, setTransportMode] = useState<TransportMode>('walking');
   const [origin, setOrigin] = useState<[number, number] | null>(null);
   const [destination, setDestination] = useState<[number, number] | null>(null);
   const [routeCoordinates, setRouteCoordinates] = useState<[number, number][]>(

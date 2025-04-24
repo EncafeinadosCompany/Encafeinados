@@ -11,7 +11,9 @@ interface RouteControlsProps {
   isCalculating: boolean;
   onClose: () => void;
   cafeName?: string;
-  routeInfo?: any; // Añadido para manejar la información de la ruta
+  origin?: [number, number] | null;
+  destination?: [number, number] | null;
+  routeInfo?: any | null;
 }
 
 const RouteControls: React.FC<RouteControlsProps> = ({
@@ -23,11 +25,32 @@ const RouteControls: React.FC<RouteControlsProps> = ({
   isCalculating,
   onClose,
   cafeName,
-  routeInfo // Añadido para manejar la información de la ruta
+  // Nuevas props
+  origin,
+  destination,
+  routeInfo
 }) => {
   if (!isActive) return null;
   
-  // Iconos para cada modo de transporte
+  const startNavigation = () => {
+    if (!origin || !destination) {
+      return;
+    }
+
+    const googleMapsModes = {
+      walking: 'walking',
+      cycling: 'bicycling',
+      driving: 'driving'
+    };
+    
+    const originCoords = `${origin[0]},${origin[1]}`;
+    const destinationCoords = `${destination[0]},${destination[1]}`;
+    
+    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${originCoords}&destination=${destinationCoords}&travelmode=${googleMapsModes[transportMode]}&dir_action=navigate`;
+    
+    window.open(googleMapsUrl, '_blank');
+  };
+
   const transportIcons = {
     walking: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -72,7 +95,6 @@ const RouteControls: React.FC<RouteControlsProps> = ({
         </button>
       </div>
 
-      {/* Datos de la ruta */}
       <div className="flex items-center gap-4 mb-5">
         <div className="flex items-center">
           <RouteIcon size={18} className="text-[#6F4E37] mr-2" />
@@ -100,7 +122,6 @@ const RouteControls: React.FC<RouteControlsProps> = ({
         </div>
       </div>
 
-      {/* Mensaje de error o cálculo de ruta */}
       {isCalculating ? (
         <div className="w-full p-3 bg-amber-50 rounded-lg text-center">
           <span className="text-amber-700 flex items-center justify-center gap-2">
@@ -119,7 +140,6 @@ const RouteControls: React.FC<RouteControlsProps> = ({
         </div>
       ) : null}
 
-      {/* Selector de modo de transporte */}
       <div className="flex justify-around border-t pt-4">
         {(['walking', 'cycling', 'driving'] as const).map((mode) => (
           <button
@@ -151,13 +171,13 @@ const RouteControls: React.FC<RouteControlsProps> = ({
         ))}
       </div>
 
-      {/* Botón de iniciar navegación - Lo implementaremos en el siguiente paso */}
       <button
         className="w-full mt-4 bg-[#6F4E37] hover:bg-[#5d4230] text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2"
-        // onClick={startNavigation} - Lo añadiremos después
+        onClick={startNavigation}
+        disabled={!origin || !destination || isCalculating}
       >
         <Navigation size={18} />
-        Iniciar navegación
+        Navegar con Google Maps
       </button>
     </motion.div>
   );
