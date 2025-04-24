@@ -17,11 +17,12 @@ const RoleRoute = ({ allowedRoles }: RouteProps) => {
 
     if (!allowedRoles.includes(userRole) && userRole === ROLES.COFFEE_LOVER) {
         toast.error("Te invitamos a iniciar sesión :)",{icon: "🔒", duration: 5000})
-        return <Navigate to="/login" replace />;
+        localStorage.removeItem("user")
+        return <Navigate to="/login" />;
       }
     
       if (!allowedRoles.includes(userRole)) {
-        return <Navigate to="/unauthorized" replace />;
+        return <Navigate to="/unauthorized"  />;
       }
     return <Outlet />
 }

@@ -13,10 +13,11 @@ import { renderSkeletons } from "@/common/molecules/adminStores/renderSkeletons"
 import { renderEmptyState } from "@/common/molecules/adminStores/renderEmtyState"
 import { AddBranchModal } from "@/common/molecules/adminStores/addBranches"
 import { BranchDetails } from "@/common/molecules/adminStores/branchDetails"
-import { CardHeaderBranches } from "@/common/molecules/adminStores/CardHeaderBranches"
+
 import { SearchBranches } from "@/common/molecules/adminStores/searchBranches"
 import { CardFooterBranches } from "@/common/molecules/adminStores/cardFooterBranches"
-import { useBranchApprovalDetails } from "@/api/queries/stores/branchesQueries"
+import { CardHeaderBranches } from "@/common/molecules/adminStores/cardHeaderBranches"
+
 
 
 export default function BranchManagement  ()  {

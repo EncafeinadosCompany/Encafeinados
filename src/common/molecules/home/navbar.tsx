@@ -13,9 +13,9 @@ export const Navbar: React.FC = () => {
   };
 
   const navLinks = [
-    { href: '/', label: 'Home', icon: <HomeIcon className="w-5 h-5" /> },
-    { href: '/about', label: 'About', icon: <InfoIcon className="w-5 h-5" /> },
-    { href: '/login', label: 'Login', icon: <UserIcon className="w-5 h-5" /> }
+    { href: '/', label: 'Inicio', icon: <HomeIcon className="w-5 h-5" /> },
+    { href: '/about', label: 'Acerca de', icon: <InfoIcon className="w-5 h-5" /> },
+    { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-5 h-5" /> }
   ];
 
   const mobileMenuVariants = {

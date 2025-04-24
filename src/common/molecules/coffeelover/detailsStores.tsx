@@ -4,6 +4,7 @@ import { DialogContent, DialogFooter } from "@/common/ui/dialog";
 import { Dispatch, SetStateAction, useState } from "react";
 import { MapPin, Mail, X, Coffee } from "@/common/ui/icons";
 import { GoToButton } from "@/common/atoms/map/GoToButton";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 
 interface detailsProps {
@@ -12,13 +13,14 @@ interface detailsProps {
 }
 
 export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
-  
+
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
+    <DialogContent aria-describedby={undefined} className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
         min-h-[73vh]  sm:max-h[90vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden 
         flex flex-col">
+      <DialogTitle className="hidden"></DialogTitle>
 
       {/* Close button */}
       <button
