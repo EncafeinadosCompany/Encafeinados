@@ -24,11 +24,13 @@ export const useRegisterCoffeloverMutation = () => {
         throw handleApiError(error)
       }
     },
+  
     onSuccess: (data, variable: RegisterCoffelover) => {
       useLonginMutation.mutate({
         email: data.client.person.user_email,
         password: variable.userData.password
       })
+
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error: any) => {
@@ -37,3 +39,5 @@ export const useRegisterCoffeloverMutation = () => {
     }
   })
 }
+
+

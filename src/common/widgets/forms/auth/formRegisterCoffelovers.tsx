@@ -69,6 +69,8 @@ const FormRegisterCoffeelover = () => {
     };
 
 
+
+
     const prevStep = () => {
         if (step > 0) {
             setDirection(-1);
@@ -94,6 +96,8 @@ const FormRegisterCoffeelover = () => {
 
         try {
             await useRegisterCoffeelover.mutateAsync(dataCoffeelover)
+            useRegisterCoffeelover.reset();
+            
         } catch (error) {
             console.log(error);
         }finally{
@@ -126,7 +130,7 @@ const FormRegisterCoffeelover = () => {
                 navigate("/completar-perfil");
             }
             setIsLoading(false);
-        
+            
         } catch (error) {
             setIsLoading(false);
         }
@@ -256,7 +260,6 @@ const FormRegisterCoffeelover = () => {
                                     <Button
                                         type="button"
                                         className={`bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white ${step === 0 ? 'w-full' : 'bg-amber-600 hover:bg-amber-500'}`}
-                                        // disabled={!methods.formState.isValid} 
                                         data-testid="next-button"
                                         onClick={onNext} >
                                         {step === 0 ? "Continuar registro manual" : "Siguiente"}

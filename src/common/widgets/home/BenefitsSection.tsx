@@ -60,7 +60,6 @@ export const BenefitsSection = () => {
     
   ];
 
-  // Variantes para animación 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -86,7 +85,6 @@ export const BenefitsSection = () => {
     }
   };
 
-  // Elemento decorativo de fondo
   const decorElements = [
     { top: '10%', left: '5%', size: 'w-24 h-24', opacity: 'opacity-5', delay: 0 },
     { top: '40%', right: '8%', size: 'w-40 h-40', opacity: 'opacity-10', delay: 0.4 },
@@ -95,7 +93,6 @@ export const BenefitsSection = () => {
 
   return (
     <section ref={ref} className="py-20 md:py-32 px-4 relative overflow-hidden bg-gradient-to-b from-white to-[#FAF3E0]">
-      {/* Elementos decorativos de fondo */}
       {decorElements.map((elem, i) => (
         <motion.div
           key={i}
@@ -120,7 +117,7 @@ export const BenefitsSection = () => {
       ))}
 
       <div className="max-w-7xl mx-auto relative">
-        {/* Encabezado con animación */}
+      
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -141,7 +138,7 @@ export const BenefitsSection = () => {
           </Text>
         </motion.div>
         
-        {/* Grid de beneficios con diseño escalonado */}
+      
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
           variants={containerVariants}

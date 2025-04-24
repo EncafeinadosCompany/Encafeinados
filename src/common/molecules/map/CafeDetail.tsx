@@ -219,10 +219,10 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
         className={`py-3 ${!hasManyNetworks ? "border-b border-gray-100" : ""}`}
       >
         <h4 className="font-medium text-[#2C1810] mb-2 flex items-center justify-between">
-          <span>Redes sociales</span>
+          <span>Social Networks</span>
           {hasManyNetworks && (
             <span className="text-xs text-[#6F4E37]/70">
-              {cafe.socialNetworks.length} disponibles
+              {cafe.socialNetworks.length} available
             </span>
           )}
         </h4>
@@ -276,7 +276,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 
         <button
           onClick={onClose}
-          aria-label="Cerrar detalles"
+          aria-label="Close details"
           className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors z-10"
         >
           <ArrowLeft size={20} className="text-[#6F4E37] transform rotate-45" />

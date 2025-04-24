@@ -117,7 +117,7 @@ export const LoginCard = (
                         </InputOTPGroup>
                       </InputOTP>
 
-                      {/* Mueve el botón fuera del flujo que interfiera */}
+                
                       {field.value !== "" && (
                         <button
                           type="button"
@@ -164,9 +164,6 @@ export const LoginCard = (
           </div>
         </CardContent>
       </Card>
-      {/* <div className="text-balance text-center text-xs text-gray-500 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-amber-600">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-      </div> */}
     </div>
   )
 }

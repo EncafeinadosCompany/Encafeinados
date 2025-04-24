@@ -13,74 +13,61 @@ import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutatio
 import { useCriteria } from "@/api/queries/stores/criteriaQueries"
 import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueries"
 import { RegisterStoreBrancheSchema, RegisterStoreBrancheSchemaType } from "@/common/utils/schemas/auth/registerStoreBrancheSchema"
-import RegisterStoreBrancheStep2 from "@/common/molecules/auth/stores/store/registerStoreBrancheStep2"
+
 import MapSearch from "../../map/mapSearch"
 import SocialNetworksForm from "./socialNetwork"
 import { validateImageRequirements } from "@/common/hooks/useCriteria"
 import { Branch } from "@/api/types/branchesTypes"
 import { useBranchApprovalDetails } from "@/api/queries/stores/branchesQueries"
+import { EditStoreBrancheSchema, EditStoreBrancheSchemaType } from "@/common/utils/schemas/auth/editStoreBrancheSchema"
 
 
-interface FormRegisterBrandsProps {
+interface FormEditBrandsProps {
     onClose: () => void
+    data?: Branch | null
+  
 }
 
-const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
+const FormEditBrands = ({ onClose, data}: FormEditBrandsProps) => {
     const [direction, setDirection] = useState(0);
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
     const [baseAddress, setBaseAddress] = useState("");
-    const useBranchesMutation = useRegisterBrandMutation();
-    const { data: criteria } = useCriteria();
     const { data: socialNetworks } = useSocialNetworksQuery();
- 
+    const {data: criteriaDetais} = useBranchApprovalDetails(data?.id || undefined)
 
 
     const storeId = localStorage.getItem("storeOrBranchId");
 
 
+   console.log('setalles',criteriaDetais)
 
-    const methods = useForm<RegisterStoreBrancheSchemaType>({
-        resolver: zodResolver(RegisterStoreBrancheSchema[step] as any),
+    const methods = useForm<EditStoreBrancheSchemaType>({
+        resolver: zodResolver(EditStoreBrancheSchema[step] as any),
         defaultValues: {
-            name:  "",
-            phone_number: "",
-            address: "",
-            latitude:  0,
-            longitude:  0,
-            addressDetails: "", 
+            name: data?.name || "",
+            phone_number: data?.phone_number || "",
+            address: data?.address || "",
+            latitude: data?.latitude || 0,
+            longitude: data?.longitude || 0,
+            addressDetails: "",
+            social_networks: data?.social_branches?.map(branch => ({
+                value: branch.value,
+                social_network_id: socialNetworks?.social.filter((b)=> b.name === branch.social_network_id)[0]?.id || 0,
+                description: branch.description
+                
+            }))|| []  
+            
         },
         mode: "onChange",
     })
 
    
-    
-
-    useEffect(() => {
-        if (criteria && Object.keys(methods.getValues("criteria") || {}).length === 0) {
-            methods.setValue("criteria", criteria.reduce((acc, c) => {
-                acc[String(c.id)] = {
-                    response_text: "",
-                    image_url: undefined,
-                };
-                return acc;
-            }, {} as Record<string, { response_text: string; image_url?: string; other_text?: string }>));
-        }
-    }, [criteria, methods]);
-
 
     const onNext = () => {
         methods.trigger(undefined, { shouldFocus: false }).then((isValid) => {
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
-
-                if (step === 1) {
-                    const error = validateImageRequirements(Array.isArray(criteria) ? criteria : [], methods.getValues("criteria"));
-                    if (error) {
-                        toast.error(error);
-                        return;
-                    }
-                }
                 setStep((prev) => prev + 1)
             }
         })
@@ -90,6 +77,8 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
         const finalData = { ...formData, ...data };
         const social = finalData.social_networks || [];
 
+
+        console.log('finalData',finalData)
         if (!social.length) {
             toast.error("Debes agregar al menos una red social.");
             return;
@@ -107,9 +96,10 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                 social_branches: finalData.social_networks,
                 criteria: finalData.criteria
             }
-
-            await useBranchesMutation.mutateAsync(data)
-            onClose();
+            
+            console.log('data',data)
+            // await useBranchesMutation.mutateAsync(data)
+            // onClose();
         }
         catch (error) {
             toast.error("Error al registrar la sucursal");
@@ -121,7 +111,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
         methods.setValue("latitude", lat, { shouldValidate: true });
         methods.setValue("longitude", lng, { shouldValidate: true });
         methods.setValue("address", address, { shouldValidate: true });
-        setBaseAddress(address);
+        setBaseAddress(data?.address || address);
     }
 
     return (
@@ -147,21 +137,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                         </RegisterBranchesStep1>
                                     )}
                                     {
-                                        step === 1 &&  (
-                                            <div className="max-h-[50vh] sm:max-h-[55vh] md:max-h-[60vh] lg:max-h-[65vh] xl:max-h-[70vh] 
-                                                overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300/50 hover:scrollbar-thumb-amber-400 
-                                                scrollbar-track-transparent px-2 sm:px-4 md:px-6 lg:px-8 
-                                                pb-4 transition-all duration-300 rounded-md">
-                                                <RegisterStoreBrancheStep2
-                                                    methods={methods}
-                                                    criteria={criteria || []}
-                                                ></RegisterStoreBrancheStep2>
-                                            </div>
-
-                                        )
-                                    }
-                                    {
-                                        step === 2 && (
+                                        step === 1 && (
 
                                             <MapSearch
                                                 initialAddress={baseAddress}
@@ -172,7 +148,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                         )
                                     }
                                     {
-                                        step === 3 && (
+                                        step === 2 && (
 
                                             <RegisterBranchesStep3
                                                 register={methods.register}
@@ -181,7 +157,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                             </RegisterBranchesStep3>
                                         )
                                     }{
-                                        step === 4 && (
+                                        step === 3 && (
                                             <div className="max-h-[50vh] sm:max-h-[55vh] md:max-h-[60vh] lg:max-h-[65vh] xl:max-h-[70vh] 
                                                 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300/50 hover:scrollbar-thumb-amber-400 
                                                 scrollbar-track-transparent px-2 sm:px-4 md:px-6 lg:px-8 
@@ -190,6 +166,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                                     register={methods.register}
                                                     control={methods.control}
                                                     availableSocialNetworks={socialNetworks}
+                                                    idSocialNetworks={data?.social_branches}
                                                 >
                                                 </SocialNetworksForm>
                                             </div>
@@ -215,7 +192,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                 ) : (
                                     <div></div>
                                 )}
-                                {step < RegisterStoreBrancheSchema.length - 1 ? (
+                                {step < EditStoreBrancheSchema.length - 1 ? (
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                         <Button type="button" onClick={onNext} className="bg-gray-900 hover:bg-gray-800 rounded-lg px-6 py-2 text-white">
                                             Siguiente
@@ -246,4 +223,4 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
     )
 }
 
-export default FormRegisterBrands 
+export default FormEditBrands 

@@ -94,7 +94,7 @@ export const Navbar: React.FC = () => {
           </motion.span>
         </Link>
 
-        {/* Navegación Desktop */}
+        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
           {navLinks.map((link) => (
             <motion.div

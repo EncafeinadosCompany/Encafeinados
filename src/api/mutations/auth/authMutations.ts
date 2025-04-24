@@ -6,6 +6,7 @@ import AuthClient from '../../client/axios'
 import { handleApiError } from '@/common/utils/errors/handleApiError'
 import { useAuth } from '@/common/hooks/auth/useAuth'
 import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 
  
 
@@ -47,6 +48,8 @@ export const useLoginMutation = () => {
 
        pagesPermissions(data.user.role, navigate)
 
+       toast.success("Inicio de sesión exitoso");
+
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error: any) => {
@@ -54,6 +57,8 @@ export const useLoginMutation = () => {
     }
   });
 }
+
+
 
 export const useLoginGoogleMutation = () => {
   return useMutation({

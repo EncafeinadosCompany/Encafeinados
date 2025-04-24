@@ -53,8 +53,7 @@ export const Footer = ({ sections }: FooterProps) => {
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       sectionIds.forEach(id => {
-        const element = document.getElementById(id);
-        console.log(`Sección "${id}": ${element ? 'Encontrada' : 'NO ENCONTRADA'}`);
+        document.getElementById(id);
       });
     }
   }, [sectionIds]);

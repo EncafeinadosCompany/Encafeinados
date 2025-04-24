@@ -52,7 +52,7 @@ export const FeaturedCarouselStores = ({branches, searchTerm, handleSearchChange
           </div>
         ) : (
           <Carousel
-          className="flex justify-center items-center touch-pan-y"
+          className="flex flex-col touch-pan-y will-change-transform"
           opts={{ 
             loop: true, 
             align: "center",
@@ -61,16 +61,17 @@ export const FeaturedCarouselStores = ({branches, searchTerm, handleSearchChange
           }}
             setApi={(api) => (carouselRef.current = api)}
           >
-            <div className="relative w-full">
+            <div className="relative w-full flex items-center lg:px-15">
               <CarouselContent className="cursor-grab active:cursor-grabbing">
                 {filteredBranches.map((branch) => (
-                  <CarouselItem key={branch.id} className="basis-4/5 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4 touch-pan-x">
+                  <CarouselItem key={branch.id} className="basis-4/5 sm:basis-1/2 lg:basis-1/3 pl-2 touch-pan-x">
                     <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.4 }}
-                      className="touch-pan-x"
+                      transition={{ duration: 0.5 }}
+                      className="touch-pan-x px-1"
+                      layout={false} 
                     >
                       <FeaturedCard
                         branches={branch}        

@@ -97,13 +97,13 @@ export function BranchCard({ branch, onViewDetails, onEdit, index = 0 }: BranchC
                 {branch.social_branches.map((socialBranch, idx) => (
                   <a 
                     key={idx}
-                    href={socialBranch.url} 
+                    href={socialBranch.value} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-2 py-1 bg-[#F5E4D2]/50 rounded-md border border-[#F5E4D2] text-xs text-[#A67C52] hover:bg-[#F5E4D2] transition-colors"
                   >
                     <Globe className="h-3 w-3 text-[#DB8935]" />
-                    {socialBranch.social_network_name || "Red social"}
+                    {socialBranch.description || "Red social"}
                   </a>
                 ))}
               </div>
