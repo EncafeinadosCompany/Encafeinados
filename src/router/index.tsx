@@ -59,28 +59,16 @@ const AuthRoutes = () => {
             <Route path="/register" element={<CuestionCard />} />
             <Route path="/google/callback" element={<GoogleCallback />} />
             <Route path="/registerWithGoogle" element={<GoogleWithRegister />} />
-            <Route
-              path="/coffee-lover-registration"
-              element={<RegisterCoffeloverPage />}
-            />
+            <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />}/>
             <Route path="/store-registration" element={<RegisterStorePage />} />
-            <Route
-              path="/stores-registration/branches/:storeId"
-              element={<RegisterStoreBranches />}
-            />
+            <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches />}/>
             <Route path="/completar-perfil" element={<CompleteProfile />} />
-            <Route
-              index
-              path="/finish-admin-registration"
-              element={<FinishAdminRegistration />}
-            />
+            <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />}/>
             <Route path="/404" element={<NotFound />} />
 
             {/* PRIVATE ROUTES  */}
             <Route element={<PrivateRoute />}>
-              <Route
-                element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}
-              >
+              <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
                 <Route path="/coffeelover" element={<HomeCoffeelover />}>
                   <Route index element={<PrincipalCoffeelover />} />
                   <Route path="map-coffelover" element={<MapView />} />

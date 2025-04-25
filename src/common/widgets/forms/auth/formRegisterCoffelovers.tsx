@@ -200,7 +200,7 @@ const FormRegisterCoffeelover = () => {
                         </div>
 
                         {/* Navigation buttons */}
-                        {
+                        {/* {
                             step === 0 && (
 
                                 <div className="mt-2 space-y-6">
@@ -233,7 +233,7 @@ const FormRegisterCoffeelover = () => {
                                 </div>
 
                             )
-                        }
+                        } */}
                         <motion.div
                             className=" m-5 flex justify-between"
                             initial={{ opacity: 0 }}
