@@ -32,9 +32,14 @@ export const useCreateAlbumMutation = () => {
       }
     },
     onSuccess: (data) => {
+      console.log("Respuesta del servidor:", data);
+      
       queryClient.invalidateQueries({ queryKey: ['albums'] });
-      if (data.id) {
+      
+      if (data && typeof data === 'object' && 'id' in data) {
         queryClient.invalidateQueries({ queryKey: ['album', data.id] });
+      } else {
+        console.warn("La respuesta del servidor no tiene el formato esperado:", data);
       }
     },
     onError: (error: any) => {
