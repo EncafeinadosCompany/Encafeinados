@@ -286,7 +286,7 @@ export const ListAlbumWidget = () => {
 
             {/* Album Detail Dialog */}
             <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-                <DialogContent className="sm:max-w-3xl bg-white border-none">
+                <DialogContent className="sm:max-w-3xl bg-white border-none h-[80vh] sm:h-[80vh] overflow-y-auto">
                     {selectedAlbum && (
                         <>
                             <DialogHeader>
@@ -325,7 +325,7 @@ export const ListAlbumWidget = () => {
 
                                     <div className="mt-4 space-y-3">
                                         <div>
-                                            <h3 className="text-sm font-medium text-gray-500">Periodo</h3>
+                                            <h3 className="text-sm font-medium text-gray-500">Período</h3>
                                             <p className="text-gray-900">
                                                 {formatDate(selectedAlbum.start_date)}
                                                 {selectedAlbum.end_date && ` - ${formatDate(selectedAlbum.end_date)}`}

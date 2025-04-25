@@ -58,14 +58,14 @@ export const LoginCard = (
                 <h1 className="text-2xl font-bold text-amber-800">{t("¡Bienvenido!")}</h1>
                 <p className="text-balance text-muted-foreground text-sm text-gray-600 mt-2">Inicia sesión Encafeinados</p>
               </div>
-              {/* <ButtonGoogle
+              <ButtonGoogle
                 variant="outline"
                 onClick={onGoogleSignIn}
                 disabled={isLoading}
                 className="border-amber-200 hover:bg-amber-50 text-amber-900"
               >
                 Iniciar sesión con Google
-              </ButtonGoogle> */}
+              </ButtonGoogle>
               <div className="relative flex items-center justify-center">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-900"></div>

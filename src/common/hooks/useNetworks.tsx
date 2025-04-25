@@ -4,7 +4,7 @@ import { LinkIcon, Mail, Phone, User } from "lucide-react";
 export const UseNetworkInputConfig = (networkName: string) => {
     const lowerName = networkName?.toLowerCase() || '';
     
-    if (lowerName.includes('whatsaap')) {
+    if (lowerName.includes('whatsapp')) {
         return {
             icon: <Phone className="h-3.5 w-3.5 text-muted-foreground" />,
             label: "Número de teléfono",

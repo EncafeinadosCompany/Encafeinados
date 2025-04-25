@@ -20,7 +20,7 @@ const googleProvider = new GoogleAuthProvider();
 
 
 
-export const registerWithGoogle = async () => {
+export const RegisterWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const credential = GoogleAuthProvider.credentialFromResult(result);

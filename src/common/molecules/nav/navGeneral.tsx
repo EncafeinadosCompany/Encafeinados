@@ -182,7 +182,7 @@ export const NavGeneral = ({
                     isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
                   )}
                 >
-                  Logout
+                  Salir
                 </span>
               </Link>
             </div>
@@ -226,7 +226,7 @@ export const NavGeneral = ({
                 onClick={clearAuthStorage}
               >
                 <LogOutIcon className="h-4 w-4 m-1" />
-                <span className="text-[10px] font-medium">Exit</span>
+                <span className="text-[10px] font-medium">Salir</span>
               </Link>
             </nav>
           </div>

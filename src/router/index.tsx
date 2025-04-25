@@ -3,6 +3,7 @@ import { lazy, Suspense } from "react";
 import { ROLES } from "@/common/utils/lists/roles";
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
+import GoogleWithRegister from "@/common/hooks/registerWithGoogle";
 
 // LAYOUTS
 const LoadingSpinner = lazy(() => import("@/common/atoms/LoadingSpinner"));
@@ -57,6 +58,7 @@ const AuthRoutes = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<CuestionCard />} />
             <Route path="/google/callback" element={<GoogleCallback />} />
+            <Route path="/registerWithGoogle" element={<GoogleWithRegister />} />
             <Route
               path="/coffee-lover-registration"
               element={<RegisterCoffeloverPage />}

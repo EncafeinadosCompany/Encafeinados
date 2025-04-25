@@ -19,9 +19,12 @@ const GoogleCallback = () => {
         return;
       }
 
+      console.log(tokenResponse);
+
+
       try {
         const userData = JSON.parse(decodeURIComponent(userDataParam));
-
+        
         setAuthStorageGoogle(tokenResponse, userData);
         toast.success("Inicio de sesión exitoso");
         navigate("/coffeelover");
