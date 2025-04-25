@@ -192,7 +192,7 @@ export const ListAlbumWidget = () => {
                 {currentAlbums.map((album: AlbumResponse) => (
                     <Card key={album.id} className="overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                         {/* Card content remains the same */}
-                        <div className="relative h-48 w-full bg-gray-100">
+                        <div className="relative h-40 w-full bg-gray-100">
                             {album.logo ? (
                                 <img
                                     src={album.logo}
@@ -286,7 +286,7 @@ export const ListAlbumWidget = () => {
 
             {/* Album Detail Dialog */}
             <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-                <DialogContent className="sm:max-w-3xl bg-white border-none">
+                <DialogContent className="sm:max-w-3xl bg-white border-none h-[80vh] sm:h-[85vh] overflow-y-auto">
                     {selectedAlbum && (
                         <>
                             <DialogHeader>
@@ -308,7 +308,7 @@ export const ListAlbumWidget = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                                 <div>
-                                    <div className="relative h-64 w-full bg-gray-100 rounded-lg overflow-hidden">
+                                    <div className="relative h-64 w-full bg-white rounded-lg overflow-hidden">
                                         {selectedAlbum.logo ? (
                                             <img
                                                 src={selectedAlbum.logo}
@@ -325,7 +325,7 @@ export const ListAlbumWidget = () => {
 
                                     <div className="mt-4 space-y-3">
                                         <div>
-                                            <h3 className="text-sm font-medium text-gray-500">Periodo</h3>
+                                            <h3 className="text-sm font-medium text-gray-500">Período</h3>
                                             <p className="text-gray-900">
                                                 {formatDate(selectedAlbum.start_date)}
                                                 {selectedAlbum.end_date && ` - ${formatDate(selectedAlbum.end_date)}`}
@@ -366,16 +366,6 @@ export const ListAlbumWidget = () => {
                                         )}
                                     </div>
                                 </div>
-                            </div>
-
-                            <div className="flex justify-end space-x-3 mt-6">
-                                <button
-                                    onClick={() => setIsDetailOpen(false)}
-                                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                                >
-                                    Cerrar
-                                </button>
-
                             </div>
                         </>
                     )}

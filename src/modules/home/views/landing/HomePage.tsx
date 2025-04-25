@@ -4,6 +4,7 @@ import { BenefitsSection } from "@/common/widgets/home/BenefitsSection";
 import { Footer } from "@/common/widgets/home/Footer";
 import { MapTeaser } from "@/common/molecules/home/MapTeaser";
 import { Navbar } from "@/common/molecules/home/navbar";
+import { useApprovedBranches } from "@/api/queries/stores/branchesQueries";
 
 const HomePage = () => {
   const homeSections = [
@@ -12,6 +13,9 @@ const HomePage = () => {
     { name: 'Tiendas', id: 'stores' },
     { name: 'Beneficios', id: 'benefits' }
   ];
+
+
+  const {data} = useApprovedBranches();
 
   return (
     <main className="min-h-screen bg-[#FAF3E0] relative overflow-x-hidden">
@@ -22,7 +26,7 @@ const HomePage = () => {
         </section>
 
         <section id="map" className="scroll-mt-20 min-h-[50vh]">
-          <MapTeaser totalCafes={45} city="Medellín" />
+          <MapTeaser totalCafes={data?.length|| 0} city="Medellín" />
         </section>
 
         <section id="stores" className="scroll-mt-20 min-h-[50vh]">

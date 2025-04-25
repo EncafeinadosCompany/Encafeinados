@@ -1,3 +1,5 @@
+import { Linkedin } from "lucide-react";
+
 export const teamMembers = [
   { name: 'Santiago Florez', role: 'Frontend Developer', imagenUrl: '/Santi.png', bio: 'Lider y desarrollo frontend con React.' },
   { name: 'Valentina Córdoba', role: 'Frontend Developer', imagenUrl: '/Valen.jpg', bio: 'Experta en diseño de experiencias de usuario y componentes interactivos.' },
@@ -8,7 +10,7 @@ export const teamMembers = [
 ];
 
 export const partners = [
-  { name: 'Santiago Herrera Velasquez', role: 'Lider tecnico', imagenUrl: '/Partner.jpg', bio: 'Empresa líder en la producción y distribución de café premium colombiano.' },
+  { name: 'Santiago Herrera Velasquez', role: 'Lider tecnico', imagenUrl: '/Lider.jpg', bio: 'Software Engineer | Backend developer | Tech lead', linkedin: 'www.linkedin.com/in/s-herrera-v/' },
   { name: 'Jader Rojas Jimenez', role: 'Co-fundador', imagenUrl: '/Diana.jpg', bio: 'Visionaria y estratega de negocios con pasión por el café colombiano.' },
   { name: 'Alber Arango', role: 'Co-fundador', imagenUrl: '/Andres.jpg', bio: 'Innovador tecnológico con amplia experiencia en plataformas digitales.' },
 ];

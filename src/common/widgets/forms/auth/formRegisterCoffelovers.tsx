@@ -9,7 +9,7 @@ import { Button } from "@/common/ui/button";
 import { ButtonGoogle } from "@/common/atoms/buttonGoogle";
 import { TitleForm } from "@/common/atoms/auth/titleForm";
 
-import { registerWithGoogle } from "@/api/firebase";
+import { RegisterWithGoogle } from "@/api/firebase";
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
@@ -108,7 +108,7 @@ const FormRegisterCoffeelover = () => {
 
     const handleGoogleSignIn = async () => {
         try {
-            const { user, token, isNewUser } = await registerWithGoogle();
+            const { user, token, isNewUser } = await RegisterWithGoogle();
             const userData: RegisterCoffelover = {
                 userData: {
                     id_google: user.providerData[0]?.uid,

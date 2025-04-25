@@ -18,7 +18,7 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
 
   return (
     <DialogContent aria-describedby={undefined} className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
-        h-[73vh]  sm:max-h[90vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden 
+        h-[73vh]  sm:h-[90vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden 
         flex flex-col">
       <DialogTitle className="hidden"></DialogTitle>
 
@@ -31,7 +31,7 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
         <X className="h-5 w-5" />
       </button>
 
-      <div className="relative w-full h-48 sm:h-56 md:h-64 overflow-hidden flex-shrink-0">
+      <div className="relative w-full h-48 sm:h-56 md:h-60 overflow-hidden flex-shrink-0">
         <div className={`absolute inset-0 bg-[#8B5A2B]/20 backdrop-blur-sm flex items-center justify-center transition-opacity duration-500 ${imageLoaded ? 'opacity-0' : 'opacity-100'}`}>
           <Coffee className="h-10 w-10 text-[#8B5A2B] animate-pulse" />
         </div>
