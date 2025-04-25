@@ -56,7 +56,8 @@ export {
     Copy,
      Map,
      ChevronDown,
-     Building
+     Building,
+     Album
      
 
 

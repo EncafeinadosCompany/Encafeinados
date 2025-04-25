@@ -23,10 +23,11 @@ const FinishAdminRegistration = lazy(() =>import("@/modules/stores/adminStores/c
 // STORES
 const HomeStores = lazy(() => import("@/modules/stores/adminStores/views/homeStores"));
 const BranchManagement= lazy(() => import("@/common/widgets/adminStores/branchManagement"));
-const PendingBranchesView = lazy(() => import("@/modules/adminStores/components/PendingBranchesList"));
 
 // ADMIN STORES
 const HomeAdminStores = lazy(() => import("@/modules/adminStores/views/homeAdmin"));
+const PendingBranchesView = lazy(() => import("@/modules/adminStores/components/PendingBranchesList"));
+const AlbumManager = lazy(() => import("@/modules/adminStores/components/AlbumManager"));
 
 // COFFEELOVER
 const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/homeCoffeelovers"));
@@ -94,6 +95,7 @@ const AuthRoutes = () => {
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
                 <Route path="/admin" element={<HomeAdminStores />}>
                   <Route index element={<PendingBranchesView />} />
+                  <Route path="albums" element={<AlbumManager />}></Route>
                 </Route>
               </Route>
             </Route>
