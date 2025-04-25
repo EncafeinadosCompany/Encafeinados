@@ -11,8 +11,8 @@ interface BranchCardProps {
     name: string;
     address?: string;
     status: string;
-    latitude?: number;  // Hacer opcional
-    longitude?: number; // Hacer opcional
+    latitude?: number; 
+    longitude?: number;
     phoneNumber?: string;
     store_logo?: string;
     store_email?: string;
@@ -99,7 +99,7 @@ export const BranchCard = ({ branch, index, onView, onApprove, onReject, type }:
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={handleApprove} // Añadido el onClick
+                          onClick={handleApprove} 
                           className="h-7 w-7 text-green-600 hover:bg-green-50/50 hover:text-green-700"
                         >
                           <CheckCircle2 className="h-3.5 w-3.5" />
@@ -110,21 +110,7 @@ export const BranchCard = ({ branch, index, onView, onApprove, onReject, type }:
                       </TooltipContent>
                     </Tooltip>
 
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={handleReject} // Añadido el onClick
-                          className="h-7 w-7 text-red-600 hover:bg-red-50/50 hover:text-red-700"
-                        >
-                          <XCircle className="h-3.5 w-3.5" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent side="bottom" className="text-xs font-medium bg-red-50 text-red-700 border-red-200 no-arrow">
-                        Rechazar sucursal
-                      </TooltipContent>
-                    </Tooltip>
+                  
                   </>
                 )}
               </TooltipProvider>
