@@ -213,9 +213,9 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, isSubmitting }) => {
               <Calendar
                 mode="single"
                 selected={watch("start_date")}
-                onSelect={(date) => setValue("start_date", date || new Date())}
-                initialFocus
+                onSelect={(date: Date | null) => setValue("start_date", date || new Date())}
                 classNames={{
+                  
                   day_selected: "bg-[#6F4E37] text-white",
                   day_today: "bg-amber-100 text-[#2C1810]",
                 }}
@@ -250,8 +250,7 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, isSubmitting }) => {
               <Calendar
                 mode="single"
                 selected={watch("end_date")}
-                onSelect={(date) => setValue("end_date", date || new Date())}
-                initialFocus
+                onSelect={(date: Date | null) => setValue("end_date", date || new Date())}
                 classNames={{
                   day_selected: "bg-[#6F4E37] text-white",
                   day_today: "bg-amber-100 text-[#2C1810]",
