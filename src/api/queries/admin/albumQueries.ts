@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import AuthClient from "@/api/client/axios";
-import { AlbumResponse, AlbumsResponse } from "@/api/types/albumTypes";
-import { AxiosResponse } from "axios";
+import { AlbumResponse} from "@/api/types/albumTypes";
+
 
 const authClient = new AuthClient();
 
@@ -11,14 +11,13 @@ export const useAlbumsQuery = () => {
     queryFn: async () => {
       
       try {
-        const response: AxiosResponse<AlbumsResponse> = await authClient.get('/albums');
-        
-        
-        const albums = response.data;
+        const response = await authClient.get('/albums');
+        const albums = response;
         
         if (!Array.isArray(albums)) {
           return [];
         }
+        console.log("✅ Álbumes obtenidos:", albums); 
         
         return albums;
         
