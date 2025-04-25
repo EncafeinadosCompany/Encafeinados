@@ -7,6 +7,11 @@ interface Member {
   role: string;
   imagenUrl?: string;
   bio?: string;
+  // Enlaces a redes sociales (opcionales)
+  linkedin?: string;
+  twitter?: string;
+  website?: string;
+  coffee?: string; // Perfil especializado de café o sitio personal
 }
 
 interface TeamCardProps {
@@ -22,24 +27,20 @@ export const TeamCard: React.FC<TeamCardProps> = ({ members, variant = 'develope
     return <div className="text-center py-8 text-[#6F4E37]">No hay miembros para mostrar.</div>;
   }
 
-  // Control de miembros visibles con configuración por variante
   const initialVisible = variant === 'partners' ? 4 : 8;
   const showExpandButton = members.length > initialVisible;
   const visibleMembers = expanded ? members : showExpandButton ? members.slice(0, initialVisible) : members;
 
-  // Manejar clic en miembro para expandir detalles
   const handleMemberClick = (member: Member) => {
     setSelectedMember(member);
   };
 
-  // Cerrar modal de detalles
   const closeDetails = () => {
     setSelectedMember(null);
   };
 
   return (
     <div className="w-full relative">
-      {/* Grid de perfiles circulares */}
       <div className="w-full mx-auto max-w-6xl">
         <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-8">
           {visibleMembers.map((member, index) => (
@@ -54,7 +55,6 @@ export const TeamCard: React.FC<TeamCardProps> = ({ members, variant = 'develope
         </div>
       </div>
       
-      {/* Botón "Ver más" */}
       {showExpandButton && (
         <div className="mt-8 text-center">
           <button
@@ -76,7 +76,6 @@ export const TeamCard: React.FC<TeamCardProps> = ({ members, variant = 'develope
         </div>
       )}
 
-      {/* Modal de detalles del miembro seleccionado */}
       <AnimatePresence>
         {selectedMember && (
           <motion.div 
@@ -147,12 +146,49 @@ export const TeamCard: React.FC<TeamCardProps> = ({ members, variant = 'develope
                   </p>
                 )}
                 
-                {/* Íconos de redes sociales */}
-                <div className="flex justify-center gap-3 mt-6">
-                  <SocialButton icon={<Linkedin size={18} />} color="#0077B5" />
-                  <SocialButton icon={<Twitter size={18} />} color="#1DA1F2" />
-                  <SocialButton icon={<Globe size={18} />} color="#6F4E37" />
-                  <SocialButton icon={<Coffee size={18} />} color="#D4A76A" />
+                {/* Reemplaza la sección actual de botones sociales */}
+                {/* Sección de redes sociales dinámica */}
+                <div className="mt-6">
+                  {(selectedMember.linkedin || selectedMember.twitter || selectedMember.website || selectedMember.coffee) ? (
+                    <div className="flex justify-center gap-3">
+                      {selectedMember.linkedin && (
+                        <SocialButton 
+                          icon={<Linkedin size={18} />} 
+                          color="#0077B5" 
+                          href={selectedMember.linkedin} 
+                          label={`LinkedIn de ${selectedMember.name}`}
+                        />
+                      )}
+                      {selectedMember.twitter && (
+                        <SocialButton 
+                          icon={<Twitter size={18} />} 
+                          color="#1DA1F2" 
+                          href={selectedMember.twitter} 
+                          label={`Twitter de ${selectedMember.name}`}
+                        />
+                      )}
+                      {selectedMember.website && (
+                        <SocialButton 
+                          icon={<Globe size={18} />} 
+                          color="#6F4E37" 
+                          href={selectedMember.website} 
+                          label={`Sitio web de ${selectedMember.name}`}
+                        />
+                      )}
+                      {selectedMember.coffee && (
+                        <SocialButton 
+                          icon={<Coffee size={18} />} 
+                          color="#D4A76A" 
+                          href={selectedMember.coffee} 
+                          label={`Perfil de café de ${selectedMember.name}`}
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-center text-gray-400 text-sm italic">
+                      No hay redes sociales disponibles
+                    </p>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -217,7 +253,6 @@ const CircleProfile = ({ member, index, variant, onClick }: CircleProfileProps) 
             </div>
           )}
           
-          {/* Efecto de superposición al hover */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#2C1810]/70 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
             <span className="text-white text-xs font-medium bg-[#D4A76A]/60 backdrop-blur-sm px-2 py-0.5 rounded-full">
               Ver perfil
@@ -239,14 +274,30 @@ const CircleProfile = ({ member, index, variant, onClick }: CircleProfileProps) 
 interface SocialButtonProps {
   icon: React.ReactNode;
   color: string;
+  href: string;
+  label: string;
 }
 
-const SocialButton = ({ icon, color }: SocialButtonProps) => (
-  <a 
-    href="#" 
-    className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-200 hover:border-[#D4A76A] transition-colors duration-300"
-    style={{ color }}
-  >
-    {icon}
-  </a>
-);
+const SocialButton = ({ icon, color, href, label }: SocialButtonProps) => {
+  const formattedHref = href.startsWith('http') ? href : `https://${href}`;
+
+  return (
+    <motion.a 
+      href={formattedHref} 
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-200 hover:border-[#D4A76A] transition-colors duration-300"
+      style={{ color }}
+      whileHover={{ 
+        scale: 1.1, 
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+        backgroundColor: "rgba(255, 255, 255, 0.9)"
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+    >
+      {icon}
+      <span className="sr-only">{label}</span>
+    </motion.a>
+  );
+};

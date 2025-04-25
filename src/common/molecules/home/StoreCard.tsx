@@ -2,41 +2,27 @@ import React, { useState, memo } from 'react';
 import { Card, CardContent } from '@/common/ui/card';
 import { Text } from '@/common/atoms/Text';
 import { Coffee, MapPin, Heart, Mail, Phone } from '@/common/ui/icons';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';  
 import { Link } from 'react-router-dom';
 
 interface StoreCardProps {
   id: number;
   name: string;
   imageUrl: string;
-  distance?: string;
   email: string;
   phone: string;
   description?: string;
 }
 
 const cardVariants = {
-  hover: {
-    y: -8,
-    transition: { duration: 0.3, ease: "easeOut" }
-  },
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 }
 };
 
-const imageVariants = {
-  hover: { scale: 1.1, filter: 'brightness(1.05)' },
-  normal: { scale: 1, filter: 'brightness(1)' }
-};
-
-const buttonVariants = {
-  hover: { scale: 1.03, boxShadow: "0 4px 12px rgba(111, 78, 55, 0.25)" },
-  tap: { scale: 0.97 }
-};
-
-export const StoreCard = memo(({ id,name,imageUrl,distance,email,phone, description = "Descubre sabores excepcionales y momentos únicos en nuestro espacio."}:
-  
-  StoreCardProps) => {
+export const StoreCard = memo(({ 
+  id, name, imageUrl, email, phone, 
+  description = "Descubre sabores excepcionales y momentos únicos en nuestro espacio."
+}: StoreCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -45,17 +31,15 @@ export const StoreCard = memo(({ id,name,imageUrl,distance,email,phone, descript
     setIsFavorite(prev => !prev);
   };
 
-
   const specialties = ["Café de origen", "Métodos artesanales", "Pasteles caseros"];
 
   return (
     <motion.div
       variants={cardVariants}
-      whileHover="hover"
       initial="initial"
       animate="animate"
       transition={{ duration: 0.4 }}
-      className="h-full"
+      className={`h-full transition-transform duration-300 ${isHovered ? 'translate-y-[-8px]' : ''}`}
     >
       <Card
         className="overflow-hidden h-full bg-white rounded-2xl border-0 shadow-md hover:shadow-lg transition-shadow duration-300"
@@ -63,53 +47,32 @@ export const StoreCard = memo(({ id,name,imageUrl,distance,email,phone, descript
         onMouseLeave={() => setIsHovered(false)}
       >
         <CardContent className="p-0 flex flex-col h-full">
-
           <div className="relative h-48 sm:h-52 overflow-hidden rounded-t-2xl">
-            {/* Gradiente superior */}
             <div className="absolute top-0 left-0 w-full h-16 bg-gradient-to-b from-black/40 to-transparent z-10"></div>
 
-            {/* Imagen con animación optimizada */}
-            <motion.img 
+            <img 
               loading="lazy"
               decoding="async"
               src={imageUrl} 
               alt={`Tienda ${name}`}
-              className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
-              variants={imageVariants}
-              animate={isHovered ? "hover" : "normal"}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              className={`w-full h-full object-cover transition-all duration-500 ease-out
+                ${isHovered ? 'scale-110 brightness-105' : 'scale-100 brightness-100'}`}
               onError={(e) => {
-                // Imagen de respaldo si la original falla
                 e.currentTarget.src = "https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg";
-              }}
-              onLoad={(e) => {
-                e.currentTarget.classList.add('loaded');
               }}
             />
 
-            {/* Botón de favoritos optimizado */}
-            <motion.button
-              className="absolute top-3 left-3 z-20 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+            <button
+              className="absolute top-3 left-3 z-20 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm
+                transition-transform duration-150 hover:scale-110 active:scale-90"
               onClick={handleFavoriteClick}
               aria-label={isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
             >
               <Heart
                 className={`w-4 h-4 transition-colors ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'}`}
               />
-            </motion.button>
-
-            {/* Indicador de distancia (si está disponible) */}
-            {distance && (
-              <div className="absolute bottom-3 left-3 z-20 bg-white/80 backdrop-blur-sm text-[#6F4E37] text-xs font-medium px-2 py-1 rounded-full flex items-center">
-                <MapPin className="w-3 h-3 mr-1" />
-                {distance}
-              </div>
-            )}
+            </button>
           </div>
-
-            {/* Card container */}
 
           <div className="p-4 flex-grow flex flex-col">
             <div className="flex justify-between items-start mb-2">
@@ -127,76 +90,60 @@ export const StoreCard = memo(({ id,name,imageUrl,distance,email,phone, descript
               </div>
             </div>
 
-            <motion.div
-              className="my-3 w-full"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: isHovered ? 1 : 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+            <div className="my-3 w-full h-px overflow-hidden">
+              <div 
+                className={`h-full bg-gradient-to-r from-[#D4A76A] to-[#6F4E37] transform origin-left transition-transform duration-300 
+                  ${isHovered ? 'scale-x-100' : 'scale-x-0'}`}
+              ></div>
+            </div>
+
+            <div 
+              className={`overflow-hidden transition-all duration-300 
+                ${isHovered ? 'opacity-100 max-h-48' : 'opacity-0 max-h-0'}`}
             >
-              <div className="h-px bg-gradient-to-r from-[#D4A76A] to-[#6F4E37]"></div>
-            </motion.div>
+              <Text variant="small" className="text-[#6F4E37] text-xs mb-3 line-clamp-2">
+                {description}
+              </Text>
 
-            <AnimatePresence>
-              {isHovered && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <Text variant="small" className="text-[#6F4E37] text-xs mb-3 line-clamp-2">
-                    {description}
-                  </Text>
-
-                  <div className="mb-3">
-                    <div className="flex items-center mb-1">
-                      <Coffee className="w-4 h-4 mr-2 text-[#A67C52]" />
-                      <Text variant="small" className="text-[#2C1810] font-medium">Especialidades:</Text>
-                    </div>
-                    <div className="flex flex-wrap gap-1 mt-1 pl-6">
-                      {specialties.map((specialty, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-[#FAF3E0] text-[#6F4E37] text-xs rounded-full"
-                        >
-                          {specialty}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+              <div className="mb-3">
+                <div className="flex items-center mb-1">
+                  <Coffee className="w-4 h-4 mr-2 text-[#A67C52]" />
+                  <Text variant="small" className="text-[#2C1810] font-medium">Especialidades:</Text>
+                </div>
+                <div className="flex flex-wrap gap-1 mt-1 pl-6">
+                  {specialties.map((specialty, index) => (
+                    <span
+                      key={index}
+                      className="px-2 py-1 bg-[#FAF3E0] text-[#6F4E37] text-xs rounded-full"
+                    >
+                      {specialty}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
 
             <div className="mt-auto pt-2 flex gap-2">
-
-              <motion.div
-                className="flex-grow"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{
-                  opacity: isHovered ? 1 : 0,
-                  y: isHovered ? 0 : 10
-                }}
-                transition={{ duration: 0.3, delay: isHovered ? 0.1 : 0 }}
+              <div 
+                className={`flex-grow transition-all duration-300
+                  ${isHovered ? 'opacity-100 transform-none' : 'opacity-0 translate-y-2'}`}
               >
                 <Link to={`/map`}>
-                  <motion.button
-                    className="w-full py-2.5 px-4 flex items-center justify-center gap-2 bg-[#6F4E37] hover:bg-[#5D4130] text-amber-50 rounded-lg font-medium text-sm shadow-sm transition-colors group relative overflow-hidden"
-                    variants={buttonVariants}
-                    whileHover="hover"
-                    whileTap="tap"
+                  <button
+                    className="w-full py-2.5 px-4 flex items-center justify-center gap-2 
+                      bg-[#6F4E37] hover:bg-[#5D4130] text-amber-50 rounded-lg 
+                      font-medium text-sm shadow-sm transition-all duration-200 
+                      relative overflow-hidden hover:shadow-md active:scale-[0.98]"
                   >
                     <span className="relative z-10">Ver sucursales</span>
                     <MapPin className="w-4 h-4 relative z-10" />
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-[#A67C52] to-[#8D6E4C] opacity-0 group-hover:opacity-100"
-                      transition={{ duration: 0.3 }}
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-r from-[#A67C52] to-[#8D6E4C] 
+                        opacity-0 hover:opacity-100 transition-opacity duration-300"
                     />
-                  </motion.button>
+                  </button>
                 </Link>
-              </motion.div>
-
+              </div>
             </div>
           </div>
         </CardContent>

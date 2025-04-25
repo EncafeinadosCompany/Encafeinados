@@ -52,18 +52,18 @@ export const AboutSection = () => {
           >
         
             <h2 className="text-3xl md:text-4xl font-bold text-[#2C1810] mb-6 leading-tight">
-              Connecting coffee lovers with authentic experiences
+            Conectamos amantes del café con experiencias auténticas
             </h2>
             
             <Separator className="w-16 h-1 bg-[#D4A76A] mb-6" />
             
             <div className="space-y-4 text-[#6F4E37] leading-relaxed">
               <p className="text-lg">
-                Passionate coffee lovers who enjoy creating solutions for the entire coffee ecosystem: we connect, dream, and co-create coffee communities.
+              Coffeelovers apasionados que disfrutan creando soluciones para todo el ecosistema de café: conectamos, soñamos y cocreamos parches alrededor del café.
               </p>
               
               <p>
-                We aim to become the reference platform for discovering, valuing, and enjoying the most authentic coffee experiences, while building a community passionate about good coffee.
+              Queremos convertirnos en la plataforma de referencia para descubrir, valorar y disfrutar de las experiencias cafeteras más auténticas, mientras creamos una comunidad apasionada por el buen café.
               </p>
             </div>
             
@@ -77,22 +77,21 @@ export const AboutSection = () => {
             >
               <div className="flex items-center bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm border border-[#D4A76A]/10">
                 <Heart size={18} className="text-[#D4A76A] mr-2" />
-                <span className="text-sm font-medium text-[#6F4E37]">Passion</span>
+                <span className="text-sm font-medium text-[#6F4E37]">Pasión</span>
               </div>
               <div className="flex items-center bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm border border-[#D4A76A]/10">
                 <Coffee size={18} className="text-[#D4A76A] mr-2" />
-                <span className="text-sm font-medium text-[#6F4E37]">Quality</span>
+                <span className="text-sm font-medium text-[#6F4E37]">Calidad</span>
               </div>
               <div className="flex items-center bg-white/80 backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm border border-[#D4A76A]/10">
                 <Sparkles size={18} className="text-[#D4A76A] mr-2" />
-                <span className="text-sm font-medium text-[#6F4E37]">Authenticity</span>
+                <span className="text-sm font-medium text-[#6F4E37]">Autenticidad</span>
               </div>
             </motion.div>
           </motion.div>
         </div>
       </div>
       
-      {/* Separator to ensure no issues with the next section */}
       <div className="h-1 w-full"></div>
     </section>
   );
