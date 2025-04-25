@@ -1,8 +1,8 @@
 import { InputForm } from "@/common/atoms/auth/inputForm"
+import { TextError } from "@/common/atoms/textError"
 import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 import { Label } from "@radix-ui/react-label"
 import { Phone, Store} from "lucide-react"
-import { useState } from "react"
 import {  UseFormRegister } from "react-hook-form"
 
 interface registerAdminProps {
@@ -28,10 +28,10 @@ export const RegisterBranchesStep1 = ({ register,errors }: registerAdminProps) =
                             {...register('name')}
                             {...registerWithFocus('name')}
                             placeholder="Ingresa tu nombre"
-                            className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+                            className="rounded-full pl-10 text-gray-600 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
                         />
                     </div>
-                    {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+                    {errors.name && <TextError>{errors.name.message}</TextError>}
                     <div className="flex flex-col space-y-2">
                         <Label htmlFor="phone_number" className={`flex items-center text-xs transition-colors ${focusedField === "phone_number" ? "text-[#DB8935]" : "text-gray-600"
                             }`}>
@@ -45,10 +45,10 @@ export const RegisterBranchesStep1 = ({ register,errors }: registerAdminProps) =
                                 {...register("phone_number")}
                                 {...registerWithFocus("phone_number")}
                                 placeholder="Número de teléfono"
-                                className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+                                className="rounded-full pl-10 text-gray-600 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
                             />
                         </div>
-                        {errors?.phone_number && <p className="text-red-500 text-sm">{errors.phone_number.message}</p>}
+                        {errors?.phone_number && <TextError >{errors.phone_number.message}</TextError>}
                     </div>
 
 

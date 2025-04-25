@@ -30,9 +30,9 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
             {...register("address")}
             {...registerWithFocus("address")}
             defaultValue={baseAddress}
-            readOnly
+            // readOnly
             rows={2}
-            className="rounded-lg text-gray-400 border shadow-sm border-gray-200 bg-gray-50 focus:ring-2 focus:ring-[#DB8935]  focus:border-transparent transition-all"
+            className="rounded-lg text-gray-600 border shadow-sm border-gray-200 bg-gray-50 focus:ring-2 focus:ring-[#DB8935]  focus:border-transparent transition-all"
           />
           {errors.address && (
             <p className="text-sm text-red-500">{errors.address.message as string}</p>
@@ -50,7 +50,7 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
             {...register("addressDetails")}
             {...registerWithFocus("addressDetails")}
             placeholder="Ej. Calle 123 #45-67"
-            className="rounded-full text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+            className="rounded-full text-gray-600 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
           />
           {errors.addressDetails && (
             <p className="text-sm text-red-500">{errors.addressDetails.message as string}</p>
@@ -70,12 +70,10 @@ export const RegisterBranchesStep3 = ({ baseAddress, register, errors }: Registe
               {...register("nearbyReference")}
               {...registerWithFocus("nearbyReference")}
               placeholder="Ej. Frente a la panadería"
-              className="rounded-full text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+              className="rounded-full text-gray-600 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
             />
           </div>
         </div>
-
-        {/* Additional notes (Optional) */}
         <div className="space-y-2">
           <Label htmlFor="additionalNotes" className={`flex items-center text-xs transition-colors ${focusedField === "additionalNotes" ? "text-[#DB8935]" : "text-gray-600"
             }`}>

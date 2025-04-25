@@ -5,6 +5,8 @@ export {
     Mail,
     Bell,
     User,
+    Trash2,
+    Link,
     Home,
     Gift,
     Phone,
@@ -18,6 +20,7 @@ export {
     MapPin,
     Search,
     Store,
+    Globe,
     Check,
     Coffee,
     Upload,
@@ -53,7 +56,8 @@ export {
     Copy,
      Map,
      ChevronDown,
-     Building
+     Building,
+     Album
      
 
 

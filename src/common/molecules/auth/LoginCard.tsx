@@ -58,16 +58,14 @@ export const LoginCard = (
                 <h1 className="text-2xl font-bold text-amber-800">{t("¡Bienvenido!")}</h1>
                 <p className="text-balance text-muted-foreground text-sm text-gray-600 mt-2">Inicia sesión Encafeinados</p>
               </div>
-
-
-              <ButtonGoogle
+              {/* <ButtonGoogle
                 variant="outline"
                 onClick={onGoogleSignIn}
                 disabled={isLoading}
                 className="border-amber-200 hover:bg-amber-50 text-amber-900"
               >
                 Iniciar sesión con Google
-              </ButtonGoogle>
+              </ButtonGoogle> */}
               <div className="relative flex items-center justify-center">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-900"></div>
@@ -99,46 +97,36 @@ export const LoginCard = (
                   control={control}
                   name="password"
                   render={({ field }) => (
-                    <div className="mx-auto">
-                      <div className="relative w-fit space-x-12">
-                        <InputOTP
-                          maxLength={4}
-                          value={field.value}
-                          onChange={field.onChange}
-                          {...registerWithFocus("password")}
-                          data-testid="custom-input-password"
-                        >
-                          <InputOTPGroup
-                            className="space-x-1"
-                          >
-                            <InputOTPSlot index={0} isVisible={isVisible} />
-                            <InputOTPSlot index={1} isVisible={isVisible} />
-                          </InputOTPGroup>
-                          {/* <InputOTPSeparator className="text-gray-400" /> */}
-                          <InputOTPGroup className="space-x-1">
-                            <InputOTPSlot index={2} isVisible={isVisible} />
-                            <InputOTPSlot index={3} isVisible={isVisible} />
-                          </InputOTPGroup>
-                        </InputOTP>
+                    <div className="relative w-fit space-x-12 mx-auto ">
+                      <InputOTP
+                        maxLength={4}
+                        value={field.value}
+                        onChange={field.onChange}
+                        {...registerWithFocus("password")}
+                        data-testid="custom-input-password"
+                      >
+                        <InputOTPGroup className="space-x-1">
+                          <InputOTPSlot index={0} isVisible={isVisible} />
+                          <InputOTPSlot index={1} isVisible={isVisible} />
+                        </InputOTPGroup>
+                        <InputOTPGroup className="space-x-1">
+                          <InputOTPSlot index={2} isVisible={isVisible} />
+                          <InputOTPSlot index={3} isVisible={isVisible} />
+                        </InputOTPGroup>
+                      </InputOTP>
 
-                        <div className="text-center text-sm">
-                          {field.value === "" ? (
-                            <>Introduzca su clave</>
-                          ) : (
-                            <>
-                              <button
-                                type="button"
-                                onClick={() => setIsVisible((prev) => !prev)}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                                aria-label={isVisible ? "Ocultar código" : "Mostrar código"}
-                                title={isVisible ? "Ocultar código" : "Mostrar código"}
-                              >
-                                {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </div>
+                
+                      {field.value !== "" && (
+                        <button
+                          type="button"
+                          onClick={() => setIsVisible((prev) => !prev)}
+                          className="absolute top-3 right-0 text-gray-500 hover:text-gray-700 text-sm"
+                          aria-label={isVisible ? "Ocultar código" : "Mostrar código"}
+                          title={isVisible ? "Ocultar código" : "Mostrar código"}
+                        >
+                          {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      )}
                     </div>
                   )}
                 >
@@ -174,9 +162,6 @@ export const LoginCard = (
           </div>
         </CardContent>
       </Card>
-      {/* <div className="text-balance text-center text-xs text-gray-500 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-amber-600">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-      </div> */}
     </div>
   )
 }

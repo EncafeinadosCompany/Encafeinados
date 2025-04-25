@@ -81,7 +81,6 @@ const CompletePerfil = () => {
                 value={formData.full_name}
                 {...register("full_name")}
                 placeholder="Nombre completo"
-              // className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
             </div>
 
@@ -112,7 +111,6 @@ const CompletePerfil = () => {
                   type="number"
                   {...register("number_document")}
                   placeholder="Número de documento"
-                // className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
                 {errors?.number_document && <TextError>{errors.number_document.message}</TextError>}
               </div>

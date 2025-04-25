@@ -13,8 +13,7 @@ const PendingBranchesList = () => {
             </div>
             <div className="h-full rounded-lg border border-green-100 overflow-hidden bg-green-50/10">
               <ApprovedBranchesWidget />
-            </div>
-          
+            </div>     
           </div>
         </div>
       </div>
@@ -22,6 +21,3 @@ const PendingBranchesList = () => {
   };
 
 export default PendingBranchesList;
-
-
-

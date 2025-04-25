@@ -13,7 +13,6 @@ import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
 import { useAdminStoreMutation } from "@/api/mutations/adminStores/adminStoresMutation";
 import { RegisterAdminStores } from "@/api/types/adminStoresTypes";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import { TermConditions } from "./termConditions";
 
 export const FormFinishRegisteAdmin = ({ref}:any) => {
@@ -71,7 +70,6 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
         try {
 
             await useRegisterAdminStore.mutateAsync(register);
-            toast.success("Registro exitoso");
             navigate("/login");
         } catch (error) {
             console.error("Registration error:", error);

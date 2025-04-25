@@ -15,7 +15,6 @@ export default function NavbarGeneral({ navItems }: NavItem) {
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768)
-      // On larger screens, we can start with the menu expanded
       if (window.innerWidth >= 768) {
         setIsExpanded(false)
       } else {
@@ -23,13 +22,10 @@ export default function NavbarGeneral({ navItems }: NavItem) {
       }
     }
 
-    // Check initially
     checkIfMobile()
 
-    // Add event listener for window resize
     window.addEventListener("resize", checkIfMobile)
 
-    // Clean up
     return () => window.removeEventListener("resize", checkIfMobile)
   }, [])
 

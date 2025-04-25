@@ -71,17 +71,17 @@ const MapSettings = {
     searchTimeoutRef.current = setTimeout(async () => {
       setIsSearching(true);
       try {
-        // Preparar la consulta para direcciones colombianas
+        // Prepare query for Colombian addresses
         let enhancedQuery = query;
         
         // Detectar formato de dirección colombiana (Cra, Calle, Av, etc.)
         const colombianAddressPattern = /^(cra\.?|carrera|calle|cl\.?|av\.?|avenida|diag\.?|diagonal|trans\.?|transversal)\s*\d+\s*[a-z]?\s*#?\s*\d+\s*[a-z]?(-|\s)\d+/i;
         
         if (colombianAddressPattern.test(query)) {
-          // Si es una dirección colombiana, añadir Medellín, Colombia para mejorar resultados
+          // If it's a Colombian address, add Medellín, Colombia to improve results
           enhancedQuery = `${query}, Medellín, Colombia`;
         } else {
-          // Para búsquedas generales, añadir contexto de Colombia
+          // For general searches, add Colombia context
           enhancedQuery = `${query}, Colombia`;
         }
         
@@ -111,7 +111,7 @@ const MapSettings = {
           data = await response.json();
         }
         
-        // Si aún no hay resultados, intentar búsqueda estructurada para direcciones colombianas
+        // If there are still no results, try structured search for Colombian addresses
         if (data.length === 0 && colombianAddressPattern.test(query)) {
           // Extraer componentes de la dirección colombiana
           const addressParts = query.match(colombianAddressPattern);

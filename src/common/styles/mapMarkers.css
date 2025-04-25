@@ -1,10 +1,10 @@
-/* Estilos para los marcadores de cafeterías */
+/* Styles for coffee shop markers */
 .custom-cafe-marker {
   background: none !important;
   border: none !important;
 }
 
-/* Modificar estos valores para volver a un tamaño mayor */
+/* Modify these values to return to a larger size */
 .cafe-marker {
   position: relative;
   width: 40px; /* Volvemos al tamaño original de 40px */
@@ -87,7 +87,7 @@
   animation: pulse-animation 2s infinite;
 }
 
-/* Indicador visual para cafés cercanos */
+/* Visual indicator for nearby cafes */
 .cafe-marker.has-nearby:not(.active):not(.hovered)::after {
   content: '';
   position: absolute;
@@ -260,7 +260,7 @@
   }
 }
 
-/* Estilos para markers de clusters */
+/* Styles for cluster markers */
 .cluster-marker-container {
   background: none !important;
   border: none !important;
@@ -286,7 +286,7 @@
   transform: scale(1.1);
 }
 
-/* Estilo para el tooltip de Leaflet */
+/* Style for Leaflet tooltip */
 .leaflet-tooltip {
   background-color: white !important;
   border: 1px solid rgba(111, 78, 55, 0.3) !important;

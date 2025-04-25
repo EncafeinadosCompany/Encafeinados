@@ -19,6 +19,7 @@ import SocialNetworksForm from "./socialNetwork"
 import { validateImageRequirements } from "@/common/hooks/useCriteria"
 
 
+
 interface FormRegisterBrandsProps {
     onClose: () => void
 }
@@ -32,7 +33,10 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
     const { data: criteria } = useCriteria();
     const { data: socialNetworks } = useSocialNetworksQuery();
 
+
+
     const storeId = localStorage.getItem("storeOrBranchId");
+
 
     const methods = useForm<RegisterStoreBrancheSchemaType>({
         resolver: zodResolver(RegisterStoreBrancheSchema[step] as any),
@@ -42,10 +46,11 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
             address: "",
             latitude: 0,
             longitude: 0,
-            addressDetails: ""
+            addressDetails: "",
         },
         mode: "onChange",
     })
+
 
     useEffect(() => {
         if (criteria && Object.keys(methods.getValues("criteria") || {}).length === 0) {
@@ -64,7 +69,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
         methods.trigger(undefined, { shouldFocus: false }).then((isValid) => {
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
-                
+
                 if (step === 1) {
                     const error = validateImageRequirements(Array.isArray(criteria) ? criteria : [], methods.getValues("criteria"));
                     if (error) {
@@ -80,28 +85,29 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
     const onSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
         const social = finalData.social_networks || [];
+
         if (!social.length) {
-          toast.error("Debes agregar al menos una red social.");
-          return;
+            toast.error("Debes agregar al menos una red social.");
+            return;
         }
-        try{
-            
-        storeId? storeId : toast.error('no cuenta con el id') 
-        const data ={
-            store_id: Number(storeId),
-            name: finalData.name,
-            phone_number: finalData.phone_number,
-            latitude: finalData.latitude,
-            longitude: finalData.longitude,
-            address: finalData.address,
-            social_branches:finalData.social_networks,
-            criteria: finalData.criteria
+        try {
+
+            storeId ? storeId : toast.error('no cuenta con el id')
+            const data = {
+                store_id: Number(storeId),
+                name: finalData.name,
+                phone_number: finalData.phone_number,
+                latitude: finalData.latitude,
+                longitude: finalData.longitude,
+                address: finalData.address,
+                social_branches: finalData.social_networks,
+                criteria: finalData.criteria
+            }
+
+            await useBranchesMutation.mutateAsync(data)
+            onClose();
         }
-        await useBranchesMutation.mutateAsync(data).then((res) => {
-            toast.success("Sucursal registrada con éxito");
-            onClose(); 
-        })
-        }catch(error){
+        catch (error) {
             toast.error("Error al registrar la sucursal");
         }
     };
@@ -114,7 +120,6 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
         setBaseAddress(address);
     }
 
-
     return (
         <div >
             <motion.div
@@ -126,10 +131,12 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4 relative ">
 
-                        <div className="relative w-full max-w-3xl mx-auto  flex flex-col" style={{ maxHeight: "600px" }}>
+                        <div className="relative w-full max-w-3xl mx-auto  flex flex-col" style={{ maxHeight: "300px" }}>
                             <AnimatePresence initial={false} custom={direction} mode="wait"
                             >
-                                <div className="flex-1">
+                                <div className="flex-1 flex-1 max-h-[50vh] sm:max-h-[55vh] md:max-h-[60vh] lg:max-h-[65vh] xl:max-h-[40vh] overflow-y-auto scrollbar-subtle
+                                scrollbar-track-transparent px-2 sm:px-4 md:px-6 lg:px-2 
+                                pb-4 transition-all duration-300 rounded-md">
                                     {step === 0 && (
                                         <RegisterBranchesStep1
                                             register={methods.register}
@@ -139,27 +146,21 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                     )}
                                     {
                                         step === 1 && (
-                                            <div className="max-h-[50vh] sm:max-h-[55vh] md:max-h-[60vh] lg:max-h-[65vh] xl:max-h-[70vh] 
-                                                overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300/50 hover:scrollbar-thumb-amber-400 
-                                                scrollbar-track-transparent px-2 sm:px-4 md:px-6 lg:px-8 
-                                                pb-4 transition-all duration-300 rounded-md">
-                                                <RegisterStoreBrancheStep2
-                                                    methods={methods}
-                                                    criteria={criteria || []}
-                                                ></RegisterStoreBrancheStep2>
-                                            </div>
-
+                                            <RegisterStoreBrancheStep2
+                                                methods={methods}
+                                                criteria={criteria || []}
+                                            ></RegisterStoreBrancheStep2>
                                         )
                                     }
                                     {
                                         step === 2 && (
-
                                             <MapSearch
                                                 initialAddress={baseAddress}
                                                 initialLat={methods.watch("latitude")}
                                                 initialLng={methods.watch("longitude")}
                                                 onLocationSelect={onLocationSelect}>
                                             </MapSearch>
+
                                         )
                                     }
                                     {
@@ -173,18 +174,14 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                         )
                                     }{
                                         step === 4 && (
-                                            <div className="max-h-[50vh] sm:max-h-[55vh] md:max-h-[60vh] lg:max-h-[65vh] xl:max-h-[70vh] 
-                                                overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300/50 hover:scrollbar-thumb-amber-400 
-                                                scrollbar-track-transparent px-2 sm:px-4 md:px-6 lg:px-8 
-                                                pb-4 transition-all duration-300 rounded-md">
+
                                             <SocialNetworksForm
                                                 register={methods.register}
                                                 control={methods.control}
                                                 availableSocialNetworks={socialNetworks}
-
                                             >
                                             </SocialNetworksForm>
-                                            </div>
+
                                         )
                                     }
                                 </div>
@@ -199,7 +196,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                             >
                                 {step > 0 ? (
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button type="button" variant="outline" onClick={() => { setStep(step - 1), setDirection(-1) }} className="border-gray-200 bg-amber-50/50">
+                                        <Button type="button" variant="outline" onClick={() => { setStep(step - 1), setDirection(-1) }} className="border-gray-200 bg-white border-1 ">
                                             <ArrowLeft className="w-4 h-4 mr-2" />
                                             Anterior
                                         </Button>

@@ -53,29 +53,29 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat,
     }
   }, []);
 
-  // Save recent searches to localStorage
+
   const SaveRecentSearch = (search: { display_name: string; lat: string; lon: string }) => {
     saveRecentSearch({ display_name: search.display_name, lat: search.lat, lon: search.lon }, { recentSearches, setRecentSearches });
   }
 
   useEffect(() => {
     if (initialLat && initialLng) {
-      // Si tenemos coordenadas iniciales, las usamos y notificamos
+
       setSelectedPosition([initialLat, initialLng]);
       if (initialAddress) {
         setSearchQuery(initialAddress);
       }
-      // Notificar al componente padre que ya tenemos una ubicación seleccionada
+
       onLocationSelect(initialLat, initialLng, initialAddress || "Selected location");
       setInitialPositionSet(true);
     } else {
-      // Solo obtenemos la ubicación actual si no hay coordenadas iniciales
+
       GetCurrenLocation();
     }
   }, [initialLat, initialLng, initialAddress]);
 
   const GetCurrenLocation = () => {
-    // Solo obtenemos la ubicación actual si no hay una posición inicial establecida
+
     if (!initialPositionSet) {
       getCurrentLocation({
         onLocationSelect,

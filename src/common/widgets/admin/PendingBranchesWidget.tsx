@@ -30,7 +30,6 @@ export const PendingBranchesWidget = () => {
   };
 
   const {
-    // Data
     data = [],
     isLoading,
     error,
@@ -39,7 +38,6 @@ export const PendingBranchesWidget = () => {
     paginatedBranches,
     totalPages,
     
-    // State
     searchTerm,
     selectedBranch,
     confirmationDialog,
@@ -62,17 +60,14 @@ export const PendingBranchesWidget = () => {
 
   const queryClient = useQueryClient();
   
-  // Obtener las mutaciones
   const approveBranchMutation = useApproveBranchMutation();
   const rejectBranchMutation = useRejectBranchMutation();
   
-  // Estados para los diálogos
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedBranchForAction, setSelectedBranchForAction] = useState<number | null>(null);
   
-  // Adaptadores de función para abrir los diálogos
   const openApproveDialog = (branchId: number) => {
     setSelectedBranchForAction(branchId);
     setIsApproveDialogOpen(true);
@@ -83,7 +78,6 @@ export const PendingBranchesWidget = () => {
     setIsRejectDialogOpen(true);
   };
   
-  // Función para confirmar aprobación
   const confirmApprove = (branchId: number) => {
     if (!checkUserAuth()) return;
     
@@ -105,9 +99,7 @@ export const PendingBranchesWidget = () => {
         toast.success("Sucursal aprobada correctamente");
         setIsSubmitting(false);
         setIsApproveDialogOpen(false);
-        // Actualizar la lista de sucursales pendientes
         refetch();
-        // Cerrar también el diálogo de detalles
         setDetailsDialogOpen(false);
       },
       onError: (error) => {
@@ -117,13 +109,11 @@ export const PendingBranchesWidget = () => {
     });
   };
   
-  // Función para confirmar rechazo
   const confirmReject = (branchId: number, reason: string) => {
     if (!checkUserAuth()) return;
     
     setIsSubmitting(true);
     
-    // Obtener el approvalId desde los detalles de la sucursal
     const branchDetails = queryClient.getQueryData<BranchApprovalDetails>(
       ['branch-approvals', 'detail', branchId]
     );
@@ -145,9 +135,7 @@ export const PendingBranchesWidget = () => {
           toast.success("Sucursal rechazada correctamente");
           setIsSubmitting(false);
           setIsRejectDialogOpen(false);
-          // Actualizar la lista de sucursales pendientes
           refetch();
-          // Cerrar también el diálogo de detalles
           setDetailsDialogOpen(false);
         },
         onError: (error) => {
@@ -158,7 +146,6 @@ export const PendingBranchesWidget = () => {
     );
   };
   
-  // Encontrar el nombre de la sucursal para mostrar en los diálogos
   const getBranchName = (branchId: number | null) => {
     if (!branchId) return undefined;
     const branch = data.find(b => b.id === branchId);
@@ -279,8 +266,8 @@ export const PendingBranchesWidget = () => {
                     branch={branch}
                     index={index}
                     onView={handleViewDetails}
-                    onApprove={handleApprove}
-                    onReject={handleReject}
+                    onApprove={() => openApproveDialog(branch.id)}
+                    onReject={() => openRejectDialog(branch.id)}
                     type="pending"
                   />
                 ))}

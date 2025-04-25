@@ -1,234 +1,252 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent } from '@/common/ui/card';
-import { Avatar } from '@/common/ui/avatar';
-import { Text } from '@/common/atoms/Text';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { Coffee, Sparkles } from '@/common/ui/icons';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { User, ChevronDown, ChevronUp, X, Coffee, Linkedin, Twitter, Globe } from 'lucide-react';
 
-interface TeamMember {
+interface Member {
   name: string;
   role: string;
   imagenUrl?: string;
-  social?: {
-    twitter?: string;
-    linkedin?: string;
-    email?: string;
-  };
+  bio?: string;
 }
 
 interface TeamCardProps {
-  members: TeamMember[];
+  members: Member[];
+  variant?: 'leadership' | 'developers' | 'partners';
 }
 
-export const TeamCard = ({ members }: TeamCardProps) => {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const cardRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(cardRef, { once: false, amount: 0.2 });
+export const TeamCard: React.FC<TeamCardProps> = ({ members, variant = 'developers' }) => {
+  const [expanded, setExpanded] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  
+  if (!members || members.length === 0) {
+    return <div className="text-center py-8 text-[#6F4E37]">No hay miembros para mostrar.</div>;
+  }
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (cardRef.current) {
-        const rect = cardRef.current.getBoundingClientRect();
-        setMousePosition({
-          x: (e.clientX - rect.left) / rect.width,
-          y: (e.clientY - rect.top) / rect.height,
-        });
-      }
-    };
+  // Control de miembros visibles con configuración por variante
+  const initialVisible = variant === 'partners' ? 4 : 8;
+  const showExpandButton = members.length > initialVisible;
+  const visibleMembers = expanded ? members : showExpandButton ? members.slice(0, initialVisible) : members;
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Variantes para animaciones
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.2
-      }
-    }
+  // Manejar clic en miembro para expandir detalles
+  const handleMemberClick = (member: Member) => {
+    setSelectedMember(member);
   };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0, scale: 0.9 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      scale: 1,
-      transition: { type: "spring", stiffness: 100, damping: 15 }
-    }
-  };
-
-  const backgroundStyle = {
-    backgroundPosition: `${mousePosition.x * 100}% ${mousePosition.y * 100}%`,
+  // Cerrar modal de detalles
+  const closeDetails = () => {
+    setSelectedMember(null);
   };
 
   return (
-    <Card 
-      ref={cardRef}
-      className="w-full max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-xl
-        bg-gradient-to-br from-white via-[#faf3e0]/80 to-[#f5e9d8]
-        dark:from-[#2C1810] dark:via-[#3a2615] dark:to-[#4a2f1a]
-        backdrop-blur-sm border border-[#D4A76A]/20
-        transition-all duration-500 ease-out transform"
-      style={{
-        boxShadow: '0 10px 40px -10px rgba(111, 78, 55, 0.2)',
-        ...backgroundStyle
-      }}
-    >
-      <CardContent className="p-8 pt-12 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute top-0 right-0 -mt-6 -mr-6 w-32 h-32 bg-[#D4A76A]/10 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-0 left-0 -mb-8 -ml-8 w-40 h-40 bg-[#6F4E37]/10 rounded-full blur-2xl"></div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative z-10"
-        >
-          <div className="flex flex-col items-center text-center mb-8 md:mb-12">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              className="mb-3"
-            >
-              <span className="inline-flex items-center justify-center p-1 bg-[#D4A76A]/10 backdrop-blur-sm rounded-full">
-                <Sparkles className="text-[#D4A76A] w-5 h-5" />
-              </span>
-            </motion.div>
-            
-            <Text variant="h2" className="text-center font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#6F4E37] to-[#A67C52] mb-2">
-              Nuestro Increíble Equipo
-            </Text>
-            
-            <motion.p 
-              initial={{ opacity: 0, y: 10 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="text-center text-[#A67C52] dark:text-[#D4A76A]/90 mb-2 mx-auto max-w-lg font-light"
-            >
-              Conoce a las personas apasionadas que hacen posible Encafeinados
-            </motion.p>
-            
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={isInView ? { width: "80px" } : { width: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="h-0.5 bg-gradient-to-r from-transparent via-[#D4A76A] to-transparent my-4"
-            ></motion.div>
-          </div>
-        </motion.div>
-        
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-4 relative z-10"
-        >
-          {members.map((member, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover={{ 
-                y: -8, 
-                transition: { duration: 0.2 } 
-              }}
-              className="relative group"
-            >
-              <div 
-                className={`relative flex flex-col items-center p-2 md:p-3 rounded-xl 
-                transition-all duration-300 transform cursor-pointer
-                ${activeIndex === index ? 'bg-white/80 dark:bg-[#2C1810]/80 backdrop-blur-md scale-105 z-20 shadow-lg' : 
-                'hover:bg-white/40 dark:hover:bg-[#2C1810]/40 hover:backdrop-blur-sm'}`}
-                onClick={() => setActiveIndex(activeIndex === index ? null : index)}
-              >
-                <motion.div 
-                  className="relative"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                >
-                  <div className="relative p-0.5 rounded-full bg-gradient-to-br from-[#D4A76A] to-[#6F4E37]">
-                    <Avatar className="w-16 h-16 md:w-20 md:h-20 border-2 border-white dark:border-[#2C1810] overflow-hidden rounded-full">
-                      <motion.img 
-                        src={member.imagenUrl} 
-                        alt={member.name}
-                        className="object-cover w-full h-full"
-                        initial={{ scale: 1 }}
-                        whileHover={{ scale: 1.12, transition: { duration: 0.6 } }}
-                      />
-                    </Avatar>
-                  </div>
-                  
-                  <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={activeIndex === index ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute -bottom-1 -right-1 bg-gradient-to-br from-[#6F4E37] to-[#A67C52] rounded-full p-1.5 shadow-lg"
-                  >
-                    <Coffee size={14} className="text-white" />
-                  </motion.div>
-                </motion.div>
-                
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 + index * 0.05, duration: 0.5 }}
-                  className="mt-3 text-center w-full"
-                >
-                  <h4 className="font-medium text-[#2C1810] dark:text-white text-sm md:text-base truncate max-w-full">
-                    {member.name}
-                  </h4>
-                  <p className="text-[#6F4E37] dark:text-[#D4A76A] text-xs md:text-sm font-light opacity-90 mt-0.5">
-                    {member.role}
-                  </p>
-                </motion.div>
-                
-                <AnimatePresence>
-                  {activeIndex === index && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, height: 0 }}
-                      animate={{ opacity: 1, y: 0, height: 'auto' }}
-                      exit={{ opacity: 0, y: 10, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="flex space-x-1 mt-3 justify-center overflow-hidden"
-                    >
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-              
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: activeIndex === index ? 0.15 : 0.1 }}
-                className="w-14 h-1.5 bg-[#6F4E37] absolute -bottom-1.5 left-1/2 transform -translate-x-1/2 rounded-full blur-sm"
-                style={{ 
-                  scale: activeIndex === index ? 1.2 : 1,
-                  transition: "all 0.3s ease-out" 
-                }}
-              ></motion.div>
-            </motion.div>
+    <div className="w-full relative">
+      {/* Grid de perfiles circulares */}
+      <div className="w-full mx-auto max-w-6xl">
+        <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-8">
+          {visibleMembers.map((member, index) => (
+            <CircleProfile 
+              key={`${member.name}-${index}`} 
+              member={member} 
+              index={index}
+              variant={variant} 
+              onClick={() => handleMemberClick(member)}
+            />
           ))}
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: 0.8, duration: 0.5 }}
-          className="mt-10 text-center"
-        >
-          <div className="inline-flex items-center justify-center">
-            <div className="h-px w-12 bg-gradient-to-r from-transparent via-[#D4A76A] to-transparent"></div>
-            <span className="mx-3 text-[#6F4E37] dark:text-[#D4A76A] text-xs font-light tracking-wide">PASIÓN POR EL CAFÉ</span>
-            <div className="h-px w-12 bg-gradient-to-r from-[#D4A76A] via-[#D4A76A] to-transparent"></div>
-          </div>
-        </motion.div>
-      </CardContent>
-    </Card>
+        </div>
+      </div>
+      
+      {/* Botón "Ver más" */}
+      {showExpandButton && (
+        <div className="mt-8 text-center">
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#D4A76A] hover:bg-[#C3966A] text-white rounded-full transition-colors shadow-md hover:shadow-lg text-sm font-medium"
+          >
+            {expanded ? (
+              <>
+                <span>Ver menos</span>
+                <ChevronUp size={18} />
+              </>
+            ) : (
+              <>
+                <span>Ver {members.length - initialVisible} más</span>
+                <ChevronDown size={18} />
+              </>
+            )}
+          </button>
+        </div>
+      )}
+
+      {/* Modal de detalles del miembro seleccionado */}
+      <AnimatePresence>
+        {selectedMember && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
+            onClick={closeDetails}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 20, opacity: 0 }}
+              transition={{ type: "spring", damping: 25 }}
+              className="bg-white rounded-2xl overflow-hidden max-w-md w-full shadow-2xl relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                onClick={closeDetails}
+                className="absolute top-3 right-3 bg-white/80 hover:bg-white text-[#6F4E37] rounded-full p-1.5 z-10"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="relative bg-gradient-to-br from-[#D4A76A] to-[#6F4E37] h-32 overflow-hidden">
+                {/* Patrón decorativo de granos de café */}
+                <div className="absolute inset-0 opacity-20">
+                  <div className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2">
+                    <Coffee size={80} color="#fff" />
+                  </div>
+                  <div className="absolute top-3/4 right-1/4 transform translate-x-1/2 -translate-y-1/2">
+                    <Coffee size={60} color="#fff" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Foto de perfil */}
+              <div className="relative flex justify-center">
+                <div className="absolute -top-16 w-32 h-32 rounded-full border-4 border-white overflow-hidden bg-[#D4A76A]/10 shadow-lg">
+                  {selectedMember.imagenUrl ? (
+                    <img 
+                      src={selectedMember.imagenUrl} 
+                      alt={selectedMember.name} 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedMember.name)}&background=D4A76A&color=fff&size=128`;
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <User size={48} className="text-white" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Información del miembro */}
+              <div className="pt-20 px-6 pb-6">
+                <h3 className="text-xl font-bold text-[#2C1810] text-center">{selectedMember.name}</h3>
+                <div className="bg-[#D4A76A]/10 text-[#6F4E37] px-4 py-1.5 rounded-full text-sm font-medium text-center my-2">
+                  {selectedMember.role}
+                </div>
+                
+                {selectedMember.bio && (
+                  <p className="text-[#6F4E37] mt-4 text-center leading-relaxed">
+                    {selectedMember.bio}
+                  </p>
+                )}
+                
+                {/* Íconos de redes sociales */}
+                <div className="flex justify-center gap-3 mt-6">
+                  <SocialButton icon={<Linkedin size={18} />} color="#0077B5" />
+                  <SocialButton icon={<Twitter size={18} />} color="#1DA1F2" />
+                  <SocialButton icon={<Globe size={18} />} color="#6F4E37" />
+                  <SocialButton icon={<Coffee size={18} />} color="#D4A76A" />
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
+
+// Componente de perfil circular
+interface CircleProfileProps {
+  member: Member;
+  index: number;
+  variant?: 'leadership' | 'developers' | 'partners';
+  onClick: () => void;
+}
+
+const CircleProfile = ({ member, index, variant, onClick }: CircleProfileProps) => {
+  // Tamaños de círculos según variante
+  const size = 
+    variant === 'leadership' ? "w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36" :
+    variant === 'partners' ? "w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40" :
+    "w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32";
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: Math.min(index * 0.08, 0.8) }}
+      className="flex flex-col items-center"
+    >
+      {/* Círculo con borde decorativo */}
+      <motion.button
+        whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(212, 167, 106, 0.4)" }}
+        whileTap={{ scale: 0.95 }}
+        className={`
+          ${size} rounded-full overflow-hidden cursor-pointer relative
+          bg-white shadow-md hover:shadow-xl transition-all duration-300
+          border-2 border-[#D4A76A] p-1
+        `}
+        onClick={onClick}
+      >
+        {/* Borde con efecto de grano de café */}
+        <span className="absolute inset-0 rounded-full border-[3px] border-[#D4A76A]/20 border-dashed"></span>
+        
+        {/* Foto o avatar */}
+        <div className="w-full h-full rounded-full overflow-hidden bg-[#D4A76A]/10 relative">
+          {member.imagenUrl ? (
+            <img 
+              src={member.imagenUrl} 
+              alt={member.name} 
+              className="w-full h-full object-cover hover:scale-110 transition-all duration-700"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=D4A76A&color=fff&size=120`;
+              }}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <User size={variant === 'leadership' ? 40 : 32} className="text-[#6F4E37]" />
+            </div>
+          )}
+          
+          {/* Efecto de superposición al hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2C1810]/70 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
+            <span className="text-white text-xs font-medium bg-[#D4A76A]/60 backdrop-blur-sm px-2 py-0.5 rounded-full">
+              Ver perfil
+            </span>
+          </div>
+        </div>
+      </motion.button>
+      
+      <h3 className="mt-3 font-medium text-[#2C1810] text-center max-w-[120px] mx-auto truncate">
+        {member.name}
+      </h3>
+      <p className="text-[#D4A76A] text-xs text-center max-w-[120px] mx-auto truncate">
+        {member.role}
+      </p>
+    </motion.div>
+  );
+};
+
+interface SocialButtonProps {
+  icon: React.ReactNode;
+  color: string;
+}
+
+const SocialButton = ({ icon, color }: SocialButtonProps) => (
+  <a 
+    href="#" 
+    className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-200 hover:border-[#D4A76A] transition-colors duration-300"
+    style={{ color }}
+  >
+    {icon}
+  </a>
+);

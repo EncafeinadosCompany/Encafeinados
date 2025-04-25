@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { 
   ArrowLeft, Search, Filter, Coffee, Star, Clock, MapPin, Heart, 
   Share2, Navigation, Route, ExternalLink, Copy, Map as MapIcon, X
-} from 'lucide-react'; // Cambiado de @/common/ui/icons a lucide-react
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
@@ -31,7 +31,7 @@ import { useRouteNavigation } from '@/common/hooks/map/useRouteNavigation';
 // Components
 import MapFocus from '@/common/molecules/map/MapFocus';
 import FilterModal from '@/common/molecules/map/filterModal';
-import HighlightText from '@/common/atoms/common/HighlightText';
+import HighlightText from '@/common/atoms/HighlightText';
 import SmartClusterGroup from '@/common/molecules/map/SmartClusterGroup';
 import UserMarker from '@/common/molecules/map/UserMarker'; 
 import DirectRouteLine from '@/common/molecules/map/DirectRouteLine';
@@ -40,6 +40,7 @@ import '@/common/styles/mapMarkers.css';
 import CafeDetail from '@/common/molecules/map/CafeDetail';
 import MapSidebar from '@/common/molecules/map/MapSidebar';
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
+import { createPortal } from 'react-dom';
 
 const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance}) => {
   const map = useMap();
@@ -102,7 +103,9 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   const [copied, setCopied] = useState(false);
   const [showRouteControls, setShowRouteControls] = useState<boolean>(false);
   const [shouldResetMapOnClose, setShouldResetMapOnClose] = useState(false);
-  const [view, setView] = useState(true)
+  const [view, setView] = useState(true);
+  const [activeCafeData, setActiveCafeData] = useState<Cafe | null>(null);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   // Custom hooks
   const { favorites, toggleFavorite } = useFavorites();
@@ -124,6 +127,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     setIsCalculatingRoute: setIsRouteLoading,
     routeInfo,
     setRouteInfo,
+    routeCoordinates,
     clearRoute,
     isRouteActive
   } = useRouteNavigation();
@@ -144,7 +148,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     cafePositions,
     filteredCafes,
     sortedCafes: mapDataSortedCafes,
-    activeCafeData,
+    activeCafeData: derivedActiveCafeData,
     availableStores
   } = useMapData(
     branchesData,
@@ -170,9 +174,16 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     updateFilterOptions,
     resetFilters,
     sortedCafes,
-    isFilterModalOpen,
-    toggleFilterModal
+    isFilterModalOpen: filterModalOpen,
+    toggleFilterModal: toggleFilterModalOriginal
   } = useSearchFilter(cafes);
+
+  const toggleFilterModal = useCallback(() => {
+    if (activeCafe) {
+      setActiveCafe(null); // Cerrar detalles al abrir filtros
+    }
+    setIsFilterModalOpen(!isFilterModalOpen);
+  }, [isFilterModalOpen, activeCafe]);
 
   useEffect(() => {
     setFilterSearchTerm(searchTerm);
@@ -310,16 +321,14 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   // ==============================
   // CALLBACKS
   // ==============================
-/**
- * Starts navigation to a cafe
- */
+
 const navigateToCafe = useCallback((cafeId: number): void => {
-  if (activeCafe && activeCafe !== cafeId) {
-    setActiveCafe(null);
-    setTimeout(() => {
-      setActiveCafe(cafeId);
-    }, 100);
-  } else {
+  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  if (!selectedCafe) return;
+  
+  if (activeCafe !== cafeId) {
+    setActiveCafeData(selectedCafe);
+    
     setActiveCafe(cafeId);
   }
 
@@ -333,15 +342,12 @@ const navigateToCafe = useCallback((cafeId: number): void => {
     return;
   }
 
-  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
-  if (selectedCafe) {
-    mapInstance?.flyTo(
-      [selectedCafe.latitude, selectedCafe.longitude],
-      16,
-      { duration: 1.5, animate: true }
-    );
-  }
-}, [userLocation, cafes, setActiveCafe, mapInstance, getUserLocation, activeCafe]);
+  mapInstance?.flyTo(
+    [selectedCafe.latitude, selectedCafe.longitude],
+    16,
+    { duration: 1.5, animate: true }
+  );
+}, [userLocation, cafes, mapInstance, getUserLocation, activeCafe]);
 
 const setupRoute = useCallback((cafeId: number) => {
   if (!userLocation) {
@@ -353,19 +359,48 @@ const setupRoute = useCallback((cafeId: number) => {
   const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
   if (selectedCafe) {
     setActiveCafe(null);
+    setIsRouteLoading(true); 
+    
     setTimeout(() => {
       setRouteOrigin(userLocation);
       setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
       setShowRouteControls(true);
+    }, 100);
+  }
+}, [userLocation, cafes, setRouteOrigin, setRouteDestination, getUserLocation, setIsRouteLoading]);
 
+const startRoute = useCallback((cafeId: number) => {
+  if (!userLocation) {
+    toast.error("Necesitamos tu ubicación para trazar la ruta");
+    getUserLocation();
+    return;
+  }
+
+  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  if (selectedCafe) {
+    setTimeout(() => {
+      setActiveCafe(null);
+    }, 300);
+
+    setTimeout(() => {
+      setRouteOrigin(userLocation);
+      setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
+      setActiveCafeData(selectedCafe);
+      setShowRouteControls(true);
+      
       if (mapInstance) {
-        const bounds = L.latLngBounds(
-          L.latLng(userLocation[0], userLocation[1]),
-          L.latLng(selectedCafe.latitude, selectedCafe.longitude)
-        );
+        const bounds = L.latLngBounds([
+          userLocation,
+          [selectedCafe.latitude, selectedCafe.longitude]
+        ]);
         mapInstance.fitBounds(bounds, { padding: [50, 50] });
       }
-    }, 300);
+    }, 500);
+
+    toast.success("¡Calculando la mejor ruta para ti!", {
+      icon: '🧭',
+      duration: 3000,
+    });
   }
 }, [userLocation, cafes, mapInstance, setRouteOrigin, setRouteDestination, getUserLocation]);
 
@@ -445,13 +480,13 @@ useEffect(() => {
 }, [activeCafeData, userLocation, showRouteControls, setRouteOrigin, setRouteDestination]);
 
 useEffect(() => {
-  if (activeCafe && window.innerWidth < 768) {
+  if (activeCafe) {
+    // Cerrar siempre el sidebar cuando se abren detalles
     setShowSidebar(false);
+    // Asegurar vista de mapa al abrir detalles
+    setViewMode('map');
   }
-  if (showRouteControls) {
-    setShowSidebar(false);
-  }
-}, [activeCafe, showRouteControls]);
+}, [activeCafe]);
 
 useEffect(() => {
   if (mapInstance) {
@@ -509,6 +544,43 @@ useEffect(() => {
     }
   }
 }, [sortedCafes, cafes.length, mapInstance]);
+
+useEffect(() => {
+  if (!mapInstance || !activeCafe) return;
+  
+  // Función para cerrar detalles al hacer clic en el mapa
+  const handleMapClick = (e: L.LeafletMouseEvent) => {
+    // Solo cerrar detalles si:
+    // 1. Estamos en desktop (>= 768px)
+    // 2. No estamos en controles de ruta (evitar cerrar durante navegación)
+    if (window.innerWidth >= 768 && !showRouteControls && activeCafe) {
+      // Pequeño retraso para evitar conflictos con otros eventos
+      setTimeout(() => {
+        handleCloseDetails();
+      }, 50);
+    }
+  };
+  
+  // Añadir el listener de eventos
+  mapInstance.on('click', handleMapClick);
+  
+  // Limpiar listener al desmontar
+  return () => {
+    mapInstance.off('click', handleMapClick);
+  };
+}, [mapInstance, activeCafe, showRouteControls, handleCloseDetails]);
+
+// Sincronizar activeCafeData con el ID activeCafe
+useEffect(() => {
+  if (activeCafe) {
+    const selectedCafe = cafes.find(cafe => cafe.id === activeCafe);
+    if (selectedCafe) {
+      setActiveCafeData(selectedCafe);
+    }
+  } else {
+    setActiveCafeData(null);
+  }
+}, [activeCafe, cafes]);
 
 // ==============================
 // RENDER FUNCTIONS
@@ -594,8 +666,7 @@ return (
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
             />
-            
-            {/* Icono que cambia según el estado */}
+   
             {isTyping || isSearchProcessing ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -621,7 +692,7 @@ return (
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]" size={18} />
             )}
             
-            {/* Mostrar contador de caracteres si está escribiendo y no alcanza el mínimo */}
+         
             {searchInputValue.length > 0 && searchInputValue.length < 3 && (
               <div className="absolute right-12 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
                 {searchInputValue.length}/3
@@ -689,9 +760,11 @@ return (
           <DirectRouteLine
             from={routeOrigin}
             to={routeDestination}
-            color="#6F4E37"
+            routeCoordinates={routeCoordinates}
+            color="#6F4E37" 
             weight={4}
             opacity={0.7}
+            transportMode={transportMode}
           />
         )}
 
@@ -769,13 +842,13 @@ return (
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             onClick={() => {
-              // Ajustar el mapa para mostrar todos los resultados
+              // Adjust map to show all search results
               if (mapInstance && sortedCafes.length > 1) {
                 const bounds = new L.LatLngBounds(
                   sortedCafes.map(cafe => [cafe.latitude, cafe.longitude])
                 );
                 
-                // Añadir un pequeño padding
+                // Add padding to bounds
                 mapInstance.fitBounds(bounds, {
                   padding: [50, 50],
                   animate: true,
@@ -783,10 +856,10 @@ return (
                 });
               }
               
-              // Cerrar cualquier detalle abierto
+              // Close any open cafe details
               setActiveCafe(null);
               
-              // En móvil mostrar la lista de resultados
+              // Show sidebar list on mobile
               if (window.innerWidth < 768) {
                 setShowSidebar(true);
               }
@@ -813,7 +886,6 @@ return (
       resetFilters={resetFilters}
     />
 
-    {/* Filter Modal */}
     <FilterModal
       isOpen={isFilterModalOpen}
       onClose={toggleFilterModal}
@@ -823,11 +895,15 @@ return (
       availableTags={availableTags}
     />
 
-    {/* Toggle sidebar button (mobile) - increased z-index */}
     {!showSidebar && (
       <motion.button
         className="absolute bottom-16 right-4 z-[100] text-white bg-[#6F4E37] p-3 rounded-full shadow-lg md:hidden"
-        onClick={() => setShowSidebar(true)}
+        onClick={() => {
+          setShowSidebar(true);
+          if (activeCafe) {
+            setActiveCafe(null);
+          }
+        }}
         initial={{ scale: 0, rotate: -180 }}
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -838,28 +914,56 @@ return (
       </motion.button>
     )}
 
-    {/* Selected Cafe Popup/Details */}
     <AnimatePresence>
       {activeCafe && (
-        <motion.div
-        className="absolute left-0 right-0 bottom-0 md:left-1/2 md:right-auto md:top-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:w-[90%] lg:w-[80%] xl:w-[1000px] md:h-auto md:max-h-[100vh] bg-white md:rounded-2xl shadow-2xl z-[200] flex flex-col overflow-hidden"
-        initial={{ y: "100%", opacity: 0, scale: 0.9 }}
-        animate={{ y: 0, opacity: 1, scale: 1 }}
-        exit={{ y: "100%", opacity: 0, scale: 0.9 }}
-        transition={{ type: 'spring', damping: 30 }}
-      >
-          {activeCafeData && (
-            <CafeDetail
-              cafe={activeCafeData}
-              favorites={favorites}
-              toggleFavorite={toggleFavorite}
-              navigateToCafe={setupRoute}
-              onClose={handleCloseDetails}
-              copyToClipboard={copyToClipboard}
-              copied={copied}
-            />
-          )}
-        </motion.div>
+        <>
+          {/* Backdrop oscuro para cerrar al hacer clic */}
+          <motion.div
+            className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-[9997]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleCloseDetails}
+          />
+          
+          {/* Contenedor del modal simplificado */}
+          <motion.div
+            className="fixed inset-0 z-[9998] flex items-end md:items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <motion.div 
+              className="w-full md:w-[90%] lg:w-[80%] xl:w-[1000px] max-h-[90vh] bg-white md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: 'spring', damping: 30 }}
+            >
+              {/* Barra de arrastre con indicador visual */}
+              <div className="sticky top-0 w-full flex justify-center py-2 bg-white md:hidden z-10">
+                <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+              </div>
+              
+              {/* Wrapper para scroll */}
+              <div className="flex-1 overflow-hidden">
+                {activeCafeData && (
+                  <CafeDetail
+                    cafe={activeCafeData}
+                    favorites={favorites}
+                    toggleFavorite={toggleFavorite}
+                    navigateToCafe={navigateToCafe}
+                    startRoute={startRoute}
+                    onClose={handleCloseDetails}
+                    copyToClipboard={copyToClipboard}
+                    copied={copied}
+                  />
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
 
@@ -890,11 +994,13 @@ return (
           isCalculating={isRouteLoading}
           onClose={handleCloseRouteControls}
           cafeName={activeCafeData.name}
+          origin={routeOrigin}
+          destination={routeDestination}
+          routeInfo={routeInfo}
         />
       )}
     </AnimatePresence>
 
-    {/* Añadir un overlay de "loading" cuando se está procesando la búsqueda */}
     <AnimatePresence>
       {isSearchProcessing && (
         <motion.div
