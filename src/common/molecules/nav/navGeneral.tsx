@@ -192,7 +192,7 @@ export const NavGeneral = ({
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        <main className="flex-1 w-full relative">
+        <main className="flex-1 w-full relative mb-10">
           <Outlet />
         </main>
         

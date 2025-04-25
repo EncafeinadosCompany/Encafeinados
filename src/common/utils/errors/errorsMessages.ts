@@ -23,7 +23,7 @@ export const errorMessages: Record<number, string> = {
         409: "Ya existe una tienda con esa información"
     },
     registerAdminStores:{
-        409: "El correo eléctronico ya se encuentra registrado"
+        409: "El correo o la cédula ya se encuentran registrados"
     },
     branches:{
         409: "El nombre de la sucursal ya se encuentra registrado",
