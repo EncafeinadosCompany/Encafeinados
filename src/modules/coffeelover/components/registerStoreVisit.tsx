@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 const ValidateVisitPage = () => {
   const [searchParams] = useSearchParams();
-  const shopId = searchParams.get("shop_id");
+  const shopId = searchParams.get("branch_id");
 
   const {
     mutate: validateVisit,
