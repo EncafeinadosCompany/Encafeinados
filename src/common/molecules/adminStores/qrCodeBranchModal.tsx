@@ -7,7 +7,9 @@ import {
   DialogTitle,
 } from "@/common/ui/dialog";
 import { Description } from "@radix-ui/react-dialog";
-import { QrCodeIcon } from "lucide-react";
+import { toPng } from "html-to-image";
+import { DownloadIcon, QrCodeIcon } from "lucide-react";
+import { useRef } from "react";
 
 export const QRCodeBranchModal = ({
   isOpen,
@@ -18,7 +20,22 @@ export const QRCodeBranchModal = ({
   onClose: () => void;
   qrCodeUrl: string;
 }) => {
-  qrCodeUrl = "encafeinados.club";
+  const downloadComponent = () => {
+    const node = document.getElementById("qr-code-branch");
+    if (!node) return;
+
+    toPng(node)
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "encafeinados-qr.png";
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((error) => {
+        console.error("Error al generar la imagen:", error);
+      });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
@@ -52,10 +69,21 @@ export const QRCodeBranchModal = ({
         </div>
 
         {/* QR Code Display */}
-        <CardContent className="bg-[#FAFAFA] sm:p-2 rounded-md border border-[#D4D4D4] shadow-inner relative z-10">
+        <CardContent
+          id="qr-code-branch"
+          className="bg-[#FAFAFA] sm:p-2 rounded-md border border-[#D4D4D4] shadow-inner relative z-10"
+        >
           {qrCodeUrl ? (
-            <div className="flex items-center justify-center mt-10 mb-10">
-              <QRCode url={qrCodeUrl} />
+            <div>
+              <div className="flex items-center justify-center mt-10 mb-10">
+                <QRCode url={qrCodeUrl} />
+              </div>
+              <button
+                onClick={downloadComponent}
+                className="flex items-center justify-center bg-[#DB8935] text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg px-2 py-2"
+              >
+                <DownloadIcon className="h-4 w-4 mr-1 ml-1" />
+              </button>
             </div>
           ) : (
             "Cargando QR Code..."

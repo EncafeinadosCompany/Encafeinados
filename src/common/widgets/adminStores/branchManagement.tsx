@@ -24,6 +24,8 @@ import { CardFooterBranches } from "@/common/molecules/adminStores/cardFooterBra
 import { CardHeaderBranches } from "@/common/molecules/adminStores/cardHeaderBranches";
 import { QRCodeBranchModal } from "@/common/molecules/adminStores/qrCodeBranchModal";
 
+const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
+
 export default function BranchManagement() {
   const [loading, setLoading] = useState(true);
   const [refreshAnimation, setRefreshAnimation] = useState(false);
@@ -35,6 +37,8 @@ export default function BranchManagement() {
   const [isQrCodeModalOpen, setIsQrCodeModalOpen] = useState(false);
 
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
+  const [selectedQrCodeBranch, setSelectedQrCodeBranch] =
+    useState<Branch | null>(null);
 
   const [isEditing, setIsEditing] = useState(false);
   const [BranchEdit, setBranchEdit] = useState<Branch | null>(null);
@@ -91,6 +95,7 @@ export default function BranchManagement() {
   };
 
   const handleQrCodeClick = (branch: Branch) => {
+    setSelectedQrCodeBranch(branch);
     setIsQrCodeModalOpen(true);
   };
 
@@ -164,7 +169,6 @@ export default function BranchManagement() {
           </div>
         )}
       </CardContent>
-
       {(filteredBranches?.length || 0) > itemsPerPage && (
         <CardFooterBranches
           filteredBranches={filteredBranches?.length || 0}
@@ -177,7 +181,6 @@ export default function BranchManagement() {
           indexOfLastItem={indexOfLastItem}
         ></CardFooterBranches>
       )}
-
       {/* MODALS */}
       <AddBranchModal
         isOpen={isAddModalOpen}
@@ -191,7 +194,7 @@ export default function BranchManagement() {
       <QRCodeBranchModal
         isOpen={isQrCodeModalOpen}
         onClose={() => setIsQrCodeModalOpen(false)}
-        qrCodeUrl={""}
+        qrCodeUrl={`${EXPOSED_URL}/coffeelover/register-branch-visit/${selectedQrCodeBranch?.id}`}
       />
 
       {selectedBranch && (
