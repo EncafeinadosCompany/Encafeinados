@@ -5,6 +5,7 @@ import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 import GoogleWithRegister from "@/common/hooks/registerWithGoogle";
 import Sellos from "@/common/molecules/sellos";
+import Prueba from "@/common/molecules/prueba";
 
 // LAYOUTS
 const LoadingSpinner = lazy(() => import("@/common/atoms/LoadingSpinner"));
@@ -66,6 +67,7 @@ const AuthRoutes = () => {
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />}/>
             <Route path="/404" element={<NotFound />} />
              <Route path="/sellos" element={<Sellos />} /> 
+             <Route path="/prueba" element={<Prueba />} />
 
             {/* PRIVATE ROUTES  */}
             <Route element={<PrivateRoute />}>
