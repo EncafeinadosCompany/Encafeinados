@@ -18,7 +18,6 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
     isOpen, 
     onOpenChange 
 }) => {
-    // Formato de fecha simplificado para ahorrar espacio
     const formatDate = (dateString: string) => {
         try {
             return format(new Date(dateString), "d MMM yyyy", { locale: es });
