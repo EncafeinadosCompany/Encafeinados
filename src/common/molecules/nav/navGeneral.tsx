@@ -13,6 +13,8 @@ interface NavGeneralProps {
   navItems: NavItemType[];
   setIsExpanded: (isExpanded: boolean) => void;
   logoPath?: string;
+  coffeecoins?: number;
+  isLoading?: boolean;
 }
 
 const cn = (...classes: string[]) => {
@@ -24,10 +26,12 @@ export const NavGeneral = ({
   isExpanded,
   navItems,
   setIsExpanded,
+  coffeecoins,
+  isLoading,
   logoPath = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
-  const [showLogout, setShowLogout] = useState(false);
+
 
   useEffect(() => {
     if (window.innerWidth <= 768 && isExpanded) {
@@ -164,6 +168,26 @@ export const NavGeneral = ({
           {/* Logout button - With enhanced design */}
           <div className="mt-auto border-t border-gray-100">
             <div className="px-2 py-3">
+             {coffeecoins && (
+               <Link
+               to="/coffeelover"
+               className={cn(
+                 "flex items-center gap-1  py-2.5 rounded-lg transition-all duration-300",
+                 "text-gray-600 hover:bg-amber-100/50 hover:text-amber-800",
+                 isExpanded ? "" : "justify-center"
+               )}
+             >
+               <img className=" w-9" src="/coffeecoins.png" />
+               <span
+                  className={cn(
+                    "font-medium whitespace-nowrap transition-opacity duration-300",
+                    isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+                  )}
+                >
+                <p className="text-sm">{coffeecoins}</p>
+                </span>
+             </Link>
+             )}
               <Link
                 to="/"
                 className={cn(
@@ -185,6 +209,7 @@ export const NavGeneral = ({
                   Salir
                 </span>
               </Link>
+
             </div>
           </div>
         </div>
@@ -195,11 +220,21 @@ export const NavGeneral = ({
         <main className="flex-1 w-full relative mb-10">
           <Outlet />
         </main>
-        
+
         {/* Mobile navbar at bottom */}
         {isMobile && (
           <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] z-[100] rounded-t-2xl border-t border-gray-100">
             <nav className="flex justify-around items-center h-16 px-2">
+              {coffeecoins && (
+                <Link
+                  to="/coffeelover"
+                  className="flex flex-col items-center justify-center px-2 py-1 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
+                >
+                  <img className="h-10 w-10 m-1" src="/coffeecoins.png" />
+
+                  <span className="text-[12px] font-medium">{coffeecoins}</span>
+                </Link>
+              )}
               {navItems.map((item) => (
                 <Link
                   key={item.href}
@@ -220,6 +255,7 @@ export const NavGeneral = ({
                   )}
                 </Link>
               ))}
+
               <Link
                 to="/"
                 className="flex flex-col items-center justify-center px-2 py-2 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
@@ -228,6 +264,7 @@ export const NavGeneral = ({
                 <LogOutIcon className="h-4 w-4 m-1" />
                 <span className="text-[10px] font-medium">Salir</span>
               </Link>
+
             </nav>
           </div>
         )}

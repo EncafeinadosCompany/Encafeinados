@@ -1,5 +1,5 @@
 import { useRegisterVisitMutation } from "@/api/mutations/branchApprovalMutations";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const ValidateVisitPage = () => {

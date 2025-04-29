@@ -1,14 +1,11 @@
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router,Route,Routes,Navigate} from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { ROLES } from "@/common/utils/lists/roles";
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 import GoogleWithRegister from "@/common/hooks/registerWithGoogle";
+import Sellos from "@/common/molecules/sellos";
+import Prueba from "@/common/molecules/prueba";
 
 // LAYOUTS
 const LoadingSpinner = lazy(() => import("@/common/atoms/LoadingSpinner"));
@@ -19,62 +16,32 @@ const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
 const LoginPage = lazy(() => import("@/modules/home/views/Login/loginPage"));
 const CuestionCard = lazy(() => import("@/common/molecules/auth/cuestionCard"));
 const GoogleCallback = lazy(() => import("@/common/hooks/google"));
-const CompleteProfile = lazy(
-  () => import("@/common/widgets/forms/auth/formCompleteProfile")
-);
-
-const RegisterCoffeloverPage = lazy(
-  () => import("@/modules/home/views/Login/registerCoffeloverPage")
-);
-const RegisterStorePage = lazy(
-  () => import("@/modules/home/views/Login/registerStoresPage")
-);
-const RegisterStoreBranches = lazy(
-  () => import("@/common/widgets/forms/auth/registerStoreBranches")
-);
-const FinishAdminRegistration = lazy(
-  () =>
-    import("@/modules/stores/adminStores/components/FinishAdminRegistration")
-);
+const CompleteProfile = lazy(() => import("@/common/widgets/forms/auth/formCompleteProfile"));
+const RegisterCoffeloverPage = lazy(() => import("@/modules/home/views/Login/registerCoffeloverPage"));
+const RegisterStorePage = lazy(() => import("@/modules/home/views/Login/registerStoresPage"));
+const RegisterStoreBranches = lazy(() => import("@/common/widgets/forms/auth/registerStoreBranches"));
+const FinishAdminRegistration = lazy(() => import("@/modules/stores/adminStores/components/FinishAdminRegistration"));
 
 // STORES
-const HomeStores = lazy(
-  () => import("@/modules/stores/adminStores/views/homeStores")
-);
-const BranchManagement = lazy(
-  () => import("@/common/widgets/adminStores/branchManagement")
-);
+const HomeStores = lazy(() => import("@/modules/stores/adminStores/views/homeStores"));
+const BranchManagement = lazy(() => import("@/common/widgets/adminStores/branchManagement"));
 
 // ADMIN STORES
-const HomeAdminStores = lazy(
-  () => import("@/modules/adminStores/views/homeAdmin")
-);
-const PendingBranchesView = lazy(
-  () => import("@/modules/adminStores/components/PendingBranchesList")
-);
-const AlbumManager = lazy(
-  () => import("@/modules/adminStores/components/AlbumManager")
-);
+const HomeAdminStores = lazy(() => import("@/modules/adminStores/views/homeAdmin"));
+const PendingBranchesView = lazy(() => import("@/modules/adminStores/components/PendingBranchesList"));
+const AlbumManager = lazy(() => import("@/modules/adminStores/components/AlbumManager"));
 
 // COFFEELOVER
-const HomeCoffeelover = lazy(
-  () => import("@/modules/coffeelover/views/homeCoffeelovers")
-);
-const PrincipalCoffeelover = lazy(
-  () => import("@/modules/coffeelover/components/principalCoffeeLover")
-);
-const RegisterStoreVisit = lazy(
-  () => import("@/modules/coffeelover/components/registerStoreVisit")
-);
+const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/homeCoffeelovers"));
+const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/components/principalCoffeeLover"));
+const RegisterStoreVisit = lazy(() => import("@/modules/coffeelover/components/registerStoreVisit"));
 
 // MAP
 const MapView = lazy(() => import("@/common/widgets/map/MapView"));
 
 // SETTINGS
 const NotFound = lazy(() => import("@/modules/settings/404"));
-const UnauthorizedPage = lazy(
-  () => import("@/modules/settings/authorizationPage")
-);
+const UnauthorizedPage = lazy(() => import("@/modules/settings/authorizationPage"));
 
 // LANGUAGES
 // const LanguageSwitcher = lazy(() => import("@/common/molecules/settings/button-languages"));
@@ -99,6 +66,8 @@ const AuthRoutes = () => {
             <Route path="/completar-perfil" element={<CompleteProfile />} />
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />}/>
             <Route path="/404" element={<NotFound />} />
+             <Route path="/sellos" element={<Sellos />} /> 
+             <Route path="/prueba" element={<Prueba />} />
 
             {/* PRIVATE ROUTES  */}
             <Route element={<PrivateRoute />}>
@@ -106,10 +75,7 @@ const AuthRoutes = () => {
                 <Route path="/coffeelover" element={<HomeCoffeelover />}>
                   <Route index element={<PrincipalCoffeelover />} />
                   <Route path="map-coffelover" element={<MapView />} />
-                  <Route
-                    path="register-branch-visit"
-                    element={<RegisterStoreVisit />}
-                  />
+                  <Route path="register-branch-visit" element={<RegisterStoreVisit />}/>
                 </Route>
               </Route>
 
