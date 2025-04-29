@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { NavItemType } from "@/common/types/navTypes"
 import { NavGeneral } from "@/common/molecules/nav/navGeneral"
+import { useCoffeeCoinsQuery } from "@/api/queries/coffeecoins/coffeecoins"
 
 
 export type NavItem = {
@@ -11,6 +12,7 @@ export type NavItem = {
 export default function NavbarGeneral({ navItems }: NavItem) {
   const [isExpanded, setIsExpanded] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
+  const {data: coffeecoins, isLoading} = useCoffeeCoinsQuery();
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -35,7 +37,10 @@ export default function NavbarGeneral({ navItems }: NavItem) {
         isExpanded={isExpanded}
         setIsExpanded={setIsExpanded}
         isMobile={isMobile}
-        navItems={navItems}>
+        navItems={navItems}
+        coffeecoins={coffeecoins?.quantity}
+        isLoading={isLoading}
+        >
       </NavGeneral>
     </div>
   )
