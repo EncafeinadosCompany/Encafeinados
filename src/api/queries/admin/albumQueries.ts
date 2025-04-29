@@ -11,7 +11,7 @@ export const useAlbumsQuery = () => {
     queryFn: async () => {
       
       try {
-        const response = await authClient.get('/albums');
+        const response = await authClient.get<AlbumResponse>('/albums');
         const albums = response;
         
         if (!Array.isArray(albums)) {
