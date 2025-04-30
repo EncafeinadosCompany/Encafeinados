@@ -75,7 +75,7 @@ const AuthRoutes = () => {
                 <Route path="/coffeelover" element={<HomeCoffeelover />}>
                   <Route index element={<PrincipalCoffeelover />} />
                   <Route path="map-coffelover" element={<MapView />} />
-                  <Route path="register-branch-visit" element={<RegisterStoreVisit />}/>
+                  <Route path="register-branch-visit/" element={<RegisterStoreVisit />}/>
                 </Route>
               </Route>
 
