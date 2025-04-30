@@ -75,7 +75,7 @@ export const useRejectBranchMutation = () => {
 };
 
 interface ValidateVisitInput {
-  branch_id: string;
+  branchId: string;
   latitude: number;
   longitude: number;
 }
@@ -91,12 +91,11 @@ export const useRegisterVisitMutation = (): UseMutationResult<
   Error,
   ValidateVisitInput
 > => {
-  const queryClient = useQueryClient();
   console.log("ingreso a la mutacion");
 
   return useMutation({
     mutationFn: async ({
-      branch_id,
+      branchId,
       latitude,
       longitude,
     }: ValidateVisitInput) => {
@@ -105,7 +104,7 @@ export const useRegisterVisitMutation = (): UseMutationResult<
       if (!userId) throw new Error("No se encontró ID de usuario.");
 
       const res: any = await authClient.post("/branches/register-visit", {
-        branch_id,
+        branch_id: branchId,
         latitude,
         longitude,
       });
