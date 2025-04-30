@@ -1,20 +1,20 @@
+// Agregar un nuevo tipo para la respuesta actual que incluye el arreglo albums
+export interface AlbumsListResponse {
+  albums: AlbumResponse[];
+}
+
+// Los demás tipos se mantienen igual
 export type AlbumType = 'ANNUAL';
 
-/**
- * Estructura de una página dentro de un álbum
- */
 export interface AlbumPage {
   id: number;
   title: string;
   description: string;
-  status: boolean;
-  createdAt: string;
-  updatedAt: string;
+  status?: boolean; // Hago opcional porque no viene en la respuesta de detalles
+  createdAt?: string; // Hago opcional porque no viene en la respuesta de detalles
+  updatedAt?: string; // Hago opcional porque no viene en la respuesta de detalles
 }
 
-/**
- * DTO para la creación de un nuevo álbum
- */
 export interface CreateAlbumDto {
   title: string;
   logo: string;
@@ -24,10 +24,6 @@ export interface CreateAlbumDto {
   end_date: string; 
 }
 
-/**
- * Respuesta de la API al crear o consultar un álbum
- * Actualizada según la estructura real de la API
- */
 export interface AlbumResponse {
   id: number; 
   title: string;
@@ -37,14 +33,9 @@ export interface AlbumResponse {
   start_date: string;
   end_date: string;
   status: boolean;
-  createdAt: string;
-  updatedAt: string;
-  pages: AlbumPage[];
+  createdAt?: string; 
+  updatedAt?: string; 
+  pages?: AlbumPage[];
 }
 
 export type AlbumsResponse = AlbumResponse[];
-
-export interface AlbumResponseWithMessage {
-  message: string;
-  album: AlbumResponse;
-}

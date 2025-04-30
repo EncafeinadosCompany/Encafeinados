@@ -14,15 +14,13 @@ import { AlbumPagination } from "@/common/molecules/admin/AlbumPagination";
 import { AlbumCard } from "@/common/molecules/admin/AlbumCard";
 import { Badge } from "@/common/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/common/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/ui/tabs";
 import { AnimatePresence, motion } from "framer-motion";
-import { cn } from "@/lib/utils";
 
 export const ListAlbumWidget = () => {
     const { data: listAlbum, isLoading, error } = useAlbumsQuery();
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const [selectedAlbum, setSelectedAlbum] = useState<AlbumResponse | null>(null);
+    const [selectedAlbumId, setSelectedAlbumId] = useState<number | null>(null); // Cambiamos de objeto a ID
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredAlbums, setFilteredAlbums] = useState<AlbumResponse[]>([]);
@@ -32,12 +30,10 @@ export const ListAlbumWidget = () => {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-    // Aplicar filtros
     useEffect(() => {
         if (listAlbum) {
             let filtered = listAlbum;
             
-            // Filtro de búsqueda
             if (searchQuery) {
                 filtered = filtered.filter(album =>
                     album.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -46,7 +42,6 @@ export const ListAlbumWidget = () => {
                 );
             }
             
-            // Filtro de estado
             if (activeFilter !== 'all') {
                 filtered = filtered.filter(album => 
                     (activeFilter === 'active' ? album.status : !album.status)
@@ -64,7 +59,7 @@ export const ListAlbumWidget = () => {
     const totalPages = Math.ceil(filteredAlbums.length / albumsPerPage);
 
     const handleViewDetail = (album: AlbumResponse) => {
-        setSelectedAlbum(album);
+        setSelectedAlbumId(album.id);
         setIsDetailOpen(true);
     };
     
@@ -276,159 +271,167 @@ export const ListAlbumWidget = () => {
                 </div>
             </header>
 
-            {/* Contenido principal con scroll */}
-            <div className="flex-grow overflow-auto p-3 md:p-4 pt-5 bg-gradient-to-b from-[#FAF3E0]/10 to-white">
-                <AnimatePresence mode="wait">
-                    {/* Sin resultados */}
-                    {filteredAlbums.length === 0 ? (
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="flex flex-col items-center justify-center p-6 md:p-8 text-center bg-[#FAF3E0]/30 rounded-xl border border-amber-100 my-4"
-                        >
-                            <div className="bg-[#FAF3E0]/80 p-4 rounded-full mb-4 border border-amber-200">
-                                <BookOpen className="h-8 w-8 text-[#D4A76A]" />
-                            </div>
-                            <h3 className="font-medium text-lg text-[#2C1810]">
-                                {searchQuery || activeFilter !== 'all' 
-                                    ? "No se encontraron álbumes" 
-                                    : "Crea tu primer álbum"}
-                            </h3>
-                            <p className="text-[#6F4E37] text-sm mt-2 max-w-md">
-                                {searchQuery 
-                                    ? `No hay resultados para "${searchQuery}"${activeFilter !== 'all' ? ` con el filtro "${activeFilter === 'active' ? 'activo' : 'inactivo'}"` : ''}`
-                                    : activeFilter !== 'all'
-                                        ? `No hay álbumes ${activeFilter === 'active' ? 'activos' : 'inactivos'}`
-                                        : "Comienza a recopilar tus cafeterías favoritas en álbumes temáticos"
-                                }
-                            </p>
-                            <div className="flex gap-2 mt-4">
-                                {(searchQuery || activeFilter !== 'all') && (
-                                    <Button 
-                                        onClick={() => {
-                                            setSearchQuery("");
-                                            setActiveFilter('all');
-                                        }}
-                                        variant="outline"
-                                        className="border-amber-200 text-[#6F4E37] hover:bg-[#FAF3E0]"
-                                    >
-                                        <Filter className="h-3.5 w-3.5 mr-1.5" />
-                                        Limpiar filtros
-                                    </Button>
-                                )}
-                            </div>
-                        </motion.div>
-                    ) : (
-                        // Vista de álbumes (grid o lista)
-                        <motion.div
-                            key={`view-${viewMode}-${searchQuery}-${activeFilter}-${currentPage}`}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            {viewMode === 'grid' ? (
-                                // Vista grid 
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-                                    {currentAlbums.map((album: AlbumResponse, index) => (
-                                        <motion.div 
-                                            key={album.id}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.2, delay: Math.min(index * 0.05, 0.3) }}
-                                        >
-                                            <AlbumCard
-                                                album={album}
-                                                index={index}
-                                                onViewDetail={handleViewDetail}
-                                            />
-                                        </motion.div>
-                                    ))}
-                                    
-                                    {/* Elementos fantasma para mantener 4 columnas cuando hay menos de 4 álbumes */}
-                                    {currentAlbums.length > 0 && currentAlbums.length < 4 && 
-                                        Array.from({ length: 4 - currentAlbums.length }).map((_, index) => (
-                                            <div key={`empty-${index}`} className="invisible"></div>
-                                        ))
-                                    }
-                                </div>
+            <div className="flex-grow flex flex-col min-h-0 w-full overflow-hidden">
+                {/* El truco del scroll: contenedor relativo con altura 0 + contenedor absoluto con scroll */}
+                <div className="flex-grow relative h-0 min-h-0 w-full">
+                    <div 
+                        className="absolute inset-0 overflow-y-auto p-3 md:p-4 pt-5 bg-gradient-to-b from-[#FAF3E0]/10 to-white"
+                        style={{
+                            scrollbarWidth: 'thin',
+                            scrollbarColor: '#F3D19E transparent'
+                        }}
+                    >
+                        <AnimatePresence mode="wait">
+                            {filteredAlbums.length === 0 ? (
+                                <motion.div 
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="flex flex-col items-center justify-center p-6 md:p-8 text-center bg-[#FAF3E0]/30 rounded-xl border border-amber-100 my-4"
+                                >
+                                    <div className="bg-[#FAF3E0]/80 p-4 rounded-full mb-4 border border-amber-200">
+                                        <BookOpen className="h-8 w-8 text-[#D4A76A]" />
+                                    </div>
+                                    <h3 className="font-medium text-lg text-[#2C1810]">
+                                        {searchQuery || activeFilter !== 'all' 
+                                            ? "No se encontraron álbumes" 
+                                            : "Crea tu primer álbum"}
+                                    </h3>
+                                    <p className="text-[#6F4E37] text-sm mt-2 max-w-md">
+                                        {searchQuery 
+                                            ? `No hay resultados para "${searchQuery}"${activeFilter !== 'all' ? ` con el filtro "${activeFilter === 'active' ? 'activo' : 'inactivo'}"` : ''}`
+                                            : activeFilter !== 'all'
+                                                ? `No hay álbumes ${activeFilter === 'active' ? 'activos' : 'inactivos'}`
+                                                : "Comienza a recopilar tus cafeterías favoritas en álbumes temáticos"
+                                        }
+                                    </p>
+                                    <div className="flex gap-2 mt-4">
+                                        {(searchQuery || activeFilter !== 'all') && (
+                                            <Button 
+                                                onClick={() => {
+                                                    setSearchQuery("");
+                                                    setActiveFilter('all');
+                                                }}
+                                                variant="outline"
+                                                className="border-amber-200 text-[#6F4E37] hover:bg-[#FAF3E0]"
+                                            >
+                                                <Filter className="h-3.5 w-3.5 mr-1.5" />
+                                                Limpiar filtros
+                                            </Button>
+                                        )}
+                                    </div>
+                                </motion.div>
                             ) : (
-                                // Vista lista
-                                <div className="space-y-2">
-                                    {currentAlbums.map((album: AlbumResponse, index) => (
-                                        <motion.div
-                                            key={album.id}
-                                            initial={{ opacity: 0, x: -5 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ duration: 0.15, delay: index * 0.03 }}
-                                        >
-                                            <Card className="overflow-hidden border border-amber-100 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 bg-white">
-                                                <div className="flex items-center p-3">
-                                                    <div className="h-14 w-14 rounded-md overflow-hidden mr-3 bg-[#FAF3E0] flex-shrink-0">
-                                                        {album.logo ? (
-                                                            <img 
-                                                                src={album.logo} 
-                                                                alt={album.title}
-                                                                className="h-full w-full object-cover"
-                                                                loading="lazy"
-                                                                onError={(e) => { e.currentTarget.src = "/coffee-206142_1280.jpg" }}
-                                                            />
-                                                        ) : (
-                                                            <div className="flex items-center justify-center h-full bg-gradient-to-br from-[#FAF3E0] to-[#F5E6C8]">
-                                                                <BookOpen className="h-6 w-6 text-[#D4A76A]" />
+                                <motion.div
+                                    key={`view-${viewMode}-${searchQuery}-${activeFilter}-${currentPage}`}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    {viewMode === 'grid' ? (
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+                                            {currentAlbums.map((album: AlbumResponse, index) => (
+                                                <motion.div 
+                                                    key={album.id}
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.2, delay: Math.min(index * 0.05, 0.3) }}
+                                                >
+                                                    <AlbumCard
+                                                        album={album}
+                                                        index={index}
+                                                        onViewDetail={handleViewDetail}
+                                                    />
+                                                </motion.div>
+                                            ))}
+                                            
+                                            {currentAlbums.length > 0 && currentAlbums.length < 4 && 
+                                                Array.from({ length: 4 - currentAlbums.length }).map((_, index) => (
+                                                    <div key={`empty-${index}`} className="invisible"></div>
+                                                ))
+                                            }
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            {currentAlbums.map((album: AlbumResponse, index) => (
+                                                <motion.div
+                                                    key={album.id}
+                                                    initial={{ opacity: 0, x: -5 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ duration: 0.15, delay: index * 0.03 }}
+                                                >
+                                                    <Card className="overflow-hidden border border-amber-100 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 bg-white">
+                                                        <div className="flex items-center p-3">
+                                                            <div className="h-14 w-14 rounded-md overflow-hidden mr-3 bg-[#FAF3E0] flex-shrink-0">
+                                                                {album.logo ? (
+                                                                    <img 
+                                                                        src={album.logo} 
+                                                                        alt={album.title}
+                                                                        className="h-full w-full object-cover"
+                                                                        loading="lazy"
+                                                                        onError={(e) => { e.currentTarget.src = "/coffee-206142_1280.jpg" }}
+                                                                    />
+                                                                ) : (
+                                                                    <div className="flex items-center justify-center h-full bg-gradient-to-br from-[#FAF3E0] to-[#F5E6C8]">
+                                                                        <BookOpen className="h-6 w-6 text-[#D4A76A]" />
+                                                                    </div>
+                                                                )}
                                                             </div>
-                                                        )}
-                                                    </div>
-                                                    
-                                                    <div className="flex-grow min-w-0">
-                                                        <div className="flex items-start justify-between">
-                                                            <h3 className="font-medium text-[#2C1810] truncate mr-2">{album.title}</h3>
-                                                            <Badge className={`${album.status ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-gray-100 text-gray-800 border border-gray-200'} flex-shrink-0`}>
-                                                                {album.status ? 'Activo' : 'Inactivo'}
-                                                            </Badge>
-                                                        </div>
-                                                        <p className="text-sm text-[#6F4E37]/80 line-clamp-1">{album.introduction}</p>
-                                                        <div className="flex items-center justify-between mt-1">
-                                                            <div className="flex items-center text-xs text-[#6F4E37]">
-                                                                <Calendar className="h-3 w-3 mr-1 text-[#D4A76A]" />
-                                                                {new Date(album.createdAt).toLocaleDateString()}
+                                                            
+                                                            <div className="flex-grow min-w-0">
+                                                                <div className="flex items-start justify-between">
+                                                                    <h3 className="font-medium text-[#2C1810] truncate mr-2">{album.title}</h3>
+                                                                    <Badge className={`${album.status ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-gray-100 text-gray-800 border border-gray-200'} flex-shrink-0`}>
+                                                                        {album.status ? 'Activo' : 'Inactivo'}
+                                                                    </Badge>
+                                                                </div>
+                                                                <p className="text-sm text-[#6F4E37]/80 line-clamp-1">{album.introduction}</p>
+                                                                <div className="flex items-center justify-between mt-1">
+                                                                    <div className="flex items-center text-xs text-[#6F4E37]">
+                                                                        <Calendar className="h-3 w-3 mr-1 text-[#D4A76A]" />
+                                                                        {album.createdAt 
+                                                                            ? new Date(album.createdAt).toLocaleDateString()
+                                                                            : new Date(album.start_date).toLocaleDateString() // Usamos start_date como fallback
+                                                                        }
+                                                                    </div>
+                                                                    <Button
+                                                                        onClick={() => handleViewDetail(album)}
+                                                                        variant="ghost"
+                                                                        className="text-[#6F4E37] hover:text-[#2C1810] hover:bg-amber-100 text-xs p-1.5 h-auto"
+                                                                    >
+                                                                        <Eye className="h-3.5 w-3.5 mr-1" />
+                                                                        Ver detalles
+                                                                    </Button>
+                                                                </div>
                                                             </div>
-                                                            <Button
-                                                                onClick={() => handleViewDetail(album)}
-                                                                variant="ghost"
-                                                                className="text-[#6F4E37] hover:text-[#2C1810] hover:bg-amber-100 text-xs p-1.5 h-auto"
-                                                            >
-                                                                <Eye className="h-3.5 w-3.5 mr-1" />
-                                                                Ver detalles
-                                                            </Button>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </Card>
-                                        </motion.div>
-                                    ))}
-                                </div>
+                                                    </Card>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    
+                                    {/* Mueve la paginación aquí dentro, como parte del contenido scrollable */}
+                                    {totalPages > 1 && (
+                                        <div className="mt-5 flex justify-center">
+                                            <AlbumPagination
+                                                currentPage={currentPage}
+                                                totalPages={totalPages}
+                                                onPageChange={setCurrentPage}
+                                            />
+                                        </div>
+                                    )}
+                                </motion.div>
                             )}
-                            
-                            {/* Paginación */}
-                            {totalPages > 1 && (
-                                <div className="mt-5 flex justify-center">
-                                    <AlbumPagination
-                                        currentPage={currentPage}
-                                        totalPages={totalPages}
-                                        onPageChange={setCurrentPage}
-                                    />
-                                </div>
-                            )}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                        </AnimatePresence>
+                    </div>
+                </div>
             </div>
 
             <AlbumDetailDialog 
-                album={selectedAlbum}
+                albumId={selectedAlbumId}
                 isOpen={isDetailOpen}
                 onOpenChange={setIsDetailOpen}
             />

@@ -19,7 +19,7 @@ const AlbumManager = () => {
         <CreateAlbumWidget className="sm:self-start" />
       </header>
       
-      <div className="flex-1 min-h-0 overflow-auto">
+      <div className="flex-1 min-h-0 overflow-hidden">
         <ListAlbumWidget />
       </div>
     </div>

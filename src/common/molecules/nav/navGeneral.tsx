@@ -215,13 +215,11 @@ export const NavGeneral = ({
         </div>
       )}
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        <main className="flex-1 w-full relative mb-10">
+        <main className="flex-1 w-full relative ">
           <Outlet />
         </main>
 
-        {/* Mobile navbar at bottom */}
         {isMobile && (
           <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] z-[100] rounded-t-2xl border-t border-gray-100">
             <nav className="flex justify-around items-center h-16 px-2">

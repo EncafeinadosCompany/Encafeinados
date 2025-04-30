@@ -32,7 +32,6 @@ export default function NavbarGeneral({ navItems }: NavItem) {
   }, [])
 
   return (
-    <div className="flex min-h-screen w-full">
       <NavGeneral
         isExpanded={isExpanded}
         setIsExpanded={setIsExpanded}
@@ -42,7 +41,7 @@ export default function NavbarGeneral({ navItems }: NavItem) {
         isLoading={isLoading}
         >
       </NavGeneral>
-    </div>
+   
   )
 }
 

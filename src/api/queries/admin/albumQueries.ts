@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import AuthClient from "@/api/client/axios";
-import { AlbumResponse} from "@/api/types/albumTypes";
+import {  AlbumResponse, AlbumsListResponse} from "@/api/types/albumTypes";
 
 
 const authClient = new AuthClient();
@@ -9,24 +9,38 @@ export const useAlbumsQuery = () => {
   return useQuery<AlbumResponse[], Error>({
     queryKey: ['albums'],
     queryFn: async () => {
-      
       try {
-        const response = await authClient.get('/albums');
-        const albums = response;
+        const response = await authClient.get<AlbumsListResponse>('/albums');
         
-        if (!Array.isArray(albums)) {
+        const albumsData = response.albums || [];
+        
+        if (!Array.isArray(albumsData)) {
           return [];
         }
-        console.log("✅ Álbumes obtenidos:", albums); 
         
-        return albums;
-        
+        return albumsData;
       } catch (error) {
-        console.error("❌ Error al obtener álbumes:", error);
         throw error; 
       }
     },
     refetchOnWindowFocus: true,
     retry: 1
+  });
+};
+
+export const useAlbumDetailsQuery = (albumId: number | null) => {
+  return useQuery<AlbumResponse, Error>({
+    queryKey: ['album', albumId],
+    queryFn: async () => {
+      if (!albumId) throw new Error("Album ID is required");
+      
+      try {
+        const response = await authClient.get<AlbumResponse>(`/albums/${albumId}`);
+        return response;
+      } catch (error) {
+        throw error;
+      }
+    },
+    enabled: !!albumId, 
   });
 };
