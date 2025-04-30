@@ -194,7 +194,7 @@ export default function BranchManagement() {
       <QRCodeBranchModal
         isOpen={isQrCodeModalOpen}
         onClose={() => setIsQrCodeModalOpen(false)}
-        qrCodeUrl={`${EXPOSED_URL}/coffeelover/register-branch-visit/${selectedQrCodeBranch?.id}`}
+        qrCodeUrl={`${EXPOSED_URL}/coffeelover/register-branch-visit?branch_id${selectedQrCodeBranch?.id}`}
       />
 
       {selectedBranch && (

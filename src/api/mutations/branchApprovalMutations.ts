@@ -4,7 +4,10 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import AuthClient from "../client/axios";
-
+import {
+  ValidateVisitInput,
+  ValidateVisitResponse,
+} from "../types/branchesApprovalTypes";
 const authClient = new AuthClient();
 
 // Mutación para aprobar una sucursal
@@ -74,18 +77,6 @@ export const useRejectBranchMutation = () => {
   });
 };
 
-interface ValidateVisitInput {
-  branchId: string;
-  latitude: number;
-  longitude: number;
-}
-
-interface ValidateVisitResponse {
-  success: boolean;
-  message: string;
-  data?: any;
-}
-
 export const useRegisterVisitMutation = (): UseMutationResult<
   ValidateVisitResponse,
   Error,
@@ -99,10 +90,6 @@ export const useRegisterVisitMutation = (): UseMutationResult<
       latitude,
       longitude,
     }: ValidateVisitInput) => {
-      console.log("ingreso a la mutacion");
-      const userId = localStorage.getItem("userId");
-      if (!userId) throw new Error("No se encontró ID de usuario.");
-
       const res: any = await authClient.post("/branches/register-visit", {
         branch_id: branchId,
         latitude,
