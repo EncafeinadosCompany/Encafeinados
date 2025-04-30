@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { AlbumResponse } from "@/api/types/albumTypes";
 import { Badge } from "@/common/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { BookOpen, CalendarIcon, Coffee, Loader2 } from "lucide-react";
+import { BookOpen, CalendarIcon, Coffee, Loader2, Stamp as StampIcon } from "lucide-react";
 import { useAlbumDetailsQuery } from "@/api/queries/admin/albumQueries";
+import { PageStampsDialog } from "./PageStampsDialog";
 
 interface AlbumDetailDialogProps {
-    albumId: number | null; // Cambiamos para recibir el ID en lugar del objeto completo
+    albumId: number | null; 
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
 }
@@ -20,6 +21,9 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
     onOpenChange 
 }) => {
     const { data: album, isLoading, error } = useAlbumDetailsQuery(albumId);
+    const [selectedPageId, setSelectedPageId] = useState<number | null>(null);
+    const [selectedPageName, setSelectedPageName] = useState<string>("");
+    const [isStampsDialogOpen, setIsStampsDialogOpen] = useState(false);
 
     const formatDate = (dateString?: string) => {
         if (!dateString) return "N/D";
@@ -30,19 +34,22 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
         }
     };
 
-    // Si no hay ID o hay error, no mostramos nada
+    const handleViewStamps = (pageId: number, pageTitle: string) => {
+        setSelectedPageId(pageId);
+        setSelectedPageName(pageTitle);
+        setIsStampsDialogOpen(true);
+    };
+
     if (!albumId) return null;
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-3xl bg-[#FFFBF6] border-amber-100 rounded-xl p-0 flex flex-col max-h-[80vh] overflow-hidden">
                 {isLoading ? (
-                    // Estado de carga
                     <div className="flex items-center justify-center p-12">
                         <Loader2 className="h-10 w-10 animate-spin text-[#D4A76A]" />
                     </div>
                 ) : error ? (
-                    // Estado de error
                     <div className="p-6 text-center text-red-500">
                         <p>Error al cargar los detalles del álbum</p>
                         <Button 
@@ -54,7 +61,6 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                         </Button>
                     </div>
                 ) : album ? (
-                    // Contenido del álbum cuando está cargado
                     <>
                         <DialogHeader className="border-b border-amber-100 bg-gradient-to-r from-[#FAF3E0] to-[#FAF3E0]/30 px-4 py-3 flex-shrink-0">
                             <DialogTitle className="text-xl font-medium text-[#2C1810] flex items-center gap-2">
@@ -76,7 +82,6 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                         </DialogHeader>
 
                         <div className="flex-grow overflow-y-auto p-4 space-y-4">
-                            {/* Resto del contenido igual que antes */}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 <div>
                                     <div className="relative rounded-lg overflow-hidden shadow-md border border-amber-100 h-48 bg-white">
@@ -115,10 +120,6 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                                                     {formatDate(album.end_date)}
                                                 </p>
                                             </div>
-                                            
-                                           
-                                            
-                                        
                                         </div>
                                     </div>
                                 </div>
@@ -183,7 +184,7 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                                                             key={index} 
                                                             className="p-2 bg-gradient-to-r from-[#FAF3E0]/50 to-white rounded border border-amber-100 shadow-sm hover:shadow-md transition-shadow"
                                                         >
-                                                            <div className="flex justify-between items-center">
+                                                            <div className="flex justify-between items-center mb-1.5">
                                                                 <h4 className="font-medium text-[#2C1810] text-xs flex items-center gap-1">
                                                                     <span className="bg-[#6F4E37]/10 text-[#6F4E37] w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-semibold">
                                                                         {index + 1}
@@ -194,9 +195,21 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                                                                     Cafetería
                                                                 </Badge>
                                                             </div>
-                                                            <p className="text-xs text-[#6F4E37] mt-1 line-clamp-2 hover:line-clamp-none transition-all duration-300">
+                                                            <p className="text-xs text-[#6F4E37] line-clamp-2 hover:line-clamp-none transition-all duration-300 mb-2">
                                                                 {page.description}
                                                             </p>
+                                                            
+                                                            <div className="flex justify-end mt-1">
+                                                                <Button
+                                                                    size="sm"
+                                                                    variant="outline"
+                                                                    className="h-7 text-xs border-amber-200 text-amber-700 hover:bg-amber-50 hover:text-amber-800 flex items-center gap-1.5"
+                                                                    onClick={() => handleViewStamps(page.id, page.title)}
+                                                                >
+                                                                    <StampIcon className="h-3 w-3 text-[#D4A76A]" />
+                                                                    Ver estampas
+                                                                </Button>
+                                                            </div>
                                                         </div>
                                                     ))}
                                                     
@@ -218,6 +231,12 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                                 </div>
                             </div>
                         </div>
+                        <PageStampsDialog
+                            pageId={selectedPageId}
+                            pageName={selectedPageName}
+                            isOpen={isStampsDialogOpen}
+                            onOpenChange={setIsStampsDialogOpen}
+                        />
                     </>
                 ) : null}
             </DialogContent>

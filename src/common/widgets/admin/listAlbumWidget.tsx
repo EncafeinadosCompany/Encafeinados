@@ -129,14 +129,9 @@ export const ListAlbumWidget = () => {
 
     return (
         <div className="flex flex-col h-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            {/* Header fijo con stats y filtros */}
             <header className="p-3 md:p-4 bg-gradient-to-r from-[#FAF3E0] to-white border-b border-amber-100 sticky top-0 z-10">
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                    <div>
-                        <h2 className="text-lg font-medium text-[#2C1810] flex items-center">
-                            <BookOpen className="mr-2 h-5 w-5 text-[#D4A76A]" />
-                            <span>Biblioteca de Álbumes</span>
-                        </h2>
+                    <div>                   
                         <div className="flex gap-3 mt-1.5 text-xs">
                             <Badge variant="outline" className="bg-white px-2 py-0.5 text-[#6F4E37] border-amber-200">
                                 <Coffee className="h-3 w-3 mr-1 text-[#D4A76A]" />

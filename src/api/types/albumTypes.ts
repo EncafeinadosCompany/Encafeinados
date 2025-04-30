@@ -39,3 +39,17 @@ export interface AlbumResponse {
 }
 
 export type AlbumsResponse = AlbumResponse[];
+
+export interface Stamp {
+  id: number;
+  logo: string;
+  name: string;
+  description: string;
+  coffeecoins_value: number;
+  status: boolean;
+}
+
+export interface PageStampsResponse {
+  pageId: number;
+  stamps: Stamp[];
+}
