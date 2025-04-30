@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
 import { motion } from "framer-motion";
+import { useStampsAllQuery} from "@/api/queries/album/stampsQueries";
+
 
 const sellosCliente = [
     {
@@ -39,6 +41,8 @@ interface Sello {
 }
 
 export default function () {
+    const {data:stapms , error, isLoading} = useStampsAllQuery();
+    
     const [flippedCards, setFlippedCards] = useState<number[]>([]);
 
     const handleFlip = (id: number) => {
@@ -49,12 +53,15 @@ export default function () {
         }
     }
 
+
+    console.log("stapms", stapms);
+
     return (
         <div className="bg-gradient-to-b from-amber-50 to-amber-100 flex flex-col justify-center items-center h-full p-4">
             <h2 className="text-2xl font-bold text-amber-800 mb-6">Colección de Sellos</h2>
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 w-full max-w-3xl">
                 {
-                    sellosStore.map((sello) => {
+                    sellosStore?.map((sello) => {
                         const aplica = sellosCliente.find((selloCliente) => {
                             return selloCliente.id === sello.id;
                         });
