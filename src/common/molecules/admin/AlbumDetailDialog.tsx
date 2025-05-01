@@ -5,9 +5,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from "@/common/ui/button";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { BookOpen, CalendarIcon, Coffee, Loader2, Stamp as StampIcon } from "lucide-react";
+import { BookOpen, CalendarIcon, Coffee, Loader2, Stamp as StampIcon, PlusCircle } from "lucide-react";
 import { useAlbumDetailsQuery } from "@/api/queries/admin/albumQueries";
 import { PageStampsDialog } from "./PageStampsDialog";
+import { CreatePageDialog } from "./CreatePageDialog";
+import { AddStampsDialog } from "./AddStampsDialog";
 
 interface AlbumDetailDialogProps {
     albumId: number | null; 
@@ -24,6 +26,8 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
     const [selectedPageId, setSelectedPageId] = useState<number | null>(null);
     const [selectedPageName, setSelectedPageName] = useState<string>("");
     const [isStampsDialogOpen, setIsStampsDialogOpen] = useState(false);
+    const [isCreatePageDialogOpen, setIsCreatePageDialogOpen] = useState(false);
+    const [isAddStampsDialogOpen, setIsAddStampsDialogOpen] = useState(false);
 
     const formatDate = (dateString?: string) => {
         if (!dateString) return "N/D";
@@ -40,11 +44,17 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
         setIsStampsDialogOpen(true);
     };
 
+    const handleAddStamps = (pageId: number, pageTitle: string) => {
+        setSelectedPageId(pageId);
+        setSelectedPageName(pageTitle);
+        setIsAddStampsDialogOpen(true);
+    };
+
     if (!albumId) return null;
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-3xl bg-[#FFFBF6] border-amber-100 rounded-xl p-0 flex flex-col max-h-[80vh] overflow-hidden">
+            <DialogContent className="sm:max-w-3xl bg-[#FFFBF6] border-amber-100 rounded-xl p-0 flex flex-col max-h-[95vh] overflow-hidden">
                 {isLoading ? (
                     <div className="flex items-center justify-center p-12">
                         <Loader2 className="h-10 w-10 animate-spin text-[#D4A76A]" />
@@ -145,25 +155,22 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                                                 <Badge className="bg-[#6F4E37]/10 text-[#6F4E37] text-xs">
                                                     {album.pages?.length || 0} páginas
                                                 </Badge>
-                                                {album.pages && album.pages.length > 5 && (
-                                                    <Button 
-                                                        variant="ghost" 
-                                                        size="sm" 
-                                                        className="h-6 px-2 text-xs text-amber-700 hover:text-amber-800 hover:bg-amber-50"
-                                                        onClick={() => {
-                                                            // Podrías añadir aquí funcionalidad para expandir o ir a una vista dedicada
-                                                            console.log("Ver todas las páginas");
-                                                        }}
-                                                    >
-                                                        Ver todas
-                                                    </Button>
-                                                )}
+                                                
+                                                <Button 
+                                                    variant="outline" 
+                                                    size="sm" 
+                                                    className="h-6 px-2 text-xs border-amber-200 text-amber-700 hover:bg-amber-50 hover:text-amber-800 flex items-center gap-1"
+                                                    onClick={() => setIsCreatePageDialogOpen(true)}
+                                                >
+                                                    <PlusCircle className="h-3 w-3" />
+                                                    Nueva
+                                                </Button>
+                                                
                                             </div>
                                         </div>
                                         
                                         {album.pages && album.pages.length > 0 ? (
                                             <div className="mt-2 flex flex-col gap-2">
-                                                {/* Contador de páginas visible cuando hay muchas */}
                                                 {album.pages.length > 3 && (
                                                     <div className="flex justify-between items-center px-2 py-1 bg-[#FAF3E0]/30 rounded text-xs text-[#6F4E37]">
                                                         <span>Mostrando {Math.min(album.pages.length, 10)} de {album.pages.length} páginas</span>
@@ -171,7 +178,6 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                                                     </div>
                                                 )}
                                                 
-                                                {/* Área de scroll mejorada con mayor altura y mejor indicación visual */}
                                                 <div 
                                                     className="max-h-[240px] overflow-y-auto pr-2 space-y-2 rounded-sm"
                                                     style={{
@@ -199,7 +205,17 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                                                                 {page.description}
                                                             </p>
                                                             
-                                                            <div className="flex justify-end mt-1">
+                                                            <div className="flex justify-end mt-1 space-x-2">
+                                                                <Button
+                                                                    size="sm"
+                                                                    variant="outline"
+                                                                    className="h-7 text-xs border-amber-200 text-amber-700 hover:bg-amber-50 hover:text-amber-800 flex items-center gap-1.5"
+                                                                    onClick={() => handleAddStamps(page.id, page.title)}
+                                                                >
+                                                                    <PlusCircle className="h-3 w-3 text-[#D4A76A]" />
+                                                                    Añadir estampas
+                                                                </Button>
+                                                                
                                                                 <Button
                                                                     size="sm"
                                                                     variant="outline"
@@ -213,7 +229,6 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                                                         </div>
                                                     ))}
                                                     
-                                                    {/* Indicador de más contenido si hay muchas páginas */}
                                                     {album.pages.length > 10 && (
                                                         <div className="text-center py-1 text-amber-500 text-xs italic">
                                                             Y {album.pages.length - 10} más...
@@ -236,6 +251,26 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                             pageName={selectedPageName}
                             isOpen={isStampsDialogOpen}
                             onOpenChange={setIsStampsDialogOpen}
+                        />
+                        <CreatePageDialog
+                            albumId={album.id} 
+                            albumTitle={album.title}
+                            isOpen={isCreatePageDialogOpen}
+                            onOpenChange={setIsCreatePageDialogOpen}
+                        />
+                        <AddStampsDialog
+                            pageId={selectedPageId}
+                            pageName={selectedPageName}
+                            isOpen={isAddStampsDialogOpen}
+                            onOpenChange={setIsAddStampsDialogOpen}
+                            onSuccess={() => {
+                                if (isStampsDialogOpen) {
+                                    setIsStampsDialogOpen(false);
+                                    setTimeout(() => {
+                                        setIsStampsDialogOpen(true);
+                                    }, 100);
+                                }
+                            }}
                         />
                     </>
                 ) : null}

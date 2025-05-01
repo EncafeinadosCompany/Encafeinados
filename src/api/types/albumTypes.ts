@@ -1,18 +1,16 @@
-// Agregar un nuevo tipo para la respuesta actual que incluye el arreglo albums
 export interface AlbumsListResponse {
   albums: AlbumResponse[];
 }
 
-// Los demás tipos se mantienen igual
 export type AlbumType = 'ANNUAL';
 
 export interface AlbumPage {
   id: number;
   title: string;
   description: string;
-  status?: boolean; // Hago opcional porque no viene en la respuesta de detalles
-  createdAt?: string; // Hago opcional porque no viene en la respuesta de detalles
-  updatedAt?: string; // Hago opcional porque no viene en la respuesta de detalles
+  status?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CreateAlbumDto {
@@ -49,7 +47,34 @@ export interface Stamp {
   status: boolean;
 }
 
+export interface StampsResponse {
+  stamps: Stamp[];
+}
+
+export interface AddStampsToPageDto {
+  pageId: number;
+  stampIds: number[];
+}
+
 export interface PageStampsResponse {
   pageId: number;
   stamps: Stamp[];
+}
+
+export interface CreatePageDto {
+  album_id: number;
+  title: string;
+  description: string;
+  status: boolean;
+}
+
+export interface CreatePageResponse {
+  album: {
+    album_id: number;
+    album_title: string;
+  };
+  id: number;
+  title: string;
+  description: string;
+  status: boolean;
 }

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import AuthClient from "@/api/client/axios";
-import {  AlbumResponse, AlbumsListResponse, PageStampsResponse} from "@/api/types/albumTypes";
+import {  AlbumResponse, AlbumsListResponse, PageStampsResponse, StampsResponse} from "@/api/types/albumTypes";
 
 
 const authClient = new AuthClient();
@@ -61,3 +61,13 @@ export const usePageStampsQuery = (pageId: number | null) => {
     enabled: !!pageId, 
   });
 };
+
+export function useAllStampsQuery() {
+  return useQuery<StampsResponse, Error>({
+    queryKey: ['stamps'],
+    queryFn: async () => {
+      const response = await authClient.get<StampsResponse>('/stamps');
+      return response;
+    },
+  });
+}
