@@ -115,7 +115,7 @@ export const BranchCard = ({
 
                 {type === "pending" && (
                   <>
-                    <Tooltip>
+                    {/* <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
                           variant="ghost"
@@ -132,9 +132,9 @@ export const BranchCard = ({
                       >
                         Aprobar sucursal
                       </TooltipContent>
-                    </Tooltip>
+                    </Tooltip> */}
 
-                    <Tooltip>
+                    {/* <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
                           variant="ghost"
@@ -151,7 +151,7 @@ export const BranchCard = ({
                       >
                         Rechazar sucursal
                       </TooltipContent>
-                    </Tooltip>
+                    </Tooltip> */}
                   </>
                 )}
               </TooltipProvider>

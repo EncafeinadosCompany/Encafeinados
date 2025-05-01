@@ -1,13 +1,11 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from "@/common/ui/card";
-import { Badge } from "@/common/ui/badge";
-import { Button } from "@/common/ui/button";
-import { AlbumResponse } from "@/api/types/albumTypes";
-import { CalendarIcon, Eye, Album, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { cn } from "@/lib/utils";
+import { AlbumResponse } from "@/api/types/albumTypes";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/common/ui/card";
+import { motion } from "framer-motion";
+import { Badge } from "@/common/ui/badge";
+import { Button } from "@/common/ui/button";
+import { BookOpen, Calendar, Eye, Clock, Album } from "lucide-react";
 
 interface AlbumCardProps {
     album: AlbumResponse;
@@ -24,8 +22,16 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({
     compact = false,
     className
 }) => {
-    // Formato de fecha simplificado
-    const formatDate = (dateString: string) => {
+    // Función segura para formatear fechas que maneja undefined
+    const formatDate = (dateString?: string) => {
+        if (!dateString) {
+            // Si no hay fecha, usamos la fecha de inicio como fallback
+            // o "N/D" si tampoco está disponible
+            return album.start_date 
+                ? format(new Date(album.start_date), compact ? "d MMM" : "d MMM yyyy", { locale: es })
+                : "N/D";
+        }
+        
         try {
             return format(new Date(dateString), compact ? "d MMM" : "d MMM yyyy", { locale: es });
         } catch (e) {
@@ -33,20 +39,29 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({
         }
     };
     
-    // Calcula los días desde la creación
-    const getDaysSince = (dateString: string): number => {
+    // Función segura para calcular días desde una fecha que maneja undefined
+    const getDaysSince = (dateString?: string): number => {
+        if (!dateString) {
+            // Si no hay fecha de creación, podemos usar start_date o la fecha actual
+            if (!album.start_date) return 0;
+            dateString = album.start_date;
+        }
+        
         try {
-            const creationDate = new Date(dateString);
+            const date = new Date(dateString);
             const currentDate = new Date();
-            const diffTime = Math.abs(currentDate.getTime() - creationDate.getTime());
+            const diffTime = Math.abs(currentDate.getTime() - date.getTime());
             return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         } catch (e) {
             return 0;
         }
     };
     
+    // Usamos la función segura para calcular días
     const daysSinceCreation = getDaysSince(album.createdAt);
-    const isNew = daysSinceCreation <= 3; // Si fue creado hace 3 días o menos
+    // También podemos manejar la fecha de inicio del álbum como alternativa
+    const daysSinceStart = getDaysSince(album.start_date);
+    const isNew = daysSinceCreation <= 3 || daysSinceStart <= 3; 
     
     return (
         <motion.div
@@ -55,8 +70,8 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({
             transition={{ duration: 0.2, delay: Math.min(index * 0.05, 0.3) }}
             className="h-full"
         >
-            <Card className="overflow-hidden border border-amber-100 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 bg-white relative group h-full flex flex-col">
-                {/* Marcador de nuevo */}
+            <Card className={`overflow-hidden border border-amber-100 rounded-lg shadow-sm hover:shadow-md 
+                transition-all duration-300 transform hover:-translate-y-0.5 bg-white relative group h-full flex flex-col ${className}`}>
                 {isNew && (
                     <div className="absolute left-0 top-4 z-10">
                         <div className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-r-md shadow-sm flex items-center">
@@ -65,7 +80,6 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({
                     </div>
                 )}
                 
-                {/* Imagen con altura proporcional */}
                 <div className="relative w-full aspect-[4/3] bg-[#FAF3E0] overflow-hidden">
                     {album.logo ? (
                         <img
@@ -87,13 +101,8 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({
                     >
                         {album.status ? 'Activo' : 'Inactivo'}
                     </Badge>
-                    
-                    <div className="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm text-[#2C1810] h-6 w-6 rounded-full flex items-center justify-center shadow-sm text-[10px] font-medium">
-                        {album.pages?.length || 0}
-                    </div>
                 </div>
 
-                {/* Contenido con altura optimizada */}
                 <CardHeader className={compact ? "p-2 pb-1.5" : "p-3 pb-2"} style={{flexGrow: 1, minHeight: compact ? '4rem' : '5rem'}}>
                     <CardTitle className="text-base font-medium text-[#2C1810] leading-tight line-clamp-1">
                         {album.title}
@@ -103,28 +112,33 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({
                     </CardDescription>
                 </CardHeader>
 
-                <CardFooter className="bg-gradient-to-r from-[#FAF3E0]/50 to-[#F5E6C8]/50 border-t border-amber-100 p-2.5 flex items-center justify-between mt-auto">
+                <div className="bg-gradient-to-r from-[#FAF3E0]/50 to-[#F5E6C8]/50 border-t border-amber-100 p-2.5 flex items-center justify-between mt-auto">
                     <div className="flex flex-col text-xs">
                         <span className="text-[#6F4E37] flex items-center whitespace-nowrap">
-                            <CalendarIcon className="h-3 w-3 mr-1.5 text-[#D4A76A] flex-shrink-0" />
-                            <span className="truncate max-w-[80px]">{formatDate(album.start_date)}</span>
-                        </span>
-                        {!compact && daysSinceCreation > 0 && (
-                            <span className="text-[10px] text-[#6F4E37]/70 flex items-center mt-0.5">
-                                <Clock className="h-2.5 w-2.5 mr-1 text-[#D4A76A]/70" />
-                                Hace {daysSinceCreation} día{daysSinceCreation !== 1 ? 's' : ''}
+                            <Calendar className="h-3 w-3 mr-1.5 text-[#D4A76A] flex-shrink-0" />
+                            <span className="truncate max-w-[80px]">
+                                {/* Usamos formatDate con la fecha de inicio que siempre está presente */}
+                                {formatDate(album.start_date)}
                             </span>
-                        )}
+                        </span>
+                        
+                        <span className="text-[10px] text-[#6F4E37]/70 flex items-center mt-0.5">
+                            <Clock className="h-2.5 w-2.5 mr-1 text-[#D4A76A]/70" />
+                            {/* Mostramos información sobre la fecha usando una lógica defensiva */}
+                            {album.createdAt 
+                                ? `Hace ${daysSinceCreation} días` 
+                                : `Inicia en ${formatDate(album.start_date)}`
+                            }
+                        </span>
                     </div>
                     <Button
                         onClick={() => onViewDetail(album)}
                         variant="ghost"
                         className="text-[#6F4E37] hover:text-[#2C1810] hover:bg-amber-100 text-xs p-1.5 h-auto rounded-full"
                     >
-                        <Eye className="h-3 w-3 mr-1" />
-                        Ver
+                        <Eye className="h-3 w-3 mr-1" />Ver
                     </Button>
-                </CardFooter>
+                </div>
             </Card>
         </motion.div>
     );

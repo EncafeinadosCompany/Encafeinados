@@ -1,60 +1,57 @@
 export interface SocialBranch {
-    social_network_name: string;
-    value: string;
-    description: string;
-  }
+  social_network_name: string;
+  value: string;
+  description: string;
+}
 
+export interface Branch {
+  id: number;
+  name: string;
+  phone_number?: string;
+  average_rating?: string;
+  status: string;
+  latitude: number;
+  longitude: number;
+  address?: string;
+  store_name?: string;
+  store?: {
+    store_id: number;
+    store_name: string;
+    store_logo: string;
+    store_email: string;
+  };
+  social_branches?: SocialBranch[];
+}
 
-  export interface Branch {
-    id: number;
-    name: string;
-    phone_number?: string;
-    average_rating?: string;
-    status: string; 
-    latitude: number;
-    longitude: number;
-    address?: string;
-    store_name?: string; 
-    store?: {
-      store_id: number;
-      store_name: string;
-      store_logo: string;
-      store_email: string;
-    };
-    social_branches?: SocialBranch[]; 
-  }
-  
 export interface PendingBranch {
-    id: number;
-    name: string;
-    address?: string;
-    status: string;
-    store_logo?: string;
-    store_email?: string;
-    phone_number?: string;
-    latitude?: number;
-    longitude?: number;
-    average_rating?: string;
-    store_name?: string;
-    store?: {
-      store_id: number;
-      store_name: string;
-      store_logo: string;
-      store_email: string;
-    };
-    social_branches?: SocialBranch[];
-  }
-  
+  id: number;
+  name: string;
+  address?: string;
+  status: string;
+  store_logo?: string;
+  store_email?: string;
+  phone_number?: string;
+  latitude?: number;
+  longitude?: number;
+  average_rating?: string;
+  store_name?: string;
+  store?: {
+    store_id: number;
+    store_name: string;
+    store_logo: string;
+    store_email: string;
+  };
+  social_branches?: SocialBranch[];
+}
+
 export type PendingBranchesResponse = PendingBranch[];
 
-
 export interface BranchesResponseList {
-    message: string;
-    branches:{
-      branches: Branch[]
-    }
-    
-  }
+  message: string;
+  branches: {
+    branches: Branch[];
+  };
+}
 
 export interface Criteria {
   name: string;
@@ -93,6 +90,18 @@ export interface ApprovedBranch {
   status: string;
   store_logo: string;
   store_email: string;
+}
+
+export interface ValidateVisitInput {
+  branchId: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface ValidateVisitResponse {
+  success: boolean;
+  message: string;
+  data?: any;
 }
 
 export type ApprovedBranchesResponse = ApprovedBranch[];

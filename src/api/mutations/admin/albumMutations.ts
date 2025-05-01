@@ -1,5 +1,5 @@
 import AuthClient from "@/api/client/axios";
-import { CreateAlbumDto, AlbumResponse } from "@/api/types/albumTypes";
+import { CreateAlbumDto, AlbumResponse, CreatePageDto, CreatePageResponse, AddStampsToPageDto } from "@/api/types/albumTypes";
 import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -48,3 +48,31 @@ export const useCreateAlbumMutation = () => {
   });
 };
 
+export function useCreatePageMutation() {
+  const queryClient = useQueryClient();
+  
+  return useMutation<CreatePageResponse, Error, CreatePageDto>({
+    mutationFn: async (pageData) => {
+      const response = await authClient.post<CreatePageResponse>('/pages', pageData);
+      return response;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['album', data.album.album_id.toString()] });
+    },
+  });
+}; 
+
+export function useAddStampsToPageMutation() {
+  const queryClient = useQueryClient();
+  
+  return useMutation<any, Error, AddStampsToPageDto>({
+    mutationFn: async (data) => {
+      const response = await authClient.post<any>('/pages-stamps', data);
+      return response;
+    },
+    onSuccess: (data, variables) => {
+      // Invalidar consultas relevantes
+      queryClient.invalidateQueries({ queryKey: ['page-stamps', variables.pageId.toString()] });
+    },
+  });
+}
