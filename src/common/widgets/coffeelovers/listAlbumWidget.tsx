@@ -10,7 +10,6 @@ import { CardAlbum } from "@/common/molecules/coffeelover/ListAlbum/cardAlbum";
 import { InputSearch } from "@/common/molecules/coffeelover/ListAlbum/inputsearch";
 import { useNavigate } from "react-router-dom";
 
-// Skeleton component for loading state
 const SkeletonCard = () => (
     <div className="bg-white rounded-lg shadow-md overflow-hidden h-72 group">
         <div className="h-40 bg-gradient-to-r from-slate-200 to-slate-100 animate-pulse relative">
