@@ -1,20 +1,18 @@
+export interface AlbumsListResponse {
+  albums: AlbumResponse[];
+}
+
 export type AlbumType = 'ANNUAL';
 
-/**
- * Estructura de una página dentro de un álbum
- */
 export interface AlbumPage {
   id: number;
   title: string;
   description: string;
-  status: boolean;
-  createdAt: string;
-  updatedAt: string;
+  status?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-/**
- * DTO para la creación de un nuevo álbum
- */
 export interface CreateAlbumDto {
   title: string;
   logo: string;
@@ -24,10 +22,6 @@ export interface CreateAlbumDto {
   end_date: string; 
 }
 
-/**
- * Respuesta de la API al crear o consultar un álbum
- * Actualizada según la estructura real de la API
- */
 export interface AlbumResponse {
   id: number; 
   title: string;
@@ -37,14 +31,50 @@ export interface AlbumResponse {
   start_date: string;
   end_date: string;
   status: boolean;
-  createdAt: string;
-  updatedAt: string;
-  pages: AlbumPage[];
+  createdAt?: string; 
+  updatedAt?: string; 
+  pages?: AlbumPage[];
 }
 
 export type AlbumsResponse = AlbumResponse[];
 
-export interface AlbumResponseWithMessage {
-  message: string;
-  album: AlbumResponse;
+export interface Stamp {
+  id: number;
+  logo: string;
+  name: string;
+  description: string;
+  coffeecoins_value: number;
+  status: boolean;
+}
+
+export interface StampsResponse {
+  stamps: Stamp[];
+}
+
+export interface AddStampsToPageDto {
+  pageId: number;
+  stampIds: number[];
+}
+
+export interface PageStampsResponse {
+  pageId: number;
+  stamps: Stamp[];
+}
+
+export interface CreatePageDto {
+  album_id: number;
+  title: string;
+  description: string;
+  status: boolean;
+}
+
+export interface CreatePageResponse {
+  album: {
+    album_id: number;
+    album_title: string;
+  };
+  id: number;
+  title: string;
+  description: string;
+  status: boolean;
 }

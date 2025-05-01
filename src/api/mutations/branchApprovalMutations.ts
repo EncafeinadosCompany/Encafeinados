@@ -4,7 +4,10 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import AuthClient from "../client/axios";
-
+import {
+  ValidateVisitInput,
+  ValidateVisitResponse,
+} from "../types/branchesApprovalTypes";
 const authClient = new AuthClient();
 
 // Mutación para aprobar una sucursal
@@ -74,42 +77,25 @@ export const useRejectBranchMutation = () => {
   });
 };
 
-interface ValidateVisitInput {
-  shop_id: string;
-  latitude: number;
-  longitude: number;
-}
-
-interface ValidateVisitResponse {
-  success: boolean;
-  message: string;
-  data?: any;
-}
-
 export const useRegisterVisitMutation = (): UseMutationResult<
   ValidateVisitResponse,
   Error,
   ValidateVisitInput
 > => {
-  const queryClient = useQueryClient();
   console.log("ingreso a la mutacion");
 
   return useMutation({
     mutationFn: async ({
-      shop_id,
+      branchId,
       latitude,
       longitude,
     }: ValidateVisitInput) => {
-      console.log("ingreso a la mutacion");
-      const userId = localStorage.getItem("userId");
-      if (!userId) throw new Error("No se encontró ID de usuario.");
-
       const res: any = await authClient.post("/branches/register-visit", {
-        shop_id,
+        branch_id: branchId,
         latitude,
-        longitude,
+        longitude
       });
-
+      console.log("Respuesta de la mutación:", res);
       return res.data as ValidateVisitResponse;
     },
   });

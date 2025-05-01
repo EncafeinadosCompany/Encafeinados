@@ -4,7 +4,7 @@ import NavbarGeneral from "@/common/widgets/nav/nav"
 
 const HomeAdminStores = () => {
   return(
-    <div className="min-h-screen bg-gray-200/40 flex flex-col overflow-x-hidden">
+    <div className="bg-gray-200/40 flex flex-col overflow-x-hidden">
           <NavbarGeneral  navItems={AdminStoresItems}/>
     </div>
   )

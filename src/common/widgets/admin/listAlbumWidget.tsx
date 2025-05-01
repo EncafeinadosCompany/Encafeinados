@@ -1,376 +1,435 @@
 import { useAlbumsQuery } from "@/api/queries/admin/albumQueries"
 import { AlbumResponse } from "@/api/types/albumTypes";
-import { Badge } from "@/common/ui/badge";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/common/ui/card";
 import { Skeleton } from "@/common/ui/skeleton";
-import { format } from "date-fns";
-import { CalendarIcon, BookOpen, Eye, ChevronRight, ChevronLeft, Search } from "lucide-react";
-import { es } from "date-fns/locale";
-import { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/common/ui/dialog";
+import { Card, CardFooter, CardHeader } from "@/common/ui/card";
+import { 
+  BookOpen, Search, X, Coffee, Filter, SlidersHorizontal, 
+  Calendar, CheckCircle, XCircle, Sparkles, Layout, List, Eye
+} from "lucide-react";
+import { useEffect, useState, useRef } from "react";
 import { Input } from "@/common/ui/input";
+import { Button } from "@/common/ui/button";
+import { AlbumDetailDialog } from "@/common/molecules/admin/AlbumDetailDialog";
+import { AlbumPagination } from "@/common/molecules/admin/AlbumPagination";
+import { AlbumCard } from "@/common/molecules/admin/AlbumCard";
+import { Badge } from "@/common/ui/badge";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/common/ui/dropdown-menu";
+import { AnimatePresence, motion } from "framer-motion";
 
 export const ListAlbumWidget = () => {
     const { data: listAlbum, isLoading, error } = useAlbumsQuery();
+    const containerRef = useRef<HTMLDivElement>(null);
 
-    const [selectedAlbum, setSelectedAlbum] = useState<AlbumResponse | null>(null);
+    const [selectedAlbumId, setSelectedAlbumId] = useState<number | null>(null); // Cambiamos de objeto a ID
     const [isDetailOpen, setIsDetailOpen] = useState(false);
-
-
-    // State for search and pagination
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredAlbums, setFilteredAlbums] = useState<AlbumResponse[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const albumsPerPage = 3;
+    const albumsPerPage = 4;
+    const [activeFilter, setActiveFilter] = useState<'all' | 'active' | 'inactive'>('all');
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
 
     useEffect(() => {
         if (listAlbum) {
-            const filtered = listAlbum.filter(album =>
-                album.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                album.introduction.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                album.type.toLowerCase().includes(searchQuery.toLowerCase())
-            );
+            let filtered = listAlbum;
+            
+            if (searchQuery) {
+                filtered = filtered.filter(album =>
+                    album.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    album.introduction.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    album.type.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            }
+            
+            if (activeFilter !== 'all') {
+                filtered = filtered.filter(album => 
+                    (activeFilter === 'active' ? album.status : !album.status)
+                );
+            }
+            
             setFilteredAlbums(filtered);
-            setCurrentPage(1); 
+            setCurrentPage(1);
         }
-    }, [searchQuery, listAlbum]);
+    }, [searchQuery, listAlbum, activeFilter]);
 
-
-    // Calculate pagination
     const indexOfLastAlbum = currentPage * albumsPerPage;
     const indexOfFirstAlbum = indexOfLastAlbum - albumsPerPage;
     const currentAlbums = filteredAlbums.slice(indexOfFirstAlbum, indexOfLastAlbum);
     const totalPages = Math.ceil(filteredAlbums.length / albumsPerPage);
 
-
     const handleViewDetail = (album: AlbumResponse) => {
-        setSelectedAlbum(album);
+        setSelectedAlbumId(album.id);
         setIsDetailOpen(true);
     };
+    
+    // Stats
+    const totalAlbums = listAlbum?.length || 0;
+    const activeAlbums = listAlbum?.filter(album => album.status).length || 0;
 
-
-    const goToNextPage = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
-
-    const goToPreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-
-    const goToPage = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
-    };
-
-    if (isLoading) {
-        return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-                {[1, 2, 3, 4, 5, 6].map((item) => (
-                    <Card key={item} className="overflow-hidden border border-gray-200 shadow-sm">
-                        <Skeleton className="h-40 w-full" />
-                        <CardHeader className="pb-2">
-                            <Skeleton className="h-6 w-3/4" />
-                            <Skeleton className="h-4 w-full mt-2" />
+    // Función para renderizar el estado de carga con esqueletos
+    const renderSkeletons = () => (
+        <div className="bg-gradient-to-b from-[#FAF3E0]/30 to-white/80 p-3 md:p-4 rounded-xl h-full">
+            <div className="flex items-center justify-between mb-5">
+                <Skeleton className="h-9 w-48 rounded-lg" />
+                <div className="flex gap-2">
+                    <Skeleton className="h-9 w-9 rounded-full" />
+                    <Skeleton className="h-9 w-9 rounded-full" />
+                </div>
+            </div>
+            
+            <div className="grid grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+                {[1, 2, 3, 4].map((item) => (
+                    <Card key={item} className="overflow-hidden border border-amber-100 shadow-sm rounded-xl bg-white h-full flex flex-col animate-pulse">
+                        <div className="bg-amber-50 h-44 w-full relative">
+                            <Skeleton className="absolute inset-0 bg-gradient-to-r from-amber-50 via-amber-100/30 to-amber-50" />
+                        </div>
+                        <CardHeader className="p-3">
+                            <Skeleton className="h-5 w-3/4 mb-2" />
+                            <Skeleton className="h-3.5 w-full mb-1" />
+                            <Skeleton className="h-3.5 w-2/3" />
                         </CardHeader>
-                        <CardContent>
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-3/4 mt-2" />
-                        </CardContent>
-                        <CardFooter>
-                            <Skeleton className="h-8 w-full" />
+                        <CardFooter className="bg-[#FAF3E0]/30 p-3 mt-auto border-t border-amber-50">
+                            <Skeleton className="h-4 w-1/3" />
+                            <Skeleton className="h-8 w-12 ml-auto rounded-full" />
                         </CardFooter>
                     </Card>
                 ))}
             </div>
-        )
+        </div>
+    );
+
+    if (isLoading) {
+        return renderSkeletons();
     }
 
     if (error) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 text-center">
-                <div className="bg-red-50 p-4 rounded-full mb-4">
-                    <svg className="h-10 w-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+            <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex flex-col items-center justify-center p-8 h-full bg-gradient-to-br from-red-50/50 to-white rounded-lg border border-red-100"
+            >
+                <div className="bg-red-50 p-4 rounded-full mb-4 border border-red-100">
+                    <XCircle className="h-10 w-10 text-red-500" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Error al cargar los álbumes</h3>
-                <p className="text-sm text-gray-500 max-w-md">
-                    No pudimos cargar tus álbumes. Por favor, intenta de nuevo más tarde.
+                <h3 className="text-lg font-medium text-gray-800 mb-2">No se pudieron cargar los álbumes</h3>
+                <p className="text-sm text-gray-500 text-center max-w-md mb-4">
+                    Ha ocurrido un error al obtener los datos. Por favor, intenta nuevamente en unos momentos.
                 </p>
-            </div>
-        )
+                <Button 
+                    variant="outline"
+                    className="border-red-200 hover:bg-red-50 text-red-600"
+                >
+                    Reintentar
+                </Button>
+            </motion.div>
+        );
     }
 
-    const formatDate = (dateString: string) => {
-        try {
-            return format(new Date(dateString), "d 'de' MMMM, yyyy", { locale: es });
-        } catch (e) {
-            return "Fecha no disponible";
-        }
-    };
-
-    const renderPagination = () => {
-        if (totalPages <= 1) return null;
-
-        return (
-            <div className="flex items-end justify-center mt-10 space-x-2">
-                <button
-                    onClick={goToPreviousPage}
-                    disabled={currentPage === 1}
-                    className={`p-2 rounded-full ${currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
-                >
-                    <ChevronLeft className="h-5 w-5" />
-                </button>
-
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                    <button
-                        key={page}
-                        onClick={() => goToPage(page)}
-                        className={`px-3 py-1 rounded-full ${currentPage === page
-                                ? 'bg-amber-300 text-white border '
-                                : 'text-gray-700 hover:bg-gray-100'
-                            }`}
-                    >
-                        {page}
-                    </button>
-                ))}
-
-                <button
-                    onClick={goToNextPage}
-                    disabled={currentPage === totalPages}
-                    className={`p-2 rounded-md ${currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
-                >
-                    <ChevronRight className="h-5 w-5" />
-                </button>
-            </div>
-        );
-    };
-
-
     return (
-        <div className="p-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-                <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-                    <div className="relative flex-grow md:w-2xl ">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Search className="h-4 w-4 text-gray-400" />
-                        </div>
-                        <Input
-                            type="text"
-                            placeholder="Buscar álbumes..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-9 w-full rounded-full bg-white/80"
-                        />
-                        {searchQuery && (
-                            <button
-                                onClick={() => setSearchQuery("")}
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                            >
-                                <span className="text-gray-400 hover:text-gray-600">×</span>
-                            </button>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Search results info */}
-            {searchQuery && (
-                <div className="mb-4 text-sm text-gray-500">
-                    {filteredAlbums.length === 0
-                        ? `No se encontraron resultados para "${searchQuery}"`
-                        : `Se encontraron ${filteredAlbums.length} resultado${filteredAlbums.length !== 1 ? 's' : ''} para "${searchQuery}"`
-                    }
-                </div>
-            )}
-
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {currentAlbums.map((album: AlbumResponse) => (
-                    <Card key={album.id} className="overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                        {/* Card content remains the same */}
-                        <div className="relative h-40 w-full bg-gray-100">
-                            {album.logo ? (
-                                <img
-                                    src={album.logo}
-                                    onError={(e) => { e.currentTarget.src = "/coffee-206142_1280.jpg" }}
-                                    alt={album.title}
-                                    className="h-full w-full object-cover"
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                />
-                            ) : (
-                                <div className="flex items-center justify-center h-full bg-amber-50">
-                                    <BookOpen className="h-16 w-16 text-amber-300" />
-                                </div>
-                            )}
-                            <Badge
-                                className={`absolute top-2 right-2 ${album.status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                                    }`}
-                            >
-                                {album.status ? 'Activo' : 'Inactivo'}
+        <div className="flex flex-col h-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <header className="p-3 md:p-4 bg-gradient-to-r from-[#FAF3E0] to-white border-b border-amber-100 sticky top-0 z-10">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
+                    <div>                   
+                        <div className="flex gap-3 mt-1.5 text-xs">
+                            <Badge variant="outline" className="bg-white px-2 py-0.5 text-[#6F4E37] border-amber-200">
+                                <Coffee className="h-3 w-3 mr-1 text-[#D4A76A]" />
+                                {totalAlbums} total
                             </Badge>
-                            <Badge
-                                className="absolute top-2 left-2 bg-amber-100 text-amber-800"
-                            >
-                                {album.type}
+                            <Badge variant="outline" className="bg-white/70 px-2 py-0.5 text-green-700 border-green-200">
+                                <CheckCircle className="h-3 w-3 mr-1 text-green-500" />
+                                {activeAlbums} activos
+                            </Badge>
+                            <Badge variant="outline" className="bg-white/70 px-2 py-0.5 text-gray-600 border-gray-200">
+                                <XCircle className="h-3 w-3 mr-1 text-gray-400" />
+                                {totalAlbums - activeAlbums} inactivos
                             </Badge>
                         </div>
-
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-xl">{album.title}</CardTitle>
-                            <CardDescription className="line-clamp-2">
-                                {album.introduction}
-                            </CardDescription>
-                        </CardHeader>
-
-                        <CardContent className="space-y-2 text-sm">
-                            <div className="flex items-center text-gray-500">
-                                <CalendarIcon className="h-4 w-4 mr-2" />
-                                <span>
-                                    {formatDate(album.start_date)}
-                                    {album.end_date && ` - ${formatDate(album.end_date)}`}
-                                </span>
-                            </div>
-                            <div className="flex items-center text-gray-500">
-                                <BookOpen className="h-4 w-4 mr-2" />
-                                <span>{album.pages?.length || 0} páginas</span>
-                            </div>
-                        </CardContent>
-
-                        <CardFooter className="bg-gray-50 border-t border-gray-100 flex justify-between">
-                            <span className="text-xs text-gray-500">
-                                Creado: {formatDate(album.createdAt)}
-                            </span>
-                            <button
-                                onClick={() => handleViewDetail(album)}
-                                className="text-amber-600 hover:text-amber-800 text-sm font-medium flex items-center mt-3"
-                            >
-                                <Eye className="h-4 w-4 mr-1" />
-                                Ver detalles
-                            </button>
-                        </CardFooter>
-                    </Card>
-                ))}
-            </div>
-
-            {filteredAlbums.length === 0 && (
-                <div className="flex flex-col items-center justify-center p-12 text-center">
-                    <div className="bg-amber-50 p-4 rounded-full mb-4">
-                        <BookOpen className="h-10 w-10 text-amber-500" />
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                        {searchQuery ? "No se encontraron resultados" : "No hay álbumes disponibles"}
-                    </h3>
-                    <p className="text-sm text-gray-500 max-w-md">
-                        {searchQuery 
-                            ? `No hay álbumes que coincidan con "${searchQuery}". Intenta con otra búsqueda.`
-                            : "Aún no has creado ningún álbum. Comienza creando tu primer álbum."
-                        }
-                    </p>
-                    {searchQuery && (
-                        <button 
-                            onClick={() => setSearchQuery("")}
-                            className="mt-4 px-4 py-2 border border-amber-200 text-amber-700 rounded-md hover:bg-amber-50"
+                    
+                    <div className="flex items-center gap-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="border-amber-200 hover:bg-[#FAF3E0] text-[#6F4E37] h-9"
+                                >
+                                    <SlidersHorizontal className="h-3.5 w-3.5 mr-1.5" />
+                                    Filtrar
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="bg-white border border-amber-100">
+                                <DropdownMenuItem 
+                                    className={`${activeFilter === 'all' ? 'bg-[#FAF3E0]/50 text-[#2C1810]' : ''}`}
+                                    onClick={() => setActiveFilter('all')}
+                                >
+                                    <Sparkles className="h-3.5 w-3.5 mr-2 text-[#D4A76A]" /> 
+                                    Todos
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                    className={`${activeFilter === 'active' ? 'bg-[#FAF3E0]/50 text-[#2C1810]' : ''}`}
+                                    onClick={() => setActiveFilter('active')}
+                                >
+                                    <CheckCircle className="h-3.5 w-3.5 mr-2 text-green-500" /> 
+                                    Activos
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                    className={`${activeFilter === 'inactive' ? 'bg-[#FAF3E0]/50 text-[#2C1810]' : ''}`}
+                                    onClick={() => setActiveFilter('inactive')}
+                                >
+                                    <XCircle className="h-3.5 w-3.5 mr-2 text-gray-400" /> 
+                                    Inactivos
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className={`border-amber-200 h-9 w-9 ${viewMode === 'grid' 
+                                ? 'bg-[#FAF3E0]/70 text-[#2C1810]'
+                                : 'bg-white/80 text-[#6F4E37] hover:bg-[#FAF3E0]/50'
+                            }`}
+                            onClick={() => setViewMode('grid')}
+                            aria-label="Vista de cuadrícula"
                         >
-                            Limpiar búsqueda
+                            <Layout className="h-3.5 w-3.5" />
+                        </Button>
+                        
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className={`border-amber-200 h-9 w-9 ${viewMode === 'list' 
+                                ? 'bg-[#FAF3E0]/70 text-[#2C1810]'
+                                : 'bg-white/80 text-[#6F4E37] hover:bg-[#FAF3E0]/50'
+                            }`}
+                            onClick={() => setViewMode('list')}
+                            aria-label="Vista de lista"
+                        >
+                            <List className="h-3.5 w-3.5" />
+                        </Button>
+                    </div>
+                </div>
+                
+                {/* Barra de búsqueda mejorada */}
+                <div className={`relative transition-all duration-200 ${isSearchFocused ? 'scale-[1.01]' : ''}`}>
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                        <Search className={`transition-colors duration-300 h-4 w-4 ${isSearchFocused ? 'text-[#D4A76A]' : 'text-[#6F4E37]/70'}`} />
+                    </div>
+                    <Input
+                        type="text"
+                        placeholder="Buscar por título, descripción o tipo..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => setIsSearchFocused(true)}
+                        onBlur={() => setIsSearchFocused(false)}
+                        className={`pl-10 py-2 h-10 w-full rounded-lg bg-white ${
+                            isSearchFocused 
+                                ? 'border-amber-300 ring-1 ring-amber-200/50 shadow-sm' 
+                                : 'border-amber-100'
+                        } transition-all duration-200 focus-visible:ring-[#D4A76A]`}
+                    />
+                    {searchQuery && (
+                        <button
+                            onClick={() => setSearchQuery("")}
+                            className="absolute inset-y-0 right-3 flex items-center"
+                            aria-label="Borrar búsqueda"
+                        >
+                            <div className="bg-[#FAF3E0] text-[#6F4E37] hover:text-[#2C1810] p-1 rounded-full transition-colors">
+                                <X className="h-3.5 w-3.5" />
+                            </div>
                         </button>
                     )}
-                </div>
-            )}
-
-            {/* Pagination */}
-            {renderPagination()}
-
-            {/* Album Detail Dialog */}
-            <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-                <DialogContent className="sm:max-w-3xl bg-white border-none h-[80vh] sm:h-[85vh] overflow-y-auto">
-                    {selectedAlbum && (
-                        <>
-                            <DialogHeader>
-                                <DialogTitle className="text-2xl font-bold">{selectedAlbum.title}</DialogTitle>
-                                <DialogDescription>
-                                    <div className="flex items-center space-x-2 mt-2">
-                                        <Badge
-                                            className={`${selectedAlbum.status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                                                }`}
-                                        >
-                                            {selectedAlbum.status ? 'Activo' : 'Inactivo'}
-                                        </Badge>
-                                        <Badge className="bg-amber-100 text-amber-800">
-                                            {selectedAlbum.type}
-                                        </Badge>
-                                    </div>
-                                </DialogDescription>
-                            </DialogHeader>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                                <div>
-                                    <div className="relative h-64 w-full bg-white rounded-lg overflow-hidden">
-                                        {selectedAlbum.logo ? (
-                                            <img
-                                                src={selectedAlbum.logo}
-                                                onError={(e) => { e.currentTarget.src = "/coffee-206142_1280.jpg" }}
-                                                alt={selectedAlbum.title}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex items-center justify-center h-full bg-amber-50">
-                                                <BookOpen className="h-24 w-24 text-amber-300" />
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="mt-4 space-y-3">
-                                        <div>
-                                            <h3 className="text-sm font-medium text-gray-500">Período</h3>
-                                            <p className="text-gray-900">
-                                                {formatDate(selectedAlbum.start_date)}
-                                                {selectedAlbum.end_date && ` - ${formatDate(selectedAlbum.end_date)}`}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <h3 className="text-sm font-medium text-gray-500">Creado</h3>
-                                            <p className="text-gray-900">{formatDate(selectedAlbum.createdAt)}</p>
-                                        </div>
-
-                                        <div>
-                                            <h3 className="text-sm font-medium text-gray-500">Actualizado</h3>
-                                            <p className="text-gray-900">{formatDate(selectedAlbum.updatedAt)}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4">
-                                    <div>
-                                        <h3 className="text-sm font-medium text-gray-500">Introducción</h3>
-                                        <p className="text-gray-900 mt-1">{selectedAlbum.introduction}</p>
-                                    </div>
-
-                                    <div>
-                                        <h3 className="text-sm font-medium text-gray-500">Páginas ({selectedAlbum.pages?.length || 0})</h3>
-                                        {selectedAlbum.pages && selectedAlbum.pages.length > 0 ? (
-                                            <div className="mt-2 space-y-2 max-h-64 overflow-y-auto pr-2">
-                                                {selectedAlbum.pages.map((page, index) => (
-                                                    <div key={index} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                                        <h4 className="font-medium">Página {index + 1}</h4>
-                                                        {/* Add more page details as needed */}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <p className="text-gray-500 mt-1">No hay páginas en este álbum</p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </>
+                    
+                    {/* Badge de resultados de búsqueda */}
+                    {searchQuery && (
+                        <div className="absolute -bottom-6 left-3 flex items-center gap-1.5 text-xs bg-[#FAF3E0]/80 px-2 py-0.5 rounded-md text-[#6F4E37]">
+                            <span className="font-medium">{filteredAlbums.length}</span> 
+                            resultado{filteredAlbums.length !== 1 ? 's' : ''} para "{searchQuery}"
+                        </div>
                     )}
-                </DialogContent>
-            </Dialog>
+                    
+                    {/* Indicador de filtro activo */}
+                    {activeFilter !== 'all' && !searchQuery && (
+                        <div className="absolute -bottom-6 left-3 flex items-center gap-1.5 text-xs bg-blue-50 px-2 py-0.5 rounded-md text-blue-600">
+                            Filtrado: <span className="font-medium">{activeFilter === 'active' ? 'Solo activos' : 'Solo inactivos'}</span>
+                            <button 
+                                onClick={() => setActiveFilter('all')} 
+                                className="ml-1 bg-blue-100 rounded-full p-0.5 text-blue-600 hover:bg-blue-200"
+                            >
+                                <X className="h-3 w-3" />
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </header>
+
+            <div className="flex-grow flex flex-col min-h-0 w-full overflow-hidden">
+                {/* El truco del scroll: contenedor relativo con altura 0 + contenedor absoluto con scroll */}
+                <div className="flex-grow relative h-0 min-h-0 w-full">
+                    <div 
+                        className="absolute inset-0 overflow-y-auto p-3 md:p-4 pt-5 bg-gradient-to-b from-[#FAF3E0]/10 to-white"
+                        style={{
+                            scrollbarWidth: 'thin',
+                            scrollbarColor: '#F3D19E transparent'
+                        }}
+                    >
+                        <AnimatePresence mode="wait">
+                            {filteredAlbums.length === 0 ? (
+                                <motion.div 
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="flex flex-col items-center justify-center p-6 md:p-8 text-center bg-[#FAF3E0]/30 rounded-xl border border-amber-100 my-4"
+                                >
+                                    <div className="bg-[#FAF3E0]/80 p-4 rounded-full mb-4 border border-amber-200">
+                                        <BookOpen className="h-8 w-8 text-[#D4A76A]" />
+                                    </div>
+                                    <h3 className="font-medium text-lg text-[#2C1810]">
+                                        {searchQuery || activeFilter !== 'all' 
+                                            ? "No se encontraron álbumes" 
+                                            : "Crea tu primer álbum"}
+                                    </h3>
+                                    <p className="text-[#6F4E37] text-sm mt-2 max-w-md">
+                                        {searchQuery 
+                                            ? `No hay resultados para "${searchQuery}"${activeFilter !== 'all' ? ` con el filtro "${activeFilter === 'active' ? 'activo' : 'inactivo'}"` : ''}`
+                                            : activeFilter !== 'all'
+                                                ? `No hay álbumes ${activeFilter === 'active' ? 'activos' : 'inactivos'}`
+                                                : "Comienza a recopilar tus cafeterías favoritas en álbumes temáticos"
+                                        }
+                                    </p>
+                                    <div className="flex gap-2 mt-4">
+                                        {(searchQuery || activeFilter !== 'all') && (
+                                            <Button 
+                                                onClick={() => {
+                                                    setSearchQuery("");
+                                                    setActiveFilter('all');
+                                                }}
+                                                variant="outline"
+                                                className="border-amber-200 text-[#6F4E37] hover:bg-[#FAF3E0]"
+                                            >
+                                                <Filter className="h-3.5 w-3.5 mr-1.5" />
+                                                Limpiar filtros
+                                            </Button>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key={`view-${viewMode}-${searchQuery}-${activeFilter}-${currentPage}`}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    {viewMode === 'grid' ? (
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+                                            {currentAlbums.map((album: AlbumResponse, index) => (
+                                                <motion.div 
+                                                    key={album.id}
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    transition={{ duration: 0.2, delay: Math.min(index * 0.05, 0.3) }}
+                                                >
+                                                    <AlbumCard
+                                                        album={album}
+                                                        index={index}
+                                                        onViewDetail={handleViewDetail}
+                                                    />
+                                                </motion.div>
+                                            ))}
+                                            
+                                            {currentAlbums.length > 0 && currentAlbums.length < 4 && 
+                                                Array.from({ length: 4 - currentAlbums.length }).map((_, index) => (
+                                                    <div key={`empty-${index}`} className="invisible"></div>
+                                                ))
+                                            }
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            {currentAlbums.map((album: AlbumResponse, index) => (
+                                                <motion.div
+                                                    key={album.id}
+                                                    initial={{ opacity: 0, x: -5 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ duration: 0.15, delay: index * 0.03 }}
+                                                >
+                                                    <Card className="overflow-hidden border border-amber-100 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 bg-white">
+                                                        <div className="flex items-center p-3">
+                                                            <div className="h-14 w-14 rounded-md overflow-hidden mr-3 bg-[#FAF3E0] flex-shrink-0">
+                                                                {album.logo ? (
+                                                                    <img 
+                                                                        src={album.logo} 
+                                                                        alt={album.title}
+                                                                        className="h-full w-full object-cover"
+                                                                        loading="lazy"
+                                                                        onError={(e) => { e.currentTarget.src = "/coffee-206142_1280.jpg" }}
+                                                                    />
+                                                                ) : (
+                                                                    <div className="flex items-center justify-center h-full bg-gradient-to-br from-[#FAF3E0] to-[#F5E6C8]">
+                                                                        <BookOpen className="h-6 w-6 text-[#D4A76A]" />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            
+                                                            <div className="flex-grow min-w-0">
+                                                                <div className="flex items-start justify-between">
+                                                                    <h3 className="font-medium text-[#2C1810] truncate mr-2">{album.title}</h3>
+                                                                    <Badge className={`${album.status ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-gray-100 text-gray-800 border border-gray-200'} flex-shrink-0`}>
+                                                                        {album.status ? 'Activo' : 'Inactivo'}
+                                                                    </Badge>
+                                                                </div>
+                                                                <p className="text-sm text-[#6F4E37]/80 line-clamp-1">{album.introduction}</p>
+                                                                <div className="flex items-center justify-between mt-1">
+                                                                    <div className="flex items-center text-xs text-[#6F4E37]">
+                                                                        <Calendar className="h-3 w-3 mr-1 text-[#D4A76A]" />
+                                                                        {album.createdAt 
+                                                                            ? new Date(album.createdAt).toLocaleDateString()
+                                                                            : new Date(album.start_date).toLocaleDateString() // Usamos start_date como fallback
+                                                                        }
+                                                                    </div>
+                                                                    <Button
+                                                                        onClick={() => handleViewDetail(album)}
+                                                                        variant="ghost"
+                                                                        className="text-[#6F4E37] hover:text-[#2C1810] hover:bg-amber-100 text-xs p-1.5 h-auto"
+                                                                    >
+                                                                        <Eye className="h-3.5 w-3.5 mr-1" />
+                                                                        Ver detalles
+                                                                    </Button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </Card>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    
+                                    {/* Mueve la paginación aquí dentro, como parte del contenido scrollable */}
+                                    {totalPages > 1 && (
+                                        <div className="mt-5 flex justify-center">
+                                            <AlbumPagination
+                                                currentPage={currentPage}
+                                                totalPages={totalPages}
+                                                onPageChange={setCurrentPage}
+                                            />
+                                        </div>
+                                    )}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                </div>
+            </div>
+
+            <AlbumDetailDialog 
+                albumId={selectedAlbumId}
+                isOpen={isDetailOpen}
+                onOpenChange={setIsDetailOpen}
+            />
         </div>
-    )
-}
+    );
+};
