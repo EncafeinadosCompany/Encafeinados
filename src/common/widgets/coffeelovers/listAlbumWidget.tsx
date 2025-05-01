@@ -7,7 +7,7 @@ import { CardError } from "@/common/molecules/coffeelover/ListAlbum/cardError";
 import { FilterAlbums } from "@/common/molecules/coffeelover/ListAlbum/filteredAlbums";
 import { FilterButtons } from "@/common/molecules/coffeelover/ListAlbum/filterButtons";
 import { CardAlbum } from "@/common/molecules/coffeelover/ListAlbum/cardAlbum";
-import { InputSearch } from "@/common/molecules/coffeelover/ListAlbum/Inputsearch";
+import { InputSearch } from "@/common/molecules/coffeelover/ListAlbum/inputsearch";
 import { useNavigate } from "react-router-dom";
 
 // Skeleton component for loading state
