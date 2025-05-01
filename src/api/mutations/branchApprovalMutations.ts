@@ -93,7 +93,7 @@ export const useRegisterVisitMutation = (): UseMutationResult<
       const res: any = await authClient.post("/branches/register-visit", {
         branch_id: branchId,
         latitude,
-        longitude,
+        longitude
       });
       console.log("Respuesta de la mutación:", res);
       return res.data as ValidateVisitResponse;

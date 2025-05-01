@@ -6,6 +6,9 @@ import RoleRoute from "./RouleRoute";
 import GoogleWithRegister from "@/common/hooks/registerWithGoogle";
 import Sellos from "@/common/molecules/sellos";
 import Prueba from "@/common/molecules/prueba";
+import ListAlbum from "@/common/widgets/coffeelovers/listAlbumWidget";
+import { PageAlbum } from "@/common/molecules/coffeelover/pageAlbum";
+
 
 // LAYOUTS
 const LoadingSpinner = lazy(() => import("@/common/atoms/LoadingSpinner"));
@@ -80,7 +83,8 @@ const AuthRoutes = () => {
             />
             <Route path="/404" element={<NotFound />} />
              <Route path="/sellos" element={<Sellos />} /> 
-             <Route path="/prueba" element={<Prueba />} />
+             <Route path="/album" element={<ListAlbum />} />
+             <Route path="/open-album" element={<PageAlbum />} />
 
             {/* PRIVATE ROUTES  */}
             <Route element={<PrivateRoute />}>
