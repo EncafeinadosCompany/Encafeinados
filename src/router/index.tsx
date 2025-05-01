@@ -6,6 +6,9 @@ import RoleRoute from "./RouleRoute";
 import GoogleWithRegister from "@/common/hooks/registerWithGoogle";
 import Sellos from "@/common/molecules/sellos";
 import Prueba from "@/common/molecules/prueba";
+import ListAlbum from "@/common/widgets/coffeelovers/listAlbumWidget";
+import { PageAlbum } from "@/common/molecules/coffeelover/pageAlbum";
+
 
 // LAYOUTS
 const LoadingSpinner = lazy(() => import("@/common/atoms/LoadingSpinner"));
@@ -62,12 +65,13 @@ const AuthRoutes = () => {
             <Route path="/registerWithGoogle" element={<GoogleWithRegister />} />
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />}/>
             <Route path="/store-registration" element={<RegisterStorePage />} />
-            <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches />}/>
             <Route path="/completar-perfil" element={<CompleteProfile />} />
+            <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches />}/>
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />}/>
             <Route path="/404" element={<NotFound />} />
              <Route path="/sellos" element={<Sellos />} /> 
-             <Route path="/prueba" element={<Prueba />} />
+             <Route path="/album" element={<ListAlbum />} />
+             <Route path="/open-album" element={<PageAlbum />} />
 
             {/* PRIVATE ROUTES  */}
             <Route element={<PrivateRoute />}>
@@ -75,7 +79,7 @@ const AuthRoutes = () => {
                 <Route path="/coffeelover" element={<HomeCoffeelover />}>
                   <Route index element={<PrincipalCoffeelover />} />
                   <Route path="map-coffelover" element={<MapView />} />
-                  <Route path="register-branch-visit" element={<RegisterStoreVisit />}/>
+                  <Route path="register-branch-visit/:branch_id" element={<RegisterStoreVisit />}/>
                 </Route>
               </Route>
 

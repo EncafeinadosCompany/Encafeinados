@@ -107,7 +107,7 @@ export const useRegisterVisitMutation = (): UseMutationResult<
       const res: any = await authClient.post("/branches/register-visit", {
         shop_id,
         latitude,
-        longitude,
+        longitude
       });
 
       return res.data as ValidateVisitResponse;

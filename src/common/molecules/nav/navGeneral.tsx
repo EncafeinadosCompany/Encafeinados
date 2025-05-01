@@ -6,6 +6,8 @@ import { clearAuthStorage } from "@/common/utils/authStorage";
 import { LogOutIcon, Coffee, CupSoda } from "lucide-react";
 import { useState, useEffect } from "react";
 import logoImage from "@/assets/images/logonav.jpg";
+import { ROLES } from "@/common/utils/lists/roles";
+import RoleRoute from "@/router/RouleRoute";
 
 interface NavGeneralProps {
   isMobile: boolean;
@@ -15,6 +17,7 @@ interface NavGeneralProps {
   logoPath?: string;
   coffeecoins?: number;
   isLoading?: boolean;
+  role?: string | null;
 }
 
 const cn = (...classes: string[]) => {
@@ -28,6 +31,7 @@ export const NavGeneral = ({
   setIsExpanded,
   coffeecoins,
   isLoading,
+  role,
   logoPath = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
@@ -39,6 +43,8 @@ export const NavGeneral = ({
     }
   }, [location.pathname, setIsExpanded]);
 
+
+  console.log("ggg", role);
   return (
     <div className="flex min-h-screen w-full">
       {/* Sidebar by desktop */}
@@ -168,7 +174,7 @@ export const NavGeneral = ({
           {/* Logout button - With enhanced design */}
           <div className="mt-auto border-t border-gray-100">
             <div className="px-2 py-3">
-             {coffeecoins && (
+             { role === ROLES.COFFEE_LOVER && (
                <Link
                to="/coffeelover"
                className={cn(
@@ -184,7 +190,7 @@ export const NavGeneral = ({
                     isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
                   )}
                 >
-                <p className="text-sm">{coffeecoins}</p>
+                <p className="text-sm">{coffeecoins? coffeecoins : 0}</p>
                 </span>
              </Link>
              )}
@@ -225,16 +231,21 @@ export const NavGeneral = ({
         {isMobile && (
           <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] z-[100] rounded-t-2xl border-t border-gray-100">
             <nav className="flex justify-around items-center h-16 px-2">
-              {coffeecoins && (
-                <Link
+              {
+                role === ROLES.COFFEE_LOVER ? (
+                  <Link
                   to="/coffeelover"
                   className="flex flex-col items-center justify-center px-2 py-1 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
                 >
                   <img className="h-10 w-10 m-1" src="/coffeecoins.png" />
 
-                  <span className="text-[12px] font-medium">{coffeecoins}</span>
+                  <span className="text-[12px] font-medium">{coffeecoins? coffeecoins: 0}</span>
                 </Link>
-              )}
+                ):
+                (
+                  <div className="hidden"></div>
+                )
+              }
               {navItems.map((item) => (
                 <Link
                   key={item.href}
