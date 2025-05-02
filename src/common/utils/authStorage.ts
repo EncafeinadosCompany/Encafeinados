@@ -17,6 +17,8 @@ export const setAuthStorageGoogle = (token: string, user: any) => {
 export const clearAuthStorage = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('storeOrBranchId');
+    localStorage.removeItem('userId')
 }
 
 export const getAuthStorage = () => {

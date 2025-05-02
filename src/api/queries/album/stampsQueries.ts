@@ -84,6 +84,8 @@ export interface stampsResponse {
       queryKey: ['stamps'],
       queryFn: async (): Promise<stampsByClientResponse> => {
         
+
+        console.log('🔍 Fetching stamps for client ID:', id);
         try {
           const response = await authClient.get<stampsByClientResponse>(`/stamp-clients/${id}`);
           const stamps = response;

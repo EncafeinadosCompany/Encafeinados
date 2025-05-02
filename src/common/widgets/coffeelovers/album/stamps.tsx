@@ -45,6 +45,8 @@ export default function ListStamps({ id_page }: PruebaProps) {
 
     const { user } = getAuthStorage();
     const { id } = user;
+
+    console.log("ID del usuario:", id);
     const { data: users, error: error_us } = useStampsByClientQuery(id);
     const { data: stampData, error, isLoading } = useStampsByPageQuery(id_page);
     const [stamps, setStamps] = useState<stamps[]>([]);

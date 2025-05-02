@@ -17,6 +17,9 @@ export default function NavbarGeneral({ navItems }: NavItem) {
   const { user } = getAuthStorage();
   const location = useLocation();
 
+
+  console.log("coffeecoins", coffeecoins);
+
   useEffect(() => {
     if (isMobile) {
       setIsExpanded(false);
