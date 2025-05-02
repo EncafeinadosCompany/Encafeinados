@@ -20,6 +20,21 @@ export const getTypeColor = (type: string) => {
 
 }
 
+
+
+const filter = (text: string) => {
+    switch(text.toUpperCase()) {
+        case "EVENT":
+            return "EVENTOS";
+        case "ANNUAL":
+            return "ANUAL";
+        // Add other filter translations as needed
+        default:
+            // If no translation exists, return the original text
+            return text;
+    }
+}
+
 export const FilterButtons = ({ uniqueTypes, handleFilterClick, activeFilter, setActiveFilter }: FilterButtonsProps) => {
     return (
         <div className="flex flex-wrap gap-2 mb-6">
@@ -32,7 +47,7 @@ export const FilterButtons = ({ uniqueTypes, handleFilterClick, activeFilter, se
                         : "bg-white/70 border-slate-200 text-slate-600 hover:border-amber-300"
                         }`}
                 >
-                    {type}
+                    {filter(type)}
                     {activeFilter === type && (
                         <X className="h-3 w-3 ml-2 inline-block" />
                     )}
