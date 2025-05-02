@@ -110,3 +110,13 @@ input[type="search"]::-webkit-search-cancel-button {
 .rotateY-180 {
   transform: rotateY(180deg);
 }
+
+@keyframes qrscan {
+  0% { top: 0; opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: 0.8; }
+}
+
+.animate-qrscan {
+  animation: qrscan 2s linear infinite;
+}

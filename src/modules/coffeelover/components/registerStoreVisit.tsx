@@ -286,10 +286,10 @@ const ValidateVisitPage = () => {
                     <Button
                       className="w-full mt-4 sm:mt-6 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-sm h-auto py-2.5"
                       onClick={() =>
-                        (window.location.href = "/coffeelover/rewards")
+                        (window.location.href = "/coffeelover")
                       }
                     >
-                      Ver mis recompensas
+                      Volver al inicio
                       <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1" />
                     </Button>
                   </motion.div>

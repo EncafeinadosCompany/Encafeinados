@@ -1,20 +1,32 @@
 import { FeaturedStoresWidget } from '@/common/widgets/coffeelovers/featureStoresWidget'
 import SearchCoffee from '@/common/atoms/search';
 import { useState, useCallback } from 'react';
-import { Coffee, MapPin } from 'lucide-react';
+import { Coffee, MapPin, Scan, X } from 'lucide-react';
 import { CoffeeBackground } from '@/common/widgets/CoffeeBackground';
-
+import QRScannerDialog from '@/common/molecules/coffeelover/QRScannerDialog';
+import { Button } from '@/common/ui/button';
 
 const PrincipalCoffeelover = () => {
   const [globalSearchTerm, setGlobalSearchTerm] = useState("");
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
   
   const handleGlobalSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setGlobalSearchTerm(e.target.value);
   }, []);
 
+  const handleScanSuccess = useCallback((result: string) => {
+    setIsScannerOpen(false);
+    
+    if (result && result.startsWith('http')) {
+      window.location.href = result;
+    } else {
+      console.log('Código QR escaneado:', result);
+    }
+  }, []);
+
   return (
-    <div className='flex flex-col max-w-full overflow-hidden'>
-       <CoffeeBackground 
+    <div className='flex flex-col max-w-full overflow-hidden min-h-screen relative'>
+      <CoffeeBackground 
         coffeeCount={10} 
         circleCount={6}
         opacity={70} 
@@ -24,21 +36,6 @@ const PrincipalCoffeelover = () => {
       />
       <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md px-4 pt-4 pb-2 border-b border-amber-100 shadow-sm">
         <div className="flex flex-col gap-3 max-w-5xl mx-auto">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="bg-gradient-to-br from-amber-100 to-amber-50 p-1.5 rounded-lg">
-                <Coffee className="h-5 w-5 text-amber-700" />
-              </div>
-              <h1 className="text-lg font-semibold text-[#2C1810]">Descubre cafeterías</h1>
-            </div>
-            <div className="flex items-center">
-              <div className="bg-amber-50 text-amber-700 text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                <MapPin className="h-3 w-3" />
-                <span>Explora lugares</span>
-              </div>
-            </div>
-          </div>
-          
           <SearchCoffee
             value={globalSearchTerm}
             onChange={handleGlobalSearchChange}
@@ -48,12 +45,28 @@ const PrincipalCoffeelover = () => {
         </div>
       </div>
       
-      <div className="flex flex-col p-4 gap-6 max-w-5xl mx-auto w-full">
+      <div className="flex flex-col p-4 gap-6 max-w-5xl mx-auto w-full relative z-10">
         <FeaturedStoresWidget 
           globalSearchTerm={globalSearchTerm} 
           setGlobalSearchTerm={setGlobalSearchTerm}
         />
       </div>
+      
+      <div className="fixed bottom-6 right-6 z-20">
+        <Button 
+          onClick={() => setIsScannerOpen(true)}
+          className="h-14 w-14 rounded-full bg-amber-600 hover:bg-amber-700 shadow-lg flex items-center justify-center"
+          aria-label="Escanear código QR"
+        >
+          <Scan className="h-6 w-6 text-white" />
+        </Button>
+      </div>
+      
+      <QRScannerDialog
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        onScanSuccess={handleScanSuccess}
+      />
     </div>
   )
 }
