@@ -120,3 +120,17 @@ input[type="search"]::-webkit-search-cancel-button {
 .animate-qrscan {
   animation: qrscan 2s linear infinite;
 }
+
+html.is-mobile main {
+  padding-bottom: calc(4rem + 1.5rem) !important;
+}
+
+.pb-safe {
+  padding-bottom: calc(var(--mobile-nav-height, 4rem) + 1.5rem) !important;
+}
+
+@media (max-width: 767px) {
+  main {
+    padding-bottom: 5rem !important;
+  }
+}

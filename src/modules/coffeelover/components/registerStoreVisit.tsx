@@ -1,6 +1,6 @@
 import { useRegisterVisitMutation } from "@/api/mutations/branchApprovalMutations";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin,
@@ -20,6 +20,7 @@ const ValidateVisitPage = () => {
   const [searchParams] = useSearchParams();
   const branchId = searchParams.get("branch_id");
   const [animationComplete, setAnimationComplete] = useState(false);
+  const navigate = useNavigate();
 
   const {
     mutate: validateVisit,
@@ -285,9 +286,7 @@ const ValidateVisitPage = () => {
 
                     <Button
                       className="w-full mt-4 sm:mt-6 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-sm h-auto py-2.5"
-                      onClick={() =>
-                        (window.location.href = "/coffeelover")
-                      }
+                      onClick={() => navigate("/coffeelover")}
                     >
                       Volver al inicio
                       <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1" />
@@ -346,7 +345,7 @@ const ValidateVisitPage = () => {
 
                       <Button
                         className="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm py-1.5 h-auto"
-                        onClick={() => (window.location.href = "/coffeelover/map-coffelover")}
+                        onClick={() => navigate("/coffeelover/map-coffelover")}
                       >
                         <MapIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1 sm:mr-1.5" />
                         Ver mapa

@@ -4,7 +4,7 @@ import { Button } from "@/common/ui/button";
 import { NavItemType } from "@/common/types/navTypes";
 import { clearAuthStorage } from "@/common/utils/authStorage";
 import { LogOutIcon, Coffee, CupSoda } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import logoImage from "@/assets/images/logonav.jpg";
 import { ROLES } from "@/common/utils/lists/roles";
 import RoleRoute from "@/router/RouleRoute";
@@ -35,26 +35,6 @@ export const NavGeneral = ({
   logoPath = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
-
-  useEffect(() => {
-    // Ajustar la variable CSS para la altura del navbar móvil
-    if (isMobile) {
-      document.documentElement.style.setProperty('--mobile-nav-height', '4rem'); // 64px (h-16)
-    } else {
-      document.documentElement.style.removeProperty('--mobile-nav-height');
-    }
-    
-    if (window.innerWidth <= 768 && isExpanded) {
-      setIsExpanded(false);
-    }
-  }, [location.pathname, setIsExpanded, isMobile]);
-
-  // Función para manejar un scroll al inicio cuando se cambia de página en móvil
-  useEffect(() => {
-    if (isMobile) {
-      window.scrollTo(0, 0);
-    }
-  }, [location.pathname, isMobile]);
 
   const isRouteActive = (href: string) => {
     if (href === '/coffeelover' && location.pathname === '/coffeelover') {
