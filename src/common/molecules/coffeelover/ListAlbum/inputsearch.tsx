@@ -18,9 +18,9 @@ export const InputSearch = ({searchTerm, setSearchTerm}:InputSearchProps) => {
         <input
             type="text"
             placeholder="Buscar por nombre o descripción..."
-            className="pl-10 pr-4 py-3 w-full border border-amber-200 rounded-xl bg-white/90 
+            className="pl-10 pr-4 py-3 w-full border border-amber-200 bg-white/90 
                 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500
-                shadow-sm transition-all duration-200"
+                shadow-sm transition-all duration-200 rounded-full"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
         />

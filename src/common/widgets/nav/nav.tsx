@@ -1,55 +1,45 @@
-import { useState, useEffect } from "react"
-import { NavItemType } from "@/common/types/navTypes"
-import { NavGeneral } from "@/common/molecules/nav/navGeneral"
-import { useCoffeeCoinsQuery } from "@/api/queries/coffeecoins/coffeecoins"
-import { getAuthStorage } from "@/common/utils/authStorage"
-
+import { useState, useEffect } from "react";
+import { NavItemType } from "@/common/types/navTypes";
+import { NavGeneral } from "@/common/molecules/nav/navGeneral";
+import { useCoffeeCoinsQuery } from "@/api/queries/coffeecoins/coffeecoins";
+import { getAuthStorage } from "@/common/utils/authStorage";
+import { useResponsiveContext } from "@/common/contexts/ResponsiveContext";
+import { useLocation } from "react-router-dom";
 
 export type NavItem = {
   navItems: NavItemType[]
 }
 
-
 export default function NavbarGeneral({ navItems }: NavItem) {
-  const [isExpanded, setIsExpanded] = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
-  const {data: coffeecoins, isLoading} = useCoffeeCoinsQuery();
+  const [isExpanded, setIsExpanded] = useState(true);
+  const { isMobile } = useResponsiveContext();
+  const { data: coffeecoins, isLoading } = useCoffeeCoinsQuery();
+  const { user } = getAuthStorage();
+  const location = useLocation();
 
-  const {user} =  getAuthStorage();
-
-
-
-  console.log("coffeecoins", user);
   useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-      if (window.innerWidth >= 768) {
-        setIsExpanded(false)
-      } else {
-        setIsExpanded(true)
-      }
+    if (isMobile) {
+      setIsExpanded(false);
+    } else {
+      setIsExpanded(false);
     }
+  }, [isMobile]);
 
-    checkIfMobile()
-
-    window.addEventListener("resize", checkIfMobile)
-
-    return () => window.removeEventListener("resize", checkIfMobile)
-  }, [])
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
-      <NavGeneral
-        isExpanded={isExpanded}
-        setIsExpanded={setIsExpanded}
-        isMobile={isMobile}
-        navItems={navItems}
-        coffeecoins={coffeecoins?.quantity}
-        isLoading={isLoading}
-        role={user.role || null}
-        >
-      </NavGeneral>
-   
-  )
+    <NavGeneral
+      isExpanded={isExpanded}
+      setIsExpanded={setIsExpanded}
+      isMobile={isMobile}
+      navItems={navItems}
+      coffeecoins={coffeecoins?.quantity}
+      isLoading={isLoading}
+      role={user.role || null}
+    />
+  );
 }
 
 

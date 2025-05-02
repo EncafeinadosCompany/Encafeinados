@@ -33,6 +33,8 @@ export interface Page {
 
 export interface AlbumPageResponse {
     albumId:number;
+    albumTitle:string;
+    albumLogo:string;
     pages:Page[];
 }
 
