@@ -10,16 +10,14 @@ import {
 } from "../types/branchesApprovalTypes";
 const authClient = new AuthClient();
 
-// Mutación para aprobar una sucursal
 export const useApproveBranchMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (approvalId: number) => {
-      // Obtener el userId del localStorage
       const userId = localStorage.getItem("userId");
 
-      console.log("userId from localStorage:", userId); // Depuración
+      console.log("userId from localStorage:", userId);
 
       if (!userId) {
         throw new Error(
@@ -40,7 +38,6 @@ export const useApproveBranchMutation = () => {
   });
 };
 
-// Mutación para rechazar una sucursal
 export const useRejectBranchMutation = () => {
   const queryClient = useQueryClient();
 
@@ -52,10 +49,8 @@ export const useRejectBranchMutation = () => {
       approvalId: number;
       reason: string;
     }) => {
-      // Obtener el userId del localStorage con verificación
       const userId = localStorage.getItem("userId");
 
-      console.log("userId from localStorage:", userId); // Depuración
 
       if (!userId) {
         throw new Error(

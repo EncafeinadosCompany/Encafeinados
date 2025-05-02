@@ -1,13 +1,20 @@
-import { ApprovedBranch} from "@/api/types/branchesApprovalTypes";
+import { ApprovedBranch } from "@/api/types/branchesApprovalTypes";
 import { CarouselApi } from "@/common/ui/carousel"
 import { useApprovedBranches } from "@/api/queries/stores/branchesQueries";
 import { useEffect, useRef, useState } from "react";
 import { FeaturedCarouselStores } from "@/common/molecules/coffeelover/featuredStores";
 
-export const FeaturedStoresWidget = () => {
+interface FeaturedStoresWidgetProps {
+  globalSearchTerm: string;
+  setGlobalSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+}
 
-const { data: branches, isLoading, isError } = useApprovedBranches();
-  const [searchTerm, setSearchTerm] = useState("");
+export const FeaturedStoresWidget = ({ 
+  globalSearchTerm, 
+  setGlobalSearchTerm 
+}: FeaturedStoresWidgetProps) => {
+
+  const { data: branches, isLoading, isError } = useApprovedBranches();
   const [filteredBranches, setFilteredBranches] = useState<ApprovedBranch[]>([]);
   const carouselRef = useRef<CarouselApi | null>(null);
 
@@ -21,11 +28,10 @@ const { data: branches, isLoading, isError } = useApprovedBranches();
     return () => clearInterval(interval);
   }, []);
 
-
   useEffect(() => {
     if (!branches) return;
 
-    const searchTermLower = searchTerm.toLowerCase().trim();
+    const searchTermLower = globalSearchTerm.toLowerCase().trim();
     const filtered = branches.filter(
       (branch) =>
         branch.name.toLowerCase().includes(searchTermLower) ||
@@ -34,7 +40,7 @@ const { data: branches, isLoading, isError } = useApprovedBranches();
 
     setFilteredBranches(filtered);
 
-  }, [branches, searchTerm]);
+  }, [branches, globalSearchTerm]);
 
   if (isLoading) {
     return (
@@ -64,20 +70,15 @@ const { data: branches, isLoading, isError } = useApprovedBranches();
     );
   }
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
   return (
-    
     <FeaturedCarouselStores
-    handleSearchChange={handleSearchChange}
-    searchTerm={searchTerm}
-    branches={branches}
-    filteredBranches={filteredBranches}
-    carouselRef={carouselRef}
-    setFilteredBranches={setFilteredBranches}
-    setSearchTerm={setSearchTerm}    
-    ></FeaturedCarouselStores>
+      searchTerm={globalSearchTerm}
+      branches={branches}
+      filteredBranches={filteredBranches}
+      carouselRef={carouselRef}
+      setFilteredBranches={setFilteredBranches}
+      setSearchTerm={setGlobalSearchTerm}
+      handleSearchChange={(e) => setGlobalSearchTerm(e.target.value)}
+    />
   )
-
 }
