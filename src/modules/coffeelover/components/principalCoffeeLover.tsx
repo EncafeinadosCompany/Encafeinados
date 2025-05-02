@@ -1,6 +1,6 @@
 import { FeaturedStoresWidget } from '@/common/widgets/coffeelovers/featureStoresWidget'
 import SearchCoffee from '@/common/atoms/search';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Coffee, MapPin, Scan, X } from 'lucide-react';
 import { CoffeeBackground } from '@/common/widgets/CoffeeBackground';
 import QRScannerDialog from '@/common/molecules/coffeelover/QRScannerDialog';
@@ -9,6 +9,17 @@ import { Button } from '@/common/ui/button';
 const PrincipalCoffeelover = () => {
   const [globalSearchTerm, setGlobalSearchTerm] = useState("");
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkIfMobile();
+    window.addEventListener("resize", checkIfMobile);
+    return () => window.removeEventListener("resize", checkIfMobile);
+  }, []);
   
   const handleGlobalSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setGlobalSearchTerm(e.target.value);
@@ -45,14 +56,14 @@ const PrincipalCoffeelover = () => {
         </div>
       </div>
       
-      <div className="flex flex-col p-4 gap-6 max-w-5xl mx-auto w-full relative z-10">
+      <div className={`flex flex-col p-4 gap-6 max-w-5xl mx-auto w-full relative z-10 ${isMobile ? 'pb-24' : ''}`}>
         <FeaturedStoresWidget 
           globalSearchTerm={globalSearchTerm} 
           setGlobalSearchTerm={setGlobalSearchTerm}
         />
       </div>
       
-      <div className="fixed bottom-6 right-6 z-20">
+      <div className={`fixed ${isMobile ? 'bottom-20' : 'bottom-6'} right-6 z-20`}>
         <Button 
           onClick={() => setIsScannerOpen(true)}
           className="h-14 w-14 rounded-full bg-amber-600 hover:bg-amber-700 shadow-lg flex items-center justify-center"

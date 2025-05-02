@@ -36,17 +36,47 @@ export const NavGeneral = ({
 }: NavGeneralProps) => {
   const location = useLocation();
 
-
   useEffect(() => {
+    // Ajustar la variable CSS para la altura del navbar móvil
+    if (isMobile) {
+      document.documentElement.style.setProperty('--mobile-nav-height', '4rem'); // 64px (h-16)
+    } else {
+      document.documentElement.style.removeProperty('--mobile-nav-height');
+    }
+    
     if (window.innerWidth <= 768 && isExpanded) {
       setIsExpanded(false);
     }
-  }, [location.pathname, setIsExpanded]);
+  }, [location.pathname, setIsExpanded, isMobile]);
 
+  // Función para manejar un scroll al inicio cuando se cambia de página en móvil
+  useEffect(() => {
+    if (isMobile) {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname, isMobile]);
 
-  console.log("ggg", role);
+  const isRouteActive = (href: string) => {
+    if (href === '/coffeelover' && location.pathname === '/coffeelover') {
+      return true;
+    }
+    
+    if (location.pathname.startsWith(href + '/') || location.pathname === href) {
+      const moreSpecificMatch = navItems.some(item => 
+        item.href !== href && 
+        location.pathname.startsWith(item.href) && 
+        item.href.startsWith(href) && 
+        item.href.length > href.length
+      );
+      
+      return !moreSpecificMatch;
+    }
+    
+    return false;
+  };
+
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex min-h-screen w-full overflow-hidden">
       {/* Sidebar by desktop */}
       {!isMobile && (
         <div
@@ -138,7 +168,7 @@ export const NavGeneral = ({
                 to={item.href}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 relative",
-                  location.pathname.startsWith(item.href)
+                  isRouteActive(item.href)
                     ? "bg-gradient-to-r from-amber-50 to-amber-100/70 text-amber-800 font-medium"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                   isExpanded ? "" : "justify-center"
@@ -147,7 +177,7 @@ export const NavGeneral = ({
                 <div
                   className={cn(
                     "flex-shrink-0",
-                    location.pathname.startsWith(item.href)
+                    isRouteActive(item.href)
                       ? "text-amber-600"
                       : "text-gray-500"
                   )}
@@ -164,7 +194,7 @@ export const NavGeneral = ({
                 </span>
 
                 {/* Visual indicator for active item */}
-                {location.pathname.startsWith(item.href) && !isExpanded && (
+                {isRouteActive(item.href) && !isExpanded && (
                   <div className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full"></div>
                 )}
               </Link>
@@ -174,26 +204,26 @@ export const NavGeneral = ({
           {/* Logout button - With enhanced design */}
           <div className="mt-auto border-t border-gray-100">
             <div className="px-2 py-3">
-             { role === ROLES.COFFEE_LOVER && (
-               <Link
-               to="/coffeelover"
-               className={cn(
-                 "flex items-center gap-1  py-2.5 rounded-lg transition-all duration-300",
-                 "text-gray-600 hover:bg-amber-100/50 hover:text-amber-800",
-                 isExpanded ? "" : "justify-center"
-               )}
-             >
-               <img className=" w-9" src="/coffeecoins.png" />
-               <span
+              {role === ROLES.COFFEE_LOVER && (
+                <Link
+                  to="/coffeelover"
                   className={cn(
-                    "font-medium whitespace-nowrap transition-opacity duration-300",
-                    isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+                    "flex items-center gap-1  py-2.5 rounded-lg transition-all duration-300",
+                    "text-gray-600 hover:bg-amber-100/50 hover:text-amber-800",
+                    isExpanded ? "" : "justify-center"
                   )}
                 >
-                <p className="text-sm">{coffeecoins? coffeecoins : 0}</p>
-                </span>
-             </Link>
-             )}
+                  <img className=" w-9" src="/coffeecoins.png" />
+                  <span
+                    className={cn(
+                      "font-medium whitespace-nowrap transition-opacity duration-300",
+                      isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+                    )}
+                  >
+                    <p className="text-sm">{coffeecoins ? coffeecoins : 0}</p>
+                  </span>
+                </Link>
+              )}
               <Link
                 to="/"
                 className={cn(
@@ -215,65 +245,71 @@ export const NavGeneral = ({
                   Salir
                 </span>
               </Link>
-
             </div>
           </div>
         </div>
       )}
 
-      <div className="flex-1 flex flex-col min-w-0">
-        <main className="flex-1 w-full relative ">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Usar CSS variables para un padding dinámico basado en la altura del navbar */}
+        <main className="flex-1 w-full relative pb-safe">
           <Outlet />
         </main>
 
         {isMobile && (
           <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] z-[100] rounded-t-2xl border-t border-gray-100">
             <nav className="flex justify-around items-center h-16 px-2">
-              {
-                role === ROLES.COFFEE_LOVER ? (
-                  <Link
+              {role === ROLES.COFFEE_LOVER && (
+                <Link
                   to="/coffeelover"
-                  className="flex flex-col items-center justify-center px-2 py-1 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
+                  className="flex flex-col items-center justify-center px-2 py-1 rounded-xl transition-all duration-300 text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
                 >
-                  <img className="h-10 w-10 m-1" src="/coffeecoins.png" />
-
-                  <span className="text-[12px] font-medium">{coffeecoins? coffeecoins: 0}</span>
+                  <div className="relative">
+                    <img className="h-8 w-8" src="/coffeecoins.png" alt="Coffee Coins" />
+                    <span className="absolute -top-1 -right-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] flex items-center justify-center">
+                      {coffeecoins || 0}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-medium mt-0.5">Coins</span>
                 </Link>
-                ):
-                (
-                  <div className="hidden"></div>
-                )
-              }
+              )}
+              
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   to={item.href}
                   className={cn(
-                    "flex flex-col items-center justify-center px-2 py-2 rounded-xl transition-all duration-300 relative",
-                    location.pathname.startsWith(item.href)
-                      ? "text-amber-800 transform scale-105"
+                    "flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 relative",
+                    isRouteActive(item.href)
+                      ? "text-amber-800 bg-amber-50"
                       : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
                   )}
                 >
-                  <span className="m-1">{item.icon}</span>
-                  <span className="text-[10px] font-medium truncate max-w-[50px] text-center">
+                  <div className={cn(
+                    "p-1 rounded-lg",
+                    isRouteActive(item.href) ? "bg-amber-100" : ""
+                  )}>
+                    {item.icon}
+                  </div>
+                  <span className="text-[10px] font-medium mt-0.5 truncate max-w-[60px] text-center">
                     {item.title}
                   </span>
-                  {location.pathname.startsWith(item.href) && (
-                    <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-amber-500 rounded-full"></div>
+                  {isRouteActive(item.href) && (
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-amber-500 rounded-full"></div>
                   )}
                 </Link>
               ))}
 
               <Link
                 to="/"
-                className="flex flex-col items-center justify-center px-2 py-2 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
+                className="flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
                 onClick={clearAuthStorage}
               >
-                <LogOutIcon className="h-4 w-4 m-1" />
-                <span className="text-[10px] font-medium">Salir</span>
+                <div className="p-1">
+                  <LogOutIcon className="h-4 w-4" />
+                </div>
+                <span className="text-[10px] font-medium mt-0.5">Salir</span>
               </Link>
-
             </nav>
           </div>
         )}

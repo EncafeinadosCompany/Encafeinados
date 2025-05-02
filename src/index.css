@@ -1,13 +1,4 @@
 @plugin "tailwindcss-animate";
 @import "tailwindcss";
 
-@keyframes qrscan {
-  0% { top: 0; opacity: 0.8; }
-  50% { opacity: 1; }
-  100% { top: calc(100% - 4px); opacity: 0.8; }
-}
-
-.animate-qrscan {
-  animation: qrscan 1.5s ease-in-out infinite;
-}
 
