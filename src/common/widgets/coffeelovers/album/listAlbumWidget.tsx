@@ -1,6 +1,6 @@
 import { Albums, useAlbumsAllQuery } from "@/api/queries/album/albumQueries";
 import { useEffect, useState } from "react";
-import { Search, Coffee, X} from "lucide-react";
+import { Stamp} from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { CardError } from "@/common/molecules/coffeelover/ListAlbum/cardError";
@@ -86,16 +86,13 @@ export default function ListAlbum() {
                 {/* Header with enhanced styling */}
                 <div className="flex flex-col md:flex-row justify-between items-center mb-8">
                     {/* Title with coffee bean pattern backdrop */}
-                    <div className="relative flex items-center justify-center mb-8 md:mb-0">
-                        <div className="absolute inset-0 w-full h-full opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48cGF0aCBkPSJNMzAgMjBjNS41MjMgMCAxMC00LjQ3NyAxMC0xMHMtNC40NzctMTAtMTAtMTAtMTAgNC40NzctMTAgMTAgNC40NzcgMTAgMTAgMTB6bTAtNWMtMi43NjEgMC01LTIuMjM5LTUtNXMyLjIzOS01IDUtNSA1IDIuMjM5IDUgNS0yLjIzOSA1LTUgNXptMTggMjRjNS41MjMgMCAxMC00LjQ3NyAxMC0xMHMtNC40NzctMTAtMTAtMTAtMTAgNC40NzctMTAgMTAgNC40NzcgMTAgMTAgMTB6bTAtNWMtMi43NjEgMC01LTIuMjM5LTUtNXMyLjIzOS01IDUtNSA1IDIuMjM5IDUgNS0yLjIzOSA1LTUgNXpNMzAgNTBjNS41MjMgMCAxMC00LjQ3NyAxMC0xMHMtNC40NzctMTAtMTAtMTAtMTAgNC40NzctMTAgMTAgNC40NzcgMTAgMTAgMTB6bTAtNWMtMi43NjEgMC01LTIuMjM5LTUtNXMyLjIzOS01IDUtNSA1IDIuMjM5IDUgNS0yLjIzOSA1LTUgNXptLTE4IDljNS41MjMgMCAxMC00LjQ3NyAxMC0xMHMtNC40NzctMTAtMTAtMTAtMTAgNC40NzctMTAgMTAgNC40NzcgMTAgMTAgMTB6bTAtNWMtMi43NjEgMC01LTIuMjM5LTUtNXMyLjIzOS01IDUtNSA1IDIuMjM5IDUgNS0yLjIzOSA1LTUgNXoiIGZpbGw9IiM1NTU1NTUiLz48L3N2Zz4=')]"></div>
-                        <div className="relative inline-flex items-center px-6 py-4">
-                            <Coffee className="h-8 w-8 text-amber-900 mr-3" />
-                            <h2 className="text-3xl md:text-4xl font-serif text-amber-900 tracking-tight">
-                                Colección de <span className="text-amber-700">Café</span>
-                            </h2>
-                            <div className="absolute -bottom-2 left-6 right-6 h-1 bg-gradient-to-r from-amber-300 to-amber-500 rounded-full"></div>
-                        </div>
+                    <div className="flex items-center justify-center mb-8 md:mb-12">
+                    <div className="relative inline-flex items-center px-6 py-3">
+                        <div className="absolute inset-0 bg-orange-100 rounded-full opacity-20"></div>
+                        <Stamp className="h-7 w-7 text-orange-800 mr-3" />
+                        <h2 className="text-2xl md:text-3xl font-serif text-orange-900 tracking-tight">Álbumes</h2>
                     </div>
+                </div>
 
                     {/* Enhanced Search Bar */}
                    <InputSearch
