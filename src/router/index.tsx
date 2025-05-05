@@ -1,15 +1,15 @@
-import { BrowserRouter as Router,Route,Routes,Navigate} from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { ROLES } from "@/common/utils/lists/roles";
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 import GoogleWithRegister from "@/common/hooks/registerWithGoogle";
+import LoadingSpinner from "@/common/atoms/LoadingSpinner";
 
 import ListAlbum from "@/common/widgets/coffeelovers/album/listAlbumWidget";
 import { PageAlbum } from "@/common/widgets/coffeelovers/album/pageAlbum";
 
 // LAYOUTS
-const LoadingSpinner = lazy(() => import("@/common/atoms/LoadingSpinner"));
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
 
@@ -44,14 +44,50 @@ const MapView = lazy(() => import("@/common/widgets/map/MapView"));
 const NotFound = lazy(() => import("@/modules/settings/404"));
 const UnauthorizedPage = lazy(() => import("@/modules/settings/authorizationPage"));
 
-// LANGUAGES
-// const LanguageSwitcher = lazy(() => import("@/common/molecules/settings/button-languages"));
+const RouteLoadingIndicator = () => {
+  const [progress, setProgress] = useState(0);
+  const location = useLocation();
+
+  useEffect(() => {
+    setProgress(0);
+    
+    const expectedLoadTime = 2500; 
+    const startTime = Date.now();
+    
+    const intervalId = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const calculatedProgress = Math.min(99, (elapsed / expectedLoadTime) * 100);
+      
+      setProgress(Math.round(calculatedProgress));
+      
+      if (calculatedProgress >= 99) {
+        clearInterval(intervalId);
+      }
+    }, 50);
+    
+    return () => clearInterval(intervalId);
+  }, [location.pathname]);
+  
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setProgress(100);
+    }, 300);
+    
+    return () => clearTimeout(timeout);
+  }, []);
+  
+  return <LoadingSpinner progress={progress} message="Preparando tu café..." size="lg" />;
+};
 
 const AuthRoutes = () => {
   return (
     <>
       <Router>
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense fallback={
+          <div className="fixed inset-0 bg-white/95 flex items-center justify-center z-50">
+            <RouteLoadingIndicator />
+          </div>
+        }>
           <Routes>
             {/* PUBLIC ROUTES */}
             <Route path="/" element={<HomePage />} />

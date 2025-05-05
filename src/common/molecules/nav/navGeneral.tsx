@@ -231,8 +231,8 @@ export const NavGeneral = ({
       )}
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Usar CSS variables para un padding dinámico basado en la altura del navbar */}
-        <main className="flex-1 w-full relative pb-safe">
+        {/* Aplicar clase pb-safe solo cuando estamos en móvil */}
+        <main className={`flex-1 w-full relative ${isMobile ? 'pb-safe' : ''}`}>
           <Outlet />
         </main>
 
