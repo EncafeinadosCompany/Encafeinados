@@ -50,14 +50,14 @@ function InputOTPSlot({
   const inputOTPContext = React.useContext(OTPInputContext)
   const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {}
 
-  const displayChar = isVisible ? char : char ? "•" : ""
+  const displayChar = isVisible ? char : char ? "•" : "*"
 
   return (
     <div
   data-slot="input-otp-slot"
   data-active={isActive}
-  className={cn(
-    "relative flex h-11 w-11 items-center bg-white/90 justify-center border border-gray-300 text-xl text-gray-600 shadow-xs outline-none transition-all",
+  className={cn( 
+    "relative flex h-11 w-11 items-center pt-2 bg-white/90 justify-center border border-gray-300 text-xl text-gray-600 shadow-xs outline-none transition-all",
     "first:rounded-l-md last:rounded-r-md",
     "data-[active=true]:border-ring data-[active=true]:ring-[1px] data-[active=true]:z-10",
     "data-[active=true]:ring-ring/50 aria-invalid:border-destructive data-[active=true]:aria-invalid:ring-destructive/20",

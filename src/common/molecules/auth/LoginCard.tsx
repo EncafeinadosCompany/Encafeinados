@@ -87,7 +87,7 @@ export const LoginCard = (
                 {errors.email && <TextError>{errors.email.message}</TextError>}
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="password" className="text-[#3D3D3D] font-medium">Clave</Label>
+                <Label htmlFor="password" className="text-[#3D3D3D] font-medium">PIN</Label>
                 <div className="flex  mx-auto">
                   {/* <a href="#" className="ml-auto text-sm text-amber-800 underline-offset-2 hover:underline">
                     {t("¿Olvidaste tu contraseña?")}
@@ -102,11 +102,12 @@ export const LoginCard = (
                         maxLength={4}
                         value={field.value}
                         onChange={field.onChange}
+                        
                         {...registerWithFocus("password")}
                         data-testid="custom-input-password"
                       >
                         <InputOTPGroup className="space-x-1">
-                          <InputOTPSlot index={0} isVisible={isVisible} />
+                          <InputOTPSlot index={0} isVisible={isVisible}  />
                           <InputOTPSlot index={1} isVisible={isVisible} />
                         </InputOTPGroup>
                         <InputOTPGroup className="space-x-1">

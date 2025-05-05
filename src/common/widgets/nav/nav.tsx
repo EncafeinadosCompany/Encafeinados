@@ -16,6 +16,9 @@ export default function NavbarGeneral({ navItems }: NavItem) {
 
   const {user} =  getAuthStorage();
 
+
+  console.log("coffeecoins", coffeecoins);
+
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768)
