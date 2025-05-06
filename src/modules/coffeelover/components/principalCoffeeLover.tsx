@@ -1,7 +1,7 @@
 import { FeaturedStoresWidget } from '@/common/widgets/coffeelovers/featureStoresWidget'
 import SearchCoffee from '@/common/atoms/search';
 import { useState, useCallback, useEffect } from 'react';
-import { Coffee, MapPin, Scan, X } from 'lucide-react';
+import { Coffee, MapPin, QrCode, X } from 'lucide-react';
 import { CoffeeBackground } from '@/common/widgets/CoffeeBackground';
 import QRScannerDialog from '@/common/molecules/coffeelover/QRScannerDialog';
 import { Button } from '@/common/ui/button';
@@ -69,7 +69,7 @@ const PrincipalCoffeelover = () => {
           className="h-14 w-14 rounded-full bg-amber-600 hover:bg-amber-700 shadow-lg flex items-center justify-center"
           aria-label="Escanear código QR"
         >
-          <Scan className="h-6 w-6 text-white" />
+          <QrCode className="h-6 w-6 text-white" />
         </Button>
       </div>
       
