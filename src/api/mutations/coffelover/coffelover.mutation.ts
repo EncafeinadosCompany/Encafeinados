@@ -1,5 +1,5 @@
 import AuthClient from "@/api/client/axios";
-import { RegisterCoffelover, RegisterCoffeloverResponse } from "@/api/types/authTypes";
+import { RegisterCoffelover, RegisterCoffeloverResponse } from "@/api/types/auth/auth.types";
 import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
-import { MapFocusProps } from '@/common/types/map/mapTypes';
+import { MapFocusProps } from '@/api/types/map/map_search.types';
 
 /**
   Component to center the map on the selected coffee shop

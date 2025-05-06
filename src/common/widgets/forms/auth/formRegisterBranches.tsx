@@ -9,15 +9,14 @@ import { AnimatePresence, motion } from "framer-motion"
 import { RegisterBranchesStep1 } from "@/common/molecules/auth/stores/branches/registerBranchesStep1"
 import { RegisterBranchesStep3 } from "@/common/molecules/auth/stores/branches/registerBranchesStep3"
 
-
-import { useCriteria } from "@/api/queries/stores/criteriaQueries"
-import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueries"
 import { RegisterStoreBrancheSchema, RegisterStoreBrancheSchemaType } from "@/common/utils/schemas/auth/registerStoreBrancheSchema"
 import RegisterStoreBrancheStep2 from "@/common/molecules/auth/stores/store/registerStoreBrancheStep2"
 import MapSearch from "../../map/mapSearch"
 import SocialNetworksForm from "./socialNetwork"
 import { validateImageRequirements } from "@/common/hooks/useCriteria"
 import { useRegisterBrandMutation } from "@/api/mutations/branches/branches.mutation"
+import { useCriteria } from "@/api/queries/criteria/criteria.query"
+import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query"
 
 
 

@@ -14,12 +14,12 @@ import '@/common/styles/desktopDetails.css';
 //   COMMENTS FOR EACH SECTION ARE NECESSARY IN THIS MODULE BECAUSE I GET LOST :(
 
 // API imports
-import { useBranches } from '@/api/queries/stores/branchesQueries';
-import { useApprovedStores } from '@/api/queries/stores/storesQueries';
-import { useBranchesByStore } from '@/api/queries/stores/storesQueries';
+
+import { useApprovedStores } from '@/api/queries/stores/stores.query';
+import { useBranchesByStore } from '@/api/queries/stores/stores.query';
 
 // Types
-import { Cafe } from '@/common/types/map/mapTypes';
+import { Cafe } from '@/api/types/map/map_search.types';
 
 // Hooks
 import { useFavorites } from '@/common/hooks/map/useFavorites';
@@ -41,6 +41,7 @@ import CafeDetail from '@/common/molecules/map/CafeDetail';
 import MapSidebar from '@/common/molecules/map/MapSidebar';
 import { containerVariants, cardVariants, pulseVariants } from './mapAnimations';
 import { createPortal } from 'react-dom';
+import { useBranches } from '@/api/queries/branches/branch.query';
 
 const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance}) => {
   const map = useMap();

@@ -1,5 +1,5 @@
 
-import { criteriaResponseData} from '../../../../src/api/types/criteriaTypes';
+import { criteriaResponseData} from '../../../../src/api/types/criteria/criteria.types';
 
 export const mockCriteria:criteriaResponseData[] = [
     {

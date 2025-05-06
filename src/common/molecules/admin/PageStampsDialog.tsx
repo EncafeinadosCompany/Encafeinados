@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog";
 import { Badge } from "@/common/ui/badge";
 import { Button } from "@/common/ui/button";
-import { usePageStampsQuery } from "@/api/queries/admin/albumQueries";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { Stamp as StampIcon, X, Coins, CheckCircle, XCircle, Search, BookOpenCheck } from "lucide-react";
+import { usePageStampsQuery } from "@/api/queries/album/page.query";
 
 interface PageStampsDialogProps {
   pageId: number | null;

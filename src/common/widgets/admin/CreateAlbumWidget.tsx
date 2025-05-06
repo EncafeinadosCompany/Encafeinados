@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogTrigger } from '@/common/ui/dialog';
 import { Button } from '@/common/ui/button';
 import { BookPlus, Coffee, Sparkles } from 'lucide-react';
-import { CreateAlbumDto } from '@/api/types/albumTypes';
+import { CreateAlbumDto } from '@/api/types/album/album.types';
 import { cn } from '@/lib/utils';
 import { useCreateAlbumMutation } from '@/api/mutations/album/album.mutation';
 import AlbumForm from '@/common/molecules/admin/AlbumForm';
@@ -20,7 +20,7 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({ className 
 
     try {
 
-    UseCreateAlbumMutation(data,{
+      UseCreateAlbumMutation(data,{
       onSuccess: () => {
         setSuccess(true); 
       }

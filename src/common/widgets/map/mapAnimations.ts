@@ -1,4 +1,4 @@
-import { CardVariants } from '@/common/types/map/mapTypes';
+import { CardVariants } from '@/api/types/map/map_search.types';
 
 /**
  * Container animation variants

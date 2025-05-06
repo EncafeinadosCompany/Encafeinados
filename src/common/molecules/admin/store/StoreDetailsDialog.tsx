@@ -1,5 +1,5 @@
 import React from 'react';
-import { Store } from "@/api/types/storesTypes";
+import { Store } from "@/api/types/stores/stores.type";
 import { 
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay 
 } from "@/common/ui/dialog";

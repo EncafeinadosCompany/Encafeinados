@@ -1,5 +1,5 @@
 import React from 'react';
-import { ApprovedBranch } from "@/api/types/branchesApprovalTypes";
+import { ApprovedBranch } from "@/api/types/branches/branches_approval.types";
 import { 
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay 
 } from "@/common/ui/dialog";

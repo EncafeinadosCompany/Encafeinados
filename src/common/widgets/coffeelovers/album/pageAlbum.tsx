@@ -1,4 +1,4 @@
-import { Page, usePageByAlbumQuery } from "@/api/queries/album/albumQueries";
+import { Page, usePageByAlbumQuery } from "@/api/queries/album/album.query";
 import HTMLFlipBook from 'react-pageflip';
 import { useRef, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight, Loader2, Coffee, AlertCircle, Info, X, Stamp
 import ListStamps from "./stamps";
 
 
-export const PageAlbum = () => {
+export default function PageAlbum () {
     const [searchParams] = useSearchParams();
     const id_album = searchParams.get("id");
     const bookRef = useRef<any>(null);

@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { Store } from "@/api/types/storesTypes";
-import { useApprovedStores } from "@/api/queries/stores/storesQueries";
+import { Store } from "@/api/types/stores/stores.type";
+import { useApprovedStores } from "@/api/queries/stores/stores.query";
 
 export const useApprovedStoresWidget = () => {
   // API data

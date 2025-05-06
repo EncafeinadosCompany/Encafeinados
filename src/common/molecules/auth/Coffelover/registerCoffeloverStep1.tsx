@@ -2,9 +2,9 @@
 
 import { Label } from "@/common/ui/label"
 import { UseFormRegister } from "react-hook-form"
-import { InputForm } from "@/common/atoms/auth/inputForm"
+import { InputForm } from "@/common/atoms/auth/input_form.atom"
 import { motion } from "framer-motion"
-import { pageVariants } from "@/common/atoms/auth/pageVariants"
+import { pageVariants } from "@/common/atoms/auth/page_variants.atom"
 
 import { TextError } from "@/common/atoms/textError"
 import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"

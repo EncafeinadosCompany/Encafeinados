@@ -1,4 +1,4 @@
-import { pageVariants } from "@/common/atoms/auth/pageVariants";
+import { pageVariants } from "@/common/atoms/auth/page_variants.atom";
 import { InputPassword } from "@/common/atoms/input-passwork";
 import { Label } from "@radix-ui/react-label";
 import { UseFormRegister } from "react-hook-form";

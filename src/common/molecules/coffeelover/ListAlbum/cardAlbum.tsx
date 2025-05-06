@@ -1,11 +1,12 @@
 import { Calendar, Tag } from "lucide-react"
 import { getTypeColor } from "./filterButtons"
 import { SetStateAction } from "react"
-import { Albums } from "@/api/queries/album/albumQueries"
+import { Albums } from "@/api/queries/album/album.query"
+import { AlbumResponse } from "@/api/types/album/album.types"
 
 
 interface AlbumProps {
-    album: Albums
+    album: AlbumResponse
     hoveredAlbum: string | null | number
     setHoveredAlbum: React.Dispatch<SetStateAction<number | null>>
     formatDate: (date: string) => string
@@ -67,7 +68,7 @@ export const CardAlbum = ({hoveredAlbum, album, formatDate}:AlbumProps) => {
                 </h2>
 
                 {/* Descripción */}
-                <p className="text-xs text-amber-700/80 line-clamp-2 mb-2 h-8 relative z-10">{album.introduccion}</p>
+                <p className="text-xs text-amber-700/80 line-clamp-2 mb-2 h-8 relative z-10">{album.introduction}</p>
 
                 {/* Metadatos de la cafetería */}
                 <div className="flex flex-wrap items-center gap-1 text-xs relative z-10">

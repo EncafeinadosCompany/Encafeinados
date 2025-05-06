@@ -4,12 +4,12 @@ import toast from "react-hot-toast";
 import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffelover.mutation";
 import { Button } from "@/common/ui/button";
 import { motion } from "framer-motion";
-import { TitleForm } from "@/common/atoms/auth/titleForm";
+import { TitleForm } from "@/common/atoms/auth/title_form.atom";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CurrentfinishSchema, registerCoffeeloverGoogleSchema } from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
-import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument";
-import { InputForm } from "@/common/atoms/auth/inputForm";
+import SelectTypeDocument from "@/common/atoms/auth/select_type_document.atom";
+import { InputForm } from "@/common/atoms/auth/input_form.atom";
 import { TermConditions } from "./termConditions";
 import { TextError } from "@/common/atoms/textError";
 

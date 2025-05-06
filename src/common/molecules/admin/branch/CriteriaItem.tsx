@@ -6,7 +6,7 @@ import {
   DialogOverlay,
 } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
-import { CriteriaResponse } from "@/api/types/branchesApprovalTypes";
+import { CriteriaResponse } from "@/api/types/branches/branches_approval.types";
 import { ZoomIn, X, Check, AlertCircle } from "lucide-react";
 
 interface CriteriaItemProps {

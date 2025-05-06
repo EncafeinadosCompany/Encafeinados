@@ -1,4 +1,4 @@
-import { ApprovedBranch } from "@/api/types/branchesApprovalTypes";
+import { ApprovedBranch } from "@/api/types/branches/branches_approval.types";
 import { Badge } from "@/common/ui/badge";
 import { DialogContent, DialogFooter } from "@/common/ui/dialog";
 import { Dispatch, SetStateAction, useState } from "react";

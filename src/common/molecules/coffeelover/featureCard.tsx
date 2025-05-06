@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/common/ui/card";
 import { Dialog } from "@/common/ui/dialog";
 import { useState } from "react";
 import { DialogDetailStores } from "./detailsStores";
-import { ApprovedBranch} from "@/api/types/branchesApprovalTypes";
+import { ApprovedBranch} from "@/api/types/branches/branches_approval.types";
 import { Coffee } from "lucide-react";
 
 interface FeaturedCardProps {

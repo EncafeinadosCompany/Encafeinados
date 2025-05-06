@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { Cafe } from '@/common/types/map/mapTypes';
+import { Cafe } from '@/api/types/map/map_search.types';
 
 interface CafeMarkerProps {
   cafe: Cafe;

@@ -1,5 +1,5 @@
-import { useBranchApprovalDetails } from "@/api/queries/stores/branchesQueries"
-import { Branch } from "@/api/types/branchesTypes"
+
+import { Branch } from "@/api/types/branches/branches.types"
 import { DialogHeader, Dialog, DialogContent, DialogTitle } from "@/common/ui/dialog"
 import { Mail, MapPin, X, Phone, Star, Store, Globe } from "@/common/ui/icons"
 
@@ -10,8 +10,6 @@ interface DetailsBranchModalProps {
 }
 
 export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalProps) {
-
-
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

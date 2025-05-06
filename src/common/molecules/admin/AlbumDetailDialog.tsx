@@ -5,10 +5,10 @@ import { Button } from "@/common/ui/button";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { BookOpen, CalendarIcon, Coffee, Loader2, Stamp as StampIcon, PlusCircle, RefreshCw } from "lucide-react";
-import { useAlbumDetailsQuery } from "@/api/queries/admin/albumQueries";
 import { PageStampsDialog } from "./PageStampsDialog";
 import { CreatePageDialog } from "./CreatePageDialog";
 import { AddStampsDialog } from "./AddStampsDialog";
+import { useAlbumDetailsQuery } from "@/api/queries/album/album.query";
 
 interface AlbumDetailDialogProps {
     albumId: number | null; 

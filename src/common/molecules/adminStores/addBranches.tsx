@@ -1,7 +1,7 @@
 "use client"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog"
 import FormRegisterBrands from "@/common/widgets/forms/auth/formRegisterBranches"
-import { Branch } from "@/api/types/branchesTypes"
+import { Branch } from "@/api/types/branches/branches.types"
 import { Description } from "@radix-ui/react-dialog"
 import FormEditBrands from "@/common/widgets/forms/auth/formEditBranches"
 import { Coffee } from "lucide-react"

@@ -1,11 +1,11 @@
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { AlbumResponse } from "@/api/types/albumTypes";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/common/ui/card";
 import { motion } from "framer-motion";
 import { Badge } from "@/common/ui/badge";
 import { Button } from "@/common/ui/button";
-import { BookOpen, Calendar, Eye, Clock, Album } from "lucide-react";
+import { Calendar, Eye, Clock, Album } from "lucide-react";
+import { AlbumResponse } from "@/api/types/album/album.types";
 
 interface AlbumCardProps {
     album: AlbumResponse;

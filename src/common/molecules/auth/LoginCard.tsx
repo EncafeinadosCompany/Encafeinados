@@ -4,14 +4,14 @@ import { Link } from "react-router-dom"
 import { InputEmail } from "@/common/atoms/Input-email"
 import { Label } from "@/common/ui/label"
 import { Controller, UseFormRegister } from "react-hook-form"
-import { User } from "@/api"
+
 import { useTranslation } from "react-i18next"
-import { ButtonGoogle } from "@/common/atoms/buttonGoogle"
 import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/common/ui/input-otp"
 import { TextError } from "@/common/atoms/textError"
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
+import { User } from "@/api/types/auth/auth.types"
 
 type LoginCardProps = {
   register: UseFormRegister<User>

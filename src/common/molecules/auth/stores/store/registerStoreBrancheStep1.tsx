@@ -1,4 +1,4 @@
-import { InputForm } from "@/common/atoms/auth/inputForm"
+import { InputForm } from "@/common/atoms/auth/input_form.atom"
 import { TextError } from "@/common/atoms/textError"
 import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 import { Label } from "@/common/ui/label"

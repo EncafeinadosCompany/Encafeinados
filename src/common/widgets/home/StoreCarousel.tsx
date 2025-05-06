@@ -6,7 +6,7 @@ import {Carousel,CarouselContent,CarouselItem,CarouselNext,CarouselPrevious} fro
 import { motion, useInView } from "framer-motion"; 
 import type { CarouselApi } from "@/common/ui/carousel";
 import { Coffee } from "@/common/ui/icons";
-import { useStores } from "@/api/queries/stores/storesQueries";
+import { useStores } from "@/api/queries/stores/stores.query";
 
 interface StoreCardProps {
   id: number;

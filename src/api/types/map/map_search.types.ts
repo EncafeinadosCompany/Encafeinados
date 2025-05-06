@@ -1,4 +1,4 @@
-import { SocialBranch } from '@/api/types/branchesTypes';
+import { SocialBranch } from '@/api/types/branches/branches.types';
 /**
  * Geographic coordinates as [latitude, longitude]
  */

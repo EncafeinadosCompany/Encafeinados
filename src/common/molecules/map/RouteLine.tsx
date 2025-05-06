@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Polyline } from 'react-leaflet';
-import { RouteLineProps, LatLngTuple } from '@/common/types/map/mapTypes';
+import { RouteLineProps, LatLngTuple } from '@/api/types/map/map_search.types';
 import { simulateRoute } from '@/common/utils/map/mapUtils';
 
 /**

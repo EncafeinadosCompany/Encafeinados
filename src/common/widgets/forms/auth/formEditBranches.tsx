@@ -10,13 +10,12 @@ import { RegisterBranchesStep1 } from "@/common/molecules/auth/stores/branches/r
 import { RegisterBranchesStep3 } from "@/common/molecules/auth/stores/branches/registerBranchesStep3"
 
 
-import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueries"
 
 import MapSearch from "../../map/mapSearch"
 import SocialNetworksForm from "./socialNetwork"
-import { Branch } from "@/api/types/branchesTypes"
-import { useBranchApprovalDetails } from "@/api/queries/stores/branchesQueries"
+import { Branch } from "@/api/types/branches/branches.types"
 import { EditStoreBrancheSchema, EditStoreBrancheSchemaType } from "@/common/utils/schemas/auth/editStoreBrancheSchema"
+import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query"
 
 
 interface FormEditBrandsProps {
@@ -127,7 +126,7 @@ const FormEditBrands = ({ onClose, data }: FormEditBrandsProps) => {
                         <div className="relative w-full max-w-3xl mx-auto  flex flex-col" style={{ maxHeight: "600px" }}>
                             <AnimatePresence initial={false} custom={direction} mode="wait"
                             >
-                                <div className="flex-1 flex-1 max-h-[50vh] sm:max-h-[55vh] md:max-h-[60vh] lg:max-h-[65vh] xl:max-h-[40vh] overflow-y-auto scrollbar-subtle
+                                <div className="flex-1  max-h-[50vh] sm:max-h-[55vh] md:max-h-[60vh] lg:max-h-[65vh] xl:max-h-[40vh] overflow-y-auto scrollbar-subtle
                                 scrollbar-track-transparent px-2 sm:px-4 md:px-6 lg:px-2 
                                 pb-4 transition-all duration-300 rounded-md">
                                     {step === 0 && (

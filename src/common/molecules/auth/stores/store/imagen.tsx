@@ -1,9 +1,9 @@
 import { CurrentSchema } from "@/common/utils/schemas/auth/registerStoreShema"
 import { Controller, UseFormRegister } from "react-hook-form"
 import { motion } from "framer-motion"
-import { pageVariants } from "@/common/atoms/auth/pageVariants"
+import { pageVariants } from "@/common/atoms/auth/page_variants.atom"
 import { Label } from "@/common/ui/label"
-import { TitleForm } from "@/common/atoms/auth/titleForm"
+import { TitleForm } from "@/common/atoms/auth/title_form.atom"
 import { useState, useRef } from "react"
 import { Coffee, Upload, X, Check } from "lucide-react"
 

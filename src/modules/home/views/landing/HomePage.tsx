@@ -4,7 +4,8 @@ import { BenefitsSection } from "@/common/widgets/home/BenefitsSection";
 import { Footer } from "@/common/widgets/home/Footer";
 import { MapTeaser } from "@/common/molecules/home/MapTeaser";
 import { Navbar } from "@/common/molecules/home/navbar";
-import { useApprovedBranches } from "@/api/queries/stores/branchesQueries";
+import { useApprovedBranches } from "@/api/queries/branches/branch.query";
+
 
 const HomePage = () => {
   const homeSections = [

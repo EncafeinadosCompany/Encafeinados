@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Store } from "@/api/types/storesTypes";
+import { Store } from "@/api/types/stores/stores.type";
 import { 
   Card, CardContent, CardHeader, CardTitle, CardFooter 
 } from "@/common/ui/card";
@@ -23,7 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from "@/common/ui/tooltip";
-import { useRejectedStores } from "@/api/queries/stores/storesQueries";
+import { useRejectedStores } from "@/api/queries/stores/stores.query";
 
 export const RejectedStoresWidget = () => {
   const { data, isLoading, error } = useRejectedStores();

@@ -1,10 +1,9 @@
 import { motion } from "framer-motion"
-import CardRegister from "@/common/atoms/auth/cardRegister"
+import CardRegister from "@/common/atoms/auth/card_register.atom"
 import { LinkReturn } from "./LinkReturn"
 
 export default function CuestionCard() {
   return (
-    // <div className="bg-gradient-to-b from-orange-100 to-orange-200">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -70,7 +69,6 @@ export default function CuestionCard() {
         </div>
 
       </motion.div>
-    // </div>
   )
 
 }

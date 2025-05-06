@@ -1,5 +1,5 @@
 import AuthClient from "@/api/client/axios";
-import { CreateAlbumDto, AlbumResponse } from "@/api/types/albumTypes";
+import { CreateAlbumDto, AlbumResponse } from "@/api/types/album/album.types";
 import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

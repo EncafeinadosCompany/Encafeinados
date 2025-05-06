@@ -1,10 +1,8 @@
 import AuthClient from "@/api/client/axios"
-import { criteriaResponseData } from "@/api/types/criteriaTypes"
+import { criteriaResponseData } from "@/api/types/criteria/criteria.types"
 import { useQuery } from "@tanstack/react-query"
 
 const authClient = new AuthClient()
-
-
 
 
 export const useCriteria= () => {

@@ -1,4 +1,4 @@
-import { getCurrentLocationProps, handleSearchProps, recentSearchesProps } from "@/api/types/mapTypes";
+import { getCurrentLocationProps, handleSearchProps, recentSearchesProps } from "@/api/types/map/map.types";
 import { formatAddress } from "@/common/utils/map/formatAddress";
 
 const MapSettings = {

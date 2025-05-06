@@ -1,13 +1,7 @@
-import {
-  useMutation,
-  UseMutationResult,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, UseMutationResult, useQueryClient} from "@tanstack/react-query";
+import { ValidateVisitInput, ValidateVisitResponse} from "../../types/branches/branches_approval.types";
 import AuthClient from "../../client/axios";
-import {
-  ValidateVisitInput,
-  ValidateVisitResponse,
-} from "../../types/branchesApprovalTypes";
+
 const authClient = new AuthClient();
 
 export const useApproveBranchMutation = () => {
@@ -16,8 +10,6 @@ export const useApproveBranchMutation = () => {
   return useMutation({
     mutationFn: async (approvalId: number) => {
       const userId = localStorage.getItem("userId");
-
-      console.log("userId from localStorage:", userId);
 
       if (!userId) {
         throw new Error(
@@ -50,7 +42,6 @@ export const useRejectBranchMutation = () => {
       reason: string;
     }) => {
       const userId = localStorage.getItem("userId");
-
 
       if (!userId) {
         throw new Error(

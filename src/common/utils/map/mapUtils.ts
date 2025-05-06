@@ -1,4 +1,4 @@
-import { LatLngTuple } from '@/common/types/map/mapTypes';
+import { LatLngTuple } from '@/api/types/map/map_search.types';
 
 /**
  * Calculates the distance between two geographic points using the Haversine formula

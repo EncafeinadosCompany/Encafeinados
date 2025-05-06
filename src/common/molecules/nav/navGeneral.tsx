@@ -1,13 +1,12 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { ChevronRight, ChevronLeft } from "@/common/ui/icons";
 import { Button } from "@/common/ui/button";
-import { NavItemType } from "@/common/types/navTypes";
+import { NavItemType } from "@/api/types/nav/nav.types";
 import { clearAuthStorage } from "@/common/utils/authStorage";
-import { LogOutIcon, Coffee, CupSoda } from "lucide-react";
-import { useState } from "react";
+import { LogOutIcon, Coffee } from "lucide-react";
 import logoImage from "@/assets/images/logonav.jpg";
 import { ROLES } from "@/common/utils/lists/roles";
-import RoleRoute from "@/router/RouleRoute";
+
 
 interface NavGeneralProps {
   isMobile: boolean;

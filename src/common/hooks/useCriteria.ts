@@ -1,4 +1,4 @@
-import { criteriaResponseData } from "@/api/types/criteriaTypes";
+import { criteriaResponseData } from "@/api/types/criteria/criteria.types";
 
 
 export const validateImageRequirements = ( criteriaData: criteriaResponseData[], formCriteria: Record<string, any>): string | null => 

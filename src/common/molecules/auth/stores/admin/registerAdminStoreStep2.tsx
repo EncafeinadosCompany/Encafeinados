@@ -1,4 +1,4 @@
-import { pageVariants } from "@/common/atoms/auth/pageVariants"
+import { pageVariants } from "@/common/atoms/auth/page_variants.atom"
 
 import { UseFormRegister } from "react-hook-form"
 import { motion } from "framer-motion"

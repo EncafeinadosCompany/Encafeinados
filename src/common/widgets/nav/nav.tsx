@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
-import { NavItemType } from "@/common/types/navTypes"
+import { NavItemType } from "@/api/types/nav/nav.types"
 import { NavGeneral } from "@/common/molecules/nav/navGeneral"
-import { useCoffeeCoinsQuery } from "@/api/queries/coffeecoins/coffeecoins"
+import { useCoffeeCoinsQuery } from "@/api/queries/coffeecoins/coffeecoins.query"
 import { getAuthStorage } from "@/common/utils/authStorage"
 
 

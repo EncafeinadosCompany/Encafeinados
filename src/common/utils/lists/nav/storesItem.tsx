@@ -1,4 +1,4 @@
-import { NavItemType } from "@/common/types/navTypes";
+import { NavItemType } from "@/api/types/nav/nav.types";
 import { GitBranchPlus} from "lucide-react";
 
 export const StoresItems: NavItemType[] = [

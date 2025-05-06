@@ -6,20 +6,19 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "@/common/ui/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/common/ui/button";
-import { ButtonGoogle } from "@/common/atoms/buttonGoogle";
-import { TitleForm } from "@/common/atoms/auth/titleForm";
+import { TitleForm } from "@/common/atoms/auth/title_form.atom";
 
-import { RegisterWithGoogle } from "@/api/firebase";
+
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep2";
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep3";
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/Coffelover/registerCoffeloverStep1";
 import { TermConditions } from "./termConditions";
 
-import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
+import ProgressIndicator from "@/common/atoms/auth/progress_indicator.atom";
 
 // SCHEMAS AND TYPES
 import { registerCoffeeloverSchema, CurrentCoffeeLoverSchema } from "@/common/utils/schemas/auth/registerCoffeeloverSchema";
-import { RegisterCoffelover } from "@/api";
+
 
 // MUTATIONS
 import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffelover.mutation";
@@ -102,35 +101,6 @@ const FormRegisterCoffeelover = () => {
         }
     };
 
-
-    const handleGoogleSignIn = async () => {
-        try {
-            const { user, token, isNewUser } = await RegisterWithGoogle();
-            const userData: RegisterCoffelover = {
-                userData: {
-                    id_google: user.providerData[0]?.uid,
-                    email: user.email || "",
-                },
-                personData: {
-                    full_name: user.displayName || "",
-                    type_document: "",  
-                    number_document: "",
-                    phone_number: "",
-                },
-            };
-
-            const datosIncompletos = !userData.personData.type_document || !userData.personData.number_document || !userData.personData.phone_number;
-
-            if (isNewUser || datosIncompletos) {
-                sessionStorage.setItem("tempUserData", JSON.stringify(userData));
-                navigate("/completar-perfil");
-            }
-            setIsLoading(false);
-            
-        } catch (error) {
-            setIsLoading(false);
-        }
-    };
 
     return (
         <div className="w-full flex flex-col items-center rounded-md max-w-3xl overflow-x-hidden mx-auto h-full max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent relative p-4 sm:p-6 border-none shadow-2xl bg-white/90">

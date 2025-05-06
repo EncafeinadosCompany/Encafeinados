@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { toast } from 'react-hot-toast'
-import { usePendingBranchesQuery } from '@/api/queries/stores/branchesQueries'
-import { PendingBranch } from '@/api/types/branchesApprovalTypes'
+import { PendingBranch } from '@/api/types/branches/branches_approval.types'
 import { useForm } from 'react-hook-form'
+import { usePendingBranchesQuery } from '@/api/queries/branches/branch.query'
 
 export const usePendingBranchesWidget = () => {
   // Query de datos - Asegúrate de extraer refetch

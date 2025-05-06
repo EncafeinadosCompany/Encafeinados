@@ -1,12 +1,7 @@
-import { NavItemType } from "@/common/types/navTypes"
-import { Home, Store, Building, Album} from "@/common/ui/icons"
+import { NavItemType } from "@/api/types/nav/nav.types"
+import {  Building, Album} from "@/common/ui/icons"
 
 export const AdminStoresItems: NavItemType[] = [
-  // {
-  //   title: "Stores",
-  //   href: "/admin",
-  //   icon: <Store className="h-4 w-4" />,
-  // },
   {
     title: "Branches",
     href: "/admin",

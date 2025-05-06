@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import toast from "react-hot-toast"
 
 import { Button } from "@/common/ui/button"
-import { TitleForm } from "@/common/atoms/auth/titleForm"
+import { TitleForm } from "@/common/atoms/auth/title_form.atom"
 import { validateImageRequirements } from "@/common/hooks/useCriteria"
 import { Card, CardContent, CardFooter, CardHeader } from "@/common/ui/card"
 import { RegisterStoreBrancheSchema, RegisterStoreBrancheSchemaType } from "@/common/utils/schemas/auth/registerStoreBrancheSchema"
@@ -22,11 +22,11 @@ const RegisterStoreBrancheStep3 = lazy(() => import("@/common/molecules/auth/sto
 const SocialNetworksForm = lazy(() => import("./socialNetwork"))
 const MapSearch = lazy(() => import("@/common/widgets/map/mapSearch"));
 
-import { useCriteria } from "@/api/queries/stores/criteriaQueries"
-import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueries"
 
 import { showSuccessToast } from "@/common/molecules/auth/cardSuccess"
 import { useRegisterBrandMutation } from "@/api/mutations/branches/branches.mutation"
+import { useCriteria } from "@/api/queries/criteria/criteria.query"
+import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query"
 
 
 export default function RegisterStoreBranches() {

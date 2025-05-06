@@ -1,4 +1,4 @@
-import { Albums, useAlbumsAllQuery } from "@/api/queries/album/albumQueries";
+import { Albums, useAlbumsQuery} from "@/api/queries/album/album.query";
 import { useEffect, useState } from "react";
 import { Stamp} from "lucide-react";
 import { format } from "date-fns";
@@ -9,6 +9,7 @@ import { FilterButtons } from "@/common/molecules/coffeelover/ListAlbum/filterBu
 import { CardAlbum } from "@/common/molecules/coffeelover/ListAlbum/cardAlbum";
 import { InputSearch } from "@/common/molecules/coffeelover/ListAlbum/inputsearch";
 import { useNavigate } from "react-router-dom";
+import { AlbumResponse} from "@/api/types/album/album.types";
 
 const SkeletonCard = () => (
     <div className="bg-white rounded-lg shadow-md overflow-hidden h-72 group">
@@ -27,17 +28,17 @@ const SkeletonCard = () => (
 );
 
 export default function ListAlbum() {
-    const { data, error, isLoading } = useAlbumsAllQuery();
-    const [albums, setAlbums] = useState<Albums[]>([]);
+    const { data, error, isLoading } = useAlbumsQuery();
+    const [albums, setAlbums] = useState<AlbumResponse[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filteredAlbums, setFilteredAlbums] = useState<Albums[]>([]);
+    const [filteredAlbums, setFilteredAlbums] = useState<AlbumResponse[]>([]);
     const [activeFilter, setActiveFilter] = useState<string | null>(null);
     const [hoveredAlbum, setHoveredAlbum] = useState<number | null>(null);
     const navigate = useNavigate();
     useEffect(() => {
-        if (data?.albums) {
-            setAlbums(data.albums);
-            setFilteredAlbums(data.albums);
+        if (data) {
+            setAlbums(data);
+            setFilteredAlbums(data);
         }
     }, [data]);
 
@@ -55,7 +56,7 @@ export default function ListAlbum() {
             // Apply search term
             filtered = filtered.filter(album =>
                 album.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                album.introduccion?.toLowerCase().includes(searchTerm.toLowerCase())
+                album.introduction?.toLowerCase().includes(searchTerm.toLowerCase())
             );
 
             setFilteredAlbums(filtered);

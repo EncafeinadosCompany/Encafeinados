@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Coffee, ArrowLeft } from 'lucide-react';
-import { Cafe } from '@/common/types/map/mapTypes';
+import { Cafe } from '@/api/types/map/map_search.types';
 import HighlightText from '@/common/atoms/HighlightText';
 import CafeCard from '@/common/molecules/map/CafeCard';
 

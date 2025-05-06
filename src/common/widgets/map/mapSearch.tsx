@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import MapSettings from "@/api/mutations/map/mapMutations";
+import MapSettings from "@/api/mutations/map/map_settings.mutations";
 import { CardMapStore } from "../../molecules/auth/stores/cardMapStore";
 
 interface MapSearchProps {

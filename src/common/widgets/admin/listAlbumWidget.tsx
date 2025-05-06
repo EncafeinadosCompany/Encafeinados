@@ -1,11 +1,6 @@
-import { useAlbumsQuery } from "@/api/queries/admin/albumQueries"
-import { AlbumResponse } from "@/api/types/albumTypes";
 import { Skeleton } from "@/common/ui/skeleton";
 import { Card, CardFooter, CardHeader } from "@/common/ui/card";
-import { 
-  BookOpen, Search, X, Coffee, Filter, SlidersHorizontal, 
-  Calendar, CheckCircle, XCircle, Sparkles, Layout, List, Eye
-} from "lucide-react";
+import { BookOpen, Search, X, Coffee, Filter, SlidersHorizontal, Calendar, CheckCircle, XCircle, Sparkles, Layout, List, Eye} from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { Input } from "@/common/ui/input";
 import { Button } from "@/common/ui/button";
@@ -15,6 +10,8 @@ import { AlbumCard } from "@/common/molecules/admin/AlbumCard";
 import { Badge } from "@/common/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/common/ui/dropdown-menu";
 import { AnimatePresence, motion } from "framer-motion";
+import { AlbumResponse } from "@/api/types/album/album.types";
+import { useAlbumsQuery } from "@/api/queries/album/album.query";
 
 export const ListAlbumWidget = () => {
     const { data: listAlbum, isLoading, error } = useAlbumsQuery();

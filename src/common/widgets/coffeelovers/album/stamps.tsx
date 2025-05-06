@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Badge } from "../../../ui/badge";
 import { Card, CardContent } from "../../../ui/card";
 import { motion } from "framer-motion";
-import { stamps, useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stampsQueries";
+import {  useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stamps.query";
 import { Coffee, AlertCircle, Stamp, Bean, Gift, Calendar, X, MapPin, StarsIcon, Search } from "lucide-react";
 import { getAuthStorage } from "@/common/utils/authStorage";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog";
 import { useNavigate } from "react-router-dom";
+import { Stamps } from "@/api/types/album/stamps.types";
 
 
 const SkeletonCard = () => (
@@ -49,10 +50,10 @@ export default function ListStamps({ id_page }: PruebaProps) {
     console.log("ID del usuario:", id);
     const { data: users, error: error_us } = useStampsByClientQuery(id);
     const { data: stampData, error, isLoading } = useStampsByPageQuery(id_page);
-    const [stamps, setStamps] = useState<stamps[]>([]);
+    const [stamps, setStamps] = useState<Stamps[]>([]);
     const [flippedCards, setFlippedCards] = useState<number[]>([]);
     const [hoverStamp, setHoverStamp] = useState<number | null>(null);
-    const [selectedStamp, setSelectedStamp] = useState<stamps | null>(null);
+    const [selectedStamp, setSelectedStamp] = useState<Stamps | null>(null);
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -197,7 +198,7 @@ export default function ListStamps({ id_page }: PruebaProps) {
                     {/* Stamps Display */}
                     {!isLoading && !error && stamps.length > 0 && (
                         <div className="grid gap-2 grid-cols-2  sm:gap-3 md:gap-3 w-full w-max-sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5  overflow-auto max-h-[65vh]  p-2 sm:p-3 md:p-4 lg:p-5 xl:p-4 2xl:p-7">
-                            {stamps.map((sello: stamps) => {
+                            {stamps.map((sello: Stamps) => {
                                 const aplica = users?.stamps.find((selloCliente) => {
                                     return selloCliente.id === sello.id;
                                 });

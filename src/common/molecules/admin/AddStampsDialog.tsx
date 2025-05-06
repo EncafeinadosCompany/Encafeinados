@@ -4,11 +4,11 @@ import { Button } from "@/common/ui/button";
 import { Checkbox } from "@/common/ui/checkbox";
 import { Label } from "@/common/ui/label";
 import { Input } from "@/common/ui/input";
-import { useAllStampsQuery } from "@/api/queries/admin/albumQueries";
 import {  Stamp as StampIcon, Search, Check, X, Loader2,  Coins, PlusCircle, BookOpenCheck } from "lucide-react";
 import toast from 'react-hot-toast';
 import { Badge } from "@/common/ui/badge";
 import { useCreateStampsToPageMutation } from "@/api/mutations/album/stamps.mutation";
+import { useAllStampsQuery } from "@/api/queries/album/stamps.query";
 
 interface AddStampsDialogProps {
   pageId: number | null;

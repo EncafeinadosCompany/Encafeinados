@@ -3,7 +3,7 @@ import { Label } from "@/common/ui/label";
 import { Controller } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import { renderRadioGroup } from "@/common/atoms/RenderRadio";
-import { criteriaResponseData } from "@/api/types/criteriaTypes";
+import { criteriaResponseData } from "@/api/types/criteria/criteria.types";
 
 
 

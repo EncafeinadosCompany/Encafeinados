@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { Cafe } from '@/common/types/map/mapTypes';
+import { Cafe } from '@/api/types/map/map_search.types';
 
 // Definir la interfaz para las opciones de filtro
 export interface FilterOptions {

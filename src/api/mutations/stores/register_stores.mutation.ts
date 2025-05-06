@@ -1,6 +1,5 @@
 import AuthClient from "@/api/client/axios";
-import { responseStores } from "@/api/types/storesTypes";
-import { RegisterStoreSchemaType } from "@/api/types/storeTypes";
+import { RegisterStoreDto, responseStores } from "@/api/types/stores/stores.type";
 import { useError } from "@/common/hooks/auth/useErrors";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -12,8 +11,8 @@ export const useRegisterStoreMutation = () => {
 
   const queryClient = useQueryClient()
 
-  return useMutation<responseStores, Error, RegisterStoreSchemaType>({
-    mutationFn: async (formData: RegisterStoreSchemaType): Promise<responseStores> => {
+  return useMutation<responseStores, Error, RegisterStoreDto>({
+    mutationFn: async (formData: RegisterStoreDto): Promise<responseStores> => {
 
   
       const response = await authClient.post<responseStores>('/stores', formData);

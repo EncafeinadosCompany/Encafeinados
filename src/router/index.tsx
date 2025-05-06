@@ -3,11 +3,8 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { ROLES } from "@/common/utils/lists/roles";
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
-import GoogleWithRegister from "@/common/hooks/registerWithGoogle";
-import LoadingSpinner from "@/common/atoms/LoadingSpinner";
 
-import ListAlbum from "@/common/widgets/coffeelovers/album/listAlbumWidget";
-import { PageAlbum } from "@/common/widgets/coffeelovers/album/pageAlbum";
+import LoadingSpinner from "@/common/atoms/LoadingSpinner";
 
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/HomePage"));
@@ -15,7 +12,7 @@ const AboutPage = lazy(() => import("@/modules/home/views/landing/AboutPage"));
 
 // AUTH
 const LoginPage = lazy(() => import("@/modules/home/views/Login/loginPage"));
-const CuestionCard = lazy(() => import("@/common/molecules/auth/cuestionCard"));
+const CuestionCard = lazy(() => import("@/common/molecules/auth/cuestion_card.molecule"));
 const GoogleCallback = lazy(() => import("@/common/hooks/google"));
 const CompleteProfile = lazy(() => import("@/common/widgets/forms/auth/formCompleteProfile"));
 const RegisterCoffeloverPage = lazy(() => import("@/modules/home/views/Login/registerCoffeloverPage"));
@@ -43,6 +40,12 @@ const MapView = lazy(() => import("@/common/widgets/map/MapView"));
 // SETTINGS
 const NotFound = lazy(() => import("@/modules/settings/404"));
 const UnauthorizedPage = lazy(() => import("@/modules/settings/authorizationPage"));
+
+
+// ALBUMS
+const ListAlbum = lazy (() => import ("@/common/widgets/coffeelovers/album/listAlbumWidget"));
+const PageAlbum = lazy(() => import ("@/common/widgets/coffeelovers/album/pageAlbum"));
+
 
 const RouteLoadingIndicator = () => {
   const [progress, setProgress] = useState(0);
@@ -96,7 +99,6 @@ const AuthRoutes = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<CuestionCard />} />
             <Route path="/google/callback" element={<GoogleCallback />} />
-            <Route path="/registerWithGoogle" element={<GoogleWithRegister />}/>
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />}/>
             <Route path="/store-registration" element={<RegisterStorePage />} />
             <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches />}/>

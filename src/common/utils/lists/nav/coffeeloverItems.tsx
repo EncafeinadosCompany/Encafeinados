@@ -1,5 +1,5 @@
-import { NavItemType } from "@/common/types/navTypes"
-import { Home, Search, Bell, Settings, User} from "@/common/ui/icons"
+import { NavItemType } from "@/api/types/nav/nav.types"
+import { Home} from "@/common/ui/icons"
 import { Book } from "lucide-react"
 
 export const CoffeloverItems: NavItemType[] = [

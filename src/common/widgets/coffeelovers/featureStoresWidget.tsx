@@ -1,8 +1,8 @@
-import { ApprovedBranch } from "@/api/types/branchesApprovalTypes";
+import { ApprovedBranch } from "@/api/types/branches/branches_approval.types";
 import { CarouselApi } from "@/common/ui/carousel"
-import { useApprovedBranches } from "@/api/queries/stores/branchesQueries";
 import { useEffect, useRef, useState } from "react";
 import { FeaturedCarouselStores } from "@/common/molecules/coffeelover/featuredStores";
+import { useApprovedBranches } from "@/api/queries/branches/branch.query";
 
 interface FeaturedStoresWidgetProps {
   globalSearchTerm: string;

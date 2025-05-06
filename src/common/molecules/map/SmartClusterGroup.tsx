@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useMap, Marker, Tooltip } from 'react-leaflet';
-import { Cafe } from '@/common/types/map/mapTypes';
+import { Cafe } from '@/api/types/map/map_search.types';
 import CafeMarker from './CafeMarker';
 import L from 'leaflet';
 

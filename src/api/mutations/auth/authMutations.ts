@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {LoginResponse, User_Data } from '../../types/authTypes'
+import {LoginResponse, User_Data } from '../../types/auth/auth.types'
 import { useError } from '@/common/hooks/auth/useErrors'
 import { clearAuthStorage, setAuthStorage } from '@/common/utils/authStorage'
 import AuthClient from '../../client/axios'

@@ -3,7 +3,7 @@ import { useError } from "@/common/hooks/auth/useErrors";
 
 import { handleApiError } from "@/common/utils/errors/handleApiError";
 import AuthClient from "@/api/client/axios";
-import { ImageType } from "@/api/types/imageTypes";
+import { ImageType } from "@/api/types/image/image.types";
 
 const authClient = new AuthClient()
 

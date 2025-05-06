@@ -1,5 +1,5 @@
 import React from 'react';
-import { Store } from "@/api/types/storesTypes";
+import { Store } from "@/api/types/stores/stores.type";
 import { Card, CardContent } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";

@@ -5,20 +5,20 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowLeft, ArrowRight } from "@/common/ui/icons"
 import { FormProvider, useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
-import { TitleForm } from "@/common/atoms/auth/titleForm"
+import { TitleForm } from "@/common/atoms/auth/title_form.atom"
 
 import RegisterStoreStep1 from "@/common/molecules/auth/stores/store/registerStoreStep1"
 import RegisterStoreStep2 from "@/common/molecules/auth/stores/store/registerStoreStep2"
 
 import { useNavigate } from "react-router-dom"
 
-import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator"
+import ProgressIndicator from "@/common/atoms/auth/progress_indicator.atom"
 import { useRegisterStoreMutation } from "@/api/mutations/stores/register_stores.mutation"
 import { Card, CardContent, CardFooter, CardHeader } from "@/common/ui/card"
 import { TermConditions } from "./termConditions"
 import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
-import { RegisterStoreSchemaType } from "@/api/types/storeTypes"
 import { uploadImage } from "@/api/mutations/image/image.mutations"
+import { RegisterStoreDto } from "@/api/types/stores/stores.type"
 
 
 const FormRegisterStores = () => {
@@ -58,7 +58,7 @@ const FormRegisterStores = () => {
 
 
 
-    const prepareFormData = async (data: RegisterStoreSchemaType): Promise<RegisterStoreSchemaType> => {
+    const prepareFormData = async (data: RegisterStoreDto): Promise<RegisterStoreDto> => {
         const preparedData = { ...data };
         if (preparedData.logo && preparedData.logo instanceof File) {
           preparedData.logo = await uploadImage(preparedData.logo);

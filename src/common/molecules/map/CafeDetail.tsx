@@ -12,7 +12,7 @@ import {
   ExternalLink,
   ChevronDown,
 } from "lucide-react";
-import { Cafe } from "@/common/types/map/mapTypes";
+import { Cafe } from "@/api/types/map/map_search.types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
 import {
   normalizeSocialNetwork,

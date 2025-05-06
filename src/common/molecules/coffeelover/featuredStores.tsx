@@ -1,4 +1,4 @@
-import { ApprovedBranch } from "@/api/types/branchesApprovalTypes";
+import { ApprovedBranch } from "@/api/types/branches/branches_approval.types";
 // UI Components
 import { 
   Carousel, 

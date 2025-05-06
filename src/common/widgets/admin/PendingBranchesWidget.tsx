@@ -14,7 +14,7 @@ import { BranchApprovalDialog } from "@/common/molecules/admin/branch/BranchAppr
 import { BranchApproveDialog } from "@/common/molecules/admin/branch/BranchApproveDialog";
 import { BranchRejectDialog } from "@/common/molecules/admin/branch/BranchRejectDialog";
 import { usePendingBranchesWidget } from "@/common/hooks/usePendingBranchesWidget";
-import { BranchApprovalDetails } from '@/api/types/branchesApprovalTypes';
+import { BranchApprovalDetails } from '@/api/types/branches/branches_approval.types';
 
 import { useQueryClient } from "@tanstack/react-query";
 import toast from 'react-hot-toast';

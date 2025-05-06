@@ -1,10 +1,10 @@
 
-import { pageVariants } from "@/common/atoms/auth/pageVariants"
+import { pageVariants } from "@/common/atoms/auth/page_variants.atom"
 import { Label } from "@radix-ui/react-label"
 import { Controller, UseFormRegister } from "react-hook-form"
 import { motion } from "framer-motion"
-import SelectTypeDocument from "@/common/atoms/auth/selectTypeDocument"
-import { InputForm } from "@/common/atoms/auth/inputForm"
+import SelectTypeDocument from "@/common/atoms/auth/select_type_document.atom"
+import { InputForm } from "@/common/atoms/auth/input_form.atom"
 
 interface registerStoreProps {
     register: UseFormRegister<any>

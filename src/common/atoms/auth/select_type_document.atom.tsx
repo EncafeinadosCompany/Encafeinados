@@ -1,4 +1,3 @@
-import React from "react";
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
 import { documentTypeList } from "@/common/utils/lists/typeDocument"
 import { Select } from "@radix-ui/react-select"
@@ -8,9 +7,9 @@ interface selectTypeDocumentProps {
     value: string | undefined
     className?: string | undefined
 }
-const SelectTypeDocument = ({ onValueChange, value, className}: selectTypeDocumentProps) => {
+const SelectTypeDocument = ({ onValueChange, value, className }: selectTypeDocumentProps) => {
     return (
-        <Select 
+        <Select
             onValueChange={onValueChange}
             value={value}>
             <SelectTrigger

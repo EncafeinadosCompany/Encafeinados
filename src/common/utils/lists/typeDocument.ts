@@ -1,5 +1,7 @@
-import { DocumentType } from "@/api/types/documentTypes";
-
+interface DocumentType {
+    clave: string
+    description: string
+  }
 
 export const documentTypeList: DocumentType[] = [
     {

@@ -6,8 +6,8 @@ import { BranchCard } from "@/common/molecules/adminStores/brandCard";
 
 import { AnimatePresence } from "framer-motion";
 import {Tooltip,TooltipContent,TooltipProvider,TooltipTrigger} from "@/common/ui/tooltip";
-import { useBranchByStore } from "@/api/queries/stores/storesQueries";
-import { Branch } from "@/api/types/branchesTypes";
+import { useBranchByStore } from "@/api/queries/stores/stores.query";
+import { Branch } from "@/api/types/branches/branches.types";
 
 import { renderSkeletons } from "@/common/molecules/adminStores/renderSkeletons";
 import { renderEmptyState } from "@/common/molecules/adminStores/renderEmtyState";

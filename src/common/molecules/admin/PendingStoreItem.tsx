@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/common/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/common/ui/avatar";
 import { Check, X, Eye, Clock } from "@/common/ui/icons";
-import { Store } from "@/api/types/storesTypes";
+import { Store } from "@/api/types/stores/stores.type";
 import { Badge } from "@/common/ui/badge";
 import { motion } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";

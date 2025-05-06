@@ -11,6 +11,16 @@ export interface Store {
   longitude?: number;
 }
 
+
+export interface RegisterStoreDto {
+  name: string
+  email: string,
+  logo: string | File,
+  type_document: number
+  number_document: string
+  phone_number: string
+}
+
 export interface StoresResponse {
   message: string;
   stores: {

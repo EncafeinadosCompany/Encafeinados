@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useApprovedBranches } from '@/api/queries/stores/branchesQueries';
-import { ApprovedBranch } from '@/api/types/branchesApprovalTypes';
+import { ApprovedBranch } from '@/api/types/branches/branches_approval.types';
+import { useApprovedBranches } from '@/api/queries/branches/branch.query';
 
 export const useApprovedBranchesWidget = () => {
   const [searchTerm, setSearchTerm] = useState('');

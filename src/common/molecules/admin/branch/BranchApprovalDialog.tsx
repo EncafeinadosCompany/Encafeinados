@@ -9,8 +9,8 @@ import {
   MapPin, Phone, CalendarClock, CheckCircle2, XCircle, 
   Loader2, AlertCircle, Coffee 
 } from "lucide-react";
-import { useBranchApprovalDetails } from '@/api/queries/stores/branchesQueries';
 import { CriteriaItem } from './CriteriaItem';
+import { useBranchApprovalDetails } from '@/api/queries/branches/branch.query';
 
 interface BranchApprovalDialogProps {
   branchId: number | null;

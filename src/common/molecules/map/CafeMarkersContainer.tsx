@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Cafe } from '@/common/types/map/mapTypes';
+import { Cafe } from '@/api/types/map/map_search.types';
 import CafeMarker from './CafeMarker';
 import L from 'leaflet';
 
