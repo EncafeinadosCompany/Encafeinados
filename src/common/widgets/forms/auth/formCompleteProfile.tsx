@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffeloverMutation";
+import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffelover.mutation";
 import { Button } from "@/common/ui/button";
 import { motion } from "framer-motion";
 import { TitleForm } from "@/common/atoms/auth/titleForm";
@@ -44,11 +44,12 @@ const CompletePerfil = () => {
   }, []);
 
     const onSubmit = async (data: any) => {
+
     const tempUserData = JSON.parse(sessionStorage.getItem("tempUserData") || "{}");
     const updatedUserData = { ...tempUserData, personData: data };
 
     await useRegisterCoffeelover.mutateAsync(updatedUserData).then((response) => {
-      toast.success("Perfil completado correctamente. ¡Bienvenido!");
+    
       sessionStorage.removeItem("tempUserData");
       navigate("/login");
     })

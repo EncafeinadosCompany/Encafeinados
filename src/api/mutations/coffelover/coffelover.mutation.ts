@@ -31,6 +31,7 @@ export const useRegisterCoffeloverMutation = () => {
         password: variable.userData.password
       })
 
+      toast.success("Perfil completado correctamente. ¡Bienvenido!");
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error: any) => {

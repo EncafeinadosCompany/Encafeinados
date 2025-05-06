@@ -1,9 +1,9 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
+import { Card, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
 import { Store as StoreIcon, RefreshCw, Search, AlertTriangle } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 
 import { StatusBadge } from "@/common/atoms/StatusBadge";

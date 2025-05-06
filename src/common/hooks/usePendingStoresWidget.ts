@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
-
-import { useChangeStoreStatus } from "@/api/mutations/storesMutations";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { Store } from "@/api/types/storesTypes";
 import { CheckCircle2, XCircle, AlertTriangle } from "lucide-react"; 
 import toast from "react-hot-toast";
 import { usePendingStores } from "@/api/queries/stores/storesQueries";
+import { useChangeStoreStatus } from "@/api/mutations/stores/change_stores_status.mutation";
 
 interface RejectFormData {
   reason: string;

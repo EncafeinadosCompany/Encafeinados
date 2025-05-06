@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { FinistAdminStore2 } from "@/common/molecules/auth/stores/admin/finishAdminStore2";
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
-import { useAdminStoreMutation } from "@/api/mutations/adminStores/adminStoresMutation";
+import { useAdminStoreMutation } from "@/api/mutations/admin_stores/admin_stores.mutation";
 import { RegisterAdminStores } from "@/api/types/adminStoresTypes";
 import { useNavigate } from "react-router-dom";
 import { TermConditions } from "./termConditions";

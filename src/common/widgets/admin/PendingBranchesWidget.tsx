@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
+import { Card,  CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
 import { Coffee, RefreshCw, Search, AlertTriangle } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 
 import { StatusBadge } from "@/common/atoms/StatusBadge";
@@ -14,10 +14,12 @@ import { BranchApprovalDialog } from "@/common/molecules/admin/branch/BranchAppr
 import { BranchApproveDialog } from "@/common/molecules/admin/branch/BranchApproveDialog";
 import { BranchRejectDialog } from "@/common/molecules/admin/branch/BranchRejectDialog";
 import { usePendingBranchesWidget } from "@/common/hooks/usePendingBranchesWidget";
-import { PendingBranch, PendingBranchesResponse, BranchApprovalDetails } from '@/api/types/branchesApprovalTypes';
-import { useApproveBranchMutation, useRejectBranchMutation } from "@/api/mutations/branchApprovalMutations";
+import { BranchApprovalDetails } from '@/api/types/branchesApprovalTypes';
+
 import { useQueryClient } from "@tanstack/react-query";
 import toast from 'react-hot-toast';
+import { useApproveBranchMutation, useRejectBranchMutation } from "@/api/mutations/branches/branch_states.mutation";
+
 
 export const PendingBranchesWidget = () => {
   const checkUserAuth = () => {

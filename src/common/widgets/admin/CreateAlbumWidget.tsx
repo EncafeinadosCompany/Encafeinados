@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogTrigger } from '@/common/ui/dialog';
 import { Button } from '@/common/ui/button';
 import { BookPlus, Coffee, Sparkles } from 'lucide-react';
-import AlbumForm from '@/common/molecules/admin/AlbumForm';
-import { useCreateAlbumMutation } from '@/api/mutations/admin/albumMutations';
 import { CreateAlbumDto } from '@/api/types/albumTypes';
-import toast from 'react-hot-toast';
 import { cn } from '@/lib/utils';
+import { useCreateAlbumMutation } from '@/api/mutations/album/album.mutation';
+import AlbumForm from '@/common/molecules/admin/AlbumForm';
 
 interface CreateAlbumWidgetProps {
   className?: string;
@@ -14,26 +13,27 @@ interface CreateAlbumWidgetProps {
 
 export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({ className }) => {
   const [open, setOpen] = useState(false);
-  const { mutate: createAlbum, isPending } = useCreateAlbumMutation();
+  const { mutateAsync: UseCreateAlbumMutation , isPending } = useCreateAlbumMutation();
   const [success, setSuccess] = useState(false);
 
-  const handleCreateAlbum = (data: CreateAlbumDto & { logoFile?: File }) => {
-    const loadingToast = toast.loading('Creando álbum...');
-    
-    createAlbum(data, {
-      onSuccess: (response) => {
-        toast.success('¡Álbum creado con éxito!', { id: loadingToast });
-        setSuccess(true);
-        
-        setTimeout(() => {
-          setSuccess(false);
-          setOpen(false);
-        }, 2000);
-      },
-      onError: (error) => {
-        toast.error(`Error al crear álbum: ${error.message}`, { id: loadingToast });
+  const handleCreateAlbum = async (data: CreateAlbumDto & { logoFile?: File }) => {
+
+    try {
+
+    UseCreateAlbumMutation(data,{
+      onSuccess: () => {
+        setSuccess(true); 
       }
-    });
+    })
+    setTimeout(() => {
+      setSuccess(false);
+      setOpen(false);
+    }, 2000);
+
+    }catch(err){
+
+    }
+    
   };
 
   return (

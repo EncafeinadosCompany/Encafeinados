@@ -1,5 +1,5 @@
 import toast from "react-hot-toast"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/common/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowLeft, ArrowRight } from "@/common/ui/icons"
@@ -13,17 +13,19 @@ import RegisterStoreStep2 from "@/common/molecules/auth/stores/store/registerSto
 import { useNavigate } from "react-router-dom"
 
 import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator"
-import { useRegisterStoreMutation } from "@/api/mutations/stores/storesMutation"
+import { useRegisterStoreMutation } from "@/api/mutations/stores/register_stores.mutation"
 import { Card, CardContent, CardFooter, CardHeader } from "@/common/ui/card"
 import { TermConditions } from "./termConditions"
 import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/registerStoreShema"
+import { RegisterStoreSchemaType } from "@/api/types/storeTypes"
+import { uploadImage } from "@/api/mutations/image/image.mutations"
 
 
 const FormRegisterStores = () => {
     const [direction, setDirection] = useState(0);
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
-    const useRegiterStore = useRegisterStoreMutation();
+    const {mutateAsync:useRegiterStore, isIdle, isPending, status} = useRegisterStoreMutation();
     const navigate = useNavigate();
 
     const methods = useForm<CurrentSchema>({
@@ -38,6 +40,12 @@ const FormRegisterStores = () => {
         mode: "onChange"
     })
 
+
+
+    useEffect(() => {
+       console.log(status) 
+    },[status])
+
     const onNext = () => {
         methods.trigger().then((isValid) => {
             if (isValid) {
@@ -48,21 +56,31 @@ const FormRegisterStores = () => {
         });
     };
 
+
+
+    const prepareFormData = async (data: RegisterStoreSchemaType): Promise<RegisterStoreSchemaType> => {
+        const preparedData = { ...data };
+        if (preparedData.logo && preparedData.logo instanceof File) {
+          preparedData.logo = await uploadImage(preparedData.logo);
+        } else {
+          preparedData.logo = "https://res.cloudinary.com/...default-image.png";
+        }
+      
+        return preparedData;
+      };
+
+
     const onSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
 
-        
-            await useRegiterStore.mutateAsync(finalData).then((response) => {
-              
-                methods.reset();
-                navigate(`/stores-registration/branches/${response.store.id}`)
-            })
-              
-            .finally(() => {   
-               
-            setStep(0); 
-            })
-        
+        try {
+            const preparedData = await prepareFormData(finalData);
+            const response = await useRegiterStore(preparedData);
+            methods.reset();
+            navigate(`/stores-registration/branches/${response.store.id}`)
+        }catch (error){
+
+        }
     };
 
     return (
@@ -163,14 +181,14 @@ const FormRegisterStores = () => {
                                     <motion.div>
                                         <Button
                                             type="submit"
-                                            disabled={!methods.formState.isValid}
+                                            disabled={!methods.formState.isValid || status === "pending"}
                                             data-testid="submit-button"
                                             className={`rounded-lg px-6 py-2 ${!methods.formState.isValid
                                                 ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                                                 : "bg-gray-900 hover:bg-gray-800 text-white"
                                                 }`}
                                         >
-                                            Listo
+                                            {status === "pending" ? "Enviando..." : "Registrar"}
                                         </Button>
                                     </motion.div>
                                 )}
