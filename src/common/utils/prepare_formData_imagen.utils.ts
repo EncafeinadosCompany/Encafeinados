@@ -1,4 +1,5 @@
-import { uploadImage } from "@/api/mutations/imageMutations";
+import { uploadImage } from "@/api/mutations/image/image.mutations";
+
 type UploadConfig = {
   field: string; // ej: 'logoFile'
   targetField: string; // ej: 'logo'

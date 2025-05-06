@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import AuthClient from "../client/axios";
 import { useError } from "@/common/hooks/auth/useErrors";
-import { ImageType } from "../types/imageTypes";
+
 import { handleApiError } from "@/common/utils/errors/handleApiError";
+import AuthClient from "@/api/client/axios";
+import { ImageType } from "@/api/types/imageTypes";
 
 const authClient = new AuthClient()
 
