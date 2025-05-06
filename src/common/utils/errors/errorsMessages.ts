@@ -1,4 +1,3 @@
-import { criteria } from "../lists/criteria";
 
 export const errorMessages: Record<number, string> = { 
     401: "Credenciales inválidas.",
@@ -34,6 +33,12 @@ export const errorMessages: Record<number, string> = {
     },
     criteria:{
         409: "El criterio ya se encuentra registrado"
+    },
+    createAlbum: {
+        409: "El álbum ya se encuentra registrado"
+    },
+    createPage:{
+        409: "La página ya se encuentra registrada"
     }
   
   };

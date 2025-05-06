@@ -3,11 +3,11 @@ import {
   UseMutationResult,
   useQueryClient,
 } from "@tanstack/react-query";
-import AuthClient from "../client/axios";
+import AuthClient from "../../client/axios";
 import {
   ValidateVisitInput,
   ValidateVisitResponse,
-} from "../types/branchesApprovalTypes";
+} from "../../types/branchesApprovalTypes";
 const authClient = new AuthClient();
 
 export const useApproveBranchMutation = () => {

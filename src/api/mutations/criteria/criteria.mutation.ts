@@ -2,9 +2,9 @@ import AuthClient from "@/api/client/axios";
 import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handleApiError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { uploadImage } from "../imageMutations";
 import toast from "react-hot-toast";
 import { criteria } from "@/api/types/criteriaTypes";
+import { uploadImage } from "../image/image.mutations";
 
 const authClient = new AuthClient();
 
@@ -51,7 +51,7 @@ export const useRegisterCriteriaMutation = () => {
         throw handleApiError(error);
       }
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['criteria'] });
     },
     onError: (error: any) => {

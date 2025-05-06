@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Coffee, Sparkles, Heart } from '@/common/ui/icons';
 import { Separator } from '@/common/ui/separator';

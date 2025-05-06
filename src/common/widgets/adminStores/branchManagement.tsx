@@ -1,16 +1,11 @@
 import { useState, useEffect } from "react";
-import { PlusCircle, QrCode, RefreshCw } from "lucide-react";
+import { PlusCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/common/ui/button";
 import { Card, CardContent } from "@/common/ui/card";
 import { BranchCard } from "@/common/molecules/adminStores/brandCard";
 
 import { AnimatePresence } from "framer-motion";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/common/ui/tooltip";
+import {Tooltip,TooltipContent,TooltipProvider,TooltipTrigger} from "@/common/ui/tooltip";
 import { useBranchByStore } from "@/api/queries/stores/storesQueries";
 import { Branch } from "@/api/types/branchesTypes";
 

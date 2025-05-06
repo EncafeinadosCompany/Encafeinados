@@ -1,13 +1,15 @@
+import AuthClient from '@/api/client/axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import AuthClient from '../client/axios'
 
-const authClient = new AuthClient()
 
 interface ChangeStoreStatusProps {
   storeId: number;
   status: boolean;
   reason?: string;
 }
+
+
+const authClient = new AuthClient()
 
 export const useChangeStoreStatus = () => {
   const queryClient = useQueryClient();

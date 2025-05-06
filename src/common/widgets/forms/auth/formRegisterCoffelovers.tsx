@@ -22,7 +22,7 @@ import { registerCoffeeloverSchema, CurrentCoffeeLoverSchema } from "@/common/ut
 import { RegisterCoffelover } from "@/api";
 
 // MUTATIONS
-import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffeloverMutation";
+import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffelover.mutation";
 
 const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(0);
@@ -67,9 +67,6 @@ const FormRegisterCoffeelover = () => {
             }
         });
     };
-
-
-
 
     const prevStep = () => {
         if (step > 0) {
@@ -198,42 +195,6 @@ const FormRegisterCoffeelover = () => {
                                 }
                             </AnimatePresence>
                         </div>
-
-                        {/* Navigation buttons */}
-                        {/* {
-                            step === 0 && (
-
-                                <div className="mt-2 space-y-6">
-                                    <div className="relative flex items-center justify-center">
-                                        <div className="absolute inset-0 flex items-center">
-                                            <div className="w-full border-t border-gray-900"></div>
-                                        </div>
-                                        <div className="relative px-4 text-sm  bg-white text-gray-500 font-medium">
-                                            Opciones de registro
-                                        </div>
-                                    </div>
-                                    <motion.div
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        className={step === 0 ? 'w-full flex px-8' : ''}
-                                    >
-
-                                        <ButtonGoogle
-                                            variant="outline"
-                                            onClick={handleGoogleSignIn}
-                                            disabled={isLoading}
-                                            className=" w-full"
-                                        >
-                                            <span className="flex items-center">
-                                                Continuar con Google
-                                            </span>
-                                        </ButtonGoogle>
-
-                                    </motion.div>
-                                </div>
-
-                            )
-                        } */}
                         <motion.div
                             className=" m-5 flex justify-between"
                             initial={{ opacity: 0 }}

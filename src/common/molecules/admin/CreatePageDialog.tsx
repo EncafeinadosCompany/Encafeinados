@@ -4,10 +4,10 @@ import { Button } from "@/common/ui/button";
 import { Input } from "@/common/ui/input";
 import { Textarea } from "@/common/ui/textarea";
 import { Label } from "@/common/ui/label";
-import { useCreatePageMutation } from "@/api/mutations/admin/albumMutations";
 import { BookOpenText, LayoutGrid, Check, X, Loader2 } from "lucide-react";
 import toast from 'react-hot-toast';
 import { Badge } from "@/common/ui/badge";
+import { useCreatePageMutation } from "@/api/mutations/album/pages.mutation";
 
 interface CreatePageDialogProps {
   albumId: number;
@@ -45,12 +45,12 @@ export const CreatePageDialog: React.FC<CreatePageDialogProps> = ({
         status: true
       });
       
-      toast.success("Página creada correctamente");
+      
       onSuccess?.();
       onOpenChange(false);
       resetForm();
     } catch (error) {
-      toast.error("Error al crear la página");
+      
       console.error(error);
     }
   };

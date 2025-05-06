@@ -24,8 +24,10 @@ const MapSearch = lazy(() => import("@/common/widgets/map/mapSearch"));
 
 import { useCriteria } from "@/api/queries/stores/criteriaQueries"
 import { useSocialNetworksQuery } from "@/api/queries/stores/socialNetworksQueries"
-import { useRegisterBrandMutation } from "@/api/mutations/stores/branchesMutation"
+
 import { showSuccessToast } from "@/common/molecules/auth/cardSuccess"
+import { useRegisterBrandMutation } from "@/api/mutations/branches/branches.mutation"
+
 
 export default function RegisterStoreBranches() {
 

@@ -1,4 +1,4 @@
-import { useRegisterVisitMutation } from "@/api/mutations/branchApprovalMutations";
+import { useRegisterVisitMutation } from "@/api/mutations/branches/branch_states.mutation";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";

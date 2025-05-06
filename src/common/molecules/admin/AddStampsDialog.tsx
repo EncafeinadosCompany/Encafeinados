@@ -4,14 +4,11 @@ import { Button } from "@/common/ui/button";
 import { Checkbox } from "@/common/ui/checkbox";
 import { Label } from "@/common/ui/label";
 import { Input } from "@/common/ui/input";
-import { useAllStampsQuery } from "@/api/queries/admin//albumQueries";
-import { useAddStampsToPageMutation } from "@/api/mutations/admin/albumMutations";
-import { 
-  Stamp as StampIcon, Search, Check, X, Loader2, 
-  Coins, PlusCircle, BookOpenCheck 
-} from "lucide-react";
+import { useAllStampsQuery } from "@/api/queries/admin/albumQueries";
+import {  Stamp as StampIcon, Search, Check, X, Loader2,  Coins, PlusCircle, BookOpenCheck } from "lucide-react";
 import toast from 'react-hot-toast';
 import { Badge } from "@/common/ui/badge";
+import { useCreateStampsToPageMutation } from "@/api/mutations/album/stamps.mutation";
 
 interface AddStampsDialogProps {
   pageId: number | null;
@@ -21,19 +18,13 @@ interface AddStampsDialogProps {
   onSuccess?: () => void;
 }
 
-export const AddStampsDialog: React.FC<AddStampsDialogProps> = ({
-  pageId,
-  pageName,
-  isOpen,
-  onOpenChange,
-  onSuccess
-}) => {
+export const AddStampsDialog: React.FC<AddStampsDialogProps> = ({pageId,pageName,isOpen,onOpenChange,onSuccess}) => {
   const [selectedStampIds, setSelectedStampIds] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showOnlyActive, setShowOnlyActive] = useState(true);
 
   const { data, isLoading, error } = useAllStampsQuery();
-  const addStampsMutation = useAddStampsToPageMutation();
+  const addStampsMutation = useCreateStampsToPageMutation();
 
   if (!pageId) return null;
 

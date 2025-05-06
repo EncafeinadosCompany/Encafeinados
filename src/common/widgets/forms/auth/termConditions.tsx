@@ -18,7 +18,6 @@ export function TermConditions({ register, errors, control }: TermConditionsProp
       <Controller
         control={control}
         name="conditions"
-       
         rules={{
           validate: (value) => value || "Debes aceptar los términos y condiciones",
         }}
