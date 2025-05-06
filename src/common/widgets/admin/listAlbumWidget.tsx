@@ -213,7 +213,6 @@ export const ListAlbumWidget = () => {
                     </div>
                 </div>
                 
-                {/* Barra de búsqueda mejorada */}
                 <div className={`relative transition-all duration-200 ${isSearchFocused ? 'scale-[1.01]' : ''}`}>
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                         <Search className={`transition-colors duration-300 h-4 w-4 ${isSearchFocused ? 'text-[#D4A76A]' : 'text-[#6F4E37]/70'}`} />

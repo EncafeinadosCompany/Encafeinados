@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { AlbumResponse } from "@/api/types/albumTypes";
+import React, { useState, useEffect } from "react";
 import { Badge } from "@/common/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { BookOpen, CalendarIcon, Coffee, Loader2, Stamp as StampIcon, PlusCircle } from "lucide-react";
+import { BookOpen, CalendarIcon, Coffee, Loader2, Stamp as StampIcon, PlusCircle, RefreshCw } from "lucide-react";
 import { useAlbumDetailsQuery } from "@/api/queries/admin/albumQueries";
 import { PageStampsDialog } from "./PageStampsDialog";
 import { CreatePageDialog } from "./CreatePageDialog";
@@ -22,12 +21,27 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
     isOpen, 
     onOpenChange 
 }) => {
-    const { data: album, isLoading, error } = useAlbumDetailsQuery(albumId);
+    const { data: album, isLoading, error, refetch } = useAlbumDetailsQuery(albumId);
     const [selectedPageId, setSelectedPageId] = useState<number | null>(null);
     const [selectedPageName, setSelectedPageName] = useState<string>("");
     const [isStampsDialogOpen, setIsStampsDialogOpen] = useState(false);
     const [isCreatePageDialogOpen, setIsCreatePageDialogOpen] = useState(false);
     const [isAddStampsDialogOpen, setIsAddStampsDialogOpen] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [refreshMessage, setRefreshMessage] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (isOpen && albumId) {
+            refetch();
+        }
+    }, [isOpen, albumId, refetch]);
+
+    const showRefreshMessage = (message: string) => {
+        setRefreshMessage(message);
+        setTimeout(() => {
+            setRefreshMessage(null);
+        }, 3000);
+    };
 
     const formatDate = (dateString?: string) => {
         if (!dateString) return "N/D";
@@ -48,6 +62,13 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
         setSelectedPageId(pageId);
         setSelectedPageName(pageTitle);
         setIsAddStampsDialogOpen(true);
+    };
+
+    const handleRefresh = async () => {
+        setIsRefreshing(true);
+        await refetch();
+        setIsRefreshing(false);
+        showRefreshMessage("Álbum actualizado");
     };
 
     if (!albumId) return null;
@@ -73,10 +94,24 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                 ) : album ? (
                     <>
                         <DialogHeader className="border-b border-amber-100 bg-gradient-to-r from-[#FAF3E0] to-[#FAF3E0]/30 px-4 py-3 flex-shrink-0">
-                            <DialogTitle className="text-xl font-medium text-[#2C1810] flex items-center gap-2">
-                                <BookOpen className="h-4 w-4 text-[#6F4E37]" />
-                                {album.title}
-                            </DialogTitle>
+                            <div className="flex justify-between items-center">
+                                <DialogTitle className="text-xl font-medium text-[#2C1810] flex items-center gap-2">
+                                    <BookOpen className="h-4 w-4 text-[#6F4E37]" />
+                                    {album.title}
+                                </DialogTitle>
+                                {/* <Button 
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-8 w-8 p-0 text-[#6F4E37] hover:text-[#D4A76A] hover:bg-[#FAF3E0]/50"
+                                    onClick={handleRefresh}
+                                    disabled={isRefreshing}
+                                    title="Actualizar datos"
+                                >
+                                    {isRefreshing ? 
+                                        <Loader2 className="h-4 w-4 animate-spin" /> : 
+                                        <RefreshCw className="h-4 w-4" />}
+                                </Button> */}
+                            </div>
                             <DialogDescription>
                                 <div className="flex items-center space-x-2 mt-1">
                                     <Badge
@@ -87,6 +122,11 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                                     <Badge className="bg-[#6F4E37] text-white">
                                         {album.type}
                                     </Badge>
+                                    {refreshMessage && (
+                                        <span className="text-xs text-green-600 ml-1 animate-pulse">
+                                            {refreshMessage} ✓
+                                        </span>
+                                    )}
                                 </div>
                             </DialogDescription>
                         </DialogHeader>
@@ -256,13 +296,27 @@ export const AlbumDetailDialog: React.FC<AlbumDetailDialogProps> = ({
                             albumId={album.id} 
                             albumTitle={album.title}
                             isOpen={isCreatePageDialogOpen}
-                            onOpenChange={setIsCreatePageDialogOpen}
+                            onOpenChange={(open) => {
+                                setIsCreatePageDialogOpen(open);
+                                if (!open) {
+                                    refetch().then(() => {
+                                        showRefreshMessage("Página añadida");
+                                    });
+                                }
+                            }}
                         />
                         <AddStampsDialog
                             pageId={selectedPageId}
                             pageName={selectedPageName}
                             isOpen={isAddStampsDialogOpen}
-                            onOpenChange={setIsAddStampsDialogOpen}
+                            onOpenChange={(open) => {
+                                setIsAddStampsDialogOpen(open);
+                                if (!open) {
+                                    refetch().then(() => {
+                                        showRefreshMessage("Estampas actualizadas");
+                                    });
+                                }
+                            }}
                             onSuccess={() => {
                                 if (isStampsDialogOpen) {
                                     setIsStampsDialogOpen(false);
