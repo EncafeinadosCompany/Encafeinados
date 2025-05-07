@@ -1,7 +1,7 @@
 import AuthClient from "@/api/client/axios";
 import { RegisterCoffelover, RegisterCoffeloverResponse } from "@/api/types/auth/auth.types";
 import { useError } from "@/common/hooks/auth/useErrors";
-import { handleApiError } from "@/common/utils/errors/handleApiError";
+import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "../auth/authMutations";
 import toast from "react-hot-toast";

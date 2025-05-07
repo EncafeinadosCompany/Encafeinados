@@ -1,5 +1,5 @@
 import { getCurrentLocationProps, handleSearchProps, recentSearchesProps } from "@/api/types/map/map.types";
-import { formatAddress } from "@/common/utils/map/formatAddress";
+import { formatAddress } from "@/common/utils/map/format_address.utils";
 
 const MapSettings = {
   getCurrentLocation: async({onLocationSelect, setCurrentAddress, setIsLocating, setCurrentPosition, setSelectedPosition , setSearchQuery}:getCurrentLocationProps) => {

@@ -1,5 +1,5 @@
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
-import { documentTypeList } from "@/common/utils/lists/typeDocument"
+import { documentTypeList } from "@/common/utils/lists/type_document.utils"
 import { Select } from "@radix-ui/react-select"
 
 interface selectTypeDocumentProps {

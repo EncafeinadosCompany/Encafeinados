@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useError } from "@/common/hooks/auth/useErrors";
 
-import { handleApiError } from "@/common/utils/errors/handleApiError";
+import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import AuthClient from "@/api/client/axios";
 import { ImageType } from "@/api/types/image/image.types";
 

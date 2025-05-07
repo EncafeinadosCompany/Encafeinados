@@ -1,4 +1,4 @@
-import { ROLES } from '@/common/utils/lists/roles';
+import { ROLES } from '@/common/utils/lists/roles.utils';
 
 export const useAuth = () => {
 

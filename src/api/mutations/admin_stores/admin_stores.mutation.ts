@@ -1,7 +1,7 @@
 import AuthClient from "@/api/client/axios";
 import { RegisterAdminStores } from "@/api/types/admin_stores/admin_stores.type";
 import { useError } from "@/common/hooks/auth/useErrors";
-import { handleApiError } from "@/common/utils/errors/handleApiError";
+import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "../auth/authMutations";
 

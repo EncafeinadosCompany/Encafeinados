@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import SelectTypeDocument from "@/common/atoms/auth/select_type_document.atom";
-import { documentTypeList } from "@/common/utils/lists/typeDocument";
+import { documentTypeList } from "@/common/utils/lists/type_document.utils";
 
 
 describe("SelectTypeDocument", () => {

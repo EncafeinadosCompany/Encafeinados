@@ -1,6 +1,6 @@
 
 import { API_URL } from "../constants";
-import {mockCriteria} from "../mocks/auth/criteriaMock";
+import {mockCriteria} from "../mocks/auth/criteria.mock";
 
 export const mockGetCriteria =()=>{
     cy.intercept("GET", `${API_URL}/criteria/status/true`, {

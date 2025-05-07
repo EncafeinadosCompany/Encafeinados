@@ -2,7 +2,7 @@ import AuthClient from "@/api/client/axios";
 import { LoginResponse } from "@/api/types/auth/auth.types";
 import { BranchPost } from "@/api/types/branches/branches.types";
 import { useError } from "@/common/hooks/auth/useErrors";
-import { handleApiError } from "@/common/utils/errors/handleApiError";
+import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";

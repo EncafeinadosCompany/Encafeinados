@@ -1,6 +1,6 @@
 
 import AuthClient from '@/api/client/axios'
-import { getAuthStorage } from '@/common/utils/authStorage'
+import { getAuthStorage } from '@/common/utils/auth_storage.utils'
 import { useQuery } from '@tanstack/react-query'
 
 interface  coffeecoins  {

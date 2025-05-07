@@ -1,6 +1,6 @@
 import { API_URL } from "../constants";
 
-import {socialNetworkMock} from "../mocks/auth/socialNetworkMock";
+import {socialNetworkMock} from "../mocks/auth/social_network.mock";
 
 export const mockGetSocialNetwork =()=>{
     cy.intercept("GET", `${API_URL}/social-networks`, {
