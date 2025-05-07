@@ -21,7 +21,7 @@ const RegisterStoreBranches = lazy(() => import("@/common/widgets/forms/auth/for
 const FinishAdminRegistration = lazy(() => import("@/modules/admin/views/finish_admin_registration_page"));
 
 // STORES
-const HomeStores = lazy(() => import("@/modules/admin_stores/views/home_stores.nav"));
+const HomeStores = lazy(() => import("@/modules/admin_stores/views/home_stores_nav"));
 const BranchManagement = lazy(() => import("@/common/widgets/admin_stores/branches/branch_management.widget"));
 
 // ADMIN STORES
@@ -31,7 +31,7 @@ const AlbumManager = lazy(() => import("@/modules/admin/components/album/album_m
 
 // COFFEELOVER
 const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/home_coffeelover_page"));
-const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover_page"));
+const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover_nav"));
 const RegisterStoreVisit = lazy(() => import("@/modules/coffeelover/components/stores/register_store_visit.component"));
 
 // MAP
