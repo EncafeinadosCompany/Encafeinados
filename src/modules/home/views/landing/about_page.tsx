@@ -15,7 +15,7 @@ const AboutPage = () => {
       <Navbar />
       <div className="">
         <section id="about">
-          <AboutSection />
+          <AboutSection/>
         </section>
         <section id="team" className="w-full bg-[#FAF3E0]">
           <TeamSection />
