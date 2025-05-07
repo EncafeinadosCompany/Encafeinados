@@ -48,7 +48,9 @@ export const useLoginMutation = () => {
 
        pagesPermissions(data.user.role, navigate)
 
+
        toast.success("Inicio de sesión exitoso, ¡Bienvenido!");
+
 
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },

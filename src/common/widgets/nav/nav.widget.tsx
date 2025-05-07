@@ -1,23 +1,23 @@
 import { useState, useEffect } from "react"
 import { NavItemType } from "@/api/types/nav/nav.types"
 import { NavGeneral } from "@/common/molecules/nav/nav_general.molecule"
-import { useCoffeeCoinsQuery } from "@/api/queries/coffeecoins/coffeecoins.query"
 import { getAuthStorage } from "@/common/utils/auth_storage.utils"
 
 
 export type NavItem = {
   navItems: NavItemType[]
+  coffeecoins?: number | null
+  isloading?: boolean | null
 }
 
-export default function NavbarGeneral({ navItems }: NavItem) {
+export default function NavbarGeneral({ navItems, coffeecoins, isloading }: NavItem) {
   const [isExpanded, setIsExpanded] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
-  const {data: coffeecoins, isLoading} = useCoffeeCoinsQuery();
+
 
   const {user} =  getAuthStorage();
 
-
-  console.log("coffeecoins", coffeecoins);
+ 
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -42,8 +42,8 @@ export default function NavbarGeneral({ navItems }: NavItem) {
         setIsExpanded={setIsExpanded}
         isMobile={isMobile}
         navItems={navItems}
-        coffeecoins={coffeecoins?.quantity}
-        isLoading={isLoading}
+        coffeecoins={coffeecoins ? coffeecoins : 0}
+        isLoading={isloading? isloading : false}
         role={user.role || null}
         >
       </NavGeneral>

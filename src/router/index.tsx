@@ -5,6 +5,8 @@ import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 
 import LoadingSpinner from "@/common/atoms/LoadingSpinner";
+import HomeBranchesNav from "@/modules/admin_branches/views/home_branches_nav";
+import Prueba1 from "@/modules/pruebas/prueba_1.module";
 
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
@@ -43,8 +45,8 @@ const UnauthorizedPage = lazy(() => import("@/modules/settings/authorization_pag
 
 
 // ALBUMS
-const ListAlbum = lazy (() => import ("@/common/widgets/coffeelover/album/list_album_coffeelover.widget"));
-const PageAlbum = lazy(() => import ("@/common/widgets/coffeelover/album/page_album.widget"));
+const ListAlbum = lazy(() => import("@/common/widgets/coffeelover/album/list_album_coffeelover.widget"));
+const PageAlbum = lazy(() => import("@/common/widgets/coffeelover/album/page_album.widget"));
 
 
 const RouteLoadingIndicator = () => {
@@ -53,32 +55,32 @@ const RouteLoadingIndicator = () => {
 
   useEffect(() => {
     setProgress(0);
-    
-    const expectedLoadTime = 2500; 
+
+    const expectedLoadTime = 2500;
     const startTime = Date.now();
-    
+
     const intervalId = setInterval(() => {
       const elapsed = Date.now() - startTime;
       const calculatedProgress = Math.min(99, (elapsed / expectedLoadTime) * 100);
-      
+
       setProgress(Math.round(calculatedProgress));
-      
+
       if (calculatedProgress >= 99) {
         clearInterval(intervalId);
       }
     }, 50);
-    
+
     return () => clearInterval(intervalId);
   }, [location.pathname]);
-  
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setProgress(100);
     }, 300);
-    
+
     return () => clearTimeout(timeout);
   }, []);
-  
+
   return <LoadingSpinner progress={progress} message="Preparando tu café..." size="lg" />;
 };
 
@@ -92,6 +94,11 @@ const AuthRoutes = () => {
           </div>
         }>
           <Routes>
+
+            {/* PRUEBAS */}
+            <Route path="/prueba" element={<Prueba1 />} />
+
+
             {/* PUBLIC ROUTES */}
             <Route path="/" element={<HomePage />} />
             <Route path="/map" element={<MapView view={true} />} />
@@ -99,29 +106,37 @@ const AuthRoutes = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<CuestionCard />} />
             <Route path="/google/callback" element={<GoogleCallback />} />
-            <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />}/>
+            <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
-            <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches />}/>
+            <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches />} />
             <Route path="/completar-perfil" element={<CompleteProfile />} />
-            <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />}/>
+            <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
             <Route path="/404" element={<NotFound />} />
-           
+
+
 
             {/* PRIVATE ROUTES  */}
             <Route element={<PrivateRoute />}>
+
               <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
                 <Route path="/coffeelover" element={<HomeCoffeelover />}>
                   <Route index element={<PrincipalCoffeelover />} />
                   <Route path="map-coffelover" element={<MapView />} />
-                  <Route path="register-branch-visit/" element={<RegisterStoreVisit />}/>
+                  <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
                   <Route path="album" element={<ListAlbum />} />
                 </Route>
-              <Route path="/open-album" element={<PageAlbum />} />
+                <Route path="/open-album" element={<PageAlbum />} />
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
                 <Route path="/stores" element={<HomeStores />}>
                   <Route index element={<BranchManagement />} />
+                </Route>
+              </Route>
+
+
+              <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL]} />}>
+                <Route path="/sucursal" element={<HomeBranchesNav />}>
                 </Route>
               </Route>
 
