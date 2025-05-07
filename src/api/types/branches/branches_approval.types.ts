@@ -98,10 +98,19 @@ export interface ValidateVisitInput {
   longitude: number;
 }
 
+export interface StampInfo {
+  logo: string;
+  name: string;
+}
+
+export interface VisitResponseData {
+  coffeecoins_earned: number;
+  stamp: StampInfo;
+}
+
 export interface ValidateVisitResponse {
-  success: boolean;
   message: string;
-  data?: any;
+  data: VisitResponseData;
 }
 
 export type ApprovedBranchesResponse = ApprovedBranch[];

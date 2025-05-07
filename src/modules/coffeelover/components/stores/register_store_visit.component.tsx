@@ -12,14 +12,18 @@ import {
   MapIcon,
   ArrowUpRight,
   RefreshCcw,
+  Award,
+  Sparkles
 } from "lucide-react";
 import { Button } from "@/common/ui/button";
 import { CoffeeBackground } from "@/common/widgets/coffee_background.widget";
+import LoadingSpinner from "@/common/atoms/LoadingSpinner"; // Añadimos nuestro LoadingSpinner
 
 const ValidateVisitPage = () => {
   const [searchParams] = useSearchParams();
   const branchId = searchParams.get("branch_id");
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0); // Para el LoadingSpinner
   const navigate = useNavigate();
 
   const {
@@ -29,6 +33,7 @@ const ValidateVisitPage = () => {
     status,
     error,
     reset,
+    data: responseData
   } = useRegisterVisitMutation();
 
   useEffect(() => {
@@ -40,6 +45,32 @@ const ValidateVisitPage = () => {
       document.body.style.overflow = originalStyle;
     };
   }, []);
+
+  // Iniciamos el progreso gradualmente
+  useEffect(() => {
+    if (isIdle) {
+      const interval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev < 60) return prev + 1;
+          return prev;
+        });
+      }, 50);
+      
+      return () => clearInterval(interval);
+    }
+    
+    if (status === 'pending') {
+      setLoadingProgress(80);
+    }
+    
+    if (status === 'success') {
+      setLoadingProgress(100);
+    }
+    
+    if (isError) {
+      setLoadingProgress(100);
+    }
+  }, [isIdle, status, isError]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -68,15 +99,20 @@ const ValidateVisitPage = () => {
         (error) => {
           console.error("Error al obtener ubicación:", error);
         },
-        { enableHighAccuracy: true }
+        { enableHighAccuracy: true, timeout: 10000 }
       );
     }
   };
 
   const handleRetry = () => {
     reset();
+    setLoadingProgress(10);
     requestLocation();
   };
+
+  // Extrae los datos de la respuesta si existen
+  const coffeecoinsEarned = responseData?.data?.coffeecoins_earned || 0;
+  const stampInfo = responseData?.data?.stamp || null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center p-0 sm:p-4 md:p-6 lg:p-8 xl:p-12">
@@ -126,35 +162,18 @@ const ValidateVisitPage = () => {
             <div className="p-4 sm:p-6 max-h-[calc(85vh-130px)] md:max-h-[500px] overflow-y-auto">
               {isIdle && !animationComplete && (
                 <div className="flex flex-col items-center py-4 sm:py-6">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 260,
-                      damping: 20,
-                      duration: 0.6,
-                      onComplete: () => setAnimationComplete(true),
-                    }}
-                    className="w-20 h-20 sm:w-24 sm:h-24 bg-amber-50 rounded-full flex items-center justify-center mb-4 sm:mb-6"
-                  >
-                    <MapPin className="h-8 w-8 sm:h-10 sm:w-10 text-amber-600" />
-                  </motion.div>
-
-                  <motion.h2
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="text-[#2C1810] font-medium text-base sm:text-lg mb-1 sm:mb-2"
-                  >
-                    Preparando validación...
-                  </motion.h2>
+                  {/* Reemplazamos la animación inicial por nuestro LoadingSpinner */}
+                  <LoadingSpinner
+                    progress={loadingProgress}
+                    message="Preparando validación..."
+                    size="md"
+                  />
 
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="text-[#6F4E37] text-sm text-center max-w-xs"
+                    className="text-[#6F4E37] text-sm text-center max-w-xs mt-4"
                   >
                     Necesitamos acceder a tu ubicación para verificar tu visita
                     a la cafetería
@@ -262,17 +281,46 @@ const ValidateVisitPage = () => {
                     </h2>
 
                     <p className="text-[#6F4E37] text-sm text-center mx-auto max-w-xs mb-4 sm:mb-6">
-                      Tu visita ha sido registrada exitosamente. Ahora puedes
-                      disfrutar de un delicioso café.
+                      Tu visita a {stampInfo?.name || "la cafetería"} ha sido registrada exitosamente.
+                      ¡Disfruta de un delicioso café!
                     </p>
+                    
+                    {/* Sección de la cafetería visitada con logo */}
+                    {stampInfo && (
+                      <div className="bg-[#FAF3E0] p-3 sm:p-4 rounded-lg sm:rounded-xl border border-amber-100 mb-4">
+                        <div className="flex items-center">
+                          {stampInfo.logo ? (
+                            <img 
+                              src={stampInfo.logo} 
+                              alt={stampInfo.name} 
+                              className="h-10 w-10 sm:h-12 sm:w-12 object-cover rounded-lg mr-3"
+                            />
+                          ) : (
+                            <div className="h-10 w-10 sm:h-12 sm:w-12 bg-amber-200 rounded-lg flex items-center justify-center mr-3">
+                              <Coffee className="h-5 w-5 sm:h-6 sm:w-6 text-amber-700" />
+                            </div>
+                          )}
+                          <div>
+                            <h3 className="text-sm sm:text-base font-medium text-amber-800">
+                              {stampInfo.name}
+                            </h3>
+                            <p className="text-xs text-amber-600">
+                              Cafetería visitada
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="bg-[#FAF3E0] p-3 sm:p-4 rounded-lg sm:rounded-xl border border-amber-100">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs sm:text-sm font-medium text-amber-800">
+                        <span className="text-xs sm:text-sm font-medium text-amber-800 flex items-center">
+                          <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 text-amber-700" />
                           Recompensa:
                         </span>
-                        <div className="bg-amber-100 text-amber-800 text-xs font-medium px-2 py-0.5 rounded-full">
-                          +5 CoffeeCoins
+                        <div className="bg-amber-100 text-amber-800 text-xs font-medium px-2 py-0.5 rounded-full flex items-center">
+                          <Sparkles className="h-3 w-3 mr-1 text-amber-600" />
+                          +{coffeecoinsEarned} CoffeeCoins
                         </div>
                       </div>
 
