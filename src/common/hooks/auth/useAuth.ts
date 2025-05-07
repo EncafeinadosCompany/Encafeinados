@@ -13,6 +13,9 @@ export const useAuth = () => {
     }else if (rol === ROLES.ADMIN) {
       return navigate("/admin");
     }
+    else if (rol === ROLES.ADMIN_SUCURSAL) {
+      return navigate("/sucursal");
+    }
     else {
       navigate("/");
     }

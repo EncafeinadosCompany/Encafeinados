@@ -3,9 +3,10 @@ import { ChevronRight, ChevronLeft } from "@/common/ui/icons";
 import { Button } from "@/common/ui/button";
 import { NavItemType } from "@/api/types/nav/nav.types";
 import { clearAuthStorage } from "@/common/utils/auth_storage.utils";
-import { LogOutIcon, Coffee } from "lucide-react";
+import { LogOutIcon, Coffee, ChevronDown, ChevronUp } from "lucide-react";
 import logoImage from "@/assets/images/logonav.jpg";
 import { ROLES } from "@/common/utils/lists/roles.utils";
+import { useState } from "react";
 
 
 interface NavGeneralProps {
@@ -34,23 +35,24 @@ export const NavGeneral = ({
   logoPath = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
+  const [isMenuExpanded, setIsMenuExpanded] = useState(false);
 
   const isRouteActive = (href: string) => {
     if (href === '/coffeelover' && location.pathname === '/coffeelover') {
       return true;
     }
-    
+
     if (location.pathname.startsWith(href + '/') || location.pathname === href) {
-      const moreSpecificMatch = navItems.some(item => 
-        item.href !== href && 
-        location.pathname.startsWith(item.href) && 
-        item.href.startsWith(href) && 
+      const moreSpecificMatch = navItems.some(item =>
+        item.href !== href &&
+        location.pathname.startsWith(item.href) &&
+        item.href.startsWith(href) &&
         item.href.length > href.length
       );
-      
+
       return !moreSpecificMatch;
     }
-    
+
     return false;
   };
 
@@ -236,8 +238,54 @@ export const NavGeneral = ({
         </main>
 
         {isMobile && (
-          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] z-[100] rounded-t-2xl border-t border-gray-100">
-            <nav className="flex justify-around items-center h-16 px-2">
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white z-[100]">
+            {/* Expanded menu items */}
+            {isMenuExpanded && navItems.length > 4 && (
+              <div className="absolute bottom-full w-full bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] rounded-t-2xl border-t border-gray-100 transition-all duration-300">
+                <nav className="grid grid-cols-4 gap-2 p-4">
+                  {navItems.slice(4).map((item) => (
+                    
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        className={cn(
+                          "flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 relative",
+                          isRouteActive(item.href)
+                            ? "text-amber-800 bg-amber-50"
+                            : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
+                        )}
+                        onClick={() => setIsMenuExpanded(false)}
+                      >
+                        <div className={cn(
+                          "p-1 rounded-lg",
+                          isRouteActive(item.href) ? "bg-amber-100" : ""
+                        )}>
+                          {item.icon}
+                        </div>
+                        <span className="text-[10px] font-medium mt-0.5 truncate max-w-[60px] text-center">
+                          {item.title}
+                        </span>
+                      </Link>
+
+                  ))}
+                   <Link
+                  to="/"
+                  className="flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
+                  onClick={clearAuthStorage}
+                >
+                  <div className="p-1">
+                    <LogOutIcon className="h-4 w-4" />
+                  </div>
+                  <span className="text-[10px] font-medium mt-0.5">Salir</span>
+                </Link>
+
+                </nav>
+              </div>
+            )}
+
+            {/* Main bottom navigation */}
+            <nav className="flex justify-around items-center h-16 px-2 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">
+              {/* CoffeeCoins Link */}
               {role === ROLES.COFFEE_LOVER && (
                 <Link
                   to="/coffeelover"
@@ -252,8 +300,11 @@ export const NavGeneral = ({
                   <span className="text-[10px] font-medium mt-0.5">Coins</span>
                 </Link>
               )}
-              
-              {navItems.map((item) => (
+
+
+
+              {/* First 4 navigation items */}
+              {navItems.slice(0, 4).map((item) => (
                 <Link
                   key={item.href}
                   to={item.href}
@@ -273,22 +324,39 @@ export const NavGeneral = ({
                   <span className="text-[10px] font-medium mt-0.5 truncate max-w-[60px] text-center">
                     {item.title}
                   </span>
-                  {isRouteActive(item.href) && (
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-amber-500 rounded-full"></div>
-                  )}
                 </Link>
               ))}
 
-              <Link
-                to="/"
-                className="flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
-                onClick={clearAuthStorage}
-              >
-                <div className="p-1">
-                  <LogOutIcon className="h-4 w-4" />
-                </div>
-                <span className="text-[10px] font-medium mt-0.5">Salir</span>
-              </Link>
+              {/* More button when there are more than 5 items */}
+              {navItems.length > 5 ? (
+                <button
+                  onClick={() => setIsMenuExpanded(!isMenuExpanded)}
+                  className={cn(
+                    "flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300",
+                    isMenuExpanded ? "text-amber-800 bg-amber-50" : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
+                  )}
+                >
+                  <div className="p-1 rounded-lg">
+                    {isMenuExpanded ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronUp className="h-4 w-4" />
+                    )}
+                  </div>
+                  <span className="text-[10px] font-medium mt-0.5">Más</span>
+                </button>
+              ) : (
+                <Link
+                  to="/"
+                  className="flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
+                  onClick={clearAuthStorage}
+                >
+                  <div className="p-1">
+                    <LogOutIcon className="h-4 w-4" />
+                  </div>
+                  <span className="text-[10px] font-medium mt-0.5">Salir</span>
+                </Link>
+              )}
             </nav>
           </div>
         )}
