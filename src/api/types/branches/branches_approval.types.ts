@@ -113,4 +113,10 @@ export interface ValidateVisitResponse {
   data: VisitResponseData;
 }
 
+export interface ValidateVisitInput {
+  branchId: string;
+  latitude: number;
+  longitude: number;
+}
+
 export type ApprovedBranchesResponse = ApprovedBranch[];

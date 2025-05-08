@@ -1,5 +1,6 @@
 import { useRegisterVisitMutation } from "@/api/mutations/branches/branch_states.mutation";
 import { useEffect, useState } from "react";
+
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -13,17 +14,17 @@ import {
   ArrowUpRight,
   RefreshCcw,
   Award,
-  Sparkles
+  Sparkles,
+  MessageCircle,
+  Star,
 } from "lucide-react";
 import { Button } from "@/common/ui/button";
 import { CoffeeBackground } from "@/common/widgets/coffee_background.widget";
-import LoadingSpinner from "@/common/atoms/LoadingSpinner"; // Añadimos nuestro LoadingSpinner
 
 const ValidateVisitPage = () => {
   const [searchParams] = useSearchParams();
   const branchId = searchParams.get("branch_id");
   const [animationComplete, setAnimationComplete] = useState(false);
-  const [loadingProgress, setLoadingProgress] = useState(0); // Para el LoadingSpinner
   const navigate = useNavigate();
 
   const {
@@ -33,44 +34,24 @@ const ValidateVisitPage = () => {
     status,
     error,
     reset,
-    data: responseData
+    data: responseData,
   } = useRegisterVisitMutation();
 
   useEffect(() => {
-    const originalStyle = window.getComputedStyle(document.body).overflow;
-    
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+    document.body.style.touchAction = 'none'; 
     
     return () => {
-      document.body.style.overflow = originalStyle;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+      document.body.style.touchAction = '';
     };
   }, []);
-
-  // Iniciamos el progreso gradualmente
-  useEffect(() => {
-    if (isIdle) {
-      const interval = setInterval(() => {
-        setLoadingProgress(prev => {
-          if (prev < 60) return prev + 1;
-          return prev;
-        });
-      }, 50);
-      
-      return () => clearInterval(interval);
-    }
-    
-    if (status === 'pending') {
-      setLoadingProgress(80);
-    }
-    
-    if (status === 'success') {
-      setLoadingProgress(100);
-    }
-    
-    if (isError) {
-      setLoadingProgress(100);
-    }
-  }, [isIdle, status, isError]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -99,23 +80,31 @@ const ValidateVisitPage = () => {
         (error) => {
           console.error("Error al obtener ubicación:", error);
         },
-        { enableHighAccuracy: true, timeout: 10000 }
+        { enableHighAccuracy: true }
       );
     }
   };
 
   const handleRetry = () => {
     reset();
-    setLoadingProgress(10);
     requestLocation();
   };
 
-  // Extrae los datos de la respuesta si existen
+  useEffect(() => {
+    if (responseData) {
+      console.log("Datos de respuesta:", responseData);
+    }
+  }, [responseData]);
+
   const coffeecoinsEarned = responseData?.data?.coffeecoins_earned || 0;
-  const stampInfo = responseData?.data?.stamp || null;
+const stampInfo = responseData?.data?.stamp || null;
+
+const handleReviewClick = () => {
+  navigate(`/coffeelover/review?branch_id=${branchId}&branch_name=${encodeURIComponent(stampInfo?.name || '')}`);
+};
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center p-0 sm:p-4 md:p-6 lg:p-8 xl:p-12">
+    <div className="fixed inset-0 flex items-center justify-center overflow-hidden touch-none">
       <CoffeeBackground />
       
       <AnimatePresence mode="wait">
@@ -125,16 +114,15 @@ const ValidateVisitPage = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.4 }}
-          className="w-full max-w-[90%] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl px-3 sm:px-4 z-10 relative"
+          className="w-full max-w-[95%] xs:max-w-[90%] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl px-2 xs:px-3 sm:px-4 z-10 relative"
         >
-          <div className="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-amber-100 overflow-hidden">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg xs:rounded-xl sm:rounded-2xl shadow-lg border border-amber-100 overflow-hidden flex flex-col max-h-[90vh]">
             {/* Cabecera */}
             <div className="bg-gradient-to-r from-[#6F4E37] to-[#8A624A] p-4 sm:p-5 text-white relative overflow-hidden">
               <div className="absolute inset-0 opacity-10">
                 <div className="absolute inset-0 bg-pattern-coffee"></div>
               </div>
 
-              {/* Decoración de la cabecera */}
               <div className="absolute top-0 right-0 w-24 h-24 opacity-20">
                 <motion.div 
                   animate={{ rotate: 360 }}
@@ -158,22 +146,38 @@ const ValidateVisitPage = () => {
               </div>
             </div>
 
-            {/* Contenido principal - Con altura máxima y scroll interno si es necesario */}
-            <div className="p-4 sm:p-6 max-h-[calc(85vh-130px)] md:max-h-[500px] overflow-y-auto">
+            <div className="p-3 xs:p-4 sm:p-6 overflow-y-auto flex-1 max-h-[calc(80vh-100px)] sm:max-h-[calc(85vh-130px)] md:max-h-[500px]">
               {isIdle && !animationComplete && (
                 <div className="flex flex-col items-center py-4 sm:py-6">
-                  {/* Reemplazamos la animación inicial por nuestro LoadingSpinner */}
-                  <LoadingSpinner
-                    progress={loadingProgress}
-                    message="Preparando validación..."
-                    size="md"
-                  />
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 260,
+                      damping: 20,
+                      duration: 0.6,
+                      onComplete: () => setAnimationComplete(true),
+                    }}
+                    className="w-20 h-20 sm:w-24 sm:h-24 bg-amber-50 rounded-full flex items-center justify-center mb-4 sm:mb-6"
+                  >
+                    <MapPin className="h-8 w-8 sm:h-10 sm:w-10 text-amber-600" />
+                  </motion.div>
+
+                  <motion.h2
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-[#2C1810] font-medium text-base sm:text-lg mb-1 sm:mb-2"
+                  >
+                    Preparando validación...
+                  </motion.h2>
 
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="text-[#6F4E37] text-sm text-center max-w-xs mt-4"
+                    className="text-[#6F4E37] text-sm text-center max-w-xs"
                   >
                     Necesitamos acceder a tu ubicación para verificar tu visita
                     a la cafetería
@@ -231,7 +235,7 @@ const ValidateVisitPage = () => {
               )}
 
               {status === "success" && (
-                <div className="flex flex-col items-center py-4 sm:py-6">
+                <div className="flex flex-col items-center py-2 sm:py-4">
                   <motion.div
                     initial={{ scale: 0, rotate: -180 }}
                     animate={{ scale: 1, rotate: 0 }}
@@ -240,10 +244,9 @@ const ValidateVisitPage = () => {
                       stiffness: 260,
                       damping: 20,
                     }}
-                    className="w-20 h-20 sm:w-24 sm:h-24 bg-green-50 rounded-full flex items-center justify-center mb-4 sm:mb-6 relative"
+                    className="w-16 h-16 sm:w-20 sm:h-20 bg-green-50 rounded-full flex items-center justify-center mb-2 sm:mb-4 relative"
                   >
-                    {/* Efecto de brillos */}
-                    {Array.from({ length: 5 }).map((_, i) => (
+                    {Array.from({ length: 3 }).map((_, i) => (
                       <motion.div
                         key={`spark-${i}`}
                         className="absolute w-2 h-2 bg-green-300 rounded-full"
@@ -254,8 +257,8 @@ const ValidateVisitPage = () => {
                           scale: 0.2 
                         }}
                         animate={{ 
-                          x: Math.cos(i * Math.PI * 0.4) * 50, 
-                          y: Math.sin(i * Math.PI * 0.4) * 50, 
+                          x: Math.cos(i * Math.PI * 0.67) * 40, // Reducir distancia
+                          y: Math.sin(i * Math.PI * 0.67) * 40,
                           opacity: 0,
                           scale: 0 
                         }}
@@ -267,79 +270,107 @@ const ValidateVisitPage = () => {
                         }}
                       />
                     ))}
-                    <CheckCircle className="h-10 w-10 sm:h-12 sm:w-12 text-green-500" />
+                    <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 text-green-500" />
                   </motion.div>
-
+                  
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                     className="w-full"
                   >
-                    <h2 className="text-[#2C1810] font-medium text-lg sm:text-xl mb-1 sm:mb-2 text-center">
+                    <h2 className="text-[#2C1810] font-medium text-base sm:text-lg mb-1 text-center">
                       ¡Visita registrada!
                     </h2>
 
-                    <p className="text-[#6F4E37] text-sm text-center mx-auto max-w-xs mb-4 sm:mb-6">
-                      Tu visita a {stampInfo?.name || "la cafetería"} ha sido registrada exitosamente.
-                      ¡Disfruta de un delicioso café!
-                    </p>
-                    
-                    {/* Sección de la cafetería visitada con logo */}
-                    {stampInfo && (
-                      <div className="bg-[#FAF3E0] p-3 sm:p-4 rounded-lg sm:rounded-xl border border-amber-100 mb-4">
-                        <div className="flex items-center">
+                    <div className="bg-[#FAF3E0] p-3 rounded-lg sm:rounded-xl border border-amber-100 w-full mb-3">
+                      {stampInfo && (
+                        <div className="flex items-center mb-2 pb-2 border-b border-amber-100">
                           {stampInfo.logo ? (
                             <img 
                               src={stampInfo.logo} 
                               alt={stampInfo.name} 
-                              className="h-10 w-10 sm:h-12 sm:w-12 object-cover rounded-lg mr-3"
+                              className="h-8 w-8 sm:h-10 sm:w-10 object-cover rounded-lg mr-2"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "/public/cafeino.png"; 
+                              }}
                             />
                           ) : (
-                            <div className="h-10 w-10 sm:h-12 sm:w-12 bg-amber-200 rounded-lg flex items-center justify-center mr-3">
-                              <Coffee className="h-5 w-5 sm:h-6 sm:w-6 text-amber-700" />
+                            <div className="h-8 w-8 sm:h-10 sm:w-10 bg-amber-200 rounded-lg flex items-center justify-center mr-2">
+                              <Coffee className="h-4 w-4 sm:h-5 sm:w-5 text-amber-700" />
                             </div>
                           )}
                           <div>
-                            <h3 className="text-sm sm:text-base font-medium text-amber-800">
+                            <h3 className="text-xs sm:text-sm font-medium text-amber-800">
                               {stampInfo.name}
                             </h3>
-                            <p className="text-xs text-amber-600">
+                            <p className="text-[10px] sm:text-xs text-amber-600">
                               Cafetería visitada
                             </p>
                           </div>
                         </div>
-                      </div>
-                    )}
-
-                    <div className="bg-[#FAF3E0] p-3 sm:p-4 rounded-lg sm:rounded-xl border border-amber-100">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs sm:text-sm font-medium text-amber-800 flex items-center">
-                          <Award className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 text-amber-700" />
+                      )}
+                      
+                      {/* Sección de recompensa */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium text-amber-800 flex items-center">
+                          <Coffee className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1 text-amber-600" />
                           Recompensa:
                         </span>
-                        <div className="bg-amber-100 text-amber-800 text-xs font-medium px-2 py-0.5 rounded-full flex items-center">
-                          <Sparkles className="h-3 w-3 mr-1 text-amber-600" />
+                        <div className="bg-amber-100 text-amber-800 text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full">
                           +{coffeecoinsEarned} CoffeeCoins
                         </div>
-                      </div>
-
-                      <div className="flex items-center">
-                        <Coffee className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600 mr-2" />
-                        <span className="text-xs sm:text-sm text-[#6F4E37]">
-                          ¡Gracias por visitarnos!
-                        </span>
                       </div>
                     </div>
 
                     <Button
-                      className="w-full mt-4 sm:mt-6 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-sm h-auto py-2.5"
+                      className="w-full mt-2 sm:mt-3 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs h-auto py-2"
                       onClick={() => navigate("/coffeelover")}
                     >
                       Volver al inicio
-                      <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1" />
+                      <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-1" />
                     </Button>
                   </motion.div>
+                </div>
+              )}
+
+              {/* Botón de incentivo - Nueva adición */}
+              {status === "success" && (
+                <div className="relative my-3 w-full">
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-200 to-amber-300 rounded-lg opacity-40 blur-sm"></div>
+                  <Button
+                    className="w-full relative bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium text-xs sm:text-sm h-auto py-3 border-b-2 border-amber-700 shadow-md group overflow-hidden"
+                    onClick={handleReviewClick}
+                  >
+                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="flex items-center justify-center w-full">
+                      <div className="mr-2 bg-white/20 rounded-full p-1.5">
+                        <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
+                      </div>
+                      <span>Comparte tu experiencia</span>
+                      <motion.div
+                        className="ml-1 flex items-center"
+                        initial={{ scale: 1, y: 0 }}
+                        animate={{ 
+                          scale: [1, 1.1, 1],
+                          y: [0, -2, 0]
+                        }}
+                        transition={{ 
+                          duration: 1.5,
+                          repeat: Infinity,
+                          repeatDelay: 2
+                        }}
+                      >
+                        <div className="flex items-center gap-0.5 bg-amber-400/30 rounded-full px-1.5 py-0.5 ml-1">
+                          <Star className="h-3 w-3 text-yellow-300 fill-yellow-300" />
+                          <span className="text-[10px] text-white font-medium">+5</span>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </Button>
+                  <p className="text-[9px] sm:text-[10px] text-center text-amber-800/70 mt-1">
+                    Gana 5 CoffeeCoins adicionales por compartir tu opinión
+                  </p>
                 </div>
               )}
 
@@ -403,10 +434,8 @@ const ValidateVisitPage = () => {
                 </div>
               )}
             </div>
-
-            {/* Footer */}
-            <div className="bg-[#FAF3E0]/50 border-t border-amber-100 px-3 sm:px-4 py-2 sm:py-3 text-center">
-              <p className="text-[10px] sm:text-xs text-[#6F4E37]/70">
+            <div className="bg-[#FAF3E0]/50 border-t border-amber-100 px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 sm:py-3 text-center flex-shrink-0">
+              <p className="text-[9px] xs:text-[10px] sm:text-xs text-[#6F4E37]/70">
                 Encafeinados © {new Date().getFullYear()} • Registro de visitas
               </p>
             </div>
