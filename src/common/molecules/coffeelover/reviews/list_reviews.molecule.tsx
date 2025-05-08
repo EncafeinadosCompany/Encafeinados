@@ -1,13 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { SingleReview } from '../../../../api/types/reviews/review.type';
-import ImageCarousel from '../../admin_branch/imagen_carousel';
+import React from 'react';
+import { SingleReview } from '@/api/types/reviews/review.type';
+import { User, Calendar } from 'lucide-react';
+import ReviewStars from '@/common/atoms/reviews/review_stars.atom';
+import ReviewImages from '@/common/atoms/reviews/review_images.atom';
 
-const StarRating = ({ rating }: { rating: number }) => {
+interface ReviewProps {
+  reviews: SingleReview[]
+}
+
+export const ListReviews = ({ reviews }: ReviewProps) => {
   return (
-    <div className="text-amber-600 text-xl mb-3">
-      {[...Array(5)].map((_, i) => (
-        <span key={i}>{i < rating ? "★" : "☆"}</span>
-      ))}
+    <div className="space-y-6">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-lg font-medium text-gray-900">
+          Opiniones de clientes
+        </h3>
+        <span className="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+          {reviews.length} {reviews.length === 1 ? 'reseña' : 'reseñas'}
+        </span>
+      </div>
+
+      <div className="space-y-6">
+        {reviews.map((review) => (
+          <div 
+            key={review.id} 
+            className="bg-white rounded-xl border border-amber-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
+          >
+            <div className="p-4 sm:p-5">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center">
+                  <div className="bg-amber-50 h-8 w-8 rounded-full flex items-center justify-center mr-2">
+                    <User className="h-4 w-4 text-amber-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">{review.clientName}</h4>
+                    <div className="flex items-center text-gray-500 text-xs mt-0.5">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      <FormatDate dateString={review.createdAt} />
+                    </div>
+                  </div>
+                </div>
+                <ReviewStars rating={review.rating} size="sm" />
+              </div>
+
+              <p className="text-gray-600 text-sm sm:text-base mb-4 whitespace-pre-line">
+                {review.comment}
+              </p>
+              
+              {/* Componente para mostrar imágenes */}
+              <ReviewImages images={review.imageUrls} />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -17,54 +62,13 @@ const FormatDate = ({ dateString }: { dateString: string }) => {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return new Intl.DateTimeFormat('es-ES', {
-      day: 'numeric',
+      year: 'numeric',
       month: 'long',
-      year: 'numeric'
+      day: 'numeric'
     }).format(date);
   };
 
-  return <span className="text-stone-500 text-sm">{formatDate(dateString)}</span>;
-};
-
-interface ReviewProps {
-  reviews: SingleReview[]
-}
-
-export const ListReviews = ({reviews}:ReviewProps) => {
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-      <h2 className="text-3xl md:text-4xl font-serif text-center text-amber-900 mb-8">
-        Lo que dicen nuestros clientes
-      </h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {reviews.map((review) => (
-          <div 
-            key={review.id} 
-            className="bg-gradient-to-b from-stone-100 to-amber-50 rounded-lg p-5 shadow-md hover:shadow-lg transition-transform duration-300 hover:-translate-y-1"
-          >
-            <div className="flex justify-between items-center">
-              <h3 className="text-stone-800 font-medium text-lg">{review.clientName}</h3>
-              <FormatDate dateString={review.createdAt} />
-            </div>
-            
-            <StarRating rating={review.rating} />
-            
-            <p className="text-stone-700 mb-2 leading-relaxed">{review.comment}</p>
-            
-            {review.imageUrls.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                    <ImageCarousel
-                     images={review.imageUrls}
-                     alt='imagenes'>  
-                    </ImageCarousel>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return <span>{formatDate(dateString)}</span>;
 };
 
 export default ListReviews;

@@ -920,7 +920,7 @@ return (
         <>
           {/* Backdrop oscuro para cerrar al hacer clic */}
           <motion.div
-            className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-[9997]"
+            className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-[900]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -929,7 +929,7 @@ return (
           
           {/* Contenedor del modal simplificado */}
           <motion.div
-            className="fixed inset-0 z-[9998] flex items-end md:items-center justify-center"
+            className="fixed inset-0 z-[950] flex items-end md:items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
