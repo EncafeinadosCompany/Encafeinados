@@ -7,6 +7,8 @@ import RoleRoute from "./RouleRoute";
 import LoadingSpinner from "@/common/atoms/LoadingSpinner";
 import HomeBranchesNav from "@/modules/admin_branches/views/home_branches_nav";
 import Prueba1 from "@/modules/pruebas/prueba_1.module";
+import ImageCarousel from "@/common/molecules/admin_branch/imagen_carousel";
+import PrincipalBranchesPage from "@/modules/admin_branches/views/principal_branches_page";
 
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
@@ -96,7 +98,7 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-            <Route path="/prueba" element={<Prueba1 />} />
+            <Route path="/prueba" element={<PrincipalBranchesPage />} />
 
 
             {/* PUBLIC ROUTES */}
@@ -137,6 +139,7 @@ const AuthRoutes = () => {
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL]} />}>
                 <Route path="/sucursal" element={<HomeBranchesNav />}>
+                  <Route index element={<PrincipalBranchesPage />} />
                 </Route>
               </Route>
 
