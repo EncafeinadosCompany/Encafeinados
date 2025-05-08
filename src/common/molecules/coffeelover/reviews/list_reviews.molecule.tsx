@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { SingleReview } from '../../../../api/types/reviews/review.type';
 import ImageCarousel from '../../admin_branch/imagen_carousel';
 
-// Datos de ejemplo (en producción deberías obtenerlos de una API
-// Componente para mostrar estrellas de calificación
 const StarRating = ({ rating }: { rating: number }) => {
   return (
     <div className="text-amber-600 text-xl mb-3">

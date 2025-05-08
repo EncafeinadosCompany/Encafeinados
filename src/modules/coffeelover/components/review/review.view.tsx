@@ -1,6 +1,6 @@
 import React from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import ReviewWidget from "@/common/widgets/review/review.widget";
+import ReviewWidget from "@/common/widgets/coffeelover/reviews/review.widget";
 import { CoffeeBackground } from "@/common/widgets/coffee_background.widget";
 
 export const ReviewView = () => {
