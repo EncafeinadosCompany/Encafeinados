@@ -45,7 +45,10 @@ const ListReviews: React.FC<ListReviewsProps> = ({ reviews }) => {
               
               {review.imageUrls && review.imageUrls.length > 0 && (
                 <div className="mt-4">
-                  <ImageCarousel images={review.imageUrls.map(url => url.replace(/`/g, ''))} />
+                  <ImageCarousel 
+                    images={review.imageUrls.map(url => url.replace(/`/g, ''))} 
+                    alt={`Imágenes de la reseña de ${review.clientName}`}
+                  />
                 </div>
               )}
             </div>
