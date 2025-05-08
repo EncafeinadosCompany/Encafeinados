@@ -9,7 +9,7 @@ import HomeBranchesNav from "@/modules/admin_branches/views/home_branches_nav";
 import Prueba1 from "@/modules/pruebas/prueba_1.module";
 import ImageCarousel from "@/common/molecules/admin_branch/imagen_carousel";
 import PrincipalBranchesPage from "@/modules/admin_branches/views/principal_branches_page";
-import ReviewsWidget from '@/common/widgets/coffeelover/reviews/reviews-widget';
+import ReviewsWidget from '@/common/widgets/coffeelover/reviews/reviews_widget';
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/about_page"));
