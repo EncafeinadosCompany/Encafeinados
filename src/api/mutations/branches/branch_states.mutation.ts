@@ -68,8 +68,6 @@ export const useRegisterVisitMutation = (): UseMutationResult<
   Error,
   ValidateVisitInput
 > => {
-  console.log("ingreso a la mutacion");
-
   return useMutation({
     mutationFn: async ({
       branchId,
@@ -81,8 +79,31 @@ export const useRegisterVisitMutation = (): UseMutationResult<
         latitude,
         longitude
       });
-      console.log("Respuesta de la mutación:", res);
-      return res.data as ValidateVisitResponse;
+      
+      console.log("Respuesta completa:", res);
+      console.log("Datos de la respuesta:", res.data);
+      
+      // Nos aseguramos de que la respuesta tenga la estructura correcta
+      let validResponse: ValidateVisitResponse;
+      
+      // Aquí transformamos la respuesta para asegurar que cumpla con nuestro tipo
+      if (res.data?.message && res.data?.data) {
+        // La API ya devuelve la estructura esperada
+        validResponse = res.data as ValidateVisitResponse;
+      } else if (res.data?.coffeecoins_earned && res.data?.stamp) {
+        // La API devuelve la estructura sin el nivel "data"
+        validResponse = {
+          message: "Visit registered successfully",
+          data: {
+            coffeecoins_earned: res.data.coffeecoins_earned,
+            stamp: res.data.stamp
+          }
+        };
+      } else {
+        throw new Error("Formato de respuesta inesperado");
+      }
+      
+      return validResponse;
     },
   });
 };
