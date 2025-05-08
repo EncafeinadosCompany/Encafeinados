@@ -43,7 +43,7 @@ export default function PrincipalBranchesPage() {
                                 </div>
                                 <div className="w-full text-sm text-gray-600 space-y-2.5">
                                    
-                                    <p className="flex items-center">
+                                    <div className="flex items-center">
                                         <span className="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
                                         <Star className="w-4 h-4 mr-2 text-yellow-400" />
                                         <div className="flex items-center space-x-2">
@@ -66,8 +66,8 @@ export default function PrincipalBranchesPage() {
                                                 </div>
                                             </div>
                                         </div>
-                                    </p>
-                                    <p className="flex items-center">
+                                    </div>
+                                    <div className="flex items-center">
                                         <span className="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
                                         <PhoneIcon className="w-3 h-3 mr-2" />
                                         <div className="flex space-x-2">
@@ -75,8 +75,8 @@ export default function PrincipalBranchesPage() {
                                             <p>{BranchByIdMock.phone_number}</p>
                                         </div>
 
-                                    </p>
-                                    <p className="flex items-center">
+                                    </div>
+                                    <div className="flex items-center">
                                         <div className="flex flex-col w-full border-t border-gray-200 space-y-4">
                                             <p className="font-medium mt-4">Redes Sociales</p>
                                             <div className="flex flex-wrap gap-3">
@@ -94,7 +94,7 @@ export default function PrincipalBranchesPage() {
                                                 ))}
                                             </div>
                                         </div>
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
