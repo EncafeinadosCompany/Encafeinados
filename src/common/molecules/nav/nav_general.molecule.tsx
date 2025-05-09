@@ -30,7 +30,6 @@ export const NavGeneral = ({
   navItems,
   setIsExpanded,
   coffeecoins,
-  isLoading,
   role,
   logoPath = logoImage,
 }: NavGeneralProps) => {
@@ -194,7 +193,7 @@ export const NavGeneral = ({
                     isExpanded ? "" : "justify-center"
                   )}
                 >
-                  <img className=" w-9" src="/coffeecoins.png" />
+                  <img className=" w-8" src="/coins.png" />
                   <span
                     className={cn(
                       "font-medium whitespace-nowrap transition-opacity duration-300",
@@ -292,7 +291,7 @@ export const NavGeneral = ({
                   className="flex flex-col items-center justify-center px-2 py-1 rounded-xl transition-all duration-300 text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
                 >
                   <div className="relative">
-                    <img className="h-8 w-8" src="/coffeecoins.png" alt="Coffee Coins" />
+                    <img className="h-8 w-8" src="/coins.png" alt="Coffee Coins" />
                     <span className="absolute -top-1 -right-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] flex items-center justify-center">
                       {coffeecoins || 0}
                     </span>

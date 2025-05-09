@@ -26,16 +26,14 @@ interface FeaturedCarouselStoresProps {
 export const FeaturedCarouselStores = ({
   branches,
   searchTerm,
-  handleSearchChange,
   setSearchTerm,
   setFilteredBranches,
   filteredBranches,
   carouselRef
 }: FeaturedCarouselStoresProps) => {
   return (
-    <div>
-   
-      
+    <>
+ 
       {/* Content Section */}
       <div className='w-full'>
         <h2 className="text-xl font-bold mb-4">Destacados</h2>
@@ -62,7 +60,7 @@ export const FeaturedCarouselStores = ({
         ) : (
           // Carousel Display
           <Carousel
-            className="flex flex-col touch-pan-y will-change-transform"
+            className="flex w-full flex-col touch-pan-y will-change-transform"
             opts={{ 
               loop: true, 
               align: "center",
@@ -71,8 +69,8 @@ export const FeaturedCarouselStores = ({
             }}
             setApi={(api) => (carouselRef.current = api)}
           >
-            <div className="relative w-full flex items-center lg:px-15">
-              <CarouselContent className="cursor-grab active:cursor-grabbing">
+            <div className="relative w-full">
+              <CarouselContent className=" item-center mx-7 flex cursor-grab active:cursor-grabbing">
                 {filteredBranches.map((branch) => (
                   <CarouselItem 
                     key={branch.id} 
@@ -99,6 +97,6 @@ export const FeaturedCarouselStores = ({
           </Carousel>
         )}
       </div>
-    </div>
+    </>
   );
 };
