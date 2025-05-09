@@ -56,14 +56,12 @@ const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ set
           controlContainer.style.zIndex = '400';
         }
         
-        // ESTE ES EL CAMBIO CLAVE - NO usar passive:true si necesitas preventDefault
         function handleTouchMove(e: TouchEvent) {
           if (e.touches.length > 1) {
-            e.preventDefault(); // Usar preventDefault en lugar de stopPropagation
+            e.preventDefault(); 
           }
         }
         
-        // Eliminar passive: true
         mapContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
         
         return () => {
