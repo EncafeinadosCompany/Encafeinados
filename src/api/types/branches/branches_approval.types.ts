@@ -13,6 +13,7 @@ export interface Branch {
   latitude: number;
   longitude: number;
   address?: string;
+  is_open: boolean;
   store_name?: string;
   store?: {
     store_id: number;
@@ -52,6 +53,12 @@ export interface BranchesResponseList {
     branches: Branch[];
   };
 }
+
+
+
+
+
+
 
 export interface Criteria {
   name: string;

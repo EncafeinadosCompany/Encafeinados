@@ -268,6 +268,8 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
     );
   };
 
+ 
+
   return (
     <>
       <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden">
@@ -291,9 +293,9 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
             <h3 className="font-bold text-2xl md:text-3xl lg:text-3xl text-white line-clamp-2">
               {cafe.name}
             </h3>
-            <div className="flex items-center justify-between mt-1">
-              <div className="flex items-center gap-1 text-amber-400">
-                <Star size={16} className="fill-amber-400" />
+            <div className="flex items-center justify-between mt-2">
+              <div className="flex items-center gap-1 text-amber-500">
+                <Star size={16} className="fill-amber-500" />
                 <span className="font-medium text-white">{cafe.rating}</span>
                 <span className="text-xs text-white/80">
                   ({cafe.reviewCount} reseñas)
@@ -307,50 +309,38 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   <span>Ver</span>
                 </button>
               </div>
-              <motion.button
-                className="bg-white/20 backdrop-blur-sm p-1.5 rounded-full"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleFavorite(cafe.id);
-                }}
-                aria-label={
-                  favorites.includes(cafe.id)
-                    ? "Quitar de favoritos"
-                    : "Agregar a favoritos"
-                }
-              >
-                <Heart
-                  size={18}
-                  className={`${
-                    favorites.includes(cafe.id)
-                      ? "fill-red-500 text-red-500"
-                      : "text-white"
-                  }`}
-                />
-              </motion.button>
             </div>
           </div>
         </div>
 
-        {/* Columna de contenido con scroll */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-          {/* Área de desplazamiento - IMPORTANTE: overflow-y-auto */}
           <div
             ref={contentRef}
             className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar md:pb-16 pb-24"
           >
             <div className="p-4 md:p-5 lg:p-6">
-              <h2 className="text-xl font-bold text-[#2C1810] md:hidden">
-                {cafe.name}
-              </h2>
-              <div className="flex items-center gap-1 text-amber-500 mb-4 md:hidden">
-                <Star size={16} className="fill-amber-500" />
-                <span className="font-medium">{cafe.rating}</span>
-                <span className="text-sm text-gray-500">
-                  ({cafe.reviewCount} reseñas)
-                </span>
+            <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
+  {cafe.name}
+  {cafe.isOpen ? (
+    <span className="text-sm bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+      Abierto
+    </span>
+  ) : (
+    <span className="text-sm bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+      Cerrado
+    </span>
+  )}
+</h2>
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center gap-1 text-amber-500">
+                  <Star size={16} className="fill-amber-500" />
+                  <span className="font-medium">{cafe.rating}</span>
+                  <span className="text-sm text-gray-500">
+                    ({cafe.reviewCount} reseñas)
+                  </span>
+                </div>
+
+             
               </div>
               <div className="md:grid md:grid-cols-2 md:gap-6 lg:gap-6 xl:grid-cols-12">
                 <div className="xl:col-span-5">

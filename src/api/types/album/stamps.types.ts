@@ -24,6 +24,7 @@ export interface StampsByClientResponse {
         {
             id: number,
             coffecoins_earned: number
+            quantity?: number
         }
     ]
 }

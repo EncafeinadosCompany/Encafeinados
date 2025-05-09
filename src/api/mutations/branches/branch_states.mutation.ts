@@ -2,6 +2,7 @@ import { useMutation, UseMutationResult, useQueryClient} from "@tanstack/react-q
 import { ValidateVisitInput, ValidateVisitResponse} from "../../types/branches/branches_approval.types";
 import AuthClient from "../../client/axios";
 
+
 const authClient = new AuthClient();
 
 export const useApproveBranchMutation = () => {
@@ -68,6 +69,7 @@ export const useRegisterVisitMutation = (): UseMutationResult<
   Error,
   ValidateVisitInput
 > => {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({
       branchId,
@@ -101,5 +103,19 @@ export const useRegisterVisitMutation = (): UseMutationResult<
       
       return validResponse;
     },
-  });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["coffecoins"] });
+    },
+  })
 };
+
+
+export const useStatesIsOpen = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, isOpen }: { id: number; isOpen: boolean }) => {
+      const response = await authClient.patch(`/branches/open-close/${id}`,{ isOpen:isOpen});
+      return response;
+    },
+  });
+}

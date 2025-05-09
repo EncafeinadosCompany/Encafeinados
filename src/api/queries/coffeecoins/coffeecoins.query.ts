@@ -4,8 +4,7 @@ import { getAuthStorage } from '@/common/utils/auth_storage.utils'
 import { useQuery } from '@tanstack/react-query'
 
 interface  coffeecoins  {
-    quantity: number
-    
+    coffee_coins: number;
 }
 
 const authClient = new AuthClient()
@@ -18,16 +17,16 @@ export const useCoffeeCoinsQuery = () => {
             try {
                 const {user} = getAuthStorage()
                 const {id} = user
-                const response = await authClient.get<coffeecoins>(`/coffee-coins/${id}`)
+                const response = await authClient.get<coffeecoins>(`/clients/user/${id}`)
                 return response
             } catch (error) {
                 throw error
             }
         },
-        staleTime: Infinity,        // Considera los datos como siempre frescos
-        gcTime: Infinity,        // Mantén los datos cacheados indefinidamente
-        refetchOnWindowFocus: false, // No volver a pedir si se cambia de pestaña
-        refetchOnMount: false,       // No volver a pedir si el componente se remonta
-        refetchOnReconnect: false,   
+        staleTime: Infinity,
+        gcTime: Infinity,  
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,   
+        refetchOnReconnect: false 
     })
 }

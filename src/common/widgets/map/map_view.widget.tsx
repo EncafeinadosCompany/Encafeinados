@@ -49,7 +49,7 @@ const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ set
   useEffect(() => {
     if (map) {
       setMapInstance(map);
-            setTimeout(() => {
+      setTimeout(() => {
         const mapContainer = map.getContainer();
         const controlContainer = mapContainer.querySelector('.leaflet-control-container') as HTMLElement;
         if (controlContainer) {
@@ -58,11 +58,11 @@ const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ set
         
         function handleTouchMove(e: TouchEvent) {
           if (e.touches.length > 1) {
-            e.stopPropagation();
+            e.preventDefault(); 
           }
         }
         
-        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
         
         return () => {
           mapContainer.removeEventListener('touchmove', handleTouchMove);

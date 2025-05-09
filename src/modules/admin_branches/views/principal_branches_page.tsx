@@ -1,4 +1,6 @@
-import { BranchByIdMock } from "@/api/types/branches/branch_by_id.mock";
+import { useStatesIsOpen } from "@/api/mutations/branches/branch_states.mutation";
+import { useBranchesID, useImagenBranch } from "@/api/queries/branches/branch.query";
+
 import { QRCode } from "@/common/atoms/QRCode";
 import BranchStatusModal from "@/common/molecules/admin_branch/branch_status_modal";
 import ImageCarousel from "@/common/molecules/admin_branch/imagen_carousel";
@@ -6,40 +8,70 @@ import { Badge } from "@/common/ui/badge";
 import { Card } from "@/common/ui/card";
 import { Switch } from "@/common/ui/switch";
 import { Label } from "@radix-ui/react-label";
-import { Clock1, Clock2, Phone, PhoneIcon, Star } from "lucide-react";
-import { useState } from "react";
-
-
-// MacBook Air images
-const macbookImages = [
-    "https://th.bing.com/th/id/OIP.0OjnGiILya4rKAOib941YwHaE8?cb=iwc1&rs=1&pid=ImgDetMain",
-    "/cafeino.png",
-    "/placeholder.svg?height=400&width=400&text=MacBook+Air+Open",
-]
-// ... imports remain the same ...
+import { Clock1, Clock2,  PhoneIcon, Star } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function PrincipalBranchesPage() {
-    const [branchStatus, setBranchStatus] = useState<true | false>(true);
+    
+    const BranchId = localStorage.getItem('storeOrBranchId') 
+    if(!BranchId){
+      return toast.error('No se encontro el id de la sucursal')
+    }
+    const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
+    const {data:branches, error, isPending} = useBranchesID(Number(BranchId))
+    const [branchStatus, setBranchStatus] = useState<boolean>(branches?.branch.is_open ?? true);
+    const {data:imagen , error:errorImagen, isPending:isPendingImagen} = useImagenBranch(Number(BranchId))
+    const {mutateAsync:useStateOpen, error:errorStatus, status} = useStatesIsOpen()
+
+
+    console.log('branches', branches, 'imagen', imagen)
+
+
+    useEffect(() => {
+        if (branches?.branch.is_open !== undefined) {
+            setBranchStatus(branches.branch.is_open);
+        }
+    }, [branches?.branch.is_open]);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleConfirmStatusChange = () => {
         setBranchStatus(branchStatus === true ? false : true);
+        useStateOpen({ id: Number(BranchId), isOpen: branchStatus === true? false : true})
+
+        setTimeout(() => {
+            setIsModalOpen(false);
+        },900);
+    };
+
+
+    const handleStatusClick = () => {
         setIsModalOpen(true);
     };
 
+
     return (
         <div className="container h-full mx-auto max-w-7xl px-4 py-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full xl:h-full">
                 {/* Left column */}
                 <div className="h-full">
                     <Card className="p-6 bg-white h-full shadow-lg rounded-xl border-none">
                         <div className="flex flex-col h-full">
                             <div className="flex-1 relative">
-                                <Badge className={`${BranchByIdMock.status == 'aprovada' ? 'bg-emerald-200/60 border-emerald-700' : 'bg-red-300 border-red-500'} p-1 px-2 rounded-full absolute z-10  right-0`}>{BranchByIdMock.status}</Badge>
-                                <ImageCarousel images={macbookImages} alt="MacBook Air" />
+                                <Badge className={`${branches?.branch.status == 'APPROVED' ? 'bg-emerald-200/60 border-emerald-700' : 'bg-orange-300 border-orange-500'} p-1 px-2 rounded-full absolute z-10  right-0`}>{branches?.branch.status === 'APPROVED'? 'Aprobada': 'Pediente'}</Badge>
+                                {
+                                   imagen && imagen?.length > 0 ? (
+                                        <ImageCarousel images={imagen||[]} alt="MacBook Air" />
+                                    ):(
+                                       <div>
+                                        <p>No hay imagenes disponibles</p>
+                                       </div> 
+                                    )
+                                }
                                 <div className="mx-auto text-center">
-                                    <h2 className="text-2xl font-semibold text-gray-900 mb-3 mt-6 ">{BranchByIdMock.name}</h2>
-                                    <p className="text-gray-500 text-center mb-6">{BranchByIdMock.address}</p>
+                                    <h2 className="text-2xl font-semibold text-gray-900 mb-3 mt-6 ">{branches?.branch.name}</h2>
+                                    <p className="text-gray-500 text-center mb-6">{branches?.branch.address}</p>
                                 </div>
                                 <div className="w-full text-sm text-gray-600 space-y-2.5">
                                    
@@ -49,7 +81,7 @@ export default function PrincipalBranchesPage() {
                                         <div className="flex items-center space-x-2">
                                             <p>Rating</p>
                                             <div className="flex items-center">
-                                                <p className="font-semibold">{BranchByIdMock.average_rating}</p>
+                                                <p className="font-semibold">{branches?.branch.average_rating}</p>
                                                 <span className="text-gray-400 mx-1">/</span>
                                                 <p className="text-gray-400">5.0</p>
                                                 <div className="flex ml-2">
@@ -57,7 +89,7 @@ export default function PrincipalBranchesPage() {
                                                         <Star
                                                             key={index}
                                                             className={`w-4 h-4 ${
-                                                                index < Math.floor(BranchByIdMock.average_rating)
+                                                                index < Math.floor(Number(branches?.branch.average_rating))
                                                                     ? 'text-yellow-400 fill-yellow-400'
                                                                     : 'text-gray-300'
                                                             }`}
@@ -72,7 +104,7 @@ export default function PrincipalBranchesPage() {
                                         <PhoneIcon className="w-3 h-3 mr-2" />
                                         <div className="flex space-x-2">
                                             <p>Teléfono</p>
-                                            <p>{BranchByIdMock.phone_number}</p>
+                                            <p>{branches?.branch.phone_number}</p>
                                         </div>
 
                                     </div>
@@ -80,10 +112,10 @@ export default function PrincipalBranchesPage() {
                                         <div className="flex flex-col w-full border-t border-gray-200 space-y-4">
                                             <p className="font-medium mt-4">Redes Sociales</p>
                                             <div className="flex flex-wrap gap-3">
-                                                {BranchByIdMock.social_branches.map((social) => (
+                                                {branches?.branch.social_branches.map((social) => (
                                                     <a
                                                         key={social.social_network_id}
-                                                        href={social.url}
+                                                        href={social.value}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="flex items-center px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
@@ -107,7 +139,7 @@ export default function PrincipalBranchesPage() {
                         <div className="flex flex-col h-full">
                             {/* Screen Size Section */}
                             <div className="mb-8">
-                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Horario</h3>
+                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Horarios</h3>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="p-4 bg-gray-50 rounded-lg flex space-x-4 text-gray-500">
                                         <Clock1></Clock1>
@@ -124,7 +156,7 @@ export default function PrincipalBranchesPage() {
                             <div className="mb-8">
                                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Gestión de QR</h3>
                                 <div className="p-4 bg-gray-50 rounded-lg">
-                                    <QRCode url="/" />
+                                    <QRCode url={`${EXPOSED_URL}/coffeelover/register-branch-visit?branch_id=${branches?.branch.id}`} />
                                 </div>
                             </div>
 
@@ -146,7 +178,7 @@ export default function PrincipalBranchesPage() {
                                         <Switch
                                             id="branch-status"
                                             checked={branchStatus}
-                                            onCheckedChange={handleConfirmStatusChange}
+                                            onCheckedChange={handleStatusClick}
                                         />
                                         <span className="text-sm font-medium">
                                             {branchStatus ? "Abierta" : "Cerrada"}

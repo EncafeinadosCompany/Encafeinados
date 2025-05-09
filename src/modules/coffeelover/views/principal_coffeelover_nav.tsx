@@ -56,7 +56,7 @@ const PrincipalCoffeelover = () => {
         </div>
       </div>
       
-      <div className={`flex flex-col p-4 gap-6 max-w-5xl mx-auto w-full relative z-10 ${isMobile ? 'pb-24' : ''}`}>
+      <div className={`flex flex-col p-4 gap-6  xl:w-full mx-auto w-full relative z-10 ${isMobile ? 'pb-24' : ''}`}>
         <FeaturedStoresWidget 
           globalSearchTerm={globalSearchTerm} 
           setGlobalSearchTerm={setGlobalSearchTerm}
