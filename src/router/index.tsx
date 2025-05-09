@@ -10,6 +10,7 @@ import Prueba1 from "@/modules/pruebas/prueba_1.module";
 import ImageCarousel from "@/common/molecules/admin_branch/imagen_carousel";
 import PrincipalBranchesPage from "@/modules/admin_branches/views/principal_branches_page";
 import ReviewsWidget from '@/common/widgets/coffeelover/reviews/reviews_widget';
+import ClientReviewsWidget from '@/common/widgets/coffeelover/reviews/client_reviews_widget';
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/about_page"));
@@ -99,7 +100,7 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-            <Route path="/prueba" element={<ReviewsWidget branchId={1}/>} /> {/* Se tiene que especificar */}
+            <Route path="/prueba" element={<ClientReviewsWidget clientId={4} />} /> {/* Se tiene que especificar */}
 
 
             {/* PUBLIC ROUTES */}
