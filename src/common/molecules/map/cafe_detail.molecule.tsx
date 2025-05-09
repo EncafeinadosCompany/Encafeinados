@@ -268,6 +268,8 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
     );
   };
 
+ 
+
   return (
     <>
       <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden">

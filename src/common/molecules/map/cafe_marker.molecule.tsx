@@ -46,7 +46,7 @@ const CafeMarker: React.FC<CafeMarkerProps> = ({
               alt="${cafe.name}" 
               onerror="this.onerror=null;this.src='https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';" 
             />
-            ${!cafe.isOpen ? '<div class="closed-badge">Cerrado</div>' : ''}
+            ${!cafe.isOpen ? '<div "></div>' : ''}
             ${isActive || isHovered ? `
               <div class="cafe-label">
                 <span>${cafe.name}</span>
@@ -54,7 +54,6 @@ const CafeMarker: React.FC<CafeMarkerProps> = ({
                   ${Array(Math.round(cafe.rating || 4.5)).fill('★').join('')}
                   ${Array(5 - Math.round(cafe.rating || 4.5)).fill('☆').join('')}
                 </div>
-                ${!cafe.isOpen ? '<div class="closed-label">Cerrado</div>' : ''}
               </div>
             ` : ''}
           </div>

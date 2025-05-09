@@ -323,35 +323,34 @@
 
 /* Estilos para marcadores cerrados */
 .cafe-marker.closed {
-  opacity: 0.7;
-  filter: grayscale(70%);
+  opacity: 0.85; /* Menos transparente que antes */
+  filter: grayscale(60%) saturate(40%); /* Gris con algo de color */
+  transform: scale(0.95); /* Ligeramente más pequeño */
 }
 
 .cafe-marker .closed-badge {
   position: absolute;
-  top: 0;
-  right: 0;
-  background: #ff4d4d;
+  top: -2px;
+  right: -2px;
+  background: linear-gradient(45deg, #ff4d4d, #ff6b6b);
   color: white;
-  font-size: 8px;
-  padding: 2px 4px;
+  font-size: 9px;
+  padding: 3px 5px;
   border-radius: 4px;
-  transform: translate(25%, -25%) rotate(15deg);
+  transform: rotate(0deg); /* Sin rotación para mejor legibilidad */
   font-weight: bold;
-  z-index: 2;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  z-index: 10; /* Mayor z-index para asegurar visibilidad */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.4);
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.cafe-marker .cafe-label .closed-label {
-  color: #ff4d4d;
-  font-size: 10px;
-  margin-top: 2px;
-  font-weight: bold;
+/* Estilo para hover en marcadores cerrados */
+.cafe-marker.closed:hover {
+  opacity: 1;
+  filter: grayscale(30%);
+  transform: scale(1.05);
 }
 
-/* Estilos para cluster con cafeterías cerradas */
-.marker-cluster.has-closed .marker-cluster-small {
-  background-color: rgba(181, 226, 140, 0.6);
-  border: 3px dashed rgba(255, 77, 77, 0.2);
-}
+/*# sourceMappingURL=styles.css.map */
