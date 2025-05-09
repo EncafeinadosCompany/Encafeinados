@@ -309,46 +309,28 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   <span>Ver</span>
                 </button>
               </div>
-
-              {/* Indicador de estado abierto/cerrado */}
-              <div
-                className={`flex items-center gap-1.5 ${
-                  cafe.isOpen ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                <span
-                  className={`inline-block w-2 h-2 rounded-full ${
-                    cafe.isOpen ? "bg-green-500" : "bg-red-500"
-                  }`}
-                ></span>
-                <span className="text-sm font-medium">
-                  {cafe.isOpen ? "Abierto ahora" : "Cerrado"}
-                </span>
-              </div>
             </div>
           </div>
         </div>
 
-        {/* Columna de contenido con scroll */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-          {/* Área de desplazamiento - IMPORTANTE: overflow-y-auto */}
           <div
             ref={contentRef}
             className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar md:pb-16 pb-24"
           >
             <div className="p-4 md:p-5 lg:p-6">
-              <h2 className="text-xl font-bold text-[#2C1810] md:hidden flex items-center gap-2">
-                {cafe.name}
-                {cafe.isOpen ? (
-                  <span className="text-sm bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                    Abierto
-                  </span>
-                ) : (
-                  <span className="text-sm bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-                    Cerrado
-                  </span>
-                )}
-              </h2>
+            <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
+  {cafe.name}
+  {cafe.isOpen ? (
+    <span className="text-sm bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+      Abierto
+    </span>
+  ) : (
+    <span className="text-sm bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+      Cerrado
+    </span>
+  )}
+</h2>
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-1 text-amber-500">
                   <Star size={16} className="fill-amber-500" />
@@ -358,21 +340,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   </span>
                 </div>
 
-                {/* Indicador de estado abierto/cerrado */}
-                <div
-                  className={`flex items-center gap-1.5 ${
-                    cafe.isOpen ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  <span
-                    className={`inline-block w-2 h-2 rounded-full ${
-                      cafe.isOpen ? "bg-green-500" : "bg-red-500"
-                    }`}
-                  ></span>
-                  <span className="text-sm font-medium">
-                    {cafe.isOpen ? "Abierto ahora" : "Cerrado"}
-                  </span>
-                </div>
+             
               </div>
               <div className="md:grid md:grid-cols-2 md:gap-6 lg:gap-6 xl:grid-cols-12">
                 <div className="xl:col-span-5">
