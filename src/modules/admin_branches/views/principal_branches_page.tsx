@@ -39,12 +39,15 @@ export default function PrincipalBranchesPage() {
     const handleConfirmStatusChange = () => {
         setBranchStatus(branchStatus === true ? false : true);
         useStateOpen({ id: Number(BranchId), isOpen: branchStatus === true? false : true})
-        setIsModalOpen(true);
+
+        setTimeout(() => {
+            setIsModalOpen(false);
+        },900);
     };
 
 
     const handleStatusClick = () => {
-        setIsModalOpen(true); // Only open modal, don't change status yet
+        setIsModalOpen(true);
     };
 
 

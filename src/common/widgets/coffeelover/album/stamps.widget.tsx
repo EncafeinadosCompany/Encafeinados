@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Badge } from "../../../ui/badge";
 import { Card, CardContent } from "../../../ui/card";
 import { motion } from "framer-motion";
-import {  useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stamps.query";
+import { useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stamps.query";
 import { Coffee, AlertCircle, Stamp, Bean, Gift, Calendar, X, MapPin, StarsIcon, Search } from "lucide-react";
 import { getAuthStorage } from "@/common/utils/auth_storage.utils";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog";
@@ -47,7 +47,6 @@ export default function ListStamps({ id_page }: PruebaProps) {
     const { user } = getAuthStorage();
     const { id } = user;
 
-    console.log("ID del usuario:", id);
     const { data: users, error: error_us } = useStampsByClientQuery(id);
     const { data: stampData, error, isLoading } = useStampsByPageQuery(id_page);
     const [stamps, setStamps] = useState<Stamps[]>([]);
@@ -215,7 +214,7 @@ export default function ListStamps({ id_page }: PruebaProps) {
                                         className="h-48 sm:h-56 perspective"
                                         onMouseEnter={() => setHoverStamp(sello.id)}
                                         onMouseLeave={() => setHoverStamp(null)}
-                                        style={{transform: `rotate(${randomRotation}deg)`}}
+                                        style={{ transform: `rotate(${randomRotation}deg)` }}
                                     >
                                         <motion.div
                                             className="relative w-full h-full preserve-3d cursor-pointer"
@@ -265,11 +264,17 @@ export default function ListStamps({ id_page }: PruebaProps) {
                                                             {!aplica && (
                                                                 <div className="absolute inset-0 bg-gray-900/40 z-10 flex justify-center items-center backdrop-blur-[1px]">
                                                                     <Badge className="bg-orange-500/90 px-3 py-1 text-xs font-medium shadow-lg rounded-full">
-                                                                    <Search className="h-4 w-4 mr-1" />
+                                                                        <Search className="h-4 w-4 mr-1" />
                                                                         Por descubrir
                                                                     </Badge>
                                                                 </div>
                                                             )}
+
+                                                            <div className="absolute top-0 right-0 z-10 flex justify-center items-center backdrop-blur-[1px]">
+                                                                <Badge className="bg-orange-300 px-3 py-1 text-xs font-medium shadow-lg rounded-full">
+                                                                    {users?.stamps.find((selloCliente) => selloCliente.id === sello.id)?.quantity || 0}
+                                                                </Badge>
+                                                            </div>
 
                                                             {/* Stamp imagery */}
                                                             <div className="absolute inset-0 flex items-center justify-center">
@@ -304,12 +309,12 @@ export default function ListStamps({ id_page }: PruebaProps) {
                                             <div className="absolute w-full h-full backface-hidden rotateY-180">
                                                 <Card className="bg-[#292524]/50 h-full border-none shadow-xl text-cream-50">
                                                     <CardContent className="p-5 h-full flex flex-col justify-center">
-                                                            <div className="flex-col justify-between mx-auto items-center gap-2 flex">
-                                                                <img src="/cafeino.png" alt="" />
-                                                                <Badge className={"bg-gray-400 m-2"}>
-                                                                    Más información
-                                                                </Badge>                                                             
-                                                            </div>                                                     
+                                                        <div className="flex-col justify-between mx-auto items-center gap-2 flex">
+                                                            <img src="/cafeino.png" alt="" />
+                                                            <Badge className={"bg-gray-400 m-2"}>
+                                                                Más información
+                                                            </Badge>
+                                                        </div>
                                                     </CardContent>
                                                 </Card>
                                             </div>
@@ -366,7 +371,8 @@ export default function ListStamps({ id_page }: PruebaProps) {
                                         <button className="px-6 py-2 bg-gradient-to-r mx-auto from-orange-500 to-amber-600 text-white rounded-lg hover:from-orange-600 hover:to-amber-700 transition-all shadow-md font-medium text-sm group" onClick={() => navigate("/coffeelover/map-coffelover")}>
                                             <span className="flex items-center gap-2">
                                                 <MapPin className="h-3 w-3 group-hover:animate-bounce" />
-                                                {users?.stamps.find(s => s.id === selectedStamp.id) ? "Coleccionado" : "Visita la sucursal"}
+                                                {/* {users?.stamps.find(s => s.id === selectedStamp.id) ? "Coleccionado" : "Visita la sucursal"} */}
+                                                Visita la sucursal
                                             </span>
                                         </button>
                                     </>

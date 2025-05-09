@@ -14,7 +14,31 @@ interface FeaturedCardProps {
 export default function FeaturedCard({ branches }: FeaturedCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  
+  // const getStatusConfig = (status: string) => {
+  //   switch (status) {
+  //     case 'APPROVED':
+  //       return {
+  //         color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  //         icon: <Clock className="h-4 w-4" />,
+  //         text: 'Abierto'
+  //       };
+  //     case 'PENDING':
+  //       return {
+  //         color: 'bg-amber-100 text-amber-700 border-amber-200',
+  //         icon: <Clock className="h-4 w-4" />,
+  //         text: 'Próximamente'
+  //       };
+  //     default:
+  //       return {
+  //         color: 'bg-rose-100 text-rose-700 border-rose-200',
+  //         icon: <Clock className="h-4 w-4" />,
+  //         text: 'Cerrado'
+  //       };
+  //   }
+  // };
 
+  // const statusConfig = getStatusConfig(branches.status);
   return (
     <>
     <div className="max-w-sm xl:max-w-sm  transform transition-transform duration-300 hover:scale-[1.02]">
