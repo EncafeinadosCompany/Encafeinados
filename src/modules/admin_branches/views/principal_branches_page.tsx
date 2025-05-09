@@ -48,11 +48,9 @@ export default function PrincipalBranchesPage() {
     };
 
 
-    
-
     return (
         <div className="container h-full mx-auto max-w-7xl px-4 py-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full xl:h-full">
                 {/* Left column */}
                 <div className="h-full">
                     <Card className="p-6 bg-white h-full shadow-lg rounded-xl border-none">
@@ -138,7 +136,7 @@ export default function PrincipalBranchesPage() {
                         <div className="flex flex-col h-full">
                             {/* Screen Size Section */}
                             <div className="mb-8">
-                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Horario</h3>
+                                <h3 className="text-xl font-semibold text-gray-900 mb-4">Horarios</h3>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="p-4 bg-gray-50 rounded-lg flex space-x-4 text-gray-500">
                                         <Clock1></Clock1>

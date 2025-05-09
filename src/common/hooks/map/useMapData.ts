@@ -46,7 +46,7 @@ export const useMapData = (
           tags: ["Coffee", "Specialty"],
           latitude: branch.latitude,
           longitude: branch.longitude,
-          isOpen: true, 
+          isOpen: branch.is_open !== undefined ? branch.is_open : true, // Usar el valor de la API
           status: branch.status,
           phone: branch.phone_number,
           address: branch.address,

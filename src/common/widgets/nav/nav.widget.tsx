@@ -13,11 +13,7 @@ export type NavItem = {
 export default function NavbarGeneral({ navItems, coffeecoins, isloading }: NavItem) {
   const [isExpanded, setIsExpanded] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
-
-
   const {user} =  getAuthStorage();
-
- 
 
   useEffect(() => {
     const checkIfMobile = () => {
