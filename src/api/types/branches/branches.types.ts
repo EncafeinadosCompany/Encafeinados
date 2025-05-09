@@ -1,4 +1,3 @@
-
 export interface SocialBranch {
   social_network_id?: string;    
   social_network_name?: string;  
@@ -34,7 +33,8 @@ export interface Branch {
     store_logo: string;
     store_email: string;
   };
-  social_branches?: SocialBranch[]; 
+  social_branches?: SocialBranch[];
+  is_open?: boolean; // Nuevo campo añadido
 }
 
 export interface BranchPost {
