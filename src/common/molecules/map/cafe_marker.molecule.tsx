@@ -37,7 +37,7 @@ const CafeMarker: React.FC<CafeMarkerProps> = ({
       className: 'custom-cafe-marker',
       html: `
         <div 
-          class="cafe-marker ${isActive ? 'active' : ''} ${isHovered ? 'hovered' : ''} ${hasNearbyCafes ? 'has-nearby' : ''}" 
+          class="cafe-marker ${isActive ? 'active' : ''} ${isHovered ? 'hovered' : ''} ${hasNearbyCafes ? 'has-nearby' : ''} ${!cafe.isOpen ? 'closed' : ''}" 
           style="width:${size}px;height:${size}px;"
         >
           <div class="marker-content">
@@ -46,6 +46,7 @@ const CafeMarker: React.FC<CafeMarkerProps> = ({
               alt="${cafe.name}" 
               onerror="this.onerror=null;this.src='https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';" 
             />
+            ${!cafe.isOpen ? '<div class="closed-badge">Cerrado</div>' : ''}
             ${isActive || isHovered ? `
               <div class="cafe-label">
                 <span>${cafe.name}</span>
@@ -53,6 +54,7 @@ const CafeMarker: React.FC<CafeMarkerProps> = ({
                   ${Array(Math.round(cafe.rating || 4.5)).fill('★').join('')}
                   ${Array(5 - Math.round(cafe.rating || 4.5)).fill('☆').join('')}
                 </div>
+                ${!cafe.isOpen ? '<div class="closed-label">Cerrado</div>' : ''}
               </div>
             ` : ''}
           </div>
@@ -62,7 +64,7 @@ const CafeMarker: React.FC<CafeMarkerProps> = ({
       iconSize: [size, size],
       iconAnchor: [size/2, size],
     });
-  }, [cafe.image, cafe.name, cafe.rating, isActive, isHovered, hasNearbyCafes, map.getZoom()]);
+  }, [cafe.image, cafe.name, cafe.rating, cafe.isOpen, isActive, isHovered, hasNearbyCafes, map.getZoom()]);
   
   // Escuchar cambios de zoom
   useEffect(() => {

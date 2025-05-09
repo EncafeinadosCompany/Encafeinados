@@ -88,6 +88,24 @@ const CafeCard: React.FC<CafeCardProps> = ({
           </div>
         </div>
 
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-1">
+            <Star size={14} className="text-amber-500 fill-amber-500" />
+            <span className="text-sm font-medium">{cafe.rating}</span>
+            <span className="text-xs text-gray-500">({cafe.reviewCount})</span>
+          </div>
+          
+          {/* Indicador de estado */}
+          <div className={`px-2 py-0.5 rounded-full text-xs font-medium
+            ${cafe.isOpen 
+              ? 'bg-green-100 text-green-700' 
+              : 'bg-red-100 text-red-700'
+            }`}
+          >
+            {cafe.isOpen ? 'Abierto' : 'Cerrado'}
+          </div>
+        </div>
+
         <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
           <div className="flex items-center gap-1">
             <MapPin size={14} className="text-[#6F4E37]" />
