@@ -1,6 +1,7 @@
 import { useMutation, UseMutationResult, useQueryClient} from "@tanstack/react-query";
 import { ValidateVisitInput, ValidateVisitResponse} from "../../types/branches/branches_approval.types";
 import AuthClient from "../../client/axios";
+import { is } from "cypress/types/bluebird";
 
 const authClient = new AuthClient();
 
@@ -107,3 +108,14 @@ export const useRegisterVisitMutation = (): UseMutationResult<
     },
   });
 };
+
+
+export const useStatesIsOpen = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, isOpen }: { id: number; isOpen: boolean }) => {
+      const response = await authClient.patch(`/branches/open-close/${id}`,{ isOpen:isOpen});
+      return response;
+    },
+  });
+}
