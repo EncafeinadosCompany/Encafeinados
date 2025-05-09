@@ -1,5 +1,5 @@
 import { toast } from "react-hot-toast";
-import { errorMessages, moduleErrorMessages } from "@/common/utils/errors/errorsMessages";
+import { errorMessages, moduleErrorMessages } from "@/common/utils/errors/errors_messages.utils";
 
 export const useError = (moduleName?: string) => {
 

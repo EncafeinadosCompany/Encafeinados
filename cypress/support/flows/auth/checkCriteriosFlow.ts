@@ -1,4 +1,4 @@
-import { mockCriteria } from "../../mocks/auth/criteriaMock";
+import { mockCriteria } from "../../mocks/auth/criteria.mock";
 
 
 export const checkCriteriosFlow = () => {

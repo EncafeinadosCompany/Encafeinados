@@ -1,5 +1,5 @@
 
-import { getAuthStorage } from "@/common/utils/authStorage";
+import { getAuthStorage } from "@/common/utils/auth_storage.utils";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRoute = () =>{

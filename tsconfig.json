@@ -22,7 +22,7 @@
     "src",
     "tests",
     "src/tests/setupTests.ts",
-    "src/tests/custom.d.ts",
+    "src/tests/custom.d.ts", "cypress/support/mocks/auth/criteria.mock.ts",
   ],
   "exclude": ["node_modules"]
 }

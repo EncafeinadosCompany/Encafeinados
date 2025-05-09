@@ -2,7 +2,8 @@ import React from "react";
 import {render, screen, fireEvent} from "@testing-library/react"
 import "@testing-library/jest-dom"
 import "jest"
-import { InputEmail } from "@/common/atoms/Input-email";
+import { InputEmail } from "@/common/atoms/auth/Input_email.atom";
+
 
 test("Renderizar el input de email con el texto correcto", () => {
     render(<InputEmail/>)

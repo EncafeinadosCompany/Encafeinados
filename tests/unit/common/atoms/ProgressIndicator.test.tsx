@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import "jest";
-import ProgressIndicator from "@/common/atoms/auth/ProgressIndicator";
+import ProgressIndicator from "@/common/atoms/auth/progress_indicator.atom";
 
 describe("ProgressIndicator", () => {
     test("Renderizar el número correcto de pasos",()=>{

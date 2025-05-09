@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { getFavoritesFromStorage } from '@/common/utils/map/mapUtils';
+import { getFavoritesFromStorage } from '@/common/utils/map/map_utils';
 
 /**
  * Hook para manejar los cafés favoritos

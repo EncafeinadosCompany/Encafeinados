@@ -1,0 +1,33 @@
+
+import AuthClient from '@/api/client/axios'
+import { getAuthStorage } from '@/common/utils/auth_storage.utils'
+import { useQuery } from '@tanstack/react-query'
+
+interface  coffeecoins  {
+    quantity: number
+    
+}
+
+const authClient = new AuthClient()
+
+
+export const useCoffeeCoinsQuery = () => {
+    return useQuery<coffeecoins,Error>({
+        queryKey: ['coffecoins'],
+        queryFn: async (): Promise<coffeecoins> => {
+            try {
+                const {user} = getAuthStorage()
+                const {id} = user
+                const response = await authClient.get<coffeecoins>(`/coffee-coins/${id}`)
+                return response
+            } catch (error) {
+                throw error
+            }
+        },
+        staleTime: Infinity,        // Considera los datos como siempre frescos
+        gcTime: Infinity,        // Mantén los datos cacheados indefinidamente
+        refetchOnWindowFocus: false, // No volver a pedir si se cambia de pestaña
+        refetchOnMount: false,       // No volver a pedir si el componente se remonta
+        refetchOnReconnect: false,   
+    })
+}

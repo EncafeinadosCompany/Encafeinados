@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { LatLngTuple } from '@/common/types/map/mapTypes';
+import { LatLngTuple } from '@/api/types/map/map_search.types';
 import L from 'leaflet';
 
 /**

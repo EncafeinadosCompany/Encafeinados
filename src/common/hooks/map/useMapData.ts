@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { LatLngTuple, Cafe, MarkerPosition } from "@/common/types/map/mapTypes";
-import { calculateDistance } from "@/common/utils/map/mapUtils";
-import { Branch, BranchesResponse, SocialBranch } from "@/api/types/branchesTypes";
-import { Store, StoresResponse } from "@/api/types/storesTypes";
+import { LatLngTuple, Cafe, MarkerPosition } from "@/api/types/map/map_search.types";
+import { calculateDistance } from "@/common/utils/map/map_utils";
+import { Branch, BranchesResponse} from "@/api/types/branches/branches.types";
+import { Store, StoresResponse } from "@/api/types/stores/stores.type";
 
 export const useMapData = (
   branchesData: BranchesResponse | undefined,

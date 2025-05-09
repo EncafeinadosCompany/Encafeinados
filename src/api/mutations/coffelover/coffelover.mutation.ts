@@ -1,0 +1,44 @@
+import AuthClient from "@/api/client/axios";
+import { RegisterCoffelover, RegisterCoffeloverResponse } from "@/api/types/auth/auth.types";
+import { useError } from "@/common/hooks/auth/useErrors";
+import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLoginMutation } from "../auth/authMutations";
+import toast from "react-hot-toast";
+
+const authClient = new AuthClient();
+
+export const useRegisterCoffeloverMutation = () => {
+  const queryClient = useQueryClient()
+  const useLonginMutation = useLoginMutation()
+  const useErrors = useError("registeCoffelover")
+
+  return useMutation<RegisterCoffeloverResponse, Error, RegisterCoffelover>({
+    mutationFn: async (formData: RegisterCoffelover): Promise<RegisterCoffeloverResponse> => {
+
+      try {
+        const response = await authClient.post<RegisterCoffeloverResponse>('/clients', formData);
+        return response;
+
+      } catch (error: any) {
+        throw handleApiError(error)
+      }
+    },
+  
+    onSuccess: (data, variable: RegisterCoffelover) => {
+      useLonginMutation.mutate({
+        email: data.client.person.user_email,
+        password: variable.userData.password
+      })
+
+      toast.success("Perfil completado correctamente. ¡Bienvenido!");
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+    onError: (error: any) => {
+      toast.remove();
+      useErrors(error);
+    }
+  })
+}
+
+

@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {LoginResponse, User_Data } from '../../types/authTypes'
+import {LoginResponse, User_Data } from '../../types/auth/auth.types'
 import { useError } from '@/common/hooks/auth/useErrors'
-import { clearAuthStorage, setAuthStorage } from '@/common/utils/authStorage'
+import { clearAuthStorage, setAuthStorage } from '@/common/utils/auth_storage.utils'
 import AuthClient from '../../client/axios'
-import { handleApiError } from '@/common/utils/errors/handleApiError'
+import { handleApiError } from '@/common/utils/errors/handle_api_error.utils'
 import { useAuth } from '@/common/hooks/auth/useAuth'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
@@ -48,7 +48,9 @@ export const useLoginMutation = () => {
 
        pagesPermissions(data.user.role, navigate)
 
+
        toast.success("Inicio de sesión exitoso, ¡Bienvenido!");
+
 
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
