@@ -23,6 +23,7 @@ export const useSubmitReviewMutation = () => {
     onSuccess: () => {
       toast.success("Tu reseña ha sido enviada con éxito");
       queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      queryClient.invalidateQueries({ queryKey: ["coffecoins"] });
     },
     onError: (error: any) => {
       toast.error("No se pudo enviar la reseña");
