@@ -201,7 +201,7 @@ export const NavGeneral = ({
                       isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
                     )}
                   >
-                    <p className="text-sm">{coffeecoins ? coffeecoins : 0}</p>
+                    <p className="text-sm">{ coffeecoins }</p>
                   </span>
                 </Link>
               )}
