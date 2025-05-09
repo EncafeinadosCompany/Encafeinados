@@ -49,20 +49,22 @@ const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ set
   useEffect(() => {
     if (map) {
       setMapInstance(map);
-            setTimeout(() => {
+      setTimeout(() => {
         const mapContainer = map.getContainer();
         const controlContainer = mapContainer.querySelector('.leaflet-control-container') as HTMLElement;
         if (controlContainer) {
           controlContainer.style.zIndex = '400';
         }
         
+        // ESTE ES EL CAMBIO CLAVE - NO usar passive:true si necesitas preventDefault
         function handleTouchMove(e: TouchEvent) {
           if (e.touches.length > 1) {
-            e.stopPropagation();
+            e.preventDefault(); // Usar preventDefault en lugar de stopPropagation
           }
         }
         
-        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+        // Eliminar passive: true
+        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
         
         return () => {
           mapContainer.removeEventListener('touchmove', handleTouchMove);
