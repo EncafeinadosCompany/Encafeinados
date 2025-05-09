@@ -30,3 +30,18 @@ export interface ReviewSubmitInput {
     createdAt: string;
     message: string;
   }
+
+  export interface ClientReview {
+    id: number;
+    branchName: string;
+    rating: number;
+    comment: string;
+    imageUrls: string[];
+    createdAt: string;
+}
+
+export interface ClientWithReviews {
+    clientId: number;
+    clientName: string;
+    reviews: ClientReview[];
+}
