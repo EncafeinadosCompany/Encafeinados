@@ -10,7 +10,9 @@ const HomeCoffeelover = () => {
 
     useEffect(() => {
         if (data) {
-            setCoffeecoins(data.quantity)
+            setCoffeecoins(data.coffee_coins)
+        }else{
+            setCoffeecoins(0)
         }
     }, [data])
     return (

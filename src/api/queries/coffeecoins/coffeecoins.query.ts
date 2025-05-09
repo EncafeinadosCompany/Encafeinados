@@ -4,8 +4,7 @@ import { getAuthStorage } from '@/common/utils/auth_storage.utils'
 import { useQuery } from '@tanstack/react-query'
 
 interface  coffeecoins  {
-    quantity: number
-    
+    coffee_coins: number;
 }
 
 const authClient = new AuthClient()
@@ -28,6 +27,6 @@ export const useCoffeeCoinsQuery = () => {
         gcTime: Infinity,  
         refetchOnWindowFocus: false,
         refetchOnMount: false,   
-        refetchOnReconnect: false,   
+        refetchOnReconnect: false 
     })
 }
