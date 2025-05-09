@@ -235,7 +235,7 @@ const handleReviewClick = () => {
               )}
 
               {status === "success" && (
-                <div className="flex flex-col items-center py-2 sm:py-4">
+                <div className="flex flex-col items-center pt-0 pb-1 sm:pb-1">
                   <motion.div
                     initial={{ scale: 0, rotate: -180 }}
                     animate={{ scale: 1, rotate: 0 }}
@@ -244,7 +244,7 @@ const handleReviewClick = () => {
                       stiffness: 260,
                       damping: 20,
                     }}
-                    className="w-16 h-16 sm:w-20 sm:h-20 bg-green-50 rounded-full flex items-center justify-center mb-2 sm:mb-4 relative"
+                    className="w-16 h-16 sm:w-20 sm:h-20 bg-green-50 rounded-full flex items-center justify-center mb-2 relative"
                   >
                     {Array.from({ length: 3 }).map((_, i) => (
                       <motion.div
@@ -257,7 +257,7 @@ const handleReviewClick = () => {
                           scale: 0.2 
                         }}
                         animate={{ 
-                          x: Math.cos(i * Math.PI * 0.67) * 40, // Reducir distancia
+                          x: Math.cos(i * Math.PI * 0.67) * 40, 
                           y: Math.sin(i * Math.PI * 0.67) * 40,
                           opacity: 0,
                           scale: 0 
@@ -311,7 +311,6 @@ const handleReviewClick = () => {
                         </div>
                       )}
                       
-                      {/* Sección de recompensa */}
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium text-amber-800 flex items-center">
                           <Coffee className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1 text-amber-600" />
@@ -323,58 +322,52 @@ const handleReviewClick = () => {
                       </div>
                     </div>
 
-                    <Button
-                      className="w-full mt-2 sm:mt-3 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs h-auto py-2"
-                      onClick={() => navigate("/coffeelover")}
-                    >
-                      Volver al inicio
-                      <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 ml-1" />
-                    </Button>
+                    <div className="w-full mt-4 space-y-2">
+                      <h3 className="text-xs text-[#6F4E37] font-medium mb-1.5 text-center">
+                        ¿Qué deseas hacer ahora?
+                      </h3>
+
+                      <Button
+                        className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium text-xs sm:text-sm h-auto py-2.5 sm:py-3 shadow-md relative overflow-hidden border-b-2 border-amber-700 group"
+                        onClick={handleReviewClick}
+                      >
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div className="flex items-center justify-center">
+                          <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white mr-1.5" />
+                          <span>Comparte tu experiencia</span>
+                          <div className="flex items-center ml-1.5 bg-amber-400/30 rounded-full px-1.5 py-0.5">
+                            <Sparkles className="h-2.5 w-2.5 text-yellow-200 mr-0.5" /> {/* Cambio de Star a Sparkles */}
+                            <span className="text-[10px] text-white font-medium">+5</span>
+                          </div>
+                        </div>
+                      </Button>
+                      
+                      <div className="flex gap-2 w-full mt-2">
+                        <Button
+                          className="flex-1 bg-white border border-amber-200 hover:bg-amber-50 text-amber-700 font-medium text-xs sm:text-sm h-auto py-2 sm:py-2.5 transition-colors"
+                          onClick={() => navigate("/coffeelover")}
+                        >
+                          <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5" />
+                          Volver al inicio
+                        </Button>
+                        
+                        <Button
+                          className="flex-1 bg-white border border-amber-200 hover:bg-amber-50 text-amber-700 font-medium text-xs sm:text-sm h-auto py-2 sm:py-2.5 transition-colors"
+                          onClick={() => navigate("/coffeelover/map-coffelover")}
+                        >
+                          <MapIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5" />
+                          Ver mapa
+                        </Button>
+                      </div>
+                      
+                      <p className="text-[9px] sm:text-[10px] text-center text-amber-800/70 mt-1">
+                        Gana 5 CoffeeCoins adicionales por compartir tu opinión
+                      </p>
+                    </div>
                   </motion.div>
                 </div>
               )}
 
-              {/* Botón de incentivo - Nueva adición */}
-              {status === "success" && (
-                <div className="relative my-3 w-full">
-                  <div className="absolute inset-0 bg-gradient-to-r from-amber-200 to-amber-300 rounded-lg opacity-40 blur-sm"></div>
-                  <Button
-                    className="w-full relative bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium text-xs sm:text-sm h-auto py-3 border-b-2 border-amber-700 shadow-md group overflow-hidden"
-                    onClick={handleReviewClick}
-                  >
-                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div className="flex items-center justify-center w-full">
-                      <div className="mr-2 bg-white/20 rounded-full p-1.5">
-                        <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
-                      </div>
-                      <span>Comparte tu experiencia</span>
-                      <motion.div
-                        className="ml-1 flex items-center"
-                        initial={{ scale: 1, y: 0 }}
-                        animate={{ 
-                          scale: [1, 1.1, 1],
-                          y: [0, -2, 0]
-                        }}
-                        transition={{ 
-                          duration: 1.5,
-                          repeat: Infinity,
-                          repeatDelay: 2
-                        }}
-                      >
-                        <div className="flex items-center gap-0.5 bg-amber-400/30 rounded-full px-1.5 py-0.5 ml-1">
-                          <Star className="h-3 w-3 text-yellow-300 fill-yellow-300" />
-                          <span className="text-[10px] text-white font-medium">+5</span>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </Button>
-                  <p className="text-[9px] sm:text-[10px] text-center text-amber-800/70 mt-1">
-                    Gana 5 CoffeeCoins adicionales por compartir tu opinión
-                  </p>
-                </div>
-              )}
-
-              {/* Error */}
               {isError && (
                 <div className="flex flex-col items-center py-4 sm:py-6">
                   <motion.div

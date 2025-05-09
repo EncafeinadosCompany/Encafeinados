@@ -9,7 +9,7 @@ import HomeBranchesNav from "@/modules/admin_branches/views/home_branches_nav";
 import Prueba1 from "@/modules/pruebas/prueba_1.module";
 import ImageCarousel from "@/common/molecules/admin_branch/imagen_carousel";
 import PrincipalBranchesPage from "@/modules/admin_branches/views/principal_branches_page";
-import ReviewsWidget from '@/common/widgets/coffeelover/reviews/reviews-widget';
+import ReviewsWidget from '@/common/widgets/coffeelover/reviews/reviews_widget';
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/about_page"));
@@ -37,6 +37,7 @@ const AlbumManager = lazy(() => import("@/modules/admin/components/album/album_m
 const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/home_coffeelover_page"));
 const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover_nav"));
 const RegisterStoreVisit = lazy(() => import("@/modules/coffeelover/components/stores/register_store_visit.component"));
+import ReviewView from '@/modules/coffeelover/components/review/review.view';
 
 // MAP
 const MapView = lazy(() => import("@/common/widgets/map/map_view.widget"));
@@ -98,7 +99,7 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-            <Route path="/prueba" element={<ReviewsWidget branchId={2}/>} />
+            <Route path="/prueba" element={<ReviewsWidget branchId={1}/>} /> {/* Se tiene que especificar */}
 
 
             {/* PUBLIC ROUTES */}
@@ -126,6 +127,7 @@ const AuthRoutes = () => {
                   <Route path="map-coffelover" element={<MapView />} />
                   <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
                   <Route path="album" element={<ListAlbum />} />
+                  <Route path="review" element={<ReviewView />} />
                 </Route>
                 <Route path="/open-album" element={<PageAlbum />} />
               </Route>

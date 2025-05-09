@@ -9,8 +9,10 @@ import {
   Navigation,
   Share2,
   Copy,
+  Phone,
   ExternalLink,
   ChevronDown,
+  MessageSquare,
 } from "lucide-react";
 import { Cafe } from "@/api/types/map/map_search.types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
@@ -18,6 +20,7 @@ import {
   normalizeSocialNetwork,
   SocialNetworkType,
 } from "@/common/utils/social_networks.utils";
+import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
 
 const determineNetworkType = (
   social: any
@@ -181,6 +184,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   copied,
 }) => {
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
+  const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -219,7 +223,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
         className={`py-3 ${!hasManyNetworks ? "border-b border-gray-100" : ""}`}
       >
         <h4 className="font-medium text-[#2C1810] mb-2 flex items-center justify-between">
-          <span>Social Networks</span>
+          <span>Redes Sociales</span>
           {hasManyNetworks && (
             <span className="text-xs text-[#6F4E37]/70">
               {cafe.socialNetworks.length} available
@@ -265,282 +269,271 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden">
-      {/* Sección de imagen */}
-      <div className="relative h-32 sm:h-40 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3 flex-shrink-0">
-        <img
-          src={cafe.image}
-          alt={cafe.name}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+    <>
+      <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden">
+        {/* Sección de imagen */}
+        <div className="relative h-32 sm:h-40 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3 flex-shrink-0">
+          <img
+            src={cafe.image}
+            alt={cafe.name}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
 
-        <button
-          onClick={onClose}
-          aria-label="Close details"
-          className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors z-10"
-        >
-          <ArrowLeft size={20} className="text-[#6F4E37] transform rotate-45" />
-        </button>
-        <div className="absolute bottom-0 left-0 p-4 w-full">
-          <h3 className="font-bold text-2xl md:text-3xl lg:text-3xl text-white line-clamp-2">
-            {cafe.name}
-          </h3>
-          <div className="flex items-center justify-between mt-1">
-            <div className="flex items-center gap-1 text-amber-400">
-              <Star size={16} className="fill-amber-400" />
-              <span className="font-medium text-white">{cafe.rating}</span>
-              <span className="text-xs text-white/80">
-                ({cafe.reviewCount} reseñas)
-              </span>
-            </div>
-            <motion.button
-              className="bg-white/20 backdrop-blur-sm p-1.5 rounded-full"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleFavorite(cafe.id);
-              }}
-              aria-label={
-                favorites.includes(cafe.id)
-                  ? "Quitar de favoritos"
-                  : "Agregar a favoritos"
-              }
-            >
-              <Heart
-                size={18}
-                className={`${
-                  favorites.includes(cafe.id)
-                    ? "fill-red-500 text-red-500"
-                    : "text-white"
-                }`}
-              />
-            </motion.button>
-          </div>
-        </div>
-      </div>
-
-      {/* Columna de contenido con scroll */}
-      <div className="flex-1 flex flex-col min-h-0 overflow-hidden"> {/* min-h-0 es crucial */}
-        {/* Área de desplazamiento - IMPORTANTE: overflow-y-auto */}
-        <div
-          ref={contentRef}
-          className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar md:pb-16 pb-24"
-        >
-          <div className="p-4 md:p-5 lg:p-6">
-            <h2 className="text-xl font-bold text-[#2C1810] md:hidden">
+          <button
+            onClick={onClose}
+            aria-label="Close details"
+            className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors z-10"
+          >
+            <ArrowLeft size={20} className="text-[#6F4E37] transform rotate-45" />
+          </button>
+          <div className="absolute bottom-0 left-0 p-4 w-full">
+            <h3 className="font-bold text-2xl md:text-3xl lg:text-3xl text-white line-clamp-2">
               {cafe.name}
-            </h2>
-            <div className="flex items-center gap-1 text-amber-500 mb-4 md:hidden">
-              <Star size={16} className="fill-amber-500" />
-              <span className="font-medium">{cafe.rating}</span>
-              <span className="text-sm text-gray-500">
-                ({cafe.reviewCount} reseñas)
-              </span>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:gap-6 lg:gap-6 xl:grid-cols-12">
-              <div className="xl:col-span-5">
-                <div className="mb-4 bg-gray-50 p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                  <h4 className="font-medium text-[#2C1810] mb-1 flex items-center gap-1.5">
-                    <MapPin size={14} className="text-[#6F4E37]" />
-                    <span>Dirección</span>
-                  </h4>
-                  <p className="text-gray-700 pl-5">
-                    {cafe.address || "Dirección no disponible"}
-                  </p>
-                </div>
-
-                <div className="bg-white rounded-lg">{renderSocialNetworks()}</div>
+            </h3>
+            <div className="flex items-center justify-between mt-1">
+              <div className="flex items-center gap-1 text-amber-400">
+                <Star size={16} className="fill-amber-400" />
+                <span className="font-medium text-white">{cafe.rating}</span>
+                <span className="text-xs text-white/80">
+                  ({cafe.reviewCount} reseñas)
+                </span>
+                {/* Botón de Ver Reseñas - Versión móvil (oculto en md) */}
+                <button
+                  onClick={() => setIsReviewsOpen(true)}
+                  className="md:hidden ml-1 bg-white/20 backdrop-blur-sm rounded-full px-1.5 py-0.5 text-[10px] text-white/90 hover:bg-white/30 transition-colors flex items-center gap-0.5"
+                >
+                  <MessageSquare size={10} />
+                  <span>Ver</span>
+                </button>
               </div>
-              <div className="xl:col-span-7 md:pl-0 lg:pl-1">
-                {cafe.phone && (
-                  <div className="py-3 mt-3 md:mt-0 border-t md:border-t-0 border-gray-100">
-                    <h4 className="font-medium text-[#2C1810] mb-2 flex items-center gap-1.5">
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="text-[#6F4E37]"
-                      >
-                        <path
-                          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <span>Contacto</span>
-                    </h4>
-                    <div className="flex items-center gap-2 bg-gray-50 p-2.5 pl-5 rounded-lg hover:bg-gray-100 transition-colors">
-                      <span className="text-[#6F4E37] font-medium">
-                        {cafe.phone}
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {cafe.tags && cafe.tags.length > 0 && (
-                  <div className="py-3 border-t md:border-t-0 border-gray-100">
-                    <h4 className="font-medium text-[#2C1810] mb-2">
-                      Características
-                    </h4>
-                    <div
-                      className={`flex flex-wrap gap-2 ${
-                        cafe.tags.length > 6
-                          ? "max-h-24 overflow-y-auto pr-1"
-                          : ""
-                      }`}
-                    >
-                      {cafe.tags.map((tag, idx) => (
-                        <span
-                          key={idx}
-                          className="inline-block px-2.5 py-1 bg-[#F3D19E]/20 text-[#6F4E37] text-xs rounded-full whitespace-nowrap"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <motion.button
+                className="bg-white/20 backdrop-blur-sm p-1.5 rounded-full"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(cafe.id);
+                }}
+                aria-label={
+                  favorites.includes(cafe.id)
+                    ? "Quitar de favoritos"
+                    : "Agregar a favoritos"
+                }
+              >
+                <Heart
+                  size={18}
+                  className={`${
+                    favorites.includes(cafe.id)
+                      ? "fill-red-500 text-red-500"
+                      : "text-white"
+                  }`}
+                />
+              </motion.button>
             </div>
           </div>
         </div>
 
-        <AnimatePresence>
-          {showScrollIndicator && (
-            <motion.div
-              className="absolute bottom-[80px] md:bottom-[72px] left-0 w-full flex justify-center items-center pointer-events-none z-10"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="bg-white/80 backdrop-blur-sm shadow-md rounded-full py-1.5 px-3 flex items-center gap-1.5 border border-gray-100">
-                <span className="text-xs text-[#6F4E37]/90 font-medium">
-                  Más información
+        {/* Columna de contenido con scroll */}
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+          {/* Área de desplazamiento - IMPORTANTE: overflow-y-auto */}
+          <div
+            ref={contentRef}
+            className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar md:pb-16 pb-24"
+          >
+            <div className="p-4 md:p-5 lg:p-6">
+              <h2 className="text-xl font-bold text-[#2C1810] md:hidden">
+                {cafe.name}
+              </h2>
+              <div className="flex items-center gap-1 text-amber-500 mb-4 md:hidden">
+                <Star size={16} className="fill-amber-500" />
+                <span className="font-medium">{cafe.rating}</span>
+                <span className="text-sm text-gray-500">
+                  ({cafe.reviewCount} reseñas)
                 </span>
-                <motion.div
-                  animate={{ y: [0, 5, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                >
-                  <ChevronDown size={16} className="text-[#6F4E37]/90" />
-                </motion.div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <div className="md:grid md:grid-cols-2 md:gap-6 lg:gap-6 xl:grid-cols-12">
+                <div className="xl:col-span-5">
+                  <div className="mb-4 bg-gray-50 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                    <h4 className="font-medium text-[#2C1810] mb-1 flex items-center gap-1.5">
+                      <MapPin size={14} className="text-[#6F4E37]" />
+                      <span>Dirección</span>
+                    </h4>
+                    <p className="text-gray-700 pl-5">
+                      {cafe.address || "Dirección no disponible"}
+                    </p>
+                  </div>
 
-        <div className="absolute md:relative bottom-0 left-0 right-0 py-4 md:py-5 px-4 md:px-6 bg-white/95 md:bg-white backdrop-blur-sm md:backdrop-filter-none border-t border-gray-100 z-10">
-          <div className="flex items-center gap-3">
-            <div className="flex-1 flex gap-2">
-              <motion.button
-                className="flex-1 bg-[#6F4E37] text-white py-3 md:py-2.5 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-1.5"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => startRoute(cafe.id)}
+                  <div className="bg-white rounded-lg">{renderSocialNetworks()}</div>
+                </div>
+                <div className="xl:col-span-7 md:pl-0 lg:pl-1">
+                  {/* Número de teléfono restaurado con diseño mejorado */}
+                  {cafe.phone && (
+                    <div className="mb-4">
+                      <h4 className="font-medium text-[#2C1810] mb-2 flex items-center gap-1.5">
+                        <Phone size={14} className="text-[#6F4E37]" />
+                        <span>Teléfono</span>
+                      </h4>
+                      <div className="pl-5 flex items-center">
+                        <a
+                          href={`tel:${cafe.phone}`}
+                          className="text-[#6F4E37] hover:underline font-medium"
+                        >
+                          {cafe.phone}
+                        </a>
+                        <button
+                          onClick={() => window.open(`tel:${cafe.phone}`, "_self")}
+                          className="ml-2 bg-amber-50 hover:bg-amber-100 text-amber-600 p-1 rounded-full"
+                          aria-label="Llamar"
+                        >
+                          <Phone size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Resto del código para las etiquetas/tags */}
+                  {cafe.tags && cafe.tags.length > 0 && (
+                    <div className="py-3 border-t md:border-t-0 border-gray-100">
+                      <h4 className="font-medium text-[#2C1810] mb-2">
+                        Características
+                      </h4>
+                      <div
+                        className={`flex flex-wrap gap-2 ${
+                          cafe.tags.length > 6
+                            ? "max-h-24 overflow-y-auto pr-1"
+                            : ""
+                        }`}
+                      >
+                        {cafe.tags.map((tag, idx) => (
+                          <span
+                            key={idx}
+                            className="inline-block px-2.5 py-1 bg-[#F3D19E]/20 text-[#6F4E37] text-xs rounded-full whitespace-nowrap"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <AnimatePresence>
+            {showScrollIndicator && (
+              <motion.div
+                className="absolute bottom-[80px] md:bottom-[72px] left-0 w-full flex justify-center items-center pointer-events-none z-10"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.3 }}
               >
-                <Navigation size={16} className="hidden sm:inline" />
-                <span>{window.innerWidth <= 380 ? "Ruta" : "Iniciar ruta"}</span>
-              </motion.button>
+                <div className="bg-white/80 backdrop-blur-sm shadow-md rounded-full py-1.5 px-3 flex items-center gap-1.5 border border-gray-100">
+                  <span className="text-xs text-[#6F4E37]/90 font-medium">
+                    Más información
+                  </span>
+                  <motion.div
+                    animate={{ y: [0, 5, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                  >
+                    <ChevronDown size={16} className="text-[#6F4E37]/90" />
+                  </motion.div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-              {cafe.phone ? (
-                <motion.a
-                  href={`tel:${cafe.phone}`}
-                  className="flex-1 md:max-w-[200px] bg-white border border-[#6F4E37] text-[#6F4E37] py-3 md:py-2.5 rounded-xl font-medium hover:bg-[#6F4E37]/5 transition-colors flex items-center justify-center gap-1.5"
+          <div className="absolute md:relative bottom-0 left-0 right-0 py-4 md:py-5 px-4 md:px-6 bg-white/95 md:bg-white backdrop-blur-sm md:backdrop-filter-none border-t border-gray-100 z-10">
+            <div className="flex items-center gap-3">
+              <div className="flex-1 flex gap-2">
+                <motion.button
+                  className="flex-1 bg-[#6F4E37] text-white py-3 md:py-2.5 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-1.5"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={() => startRoute(cafe.id)}
                 >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="hidden sm:inline"
-                  >
-                    <path
-                      d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>{window.innerWidth <= 380 ? "Llamar" : "Llamar"}</span>
-                </motion.a>
-              ) : (
+                  <Navigation size={16} className="hidden sm:inline" />
+                  <span>{window.innerWidth <= 380 ? "Ruta" : "Iniciar ruta"}</span>
+                </motion.button>
+
+                {/* Por este botón fijo de reseñas */}
                 <motion.button
                   className="flex-1 md:max-w-[200px] bg-white border border-[#6F4E37] text-[#6F4E37] py-3 md:py-2.5 rounded-xl font-medium hover:bg-[#6F4E37]/5 transition-colors flex items-center justify-center gap-1.5"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => navigateToCafe(cafe.id)}
+                  onClick={() => setIsReviewsOpen(true)}
                 >
-                  <MapPin size={16} className="hidden sm:inline" />
-                  <span>{window.innerWidth <= 380 ? "Mapa" : "Ver en mapa"}</span>
+                  <MessageSquare size={16} className="hidden sm:inline" />
+                  <span>{window.innerWidth <= 380 ? "Reseñas" : "Ver reseñas"}</span>
                 </motion.button>
-              )}
-            </div>
+              </div>
 
-            <div className="relative">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <motion.button
-                    className="w-10 h-10 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-xl hover:bg-[#6F4E37] hover:text-white transition-colors"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+              <div className="relative">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <motion.button
+                      className="w-10 h-10 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-xl hover:bg-[#6F4E37] hover:text-white transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Share2 size={16} />
+                    </motion.button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-64 md:w-72 z-[500] p-0 bg-white shadow-xl border border-gray-200 rounded-xl"
+                    align="end"
+                    side={window.innerWidth < 768 ? "top" : "right"}
+                    sideOffset={16}
+                    avoidCollisions={true}
                   >
-                    <Share2 size={16} />
-                  </motion.button>
-                </PopoverTrigger>
-                <PopoverContent
-                  className="w-64 md:w-72 z-[500] p-0 bg-white shadow-xl border border-gray-200 rounded-xl"
-                  align="end"
-                  side={window.innerWidth < 768 ? "top" : "right"}
-                  sideOffset={16}
-                  avoidCollisions={true}
-                >
-                  <div className="p-4">
-                    <h3 className="font-medium text-gray-900 mb-3">
-                      Compartir cafetería
-                    </h3>
-                    <div className="flex flex-col gap-3">
-                      <button
-                        className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors w-full text-left"
-                        onClick={() =>
-                          copyToClipboard(
-                            `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`
-                          )
-                        }
-                      >
-                        <Copy size={16} className="text-[#6F4E37]" />
-                        <span className="flex-1">
-                          {copied ? "Link copiado! ✓" : "Copiar enlace"}
-                        </span>
-                      </button>
+                    <div className="p-4">
+                      <h3 className="font-medium text-gray-900 mb-3">
+                        Compartir cafetería
+                      </h3>
+                      <div className="flex flex-col gap-3">
+                        <button
+                          className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors w-full text-left"
+                          onClick={() =>
+                            copyToClipboard(
+                              `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`
+                            )
+                          }
+                        >
+                          <Copy size={16} className="text-[#6F4E37]" />
+                          <span className="flex-1">
+                            {copied ? "Link copiado! ✓" : "Copiar enlace"}
+                          </span>
+                        </button>
 
-                      <a
-                        className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors"
-                        href={`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <ExternalLink size={16} className="text-[#6F4E37]" />
-                        <span>Abrir en Google Maps</span>
-                      </a>
+                        <a
+                          className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors"
+                          href={`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <ExternalLink size={16} className="text-[#6F4E37]" />
+                          <span>Abrir en Google Maps</span>
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Diálogo de reseñas */}
+      <ReviewsDialog
+        branchId={cafe.id}
+        branchName={cafe.name}
+        isOpen={isReviewsOpen}
+        onClose={() => setIsReviewsOpen(false)}
+      />
+    </>
   );
 };
 
