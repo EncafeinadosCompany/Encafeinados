@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult, useQueryClient} from "@tanstack/react-query";
 import { ValidateVisitInput, ValidateVisitResponse} from "../../types/branches/branches_approval.types";
 import AuthClient from "../../client/axios";
-import { is } from "cypress/types/bluebird";
+
 
 const authClient = new AuthClient();
 
@@ -69,6 +69,7 @@ export const useRegisterVisitMutation = (): UseMutationResult<
   Error,
   ValidateVisitInput
 > => {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async ({
       branchId,
@@ -102,7 +103,10 @@ export const useRegisterVisitMutation = (): UseMutationResult<
       
       return validResponse;
     },
-  });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["coffecoins"] });
+    },
+  })
 };
 
 
