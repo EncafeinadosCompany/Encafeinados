@@ -18,16 +18,16 @@ export const useCoffeeCoinsQuery = () => {
             try {
                 const {user} = getAuthStorage()
                 const {id} = user
-                const response = await authClient.get<coffeecoins>(`/coffee-coins/${id}`)
+                const response = await authClient.get<coffeecoins>(`/clients/user/${id}`)
                 return response
             } catch (error) {
                 throw error
             }
         },
-        staleTime: Infinity,        // Considera los datos como siempre frescos
-        gcTime: Infinity,        // Mantén los datos cacheados indefinidamente
-        refetchOnWindowFocus: false, // No volver a pedir si se cambia de pestaña
-        refetchOnMount: false,       // No volver a pedir si el componente se remonta
+        staleTime: Infinity,
+        gcTime: Infinity,  
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,   
         refetchOnReconnect: false,   
     })
 }

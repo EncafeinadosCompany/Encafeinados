@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { BranchesResponse } from '../../types/branches/branches.types'
-import {  BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse, BrancheIDresponse, BranchesImagen } from '../../types/branches/branches_approval.types'
+import { BrancheIDresponse, BranchesImagen, BranchesResponse } from '../../types/branches/branches.types'
+import {  BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse} from '../../types/branches/branches_approval.types'
 
 import AuthClient from '@/api/client/axios'
 
