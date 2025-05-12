@@ -71,14 +71,13 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                 )}
               </h2>
               
-              {/* Botón con área táctil ampliada */}
               <div 
                 className="md:hidden relative"
                 style={{ width: '60px', height: '60px' }}
               >
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevenir propagación
+                    e.stopPropagation();
                     setShowSidebar(false);
                     if (window.innerWidth < 768) {
                       setViewMode('map');
@@ -95,7 +94,6 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
               </div>
             </div>
 
-            {/* Área de scroll móvil optimizada */}
             <div 
               className="flex-1 h-full overflow-y-auto p-4 pb-32" 
               style={{ 

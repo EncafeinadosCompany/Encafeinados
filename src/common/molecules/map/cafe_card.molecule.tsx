@@ -94,7 +94,6 @@ const CafeCard: React.FC<CafeCardProps> = ({
         </div>
 
         <div className="flex justify-between items-center mt-2">
-          {/* Indicador de estado */}
           <div className={`px-2 py-0.5 rounded-full text-xs font-medium
             ${cafe.isOpen 
               ? 'bg-green-100 text-green-700' 
