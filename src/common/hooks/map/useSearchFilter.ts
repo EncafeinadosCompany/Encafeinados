@@ -88,7 +88,6 @@ export const useSearchFilter = (cafes: Cafe[]) => {
       );
     }
     
-    // Aplicar otros filtros (rating, distancia, tags, etc.)
     if (filterOptions.minRating > 0) {
       filtersActive = true;
       filtered = filtered.filter(cafe => cafe.rating >= filterOptions.minRating);

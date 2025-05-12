@@ -350,7 +350,6 @@ const navigateToCafe = useCallback((cafeId: number): void => {
   );
 }, [userLocation, cafes, mapInstance, getUserLocation, activeCafe]);
 
-// Modificar la función startRoute para evitar navegación a cafeterías cerradas
 const startRoute = useCallback((cafeId: number) => {
   if (!userLocation) {
     toast.error("Necesitamos tu ubicación para trazar la ruta");
@@ -818,7 +817,7 @@ return (
       </div>
 
       <motion.button
-        className="absolute bottom-28 right-4 z-[999] bg-white rounded-full p-3 shadow-lg pointer-events-auto"
+        className="absolute bottom-36 right-4 z-[999] bg-white rounded-full p-3 shadow-lg pointer-events-auto"
         style={{ 
           position: 'fixed', 
           zIndex: 9999,
@@ -899,6 +898,8 @@ return (
       activeCafe={activeCafe}
       favorites={favorites}
       searchTerm={searchTerm}
+      filterOptions={filterOptions} // Añadir esta línea
+      totalCafeCount={cafes.length} // Añadir esta línea
       setShowSidebar={setShowSidebar}
       setViewMode={setViewMode}
       setActiveCafe={setActiveCafe}
@@ -916,18 +917,16 @@ return (
       availableTags={availableTags}
     />
 
-    {!showSidebar && (
+    {!showSidebar && !activeCafe && window.innerWidth < 768 && (
       <motion.button
-        className="absolute bottom-16 right-4 z-[100] text-white bg-[#6F4E37] p-3 rounded-full shadow-lg md:hidden"
+        className="absolute bottom-24 right-4 bg-[#6F4E37] rounded-full p-3 shadow-lg pointer-events-auto"
+        style={{ 
+          position: 'fixed', 
+          zIndex: 9999,
+        }}
         onClick={() => {
           setShowSidebar(true);
-          if (activeCafe) {
-            setActiveCafe(null);
-          }
         }}
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >

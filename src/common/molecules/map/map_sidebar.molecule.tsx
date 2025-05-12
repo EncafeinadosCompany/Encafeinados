@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Coffee, ArrowLeft } from 'lucide-react';
 import { Cafe } from '@/api/types/map/map_search.types';
+import { FilterOptions } from '@/common/hooks/map/useSearchFilter'; // Añadir esta línea
 import HighlightText from '@/common/atoms/HighlightText';
 import CafeCard from '@/common/molecules/map/cafe_card.molecule';
 
@@ -12,6 +13,8 @@ interface MapSidebarProps {
   activeCafe: number | null;
   favorites: number[];
   searchTerm: string;
+  filterOptions: FilterOptions; // Añadir esta línea
+  totalCafeCount: number; // Añadir esta línea
   setShowSidebar: (show: boolean) => void;
   setViewMode: (mode: 'map' | 'list') => void;
   setActiveCafe: (id: number | null) => void;
@@ -27,6 +30,8 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   activeCafe,
   favorites,
   searchTerm,
+  filterOptions, 
+  totalCafeCount, 
   setShowSidebar,
   setViewMode,
   setActiveCafe,
@@ -34,6 +39,11 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   navigateToCafe,
   resetFilters
 }) => {
+  useEffect(() => {
+    console.log("FilterOptions:", filterOptions);
+    console.log("SearchTerm:", searchTerm);
+  }, [filterOptions, searchTerm]);
+
   return (
     <AnimatePresence>
       {(
@@ -61,17 +71,29 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                   </span>
                 )}
               </h2>
-              <button
-                onClick={() => {
-                  setShowSidebar(false);
-                  if (window.innerWidth < 768) {
-                    setViewMode('map');
-                  }
-                }}
-                className="text-[#6F4E37] md:hidden bg-gray-50 rounded-full p-2 hover:bg-gray-100 transition-colors"
+              
+              {/* Botón con área táctil ampliada */}
+              <div 
+                className="md:hidden relative"
+                style={{ width: '60px', height: '60px' }}
               >
-                <ArrowLeft size={20} />
-              </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevenir propagación
+                    setShowSidebar(false);
+                    if (window.innerWidth < 768) {
+                      setViewMode('map');
+                    }
+                  }}
+                  className="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-full hover:bg-gray-100 transition-colors"
+                  style={{
+                    touchAction: 'manipulation',
+                  }}
+                  aria-label="Cerrar lista de cafeterías"
+                >
+                  <ArrowLeft size={20} className="text-[#6F4E37]" />
+                </button>
+              </div>
             </div>
 
             {/* Área de scroll móvil optimizada */}
@@ -86,6 +108,20 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
             >
               {sortedCafes.length > 0 ? (
                 <div className="space-y-4 pb-16">
+                  {searchTerm.trim() !== "" || 
+                   filterOptions.minRating > 0 || 
+                   filterOptions.tags.length > 0 || 
+                   filterOptions.onlyOpen === true ? (
+                    <div className="text-xs text-gray-500 text-center mt-1 mb-3">
+                      Mostrando {sortedCafes.length} de {totalCafeCount} cafeterías
+                      {searchTerm.trim() !== "" && (
+                        <span className="ml-1">para "<strong>{searchTerm}</strong>"</span>
+                      )}
+                      {filterOptions.onlyOpen && (
+                        <span className="ml-1">(solo abiertas)</span>
+                      )}
+                    </div>
+                  ) : null}
                   {sortedCafes.map((cafe, index) => (
                     <CafeCard
                       key={cafe.id}
