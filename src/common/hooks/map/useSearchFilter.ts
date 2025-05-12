@@ -93,7 +93,6 @@ export const useSearchFilter = (cafes: Cafe[]) => {
       filtered = filtered.filter(cafe => cafe.rating >= filterOptions.minRating);
     }
     
-    // Actualizar el estado de filtros activos
     setHasActiveFilters(filtersActive);
     
     const sorted = [...filtered];

@@ -13,8 +13,8 @@ interface MapSidebarProps {
   activeCafe: number | null;
   favorites: number[];
   searchTerm: string;
-  filterOptions: FilterOptions; // Añadir esta línea
-  totalCafeCount: number; // Añadir esta línea
+  filterOptions: FilterOptions; 
+  totalCafeCount: number; 
   setShowSidebar: (show: boolean) => void;
   setViewMode: (mode: 'map' | 'list') => void;
   setActiveCafe: (id: number | null) => void;
@@ -40,8 +40,7 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   resetFilters
 }) => {
   useEffect(() => {
-    console.log("FilterOptions:", filterOptions);
-    console.log("SearchTerm:", searchTerm);
+  
   }, [filterOptions, searchTerm]);
 
   return (

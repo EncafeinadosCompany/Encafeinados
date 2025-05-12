@@ -276,7 +276,6 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   return (
     <>
       <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden">
-        {/* Sección de imagen */}
         <div className="relative h-32 sm:h-40 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3 flex-shrink-0">
           <img
             src={cafe.image}
@@ -298,19 +297,23 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
             </h3>
             <div className="flex items-center justify-between mt-2">
               <div className="flex items-center gap-1 text-amber-500">
-                <Star size={16} className="fill-amber-500" />
-                <span className="font-medium text-white">{cafe.rating}</span>
-                <span className="text-xs text-white/80">
-                  ({cafe.reviewCount} reseñas)
-                </span>
-                {/* Botón de Ver Reseñas - Versión móvil (oculto en md) */}
-                <button
-                  onClick={() => setIsReviewsOpen(true)}
-                  className="md:hidden ml-1 bg-white/20 backdrop-blur-sm rounded-full px-1.5 py-0.5 text-[10px] text-white/90 hover:bg-white/30 transition-colors flex items-center gap-0.5"
-                >
-                  <MessageSquare size={10} />
-                  <span>Ver</span>
-                </button>
+                {cafe.rating ? (
+                  <>
+                    <Star size={16} className="fill-amber-500" />
+                    <span className="font-medium text-white">{cafe.rating}</span>
+                    <button
+                      onClick={() => setIsReviewsOpen(true)}
+                      className="md:hidden ml-1 bg-white/20 backdrop-blur-sm rounded-full px-1.5 py-0.5 text-[10px] text-white/90 hover:bg-white/30 transition-colors flex items-center gap-0.5"
+                    >
+                      <MessageSquare size={10} />
+                      <span>Ver</span>
+                    </button>
+                  </>
+                ) : (
+                  <span className="text-xs text-white/90 font-medium">
+                    Sin reseñas aún
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -336,11 +339,21 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 </h2>
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-1 text-amber-500">
-                  <Star size={16} className="fill-amber-500" />
-                  <span className="font-medium">{cafe.rating}</span>
-                  <span className="text-sm text-gray-500">
-                    ({cafe.reviewCount} reseñas)
-                  </span>
+                  {cafe.rating ? (
+                    <>
+                      <Star size={16} className="fill-amber-500" />
+                      <span className="font-medium">{cafe.rating}</span>
+                      {/* Mostrar solo "Reseñas disponibles" en lugar del contador exacto */}
+                      <span className="text-sm text-gray-500">
+                        (Reseñas disponibles)
+                      </span>
+                    </>
+                  ) : (
+                    <div className="text-sm text-gray-500 flex items-center gap-1.5">
+                      <Star size={16} className="text-gray-300" />
+                      <span>Sé el primero en reseñar esta cafetería</span>
+                    </div>
+                  )}
                 </div>
 
              
@@ -478,7 +491,11 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   onClick={() => setIsReviewsOpen(true)}
                 >
                   <MessageSquare size={16} className="hidden sm:inline" />
-                  <span>{window.innerWidth <= 380 ? "Reseñas" : "Ver reseñas"}</span>
+                  <span>
+                    {cafe.rating 
+                      ? (window.innerWidth <= 380 ? "Reseñas" : "Ver reseñas")
+                      : (window.innerWidth <= 380 ? "Reseñar" : "Añadir reseña")}
+                  </span>
                 </motion.button>
               </div>
 

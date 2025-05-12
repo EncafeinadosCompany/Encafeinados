@@ -39,8 +39,10 @@ export const useMapData = (
         const baseData = {
           id: branch.id,
           name: branch.name,
-          rating: parseFloat(branch.average_rating ?? "4.5") || 4.5,
-          reviewCount: Math.floor(Math.random() * 100) + 50,
+          // Usar el rating de la API o null si no está disponible
+          rating: branch.average_rating ? parseFloat(branch.average_rating) : null,
+          // Eliminar la generación aleatoria del contador de reseñas
+          // reviewCount: Math.floor(Math.random() * 100) + 50, ← ELIMINAR ESTA LÍNEA
           openTime: "7:00 AM - 6:00 PM",
           image: storeLogo,
           tags: ["Coffee", "Specialty"],

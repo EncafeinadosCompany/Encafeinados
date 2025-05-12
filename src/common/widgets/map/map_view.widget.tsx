@@ -4,7 +4,7 @@ import {
   Share2, Navigation, Route, ExternalLink, Copy, Map as MapIcon, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import toast from 'react-hot-toast';
@@ -40,7 +40,6 @@ import '@/common/styles/mapMarkers.css';
 import CafeDetail from '@/common/molecules/map/cafe_detail.molecule';
 import MapSidebar from '@/common/molecules/map/map_sidebar.molecule';
 import { containerVariants, cardVariants, pulseVariants } from './map_animations.widget';
-import { createPortal } from 'react-dom';
 import { useBranches } from '@/api/queries/branches/branch.query';
 
 const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance}) => {
@@ -57,12 +56,10 @@ const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ set
         }
         
         function handleTouchMove(e: TouchEvent) {
-          if (e.touches.length > 1) {
-            e.preventDefault(); 
-          }
+  
         }
         
-        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
         
         return () => {
           mapContainer.removeEventListener('touchmove', handleTouchMove);
@@ -84,6 +81,8 @@ export interface MapViewProps {
 }
 
 const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
+  const [searchParams] = useSearchParams();
+  
   // ==============================
   // STATE MANAGEMENT
   // ==============================
@@ -601,6 +600,34 @@ useEffect(() => {
     setActiveCafeData(null);
   }
 }, [activeCafe, cafes]);
+
+// Efecto para detectar cafetería seleccionada en la URL
+useEffect(() => {
+  if (!cafes.length || !mapInstance) return;
+  
+  const cafeId = searchParams.get('cafeId');
+  if (!cafeId) return;
+  
+  const cafeIdNumber = parseInt(cafeId, 10);
+  if (isNaN(cafeIdNumber)) return;
+  
+  const selectedCafe = cafes.find(cafe => cafe.id === cafeIdNumber);
+  if (!selectedCafe) {
+    toast.error("La cafetería seleccionada no se encuentra disponible");
+    return;
+  }
+  
+  // Activar la cafetería seleccionada
+  setActiveCafe(cafeIdNumber);
+  
+  // Centrar el mapa en la ubicación de la cafetería
+  mapInstance.flyTo(
+    [selectedCafe.latitude, selectedCafe.longitude],
+    16,
+    { duration: 1.5, animate: true }
+  );
+  
+}, [cafes, mapInstance, searchParams, setActiveCafe]);
 
 // ==============================
 // RENDER FUNCTIONS
