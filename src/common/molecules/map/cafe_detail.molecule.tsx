@@ -13,6 +13,7 @@ import {
   ExternalLink,
   ChevronDown,
   MessageSquare,
+  X
 } from "lucide-react";
 import { Cafe } from "@/api/types/map/map_search.types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
@@ -21,6 +22,8 @@ import {
   SocialNetworkType,
 } from "@/common/utils/social_networks.utils";
 import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
+import toast from "react-hot-toast";
+
 
 const determineNetworkType = (
   social: any
@@ -287,7 +290,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
             aria-label="Close details"
             className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors z-10"
           >
-            <ArrowLeft size={20} className="text-[#6F4E37] transform rotate-45" />
+            <X size={20} className="text-[#6F4E37]" />
           </button>
           <div className="absolute bottom-0 left-0 p-4 w-full">
             <h3 className="font-bold text-2xl md:text-3xl lg:text-3xl text-white line-clamp-2">
@@ -438,15 +441,34 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           <div className="absolute md:relative bottom-0 left-0 right-0 py-4 md:py-5 px-4 md:px-6 bg-white/95 md:bg-white backdrop-blur-sm md:backdrop-filter-none border-t border-gray-100 z-10">
             <div className="flex items-center gap-3">
               <div className="flex-1 flex gap-2">
-                <motion.button
-                  className="flex-1 bg-[#6F4E37] text-white py-3 md:py-2.5 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-1.5"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => startRoute(cafe.id)}
-                >
-                  <Navigation size={16} className="hidden sm:inline" />
-                  <span>{window.innerWidth <= 380 ? "Ruta" : "Iniciar ruta"}</span>
-                </motion.button>
+                {/* AQUÍ ES DONDE DEBES REEMPLAZAR EL BOTÓN */}
+<motion.button
+  className={`flex-1 py-3 md:py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-1.5 ${
+    cafe.isOpen
+      ? "bg-[#6F4E37] text-white hover:bg-[#5d4230]"
+      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+  }`}
+  whileHover={cafe.isOpen ? { scale: 1.02 } : {}}
+  whileTap={cafe.isOpen ? { scale: 0.98 } : {}}
+  onClick={() => {
+    if (cafe.isOpen) {
+      startRoute(cafe.id);
+    } else {
+      toast.error("Esta cafetería está cerrada actualmente", {
+        icon: "⏰",
+        duration: 3000
+      });
+    }
+  }}
+  disabled={!cafe.isOpen}
+>
+  <Navigation size={16} className="hidden sm:inline" />
+  <span>
+    {window.innerWidth <= 380
+      ? cafe.isOpen ? "Ruta" : "Cerrado"
+      : cafe.isOpen ? "Iniciar ruta" : "Cerrado - No disponible"}
+  </span>
+</motion.button>
 
                 {/* Por este botón fijo de reseñas */}
                 <motion.button

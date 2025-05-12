@@ -350,26 +350,7 @@ const navigateToCafe = useCallback((cafeId: number): void => {
   );
 }, [userLocation, cafes, mapInstance, getUserLocation, activeCafe]);
 
-const setupRoute = useCallback((cafeId: number) => {
-  if (!userLocation) {
-    toast.error("Necesitamos tu ubicación para trazar la ruta");
-    getUserLocation();
-    return;
-  }
-
-  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
-  if (selectedCafe) {
-    setActiveCafe(null);
-    setIsRouteLoading(true); 
-    
-    setTimeout(() => {
-      setRouteOrigin(userLocation);
-      setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
-      setShowRouteControls(true);
-    }, 100);
-  }
-}, [userLocation, cafes, setRouteOrigin, setRouteDestination, getUserLocation, setIsRouteLoading]);
-
+// Modificar la función startRoute para evitar navegación a cafeterías cerradas
 const startRoute = useCallback((cafeId: number) => {
   if (!userLocation) {
     toast.error("Necesitamos tu ubicación para trazar la ruta");
@@ -379,6 +360,15 @@ const startRoute = useCallback((cafeId: number) => {
 
   const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
   if (selectedCafe) {
+    // Verificar si la cafetería está cerrada
+    if (!selectedCafe.isOpen) {
+      toast.error("Esta cafetería está cerrada actualmente", {
+        icon: '⏰',
+        duration: 3000,
+      });
+      return;
+    }
+
     setTimeout(() => {
       setActiveCafe(null);
     }, 300);
@@ -404,6 +394,36 @@ const startRoute = useCallback((cafeId: number) => {
     });
   }
 }, [userLocation, cafes, mapInstance, setRouteOrigin, setRouteDestination, getUserLocation]);
+
+// También modificar setupRoute para la misma comprobación
+const setupRoute = useCallback((cafeId: number) => {
+  if (!userLocation) {
+    toast.error("Necesitamos tu ubicación para trazar la ruta");
+    getUserLocation();
+    return;
+  }
+
+  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  if (selectedCafe) {
+    // Verificar si la cafetería está cerrada
+    if (!selectedCafe.isOpen) {
+      toast.error("No puedes navegar a una cafetería cerrada", {
+        icon: '⏰',
+        duration: 3000,
+      });
+      return;
+    }
+    
+    setActiveCafe(null);
+    setIsRouteLoading(true); 
+    
+    setTimeout(() => {
+      setRouteOrigin(userLocation);
+      setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
+      setShowRouteControls(true);
+    }, 100);
+  }
+}, [userLocation, cafes, setRouteOrigin, setRouteDestination, getUserLocation, setIsRouteLoading]);
 
 const copyToClipboard = useCallback((text: string) => {
   navigator.clipboard.writeText(text);
@@ -920,27 +940,30 @@ return (
         <>
           {/* Backdrop oscuro para cerrar al hacer clic */}
           <motion.div
-            className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-[900]"
+            className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-[900] cursor-pointer"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={handleCloseDetails}
+            onClick={(e) => {
+              e.preventDefault();
+              handleCloseDetails();
+            }}
           />
           
           {/* Contenedor del modal simplificado */}
           <motion.div
-            className="fixed inset-0 z-[950] flex items-end md:items-center justify-center"
+            className="fixed inset-0 z-[950] flex items-end md:items-center justify-center pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={(e) => e.stopPropagation()}
           >
             <motion.div 
-              className="w-full md:w-[90%] lg:w-[80%] xl:w-[1000px] max-h-[90vh] bg-white md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col"
+              className="w-full md:w-[90%] lg:w-[80%] xl:w-[1000px] max-h-[90vh] bg-white md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col pointer-events-auto"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: 'spring', damping: 30 }}
+              onClick={(e) => e.stopPropagation()}
             >
               {/* Barra de arrastre con indicador visual */}
               <div className="sticky top-0 w-full flex justify-center py-2 bg-white md:hidden z-10">
