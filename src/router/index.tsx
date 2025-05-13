@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Route, Routes, Navigate} from "react-router-dom";
-import { lazy, Suspense} from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
@@ -30,15 +30,15 @@ const PendingBranchesView = lazy(() => import("@/modules/admin/components/branch
 const AlbumManager = lazy(() => import("@/modules/admin/components/album/album_manager.component"));
 
 //BRANCHES
-const FormRegisterBranchPage =  lazy (()=> import ("@/common/widgets/forms/auth/form_register_stores_page"));
-const HomeBranchesNav = lazy(() => import ("@/modules/admin_branches/views/home_branches_nav"));
-const PrincipalBranchesPage = lazy (() => import ("@/modules/admin_branches/views/principal_branches_page"));
+const FormRegisterBranchPage = lazy(() => import("@/common/widgets/forms/auth/form_register_stores_page"));
+const HomeBranchesNav = lazy(() => import("@/modules/admin_branches/views/home_branches_nav"));
+const PrincipalBranchesPage = lazy(() => import("@/modules/admin_branches/views/principal_branches_page"));
 
 // COFFEELOVER
 const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/home_coffeelover_page"));
 const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover_nav"));
 const RegisterStoreVisit = lazy(() => import("@/modules/coffeelover/components/stores/register_store_visit.component"));
-const ReviewView = lazy(()=> import ('@/modules/coffeelover/components/review/review.view'));
+const ReviewView = lazy(() => import('@/modules/coffeelover/components/review/review.view'));
 
 // MAP
 const MapView = lazy(() => import("@/common/widgets/map/map_view.widget"));
@@ -67,7 +67,7 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-            <Route path="/prueba" element={<FormRegisterBranchPage/>} /> Se tiene que especificar
+            <Route path="/prueba" element={<FormRegisterBranchPage />} /> Se tiene que especificar
 
 
             {/* PUBLIC ROUTES */}
