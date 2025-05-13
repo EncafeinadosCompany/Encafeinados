@@ -13,6 +13,7 @@ import {
   ExternalLink,
   ChevronDown,
   MessageSquare,
+  X
 } from "lucide-react";
 import { Cafe } from "@/api/types/map/map_search.types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
@@ -21,6 +22,8 @@ import {
   SocialNetworkType,
 } from "@/common/utils/social_networks.utils";
 import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
+import toast from "react-hot-toast";
+
 
 const determineNetworkType = (
   social: any
@@ -273,7 +276,6 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   return (
     <>
       <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden">
-        {/* Sección de imagen */}
         <div className="relative h-32 sm:h-40 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3 flex-shrink-0">
           <img
             src={cafe.image}
@@ -287,7 +289,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
             aria-label="Close details"
             className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors z-10"
           >
-            <ArrowLeft size={20} className="text-[#6F4E37] transform rotate-45" />
+            <X size={20} className="text-[#6F4E37]" />
           </button>
           <div className="absolute bottom-0 left-0 p-4 w-full">
             <h3 className="font-bold text-2xl md:text-3xl lg:text-3xl text-white line-clamp-2">
@@ -295,84 +297,66 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
             </h3>
             <div className="flex items-center justify-between mt-2">
               <div className="flex items-center gap-1 text-amber-500">
-                <Star size={16} className="fill-amber-500" />
-                <span className="font-medium text-white">{cafe.rating}</span>
-                <span className="text-xs text-white/80">
-                  ({cafe.reviewCount} reseñas)
-                </span>
-                {/* Botón de Ver Reseñas - Versión móvil (oculto en md) */}
-                <button
-                  onClick={() => setIsReviewsOpen(true)}
-                  className="md:hidden ml-1 bg-white/20 backdrop-blur-sm rounded-full px-1.5 py-0.5 text-[10px] text-white/90 hover:bg-white/30 transition-colors flex items-center gap-0.5"
-                >
-                  <MessageSquare size={10} />
-                  <span>Ver</span>
-                </button>
-              </div>
-
-              {/* Indicador de estado abierto/cerrado */}
-              <div
-                className={`flex items-center gap-1.5 ${
-                  cafe.isOpen ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                <span
-                  className={`inline-block w-2 h-2 rounded-full ${
-                    cafe.isOpen ? "bg-green-500" : "bg-red-500"
-                  }`}
-                ></span>
-                <span className="text-sm font-medium">
-                  {cafe.isOpen ? "Abierto ahora" : "Cerrado"}
-                </span>
+                {cafe.rating ? (
+                  <>
+                    <Star size={16} className="fill-amber-500" />
+                    <span className="font-medium text-white">{cafe.rating}</span>
+                    <button
+                      onClick={() => setIsReviewsOpen(true)}
+                      className="md:hidden ml-1 bg-white/20 backdrop-blur-sm rounded-full px-1.5 py-0.5 text-[10px] text-white/90 hover:bg-white/30 transition-colors flex items-center gap-0.5"
+                    >
+                      <MessageSquare size={10} />
+                      <span>Ver</span>
+                    </button>
+                  </>
+                ) : (
+                  <span className="text-xs text-white/90 font-medium">
+                    Sin reseñas aún
+                  </span>
+                )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Columna de contenido con scroll */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-          {/* Área de desplazamiento - IMPORTANTE: overflow-y-auto */}
           <div
             ref={contentRef}
             className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar md:pb-16 pb-24"
           >
             <div className="p-4 md:p-5 lg:p-6">
-              <h2 className="text-xl font-bold text-[#2C1810] md:hidden flex items-center gap-2">
-                {cafe.name}
-                {cafe.isOpen ? (
-                  <span className="text-sm bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                    Abierto
-                  </span>
-                ) : (
-                  <span className="text-sm bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-                    Cerrado
-                  </span>
-                )}
-              </h2>
+            <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
+  {cafe.name}
+  {cafe.isOpen ? (
+    <span className="text-sm bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+      Abierto
+    </span>
+  ) : (
+    <span className="text-sm bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+      Cerrado
+    </span>
+  )}
+</h2>
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-1 text-amber-500">
-                  <Star size={16} className="fill-amber-500" />
-                  <span className="font-medium">{cafe.rating}</span>
-                  <span className="text-sm text-gray-500">
-                    ({cafe.reviewCount} reseñas)
-                  </span>
+                  {cafe.rating ? (
+                    <>
+                      <Star size={16} className="fill-amber-500" />
+                      <span className="font-medium">{cafe.rating}</span>
+                      {/* Mostrar solo "Reseñas disponibles" en lugar del contador exacto */}
+                      <span className="text-sm text-gray-500">
+                        (Reseñas disponibles)
+                      </span>
+                    </>
+                  ) : (
+                    <div className="text-sm text-gray-500 flex items-center gap-1.5">
+                      <Star size={16} className="text-gray-300" />
+                      <span>Sé el primero en reseñar esta cafetería</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Indicador de estado abierto/cerrado */}
-                <div
-                  className={`flex items-center gap-1.5 ${
-                    cafe.isOpen ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  <span
-                    className={`inline-block w-2 h-2 rounded-full ${
-                      cafe.isOpen ? "bg-green-500" : "bg-red-500"
-                    }`}
-                  ></span>
-                  <span className="text-sm font-medium">
-                    {cafe.isOpen ? "Abierto ahora" : "Cerrado"}
-                  </span>
-                </div>
+             
               </div>
               <div className="md:grid md:grid-cols-2 md:gap-6 lg:gap-6 xl:grid-cols-12">
                 <div className="xl:col-span-5">
@@ -470,15 +454,34 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           <div className="absolute md:relative bottom-0 left-0 right-0 py-4 md:py-5 px-4 md:px-6 bg-white/95 md:bg-white backdrop-blur-sm md:backdrop-filter-none border-t border-gray-100 z-10">
             <div className="flex items-center gap-3">
               <div className="flex-1 flex gap-2">
-                <motion.button
-                  className="flex-1 bg-[#6F4E37] text-white py-3 md:py-2.5 rounded-xl font-medium hover:bg-[#5d4230] transition-colors flex items-center justify-center gap-1.5"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => startRoute(cafe.id)}
-                >
-                  <Navigation size={16} className="hidden sm:inline" />
-                  <span>{window.innerWidth <= 380 ? "Ruta" : "Iniciar ruta"}</span>
-                </motion.button>
+                {/* AQUÍ ES DONDE DEBES REEMPLAZAR EL BOTÓN */}
+<motion.button
+  className={`flex-1 py-3 md:py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-1.5 ${
+    cafe.isOpen
+      ? "bg-[#6F4E37] text-white hover:bg-[#5d4230]"
+      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+  }`}
+  whileHover={cafe.isOpen ? { scale: 1.02 } : {}}
+  whileTap={cafe.isOpen ? { scale: 0.98 } : {}}
+  onClick={() => {
+    if (cafe.isOpen) {
+      startRoute(cafe.id);
+    } else {
+      toast.error("Esta cafetería está cerrada actualmente", {
+        icon: "⏰",
+        duration: 3000
+      });
+    }
+  }}
+  disabled={!cafe.isOpen}
+>
+  <Navigation size={16} className="hidden sm:inline" />
+  <span>
+    {window.innerWidth <= 380
+      ? cafe.isOpen ? "Ruta" : "Cerrado"
+      : cafe.isOpen ? "Iniciar ruta" : "Cerrado - No disponible"}
+  </span>
+</motion.button>
 
                 {/* Por este botón fijo de reseñas */}
                 <motion.button
@@ -488,7 +491,11 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   onClick={() => setIsReviewsOpen(true)}
                 >
                   <MessageSquare size={16} className="hidden sm:inline" />
-                  <span>{window.innerWidth <= 380 ? "Reseñas" : "Ver reseñas"}</span>
+                  <span>
+                    {cafe.rating 
+                      ? (window.innerWidth <= 380 ? "Reseñas" : "Ver reseñas")
+                      : (window.innerWidth <= 380 ? "Reseñar" : "Añadir reseña")}
+                  </span>
                 </motion.button>
               </div>
 

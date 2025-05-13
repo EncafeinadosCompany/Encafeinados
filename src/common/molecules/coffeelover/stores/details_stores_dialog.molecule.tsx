@@ -101,10 +101,15 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
 
       <DialogFooter className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 
         flex flex-col sm:flex-row gap-3 sm:gap-4 bg-[#FBF7F4]">
-        {/* <GoToButton
-          text={details.name}
-          onClick={() => setIsOpen(false)}>
-        </GoToButton> */}
+        <DialogFooter className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 
+  flex flex-col sm:flex-row gap-3 sm:gap-4 bg-[#FBF7F4]">
+  <GoToButton
+    text={details.name}
+    branchId={details.id}
+    mapRoute="private" 
+    onClick={() => setIsOpen(false)} 
+  />
+</DialogFooter>
       </DialogFooter>
     </DialogContent>
   )

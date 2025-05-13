@@ -4,7 +4,7 @@ import {
   Share2, Navigation, Route, ExternalLink, Copy, Map as MapIcon, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import toast from 'react-hot-toast';
@@ -40,7 +40,6 @@ import '@/common/styles/mapMarkers.css';
 import CafeDetail from '@/common/molecules/map/cafe_detail.molecule';
 import MapSidebar from '@/common/molecules/map/map_sidebar.molecule';
 import { containerVariants, cardVariants, pulseVariants } from './map_animations.widget';
-import { createPortal } from 'react-dom';
 import { useBranches } from '@/api/queries/branches/branch.query';
 
 const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance}) => {
@@ -57,12 +56,10 @@ const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ set
         }
         
         function handleTouchMove(e: TouchEvent) {
-          if (e.touches.length > 1) {
-            e.preventDefault(); 
-          }
+  
         }
         
-        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
         
         return () => {
           mapContainer.removeEventListener('touchmove', handleTouchMove);
@@ -84,6 +81,8 @@ export interface MapViewProps {
 }
 
 const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
+  const [searchParams] = useSearchParams();
+  
   // ==============================
   // STATE MANAGEMENT
   // ==============================
@@ -350,26 +349,6 @@ const navigateToCafe = useCallback((cafeId: number): void => {
   );
 }, [userLocation, cafes, mapInstance, getUserLocation, activeCafe]);
 
-const setupRoute = useCallback((cafeId: number) => {
-  if (!userLocation) {
-    toast.error("Necesitamos tu ubicación para trazar la ruta");
-    getUserLocation();
-    return;
-  }
-
-  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
-  if (selectedCafe) {
-    setActiveCafe(null);
-    setIsRouteLoading(true); 
-    
-    setTimeout(() => {
-      setRouteOrigin(userLocation);
-      setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
-      setShowRouteControls(true);
-    }, 100);
-  }
-}, [userLocation, cafes, setRouteOrigin, setRouteDestination, getUserLocation, setIsRouteLoading]);
-
 const startRoute = useCallback((cafeId: number) => {
   if (!userLocation) {
     toast.error("Necesitamos tu ubicación para trazar la ruta");
@@ -379,6 +358,15 @@ const startRoute = useCallback((cafeId: number) => {
 
   const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
   if (selectedCafe) {
+    // Verificar si la cafetería está cerrada
+    if (!selectedCafe.isOpen) {
+      toast.error("Esta cafetería está cerrada actualmente", {
+        icon: '⏰',
+        duration: 3000,
+      });
+      return;
+    }
+
     setTimeout(() => {
       setActiveCafe(null);
     }, 300);
@@ -404,6 +392,36 @@ const startRoute = useCallback((cafeId: number) => {
     });
   }
 }, [userLocation, cafes, mapInstance, setRouteOrigin, setRouteDestination, getUserLocation]);
+
+// También modificar setupRoute para la misma comprobación
+const setupRoute = useCallback((cafeId: number) => {
+  if (!userLocation) {
+    toast.error("Necesitamos tu ubicación para trazar la ruta");
+    getUserLocation();
+    return;
+  }
+
+  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  if (selectedCafe) {
+    // Verificar si la cafetería está cerrada
+    if (!selectedCafe.isOpen) {
+      toast.error("No puedes navegar a una cafetería cerrada", {
+        icon: '⏰',
+        duration: 3000,
+      });
+      return;
+    }
+    
+    setActiveCafe(null);
+    setIsRouteLoading(true); 
+    
+    setTimeout(() => {
+      setRouteOrigin(userLocation);
+      setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
+      setShowRouteControls(true);
+    }, 100);
+  }
+}, [userLocation, cafes, setRouteOrigin, setRouteDestination, getUserLocation, setIsRouteLoading]);
 
 const copyToClipboard = useCallback((text: string) => {
   navigator.clipboard.writeText(text);
@@ -582,6 +600,34 @@ useEffect(() => {
     setActiveCafeData(null);
   }
 }, [activeCafe, cafes]);
+
+// Efecto para detectar cafetería seleccionada en la URL
+useEffect(() => {
+  if (!cafes.length || !mapInstance) return;
+  
+  const cafeId = searchParams.get('cafeId');
+  if (!cafeId) return;
+  
+  const cafeIdNumber = parseInt(cafeId, 10);
+  if (isNaN(cafeIdNumber)) return;
+  
+  const selectedCafe = cafes.find(cafe => cafe.id === cafeIdNumber);
+  if (!selectedCafe) {
+    toast.error("La cafetería seleccionada no se encuentra disponible");
+    return;
+  }
+  
+  // Activar la cafetería seleccionada
+  setActiveCafe(cafeIdNumber);
+  
+  // Centrar el mapa en la ubicación de la cafetería
+  mapInstance.flyTo(
+    [selectedCafe.latitude, selectedCafe.longitude],
+    16,
+    { duration: 1.5, animate: true }
+  );
+  
+}, [cafes, mapInstance, searchParams, setActiveCafe]);
 
 // ==============================
 // RENDER FUNCTIONS
@@ -798,7 +844,7 @@ return (
       </div>
 
       <motion.button
-        className="absolute bottom-28 right-4 z-[999] bg-white rounded-full p-3 shadow-lg pointer-events-auto"
+        className="absolute bottom-36 right-4 z-[999] bg-white rounded-full p-3 shadow-lg pointer-events-auto"
         style={{ 
           position: 'fixed', 
           zIndex: 9999,
@@ -879,6 +925,8 @@ return (
       activeCafe={activeCafe}
       favorites={favorites}
       searchTerm={searchTerm}
+      filterOptions={filterOptions} // Añadir esta línea
+      totalCafeCount={cafes.length} // Añadir esta línea
       setShowSidebar={setShowSidebar}
       setViewMode={setViewMode}
       setActiveCafe={setActiveCafe}
@@ -896,18 +944,16 @@ return (
       availableTags={availableTags}
     />
 
-    {!showSidebar && (
+    {!showSidebar && !activeCafe && window.innerWidth < 768 && (
       <motion.button
-        className="absolute bottom-16 right-4 z-[100] text-white bg-[#6F4E37] p-3 rounded-full shadow-lg md:hidden"
+        className="absolute bottom-24 right-4 bg-[#6F4E37] rounded-full p-3 shadow-lg pointer-events-auto"
+        style={{ 
+          position: 'fixed', 
+          zIndex: 9999,
+        }}
         onClick={() => {
           setShowSidebar(true);
-          if (activeCafe) {
-            setActiveCafe(null);
-          }
         }}
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
@@ -920,27 +966,30 @@ return (
         <>
           {/* Backdrop oscuro para cerrar al hacer clic */}
           <motion.div
-            className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-[900]"
+            className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-[900] cursor-pointer"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={handleCloseDetails}
+            onClick={(e) => {
+              e.preventDefault();
+              handleCloseDetails();
+            }}
           />
           
           {/* Contenedor del modal simplificado */}
           <motion.div
-            className="fixed inset-0 z-[950] flex items-end md:items-center justify-center"
+            className="fixed inset-0 z-[950] flex items-end md:items-center justify-center pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={(e) => e.stopPropagation()}
           >
             <motion.div 
-              className="w-full md:w-[90%] lg:w-[80%] xl:w-[1000px] max-h-[90vh] bg-white md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col"
+              className="w-full md:w-[90%] lg:w-[80%] xl:w-[1000px] max-h-[90vh] bg-white md:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col pointer-events-auto"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: 'spring', damping: 30 }}
+              onClick={(e) => e.stopPropagation()}
             >
               {/* Barra de arrastre con indicador visual */}
               <div className="sticky top-0 w-full flex justify-center py-2 bg-white md:hidden z-10">
