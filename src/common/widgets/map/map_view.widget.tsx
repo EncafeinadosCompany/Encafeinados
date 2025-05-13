@@ -41,13 +41,27 @@ import CafeDetail from '@/common/molecules/map/cafe_detail.molecule';
 import MapSidebar from '@/common/molecules/map/map_sidebar.molecule';
 import { containerVariants, cardVariants, pulseVariants } from './map_animations.widget';
 import { useBranches } from '@/api/queries/branches/branch.query';
+import LoadingSpinner from '@/common/atoms/LoadingSpinner';
 
-const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance}) => {
+const MapController: React.FC<{
+  setMapInstance: (map: L.Map) => void;
+  setTotalTiles: (total: number) => void;
+  setTilesLoaded: (loaded: number) => void;
+  setLoadingProgress: (progress: number) => void;
+  setMapLoaded: (loaded: boolean) => void;
+}> = ({
+  setMapInstance,
+  setTotalTiles,
+  setTilesLoaded,
+  setLoadingProgress,
+  setMapLoaded
+}) => {
   const map = useMap();
   
   useEffect(() => {
     if (map) {
       setMapInstance(map);
+      
       setTimeout(() => {
         const mapContainer = map.getContainer();
         const controlContainer = mapContainer.querySelector('.leaflet-control-container') as HTMLElement;
@@ -55,18 +69,78 @@ const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ set
           controlContainer.style.zIndex = '400';
         }
         
-        function handleTouchMove(e: TouchEvent) {
-  
-        }
-        
-        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
-        
-        return () => {
-          mapContainer.removeEventListener('touchmove', handleTouchMove);
-        };
+        mapContainer.addEventListener('touchmove', () => {}, { passive: true });
       }, 100);
+      
+      let loadedTiles = 0;
+      let totalTilesCount = 0;
+      
+      setLoadingProgress(30);
+      
+      const backupTimer = setTimeout(() => {
+        if (loadedTiles === 0) {
+          let progress = 30;
+          const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 4) + 2; 
+            setLoadingProgress(progress);
+            
+            if (progress >= 90) {
+              clearInterval(interval);
+              setTimeout(() => {
+                setLoadingProgress(95);
+                setTimeout(() => {
+                  setLoadingProgress(100);
+                  setTimeout(() => setMapLoaded(true), 300);
+                }, 200);
+              }, 300);
+            }
+          }, 200);
+          
+          return () => clearInterval(interval);
+        }
+      }, 1500);
+      
+      const maxWaitTimer = setTimeout(() => {
+        setLoadingProgress(100);
+        setTimeout(() => setMapLoaded(true), 300);
+      }, 4000);
+      
+      function onTileLoadStart() {
+        totalTilesCount++;
+        setTotalTiles(totalTilesCount);
+      }
+      
+      function onTileLoad() {
+        loadedTiles++;
+        setTilesLoaded(loadedTiles);
+        
+        const maxTiles = Math.max(10, totalTilesCount);
+        const tileProgress = Math.min(Math.floor((loadedTiles / maxTiles) * 70), 70);
+        const totalProgress = 30 + tileProgress;
+        
+        setLoadingProgress(totalProgress);
+        
+        if (totalProgress >= 90) {
+          setTimeout(() => {
+            setLoadingProgress(100);
+            setTimeout(() => {
+              setMapLoaded(true);
+            }, 300);
+          }, 200);
+        }
+      }
+      
+      map.on('tileloadstart', onTileLoadStart);
+      map.on('tileload', onTileLoad);
+  
+      return () => {
+        map.off('tileloadstart', onTileLoadStart);
+        map.off('tileload', onTileLoad);
+        clearTimeout(backupTimer);
+        clearTimeout(maxWaitTimer);
+      };
     }
-  }, [map, setMapInstance]);
+  }, [map, setMapInstance, setTotalTiles, setTilesLoaded, setLoadingProgress, setMapLoaded]);
   
   return null;
 };
@@ -87,6 +161,9 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   // STATE MANAGEMENT
   // ==============================
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
+  const [tilesLoaded, setTilesLoaded] = useState<number>(0);
+  const [totalTiles, setTotalTiles] = useState<number>(0);
+  const [loadingProgress, setLoadingProgress] = useState<number>(0);
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [showSidebar, setShowSidebar] = useState<boolean>(false);
   const [activeCafe, setActiveCafe] = useState<number | null>(null);
@@ -180,7 +257,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
 
   const toggleFilterModal = useCallback(() => {
     if (activeCafe) {
-      setActiveCafe(null); // Cerrar detalles al abrir filtros
+      setActiveCafe(null); 
     }
     setIsFilterModalOpen(!isFilterModalOpen);
   }, [isFilterModalOpen, activeCafe]);
@@ -393,7 +470,6 @@ const startRoute = useCallback((cafeId: number) => {
   }
 }, [userLocation, cafes, mapInstance, setRouteOrigin, setRouteDestination, getUserLocation]);
 
-// También modificar setupRoute para la misma comprobación
 const setupRoute = useCallback((cafeId: number) => {
   if (!userLocation) {
     toast.error("Necesitamos tu ubicación para trazar la ruta");
@@ -403,7 +479,6 @@ const setupRoute = useCallback((cafeId: number) => {
 
   const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
   if (selectedCafe) {
-    // Verificar si la cafetería está cerrada
     if (!selectedCafe.isOpen) {
       toast.error("No puedes navegar a una cafetería cerrada", {
         icon: '⏰',
@@ -480,17 +555,10 @@ const clearAllFilters = useCallback(() => {
 // EFFECTS
 // ==============================
 
-// Load map and get user location when component mounts
 useEffect(() => {
-  const timer = setTimeout(() => {
-    setMapLoaded(true);
-    getUserLocation();
-  }, 800);
-
-  return () => clearTimeout(timer);
+  getUserLocation();
 }, [getUserLocation]);
 
-// Update route when active cafe changes
 useEffect(() => {
   if (activeCafeData && userLocation && showRouteControls) {
     setRouteOrigin(userLocation);
@@ -500,9 +568,7 @@ useEffect(() => {
 
 useEffect(() => {
   if (activeCafe) {
-    // Cerrar siempre el sidebar cuando se abren detalles
     setShowSidebar(false);
-    // Asegurar vista de mapa al abrir detalles
     setViewMode('map');
   }
 }, [activeCafe]);
@@ -567,29 +633,22 @@ useEffect(() => {
 useEffect(() => {
   if (!mapInstance || !activeCafe) return;
   
-  // Función para cerrar detalles al hacer clic en el mapa
   const handleMapClick = (e: L.LeafletMouseEvent) => {
-    // Solo cerrar detalles si:
-    // 1. Estamos en desktop (>= 768px)
-    // 2. No estamos en controles de ruta (evitar cerrar durante navegación)
+  
     if (window.innerWidth >= 768 && !showRouteControls && activeCafe) {
-      // Pequeño retraso para evitar conflictos con otros eventos
       setTimeout(() => {
         handleCloseDetails();
       }, 50);
     }
   };
   
-  // Añadir el listener de eventos
   mapInstance.on('click', handleMapClick);
   
-  // Limpiar listener al desmontar
   return () => {
     mapInstance.off('click', handleMapClick);
   };
 }, [mapInstance, activeCafe, showRouteControls, handleCloseDetails]);
 
-// Sincronizar activeCafeData con el ID activeCafe
 useEffect(() => {
   if (activeCafe) {
     const selectedCafe = cafes.find(cafe => cafe.id === activeCafe);
@@ -601,9 +660,8 @@ useEffect(() => {
   }
 }, [activeCafe, cafes]);
 
-// Efecto para detectar cafetería seleccionada en la URL
 useEffect(() => {
-  if (!cafes.length || !mapInstance) return;
+  if (!mapLoaded || !cafes.length || !mapInstance) return;
   
   const cafeId = searchParams.get('cafeId');
   if (!cafeId) return;
@@ -617,17 +675,15 @@ useEffect(() => {
     return;
   }
   
-  // Activar la cafetería seleccionada
   setActiveCafe(cafeIdNumber);
   
-  // Centrar el mapa en la ubicación de la cafetería
   mapInstance.flyTo(
     [selectedCafe.latitude, selectedCafe.longitude],
     16,
     { duration: 1.5, animate: true }
   );
   
-}, [cafes, mapInstance, searchParams, setActiveCafe]);
+}, [cafes, mapInstance, searchParams, setActiveCafe, mapLoaded]); // Añadir mapLoaded a las dependencias
 
 // ==============================
 // RENDER FUNCTIONS
@@ -657,24 +713,22 @@ return (
             transition: { duration: 0.7, ease: "easeInOut" }
           }}
         >
-          <motion.div
-            className="w-16 h-16 text-[#6F4E37]"
-            animate={{
-              rotate: 360,
-              transition: { duration: 2, repeat: Infinity, ease: "linear" }
-            }}
-          >
-            <Coffee size={64} />
-          </motion.div>
-          <motion.p
-            className="mt-4 text-[#6F4E37] font-medium"
-            animate={{
-              opacity: [0.5, 1, 0.5],
-              transition: { duration: 1.5, repeat: Infinity }
-            }}
-          >
-            Cargando tu experiencia cafetera...
-          </motion.p>
+          <LoadingSpinner 
+            size="lg" 
+            progress={loadingProgress} 
+            message={
+              loadingProgress < 30 ? "Inicializando mapa..." :
+              loadingProgress < 70 ? "Cargando datos de cafeterías..." :
+              loadingProgress < 100 ? "Preparando tu experiencia cafetera..." :
+              "¡Listo!"
+            }
+            className="mb-4"
+          />
+          {tilesLoaded > 0 && totalTiles > 0 && (
+            <div className="text-sm text-gray-500 mt-2">
+              Cargando tiles: {tilesLoaded}/{totalTiles}
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
@@ -795,7 +849,7 @@ return (
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-                <UserMarker position={userLocation} pulsing={true} />
+        <UserMarker position={userLocation} pulsing={true} />
         <SmartClusterGroup
           cafes={sortedCafes} 
           activeCafe={activeCafe} 
@@ -820,7 +874,13 @@ return (
           positions={cafePositions}
           userLocation={userLocation}
         />
-        <MapController setMapInstance={setMapInstance} />
+        <MapController 
+          setMapInstance={setMapInstance} 
+          setTotalTiles={setTotalTiles}
+          setTilesLoaded={setTilesLoaded}
+          setLoadingProgress={setLoadingProgress}
+          setMapLoaded={setMapLoaded}
+        />
       </MapContainer>
 
       {/* Map controls */}
@@ -925,8 +985,8 @@ return (
       activeCafe={activeCafe}
       favorites={favorites}
       searchTerm={searchTerm}
-      filterOptions={filterOptions} // Añadir esta línea
-      totalCafeCount={cafes.length} // Añadir esta línea
+      filterOptions={filterOptions} 
+      totalCafeCount={cafes.length} 
       setShowSidebar={setShowSidebar}
       setViewMode={setViewMode}
       setActiveCafe={setActiveCafe}
@@ -964,7 +1024,6 @@ return (
     <AnimatePresence>
       {activeCafe && (
         <>
-          {/* Backdrop oscuro para cerrar al hacer clic */}
           <motion.div
             className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-[900] cursor-pointer"
             initial={{ opacity: 0 }}
@@ -976,7 +1035,6 @@ return (
             }}
           />
           
-          {/* Contenedor del modal simplificado */}
           <motion.div
             className="fixed inset-0 z-[950] flex items-end md:items-center justify-center pointer-events-none"
             initial={{ opacity: 0 }}

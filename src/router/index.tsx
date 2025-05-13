@@ -5,6 +5,7 @@ import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 
 import { RouteLoadingIndicator } from "./route_loading_indicador.router";
+import EditCoffelovers from "@/common/widgets/coffeelover/edit_coffelovers.widget";
 
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
