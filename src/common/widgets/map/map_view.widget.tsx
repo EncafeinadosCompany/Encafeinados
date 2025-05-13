@@ -41,13 +41,28 @@ import CafeDetail from '@/common/molecules/map/cafe_detail.molecule';
 import MapSidebar from '@/common/molecules/map/map_sidebar.molecule';
 import { containerVariants, cardVariants, pulseVariants } from './map_animations.widget';
 import { useBranches } from '@/api/queries/branches/branch.query';
+import LoadingSpinner from '@/common/atoms/LoadingSpinner';
 
-const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ setMapInstance}) => {
+const MapController: React.FC<{
+  setMapInstance: (map: L.Map) => void;
+  setTotalTiles: (total: number) => void;
+  setTilesLoaded: (loaded: number) => void;
+  setLoadingProgress: (progress: number) => void;
+  setMapLoaded: (loaded: boolean) => void;
+}> = ({
+  setMapInstance,
+  setTotalTiles,
+  setTilesLoaded,
+  setLoadingProgress,
+  setMapLoaded
+}) => {
   const map = useMap();
   
   useEffect(() => {
     if (map) {
       setMapInstance(map);
+      
+      // Configuración de controladores y estilos
       setTimeout(() => {
         const mapContainer = map.getContainer();
         const controlContainer = mapContainer.querySelector('.leaflet-control-container') as HTMLElement;
@@ -55,18 +70,87 @@ const MapController: React.FC<{ setMapInstance: (map: L.Map) => void }> = ({ set
           controlContainer.style.zIndex = '400';
         }
         
-        function handleTouchMove(e: TouchEvent) {
-  
-        }
-        
-        mapContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
-        
-        return () => {
-          mapContainer.removeEventListener('touchmove', handleTouchMove);
-        };
+        // Passive touch handling
+        mapContainer.addEventListener('touchmove', () => {}, { passive: true });
       }, 100);
+      
+      // Monitorear la carga real de los tiles
+      let loadedTiles = 0;
+      let totalTilesCount = 0;
+      
+      // Iniciar con progreso del 30%
+      setLoadingProgress(30);
+      
+      // Implementar progreso automático como respaldo
+      const backupTimer = setTimeout(() => {
+        // Si después de 1.5 segundos seguimos en 30%, avanzar artificialmente
+        if (loadedTiles === 0) {
+          const simulateLoading = () => {
+            let progress = 30;
+            const interval = setInterval(() => {
+              progress += 5;
+              if (progress >= 90) {
+                clearInterval(interval);
+                setTimeout(() => {
+                  setLoadingProgress(100);
+                  setTimeout(() => setMapLoaded(true), 300);
+                }, 500);
+              } else {
+                setLoadingProgress(progress);
+              }
+            }, 200);
+            simulateLoading();
+          };
+          simulateLoading();
+        }
+      }, 1500);
+      
+      function onTileLoadStart() {
+        totalTilesCount++;
+        setTotalTiles(totalTilesCount);
+      }
+      
+      function onTileLoad() {
+        loadedTiles++;
+        setTilesLoaded(loadedTiles);
+        
+        // Cálculo de progreso más fiable
+        // Asigna el 70% restante del progreso (partiendo del 30% inicial)
+        const maxTiles = Math.max(10, totalTilesCount); // Asume al menos 10 tiles
+        const tileProgress = Math.min(Math.floor((loadedTiles / maxTiles) * 70), 70);
+        const totalProgress = 30 + tileProgress;
+        
+        setLoadingProgress(totalProgress);
+        
+        // Si alcanzamos un progreso suficiente, completarlo
+        if (totalProgress >= 90) {
+          setTimeout(() => {
+            setLoadingProgress(100);
+            setTimeout(() => {
+              setMapLoaded(true);
+            }, 300);
+          }, 200);
+        }
+      }
+      
+      // Agregar event listeners para la carga de tiles
+      map.on('tileloadstart', onTileLoadStart);
+      map.on('tileload', onTileLoad);
+      
+      // Asegurarnos de que después de 5 segundos el mapa se muestre de todos modos
+      const maxWaitTimer = setTimeout(() => {
+        setLoadingProgress(100);
+        setTimeout(() => setMapLoaded(true), 300);
+      }, 4000);
+      
+      return () => {
+        map.off('tileloadstart', onTileLoadStart);
+        map.off('tileload', onTileLoad);
+        clearTimeout(backupTimer);
+        clearTimeout(maxWaitTimer);
+      };
     }
-  }, [map, setMapInstance]);
+  }, [map, setMapInstance, setTotalTiles, setTilesLoaded, setLoadingProgress, setMapLoaded]);
   
   return null;
 };
@@ -87,6 +171,9 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   // STATE MANAGEMENT
   // ==============================
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
+  const [tilesLoaded, setTilesLoaded] = useState<number>(0);
+  const [totalTiles, setTotalTiles] = useState<number>(0);
+  const [loadingProgress, setLoadingProgress] = useState<number>(0);
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [showSidebar, setShowSidebar] = useState<boolean>(false);
   const [activeCafe, setActiveCafe] = useState<number | null>(null);
@@ -482,12 +569,8 @@ const clearAllFilters = useCallback(() => {
 
 // Load map and get user location when component mounts
 useEffect(() => {
-  const timer = setTimeout(() => {
-    setMapLoaded(true);
-    getUserLocation();
-  }, 800);
-
-  return () => clearTimeout(timer);
+  // Obtener ubicación del usuario independientemente de la carga del mapa
+  getUserLocation();
 }, [getUserLocation]);
 
 // Update route when active cafe changes
@@ -603,7 +686,8 @@ useEffect(() => {
 
 // Efecto para detectar cafetería seleccionada en la URL
 useEffect(() => {
-  if (!cafes.length || !mapInstance) return;
+  // No procesar nada si el mapa no está cargado
+  if (!mapLoaded || !cafes.length || !mapInstance) return;
   
   const cafeId = searchParams.get('cafeId');
   if (!cafeId) return;
@@ -617,7 +701,7 @@ useEffect(() => {
     return;
   }
   
-  // Activar la cafetería seleccionada
+  // Ahora podemos activar la cafetería y centrar el mapa
   setActiveCafe(cafeIdNumber);
   
   // Centrar el mapa en la ubicación de la cafetería
@@ -627,7 +711,7 @@ useEffect(() => {
     { duration: 1.5, animate: true }
   );
   
-}, [cafes, mapInstance, searchParams, setActiveCafe]);
+}, [cafes, mapInstance, searchParams, setActiveCafe, mapLoaded]); // Añadir mapLoaded a las dependencias
 
 // ==============================
 // RENDER FUNCTIONS
@@ -657,24 +741,22 @@ return (
             transition: { duration: 0.7, ease: "easeInOut" }
           }}
         >
-          <motion.div
-            className="w-16 h-16 text-[#6F4E37]"
-            animate={{
-              rotate: 360,
-              transition: { duration: 2, repeat: Infinity, ease: "linear" }
-            }}
-          >
-            <Coffee size={64} />
-          </motion.div>
-          <motion.p
-            className="mt-4 text-[#6F4E37] font-medium"
-            animate={{
-              opacity: [0.5, 1, 0.5],
-              transition: { duration: 1.5, repeat: Infinity }
-            }}
-          >
-            Cargando tu experiencia cafetera...
-          </motion.p>
+          <LoadingSpinner 
+            size="lg" 
+            progress={loadingProgress} 
+            message={
+              loadingProgress < 30 ? "Inicializando mapa..." :
+              loadingProgress < 70 ? "Cargando datos de cafeterías..." :
+              loadingProgress < 100 ? "Preparando tu experiencia cafetera..." :
+              "¡Listo!"
+            }
+            className="mb-4"
+          />
+          {tilesLoaded > 0 && totalTiles > 0 && (
+            <div className="text-sm text-gray-500 mt-2">
+              Cargando tiles: {tilesLoaded}/{totalTiles}
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
@@ -795,7 +877,7 @@ return (
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-                <UserMarker position={userLocation} pulsing={true} />
+        <UserMarker position={userLocation} pulsing={true} />
         <SmartClusterGroup
           cafes={sortedCafes} 
           activeCafe={activeCafe} 
@@ -820,7 +902,13 @@ return (
           positions={cafePositions}
           userLocation={userLocation}
         />
-        <MapController setMapInstance={setMapInstance} />
+        <MapController 
+          setMapInstance={setMapInstance} 
+          setTotalTiles={setTotalTiles}
+          setTilesLoaded={setTilesLoaded}
+          setLoadingProgress={setLoadingProgress}
+          setMapLoaded={setMapLoaded}
+        />
       </MapContainer>
 
       {/* Map controls */}
