@@ -39,6 +39,9 @@ const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/home_coff
 const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover_nav"));
 const RegisterStoreVisit = lazy(() => import("@/modules/coffeelover/components/stores/register_store_visit.component"));
 import ReviewView from '@/modules/coffeelover/components/review/review.view';
+import FormRegisterBrands from "@/common/widgets/forms/auth/form_register_branches.widget";
+import FormRegisterBranchPage from "@/common/widgets/forms/auth/form_register_stores_page";
+
 
 // MAP
 const MapView = lazy(() => import("@/common/widgets/map/map_view.widget"));
@@ -100,7 +103,7 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-            <Route path="/prueba" element={<ClientReviewsWidget clientId={4} />} /> {/* Se tiene que especificar */}
+            <Route path="/prueba" element={<FormRegisterBranchPage/>} /> Se tiene que especificar
 
 
             {/* PUBLIC ROUTES */}

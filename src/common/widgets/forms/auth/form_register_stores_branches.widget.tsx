@@ -40,7 +40,7 @@ export default function RegisterStoreBranches() {
     const { data: socialNetworks } = useSocialNetworksQuery();
     const { data: criteria } = useCriteria();
     const [invalid , setInvalid] = useState(false)
-    const useBranchesMutation = useRegisterBrandMutation();
+    const {mutateAsync:useBranchesMutation, status} = useRegisterBrandMutation();
 
 
     const methods = useForm<RegisterStoreBrancheSchemaType>({
@@ -94,7 +94,7 @@ export default function RegisterStoreBranches() {
                 social_branches: finalData.social_networks,
                 criteria: finalData.criteria
             }
-            await useBranchesMutation.mutateAsync(data)
+            await useBranchesMutation(data)
             const name = localStorage.getItem("nameStore");
             showSuccessToast(name)
             navigate("/")
@@ -215,6 +215,7 @@ export default function RegisterStoreBranches() {
                                         <SocialNetworksForm
                                             register={methods.register}
                                             control={methods.control}
+                                            error={methods.formState.errors}
                                             availableSocialNetworks={socialNetworks}>
                                         </SocialNetworksForm>
                                     )
@@ -240,8 +241,8 @@ export default function RegisterStoreBranches() {
 
                                     ) : (
                                         <Button
-                                            disabled={!methods.formState.isValid || !methods.getValues("social_networks")?.length}
-                                            type="submit" className="ml-auto bg-black text-white">Guardar</Button>
+                                            disabled={!methods.formState.isValid || !methods.getValues("social_networks")?.length || status === "pending" }
+                                            type="submit" className="ml-auto bg-black text-white">{status === "pending" ? "Cargando..." : "Guardar"}</Button>
                                     )}
                                 </div>
                             </CardFooter>

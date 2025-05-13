@@ -31,22 +31,14 @@ export function TermConditions({ register, errors, control }: TermConditionsProp
                 onCheckedChange={onChange}
                 className="border-[#D4A76A] text-[#6F4E37] mt-0.5"
               />
-              <span className="text-xs sm:text-sm text-gray-700 leading-tight">
+              <span className="text-xs sm:text-sm  text-gray-700 leading-tight">
                 He leído y acepto los{" "}
                 <button
                   type="button"
                   onClick={() => setOpen(true)}
-                  className="underline underline-offset-4 hover:text-amber-600"
+                  className=" underline underline-offset-4 hover:text-amber-600"
                 >
-                  Términos de servicio
-                </button>{" "}
-                y{" "}
-                <button
-                  type="button"
-                  onClick={() => setOpen(true)}
-                  className="underline underline-offset-4 hover:text-amber-600"
-                >
-                  Política de privacidad
+                  Términos de servicio y {" "} Política de privacidad
                 </button>.
               </span>
             </div>

@@ -162,6 +162,7 @@ const FormEditBrands = ({ onClose, data }: FormEditBrandsProps) => {
                                                 control={methods.control}
                                                 availableSocialNetworks={socialNetworks}
                                                 idSocialNetworks={data?.social_branches}
+                                                error={methods.formState.errors}
                                             >
                                             </SocialNetworksForm>
                                         )
