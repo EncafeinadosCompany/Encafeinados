@@ -48,7 +48,8 @@ export const RegisterStoreBrancheSchema = [
       z.object({
         social_network_id: z.number(),
         value: z.string().nonempty({ message: 'El enlace es importante, como la ruta para llegar a un buen café' }),
-        description: z.string().nonempty({ message: 'La descripción es importante, como la ruta para llegar a un buen café' }),
+        description: z.string().nonempty({ message: 'La descripción es importante, como la ruta para llegar a un buen café' })
+        .min(3, { message: 'La descripción debe tener al menos 3 caracteres'}),
       })
     )
     .optional(),

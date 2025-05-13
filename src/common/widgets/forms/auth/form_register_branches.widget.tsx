@@ -29,7 +29,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
     const [baseAddress, setBaseAddress] = useState("");
-    const useBranchesMutation = useRegisterBrandMutation();
+    const{mutateAsync: useBranchesMutation, status} = useRegisterBrandMutation();
     const { data: criteria } = useCriteria();
     const { data: socialNetworks } = useSocialNetworksQuery();
 
@@ -104,7 +104,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                 criteria: finalData.criteria
             }
 
-            await useBranchesMutation.mutateAsync(data)
+            await useBranchesMutation(data)
             onClose();
         }
         catch (error) {
@@ -178,6 +178,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                             <SocialNetworksForm
                                                 register={methods.register}
                                                 control={methods.control}
+                                                error={methods.formState.errors}
                                                 availableSocialNetworks={socialNetworks}
                                             >
                                             </SocialNetworksForm>
@@ -215,13 +216,13 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                                     <motion.div>
                                         <Button
                                             type="submit"
-                                            disabled={!methods.formState.isValid || !methods.getValues("social_networks")?.length}
+                                            disabled={!methods.formState.isValid || !methods.getValues("social_networks")?.length || status === "pending"}
                                             className={`rounded-lg px-6 py-2 ${!methods.formState.isValid
                                                 ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                                                 : "bg-gray-900 hover:bg-gray-800 text-white"
                                                 }`}
                                         >
-                                            Complete Registration
+                                            {status === "pending" ? "Enviando..." : "Complete Registration"}
                                         </Button>
                                     </motion.div>
                                 )}
