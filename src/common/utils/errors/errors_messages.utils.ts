@@ -39,6 +39,9 @@ export const errorMessages: Record<number, string> = {
     },
     createPage:{
         409: "La página ya se encuentra registrada"
+    },
+    editCoffelover:{
+        409: "El correo eléctronico ya se encuentra registrado"
     }
   
   };
