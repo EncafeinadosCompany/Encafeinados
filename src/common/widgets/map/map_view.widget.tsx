@@ -62,7 +62,6 @@ const MapController: React.FC<{
     if (map) {
       setMapInstance(map);
       
-      // Configuración de controladores y estilos
       setTimeout(() => {
         const mapContainer = map.getContainer();
         const controlContainer = mapContainer.querySelector('.leaflet-control-container') as HTMLElement;
@@ -70,40 +69,41 @@ const MapController: React.FC<{
           controlContainer.style.zIndex = '400';
         }
         
-        // Passive touch handling
         mapContainer.addEventListener('touchmove', () => {}, { passive: true });
       }, 100);
       
-      // Monitorear la carga real de los tiles
       let loadedTiles = 0;
       let totalTilesCount = 0;
       
-      // Iniciar con progreso del 30%
       setLoadingProgress(30);
       
-      // Implementar progreso automático como respaldo
       const backupTimer = setTimeout(() => {
-        // Si después de 1.5 segundos seguimos en 30%, avanzar artificialmente
         if (loadedTiles === 0) {
-          const simulateLoading = () => {
-            let progress = 30;
-            const interval = setInterval(() => {
-              progress += 5;
-              if (progress >= 90) {
-                clearInterval(interval);
+          let progress = 30;
+          const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 4) + 2; 
+            setLoadingProgress(progress);
+            
+            if (progress >= 90) {
+              clearInterval(interval);
+              setTimeout(() => {
+                setLoadingProgress(95);
                 setTimeout(() => {
                   setLoadingProgress(100);
                   setTimeout(() => setMapLoaded(true), 300);
-                }, 500);
-              } else {
-                setLoadingProgress(progress);
-              }
-            }, 200);
-            simulateLoading();
-          };
-          simulateLoading();
+                }, 200);
+              }, 300);
+            }
+          }, 200);
+          
+          return () => clearInterval(interval);
         }
       }, 1500);
+      
+      const maxWaitTimer = setTimeout(() => {
+        setLoadingProgress(100);
+        setTimeout(() => setMapLoaded(true), 300);
+      }, 4000);
       
       function onTileLoadStart() {
         totalTilesCount++;
@@ -114,15 +114,12 @@ const MapController: React.FC<{
         loadedTiles++;
         setTilesLoaded(loadedTiles);
         
-        // Cálculo de progreso más fiable
-        // Asigna el 70% restante del progreso (partiendo del 30% inicial)
-        const maxTiles = Math.max(10, totalTilesCount); // Asume al menos 10 tiles
+        const maxTiles = Math.max(10, totalTilesCount);
         const tileProgress = Math.min(Math.floor((loadedTiles / maxTiles) * 70), 70);
         const totalProgress = 30 + tileProgress;
         
         setLoadingProgress(totalProgress);
         
-        // Si alcanzamos un progreso suficiente, completarlo
         if (totalProgress >= 90) {
           setTimeout(() => {
             setLoadingProgress(100);
@@ -133,16 +130,9 @@ const MapController: React.FC<{
         }
       }
       
-      // Agregar event listeners para la carga de tiles
       map.on('tileloadstart', onTileLoadStart);
       map.on('tileload', onTileLoad);
-      
-      // Asegurarnos de que después de 5 segundos el mapa se muestre de todos modos
-      const maxWaitTimer = setTimeout(() => {
-        setLoadingProgress(100);
-        setTimeout(() => setMapLoaded(true), 300);
-      }, 4000);
-      
+  
       return () => {
         map.off('tileloadstart', onTileLoadStart);
         map.off('tileload', onTileLoad);
@@ -267,7 +257,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
 
   const toggleFilterModal = useCallback(() => {
     if (activeCafe) {
-      setActiveCafe(null); // Cerrar detalles al abrir filtros
+      setActiveCafe(null); 
     }
     setIsFilterModalOpen(!isFilterModalOpen);
   }, [isFilterModalOpen, activeCafe]);
@@ -480,7 +470,6 @@ const startRoute = useCallback((cafeId: number) => {
   }
 }, [userLocation, cafes, mapInstance, setRouteOrigin, setRouteDestination, getUserLocation]);
 
-// También modificar setupRoute para la misma comprobación
 const setupRoute = useCallback((cafeId: number) => {
   if (!userLocation) {
     toast.error("Necesitamos tu ubicación para trazar la ruta");
@@ -490,7 +479,6 @@ const setupRoute = useCallback((cafeId: number) => {
 
   const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
   if (selectedCafe) {
-    // Verificar si la cafetería está cerrada
     if (!selectedCafe.isOpen) {
       toast.error("No puedes navegar a una cafetería cerrada", {
         icon: '⏰',
@@ -567,13 +555,10 @@ const clearAllFilters = useCallback(() => {
 // EFFECTS
 // ==============================
 
-// Load map and get user location when component mounts
 useEffect(() => {
-  // Obtener ubicación del usuario independientemente de la carga del mapa
   getUserLocation();
 }, [getUserLocation]);
 
-// Update route when active cafe changes
 useEffect(() => {
   if (activeCafeData && userLocation && showRouteControls) {
     setRouteOrigin(userLocation);
@@ -583,9 +568,7 @@ useEffect(() => {
 
 useEffect(() => {
   if (activeCafe) {
-    // Cerrar siempre el sidebar cuando se abren detalles
     setShowSidebar(false);
-    // Asegurar vista de mapa al abrir detalles
     setViewMode('map');
   }
 }, [activeCafe]);
@@ -650,29 +633,22 @@ useEffect(() => {
 useEffect(() => {
   if (!mapInstance || !activeCafe) return;
   
-  // Función para cerrar detalles al hacer clic en el mapa
   const handleMapClick = (e: L.LeafletMouseEvent) => {
-    // Solo cerrar detalles si:
-    // 1. Estamos en desktop (>= 768px)
-    // 2. No estamos en controles de ruta (evitar cerrar durante navegación)
+  
     if (window.innerWidth >= 768 && !showRouteControls && activeCafe) {
-      // Pequeño retraso para evitar conflictos con otros eventos
       setTimeout(() => {
         handleCloseDetails();
       }, 50);
     }
   };
   
-  // Añadir el listener de eventos
   mapInstance.on('click', handleMapClick);
   
-  // Limpiar listener al desmontar
   return () => {
     mapInstance.off('click', handleMapClick);
   };
 }, [mapInstance, activeCafe, showRouteControls, handleCloseDetails]);
 
-// Sincronizar activeCafeData con el ID activeCafe
 useEffect(() => {
   if (activeCafe) {
     const selectedCafe = cafes.find(cafe => cafe.id === activeCafe);
@@ -684,9 +660,7 @@ useEffect(() => {
   }
 }, [activeCafe, cafes]);
 
-// Efecto para detectar cafetería seleccionada en la URL
 useEffect(() => {
-  // No procesar nada si el mapa no está cargado
   if (!mapLoaded || !cafes.length || !mapInstance) return;
   
   const cafeId = searchParams.get('cafeId');
@@ -701,10 +675,8 @@ useEffect(() => {
     return;
   }
   
-  // Ahora podemos activar la cafetería y centrar el mapa
   setActiveCafe(cafeIdNumber);
   
-  // Centrar el mapa en la ubicación de la cafetería
   mapInstance.flyTo(
     [selectedCafe.latitude, selectedCafe.longitude],
     16,
@@ -1013,8 +985,8 @@ return (
       activeCafe={activeCafe}
       favorites={favorites}
       searchTerm={searchTerm}
-      filterOptions={filterOptions} // Añadir esta línea
-      totalCafeCount={cafes.length} // Añadir esta línea
+      filterOptions={filterOptions} 
+      totalCafeCount={cafes.length} 
       setShowSidebar={setShowSidebar}
       setViewMode={setViewMode}
       setActiveCafe={setActiveCafe}
@@ -1052,7 +1024,6 @@ return (
     <AnimatePresence>
       {activeCafe && (
         <>
-          {/* Backdrop oscuro para cerrar al hacer clic */}
           <motion.div
             className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-[900] cursor-pointer"
             initial={{ opacity: 0 }}
@@ -1064,7 +1035,6 @@ return (
             }}
           />
           
-          {/* Contenedor del modal simplificado */}
           <motion.div
             className="fixed inset-0 z-[950] flex items-end md:items-center justify-center pointer-events-none"
             initial={{ opacity: 0 }}
