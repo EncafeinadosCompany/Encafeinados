@@ -1,8 +1,8 @@
 "use client"
 
-import { useFieldArray,UseFormRegister } from "react-hook-form"
-import { Trash2, Globe, Link as MessageSquare  } from "@/common/ui/icons"
-import type {  SocialNetworksType } from "@/api/queries/social_networks/social_networks.query"
+import { useFieldArray, UseFormRegister } from "react-hook-form"
+import { Trash2, Globe, Link as MessageSquare } from "@/common/ui/icons"
+import type { SocialNetworksType } from "@/api/queries/social_networks/social_networks.query"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/common/ui/card"
 import { Label } from "@/common/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
@@ -13,18 +13,20 @@ import { motion, AnimatePresence } from "framer-motion"
 import { UseNetworkInputConfig } from "@/common/hooks/useNetworks"
 import { SocialBranch } from "@/api/types/branches/branches.types"
 import { useState } from "react"
+import { TextError } from "@/common/atoms/textError"
 
 interface DynamicSocialNetworksFormProps {
     availableSocialNetworks: SocialNetworksType | undefined
     register: UseFormRegister<any>
     control: any
+    error?: any
     idSocialNetworks?: SocialBranch[]
 }
 
-export default function SocialNetworksForm({ availableSocialNetworks, register, control, idSocialNetworks }: DynamicSocialNetworksFormProps) {
+export default function SocialNetworksForm({ availableSocialNetworks, register, control, error }: DynamicSocialNetworksFormProps) {
 
 
-    const { fields, append, remove } = useFieldArray({control, name: "social_networks",})
+    const { fields, append, remove } = useFieldArray({ control, name: "social_networks", })
     const [currentSelection, setCurrentSelection] = useState<string>("")
 
     const availableNetworks = availableSocialNetworks?.social
@@ -45,7 +47,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
     }
 
 
-
+    console.log(error?.social_networks?.[1]?.description?.message);
     return (
         <Card className="w-full max-w-3xl mx-auto border-none shadow-lg rounded-xl overflow-hidden">
             <CardHeader className="bg-gradient-to-r from-amber-50 to-amber-100 pb-6">
@@ -66,7 +68,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                             Agregar Red Social
                         </Label>
                         <Select
-                             onValueChange={(value) => {
+                            onValueChange={(value) => {
                                 setCurrentSelection(value)
                                 handleAddNetwork(value)
                             }}
@@ -128,7 +130,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                 <AnimatePresence>
                     <div className="space-y-4">
                         {fields.map((field, index) => {
-                           
+
                             const inputConfig = UseNetworkInputConfig((field as any).name);
                             return (
                                 <motion.div
@@ -144,7 +146,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                                                 <div className="h-6 w-6 rounded-full bg-amber-100 flex items-center justify-center">
                                                     <Globe className="h-3.5 w-3.5 text-amber-600" />
                                                 </div>
-                                                {(field as any).name || (field as any).description }
+                                                {(field as any).name || (field as any).description}
                                             </CardTitle>
                                             <Button
                                                 variant="ghost"
@@ -183,8 +185,13 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                                                     id={`description-${index}`}
                                                     placeholder={inputConfig.slogan}
                                                     className="min-h-[80px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-200 focus:border-amber-400"
-                                                    {...register(`social_networks.${index}.description` )}
+                                                    {...register(`social_networks.${index}.description`)}
                                                 />
+                                                {error?.social_networks?.[index]?.description && (
+                                                    <TextError>
+                                                        {error.social_networks[index].description.message || error.social_networks[index].description}
+                                                    </TextError>
+                                                )}
                                             </div>
                                         </CardContent>
                                     </Card>

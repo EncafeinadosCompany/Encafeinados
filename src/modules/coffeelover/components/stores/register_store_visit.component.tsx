@@ -3,21 +3,7 @@ import { useEffect, useState } from "react";
 
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  MapPin,
-  Coffee,
-  CheckCircle,
-  AlertCircle,
-  Loader2,
-  Store,
-  MapIcon,
-  ArrowUpRight,
-  RefreshCcw,
-  Award,
-  Sparkles,
-  MessageCircle,
-  Star,
-} from "lucide-react";
+import {MapPin,Coffee,CheckCircle,AlertCircle,Loader2,Store,MapIcon,ArrowUpRight,RefreshCcw,Sparkles,MessageCircle} from "lucide-react";
 import { Button } from "@/common/ui/button";
 import { CoffeeBackground } from "@/common/widgets/coffee_background.widget";
 
@@ -27,15 +13,7 @@ const ValidateVisitPage = () => {
   const [animationComplete, setAnimationComplete] = useState(false);
   const navigate = useNavigate();
 
-  const {
-    mutate: validateVisit,
-    isError,
-    isIdle,
-    status,
-    error,
-    reset,
-    data: responseData,
-  } = useRegisterVisitMutation();
+  const { mutate: validateVisit, isError, isIdle, status, error, reset, data: responseData} = useRegisterVisitMutation();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';

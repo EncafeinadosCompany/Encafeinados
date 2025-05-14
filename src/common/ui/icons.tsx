@@ -57,7 +57,8 @@ export {
      Map,
      ChevronDown,
      Building,
-     Album
+     Album,
+     MessageSquare
      
 
 

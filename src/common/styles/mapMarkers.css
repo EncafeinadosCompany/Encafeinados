@@ -353,4 +353,37 @@
   transform: scale(1.05);
 }
 
-/*# sourceMappingURL=styles.css.map */
+/* Animaciones para las líneas de ruta */
+@keyframes pulseWalking {
+  0% { stroke-opacity: 0.7; }
+  50% { stroke-opacity: 1; }
+  100% { stroke-opacity: 0.7; }
+}
+
+@keyframes pulseCycling {
+  0% { stroke-opacity: 0.7; stroke-dashoffset: 0; }
+  50% { stroke-opacity: 1; }
+  100% { stroke-opacity: 0.7; stroke-dashoffset: 20; }
+}
+
+@keyframes pulseDriving {
+  0% { stroke-width: 5; }
+  50% { stroke-width: 6.5; }
+  100% { stroke-width: 5; }
+}
+
+.pulse-walking {
+  animation: pulseWalking 2s infinite;
+}
+
+.pulse-cycling {
+  animation: pulseCycling 3s infinite linear;
+}
+
+.pulse-driving {
+  animation: pulseDriving 1.5s infinite;
+}
+
+.pulse-default {
+  animation: pulseWalking 2s infinite;
+}

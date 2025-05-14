@@ -1,16 +1,12 @@
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 
-import LoadingSpinner from "@/common/atoms/LoadingSpinner";
-import HomeBranchesNav from "@/modules/admin_branches/views/home_branches_nav";
-import Prueba1 from "@/modules/pruebas/prueba_1.module";
-import ImageCarousel from "@/common/molecules/admin_branch/imagen_carousel";
-import PrincipalBranchesPage from "@/modules/admin_branches/views/principal_branches_page";
-import ReviewsWidget from '@/common/widgets/coffeelover/reviews/reviews_widget';
-import ClientReviewsWidget from '@/common/widgets/coffeelover/reviews/client_reviews_widget';
+import { RouteLoadingIndicator } from "./route_loading_indicador.router";
+import EditCoffelovers from "@/common/widgets/coffeelover/edit_coffelovers.widget";
+
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/about_page"));
@@ -34,11 +30,16 @@ const HomeAdminStores = lazy(() => import("@/modules/admin/views/home_admin_stor
 const PendingBranchesView = lazy(() => import("@/modules/admin/components/branches/pending_branches_list.component"));
 const AlbumManager = lazy(() => import("@/modules/admin/components/album/album_manager.component"));
 
+//BRANCHES
+const FormRegisterBranchPage = lazy(() => import("@/common/widgets/forms/auth/form_register_stores_page"));
+const HomeBranchesNav = lazy(() => import("@/modules/admin_branches/views/home_branches_nav"));
+const PrincipalBranchesPage = lazy(() => import("@/modules/admin_branches/views/principal_branches_page"));
+
 // COFFEELOVER
 const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/home_coffeelover_page"));
 const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover_nav"));
 const RegisterStoreVisit = lazy(() => import("@/modules/coffeelover/components/stores/register_store_visit.component"));
-import ReviewView from '@/modules/coffeelover/components/review/review.view';
+const ReviewView = lazy(() => import('@/modules/coffeelover/components/review/review.view'));
 
 // MAP
 const MapView = lazy(() => import("@/common/widgets/map/map_view.widget"));
@@ -53,40 +54,7 @@ const ListAlbum = lazy(() => import("@/common/widgets/coffeelover/album/list_alb
 const PageAlbum = lazy(() => import("@/common/widgets/coffeelover/album/page_album.widget"));
 
 
-const RouteLoadingIndicator = () => {
-  const [progress, setProgress] = useState(0);
-  const location = useLocation();
 
-  useEffect(() => {
-    setProgress(0);
-
-    const expectedLoadTime = 2500;
-    const startTime = Date.now();
-
-    const intervalId = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const calculatedProgress = Math.min(99, (elapsed / expectedLoadTime) * 100);
-
-      setProgress(Math.round(calculatedProgress));
-
-      if (calculatedProgress >= 99) {
-        clearInterval(intervalId);
-      }
-    }, 50);
-
-    return () => clearInterval(intervalId);
-  }, [location.pathname]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setProgress(100);
-    }, 300);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
-  return <LoadingSpinner progress={progress} message="Preparando tu café..." size="lg" />;
-};
 
 const AuthRoutes = () => {
   return (
@@ -100,7 +68,7 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-            <Route path="/prueba" element={<ClientReviewsWidget clientId={4} />} /> {/* Se tiene que especificar */}
+            <Route path="/prueba" element={<FormRegisterBranchPage />} /> Se tiene que especificar
 
 
             {/* PUBLIC ROUTES */}

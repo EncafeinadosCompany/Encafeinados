@@ -81,21 +81,19 @@ const CafeCard: React.FC<CafeCardProps> = ({
           <h3 className="font-bold text-lg text-[#2C1810] line-clamp-1">
             <HighlightText text={cafe.name} highlight={searchTerm} />
           </h3>
-          <div className="flex items-center gap-1 text-amber-500">
-            <Star size={16} className="fill-amber-500" />
-            <span className="font-medium">{cafe.rating}</span>
-            <span className="text-xs text-gray-500">({cafe.reviewCount})</span>
-          </div>
+          {cafe.rating ? (
+            <div className="flex items-center gap-1 text-amber-500">
+              <Star size={16} className="fill-amber-500" />
+              <span className="font-medium">{cafe.rating}</span>
+            </div>
+          ) : (
+            <div className="text-xs text-gray-400 font-medium">
+              Sin reseñas
+            </div>
+          )}
         </div>
 
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-1">
-            <Star size={14} className="text-amber-500 fill-amber-500" />
-            <span className="text-sm font-medium">{cafe.rating}</span>
-            <span className="text-xs text-gray-500">({cafe.reviewCount})</span>
-          </div>
-          
-          {/* Indicador de estado */}
+        <div className="flex justify-between items-center mt-2">
           <div className={`px-2 py-0.5 rounded-full text-xs font-medium
             ${cafe.isOpen 
               ? 'bg-green-100 text-green-700' 

@@ -1,5 +1,7 @@
-import React from 'react';
-import { Polyline } from 'react-leaflet';
+import React, { useEffect, useState } from 'react';
+import { Polyline, Tooltip } from 'react-leaflet';
+import L from 'leaflet';
+import "@/common/styles/mapMarkers.css";
 
 interface DirectRouteLineProps {
   from: [number, number];
@@ -16,50 +18,109 @@ const DirectRouteLine: React.FC<DirectRouteLineProps> = ({
   to, 
   routeCoordinates, 
   color = '#6F4E37', 
-  weight = 4, 
-  opacity = 0.7,
+  weight = 5, 
+  opacity = 0.9, 
   transportMode = 'walking'
 }) => {
-  // Personalización según el modo de transporte
+  const [animated, setAnimated] = useState(false);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimated(true), 300);
+    return () => clearTimeout(timer);
+  }, [routeCoordinates]);
+
   const getLineStyle = () => {
     switch(transportMode) {
       case 'walking':
-        return { dashArray: '1,10', color: '#4285F4', weight: weight };
+        return { 
+          dashArray: '5, 10', 
+          color: '#007BFF', 
+          weight: weight,
+          className: animated ? 'pulse-walking' : ''
+        };
       case 'cycling':
-        return { dashArray: '10,15', color: '#0F9D58', weight: weight };
+        return { 
+          dashArray: '10, 10', 
+          color: '#00B74A', 
+          weight: weight,
+          className: animated ? 'pulse-cycling' : ''
+        };
       case 'driving':
-        return { dashArray: undefined, color: color, weight: weight };
+        return { 
+          dashArray: undefined, 
+          color: '#E53935', 
+          weight: weight,
+          className: animated ? 'pulse-driving' : ''
+        };
       default:
-        return { dashArray: undefined, color: color, weight: weight };
+        return { 
+          dashArray: undefined, 
+          color: color, 
+          weight: weight,
+          className: animated ? 'pulse-default' : ''
+        };
     }
   };
 
   const lineStyle = getLineStyle();
+  
+  const createPathOptions = (): L.PathOptions => {
+    return {
+      color: lineStyle.color,
+      weight: lineStyle.weight,
+      opacity: opacity,
+      dashArray: lineStyle.dashArray,
+      className: lineStyle.className,
+      lineCap: 'round' as L.LineCapShape,
+      lineJoin: 'round' as L.LineJoinShape,
+    };
+  };
+
+  const pathOptions = createPathOptions();
   
   if (routeCoordinates && routeCoordinates.length > 1) {
     return (
       <>
         <Polyline 
           positions={routeCoordinates}
-          color={lineStyle.color}
-          weight={lineStyle.weight}
-          opacity={opacity}
-          dashArray={lineStyle.dashArray}
+          pathOptions={{
+            color: '#FFFFFF',
+            weight: lineStyle.weight + 4,
+            opacity: 0.5,
+            lineCap: 'round',
+            lineJoin: 'round'
+          }}
         />
+        
+        <Polyline 
+          positions={routeCoordinates}
+          pathOptions={pathOptions}
+        >
+          <Tooltip direction="top" permanent={false} sticky>
+            {transportMode === 'walking' ? 'Caminando' : 
+             transportMode === 'cycling' ? 'En bicicleta' : 'En automóvil'}
+          </Tooltip>
+        </Polyline>
         
         {routeCoordinates.length > 2 && (
           <>
             <Polyline 
               positions={[routeCoordinates[0], routeCoordinates[1]]}
-              color={lineStyle.color}
-              weight={lineStyle.weight + 2}
-              opacity={opacity + 0.2}
+              pathOptions={{
+                color: lineStyle.color,
+                weight: lineStyle.weight + 3,
+                opacity: 1.0,
+                dashArray: undefined
+              }}
             />
             <Polyline 
               positions={[routeCoordinates[routeCoordinates.length-2], routeCoordinates[routeCoordinates.length-1]]}
-              color={lineStyle.color}
-              weight={lineStyle.weight + 2}
-              opacity={opacity + 0.2}
+              pathOptions={{
+                color: lineStyle.color,
+                weight: lineStyle.weight + 3,
+                opacity: 1.0,
+                dashArray: undefined
+              }}
             />
           </>
         )}
@@ -68,13 +129,27 @@ const DirectRouteLine: React.FC<DirectRouteLineProps> = ({
   }
   
   return (
-    <Polyline 
-      positions={[from, to]}
-      color={color}
-      weight={weight}
-      opacity={opacity * 0.6}
-      dashArray="5,10"
-    />
+    <>
+      <Polyline 
+        positions={[from, to]}
+        pathOptions={{
+          color: '#FFFFFF',
+          weight: weight + 4,
+          opacity: 0.5,
+          dashArray: undefined
+        }}
+      />
+      {/* Línea principal */}
+      <Polyline 
+        positions={[from, to]}
+        pathOptions={{
+          color: color,
+          weight: weight,
+          opacity: opacity,
+          dashArray: '5,10'
+        }}
+      />
+    </>
   );
 };
 
