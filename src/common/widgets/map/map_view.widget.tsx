@@ -78,27 +78,57 @@ const MapController: React.FC<{
       setLoadingProgress(30);
       
       const backupTimer = setTimeout(() => {
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
         if (loadedTiles === 0) {
-          let progress = 30;
-          const interval = setInterval(() => {
-            progress += Math.floor(Math.random() * 4) + 2; 
-            setLoadingProgress(progress);
+          if (isMobile) {
+            let fakeTotalTiles = 12;
+            let fakeLoadedTiles = 0;
             
-            if (progress >= 90) {
-              clearInterval(interval);
-              setTimeout(() => {
-                setLoadingProgress(95);
+            let progress = 30;
+            const interval = setInterval(() => {
+              progress += Math.floor(Math.random() * 4) + 2;
+              setLoadingProgress(progress);
+              
+              fakeLoadedTiles = Math.ceil((progress - 30) / 70 * fakeTotalTiles);
+              setTotalTiles(fakeTotalTiles);
+              setTilesLoaded(fakeLoadedTiles);
+              
+              if (progress >= 90) {
+                clearInterval(interval);
                 setTimeout(() => {
-                  setLoadingProgress(100);
-                  setTimeout(() => setMapLoaded(true), 300);
-                }, 200);
-              }, 300);
-            }
-          }, 200);
-          
-          return () => clearInterval(interval);
+                  setLoadingProgress(95);
+                  setTimeout(() => {
+                    setLoadingProgress(100);
+                    setTimeout(() => setMapLoaded(true), 300);
+                  }, 200);
+                }, 300);
+              }
+            }, 200);
+            
+            return () => clearInterval(interval);
+          } else {
+            let progress = 30;
+            const interval = setInterval(() => {
+              progress += Math.floor(Math.random() * 4) + 2; 
+              setLoadingProgress(progress);
+              
+              if (progress >= 90) {
+                clearInterval(interval);
+                setTimeout(() => {
+                  setLoadingProgress(95);
+                  setTimeout(() => {
+                    setLoadingProgress(100);
+                    setTimeout(() => setMapLoaded(true), 300);
+                  }, 200);
+                }, 300);
+              }
+            }, 200);
+            
+            return () => clearInterval(interval);
+          }
         }
-      }, 1500);
+      }, 2500);
       
       const maxWaitTimer = setTimeout(() => {
         setLoadingProgress(100);
@@ -724,11 +754,7 @@ return (
             }
             className="mb-4"
           />
-          {tilesLoaded > 0 && totalTiles > 0 && (
-            <div className="text-sm text-gray-500 mt-2">
-              Cargando tiles: {tilesLoaded}/{totalTiles}
-            </div>
-          )}
+       
         </motion.div>
       )}
     </AnimatePresence>

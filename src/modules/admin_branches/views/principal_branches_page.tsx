@@ -24,10 +24,6 @@ export default function PrincipalBranchesPage() {
     const {data:imagen , error:errorImagen, isPending:isPendingImagen} = useImagenBranch(Number(BranchId))
     const {mutateAsync:useStateOpen, error:errorStatus, status} = useStatesIsOpen()
 
-
-    console.log('branches', branches, 'imagen', imagen)
-
-
     useEffect(() => {
         if (branches?.branch.is_open !== undefined) {
             setBranchStatus(branches.branch.is_open);

@@ -75,7 +75,6 @@ export const ClientReviewsWidget: React.FC<ClientReviewsWidgetProps> = ({ client
     );
   }
 
-  // Lógica de paginación
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;

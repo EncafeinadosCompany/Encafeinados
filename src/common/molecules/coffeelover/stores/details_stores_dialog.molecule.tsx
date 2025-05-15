@@ -26,7 +26,6 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
       >
         <DialogTitle className="hidden"></DialogTitle>
 
-        {/* Close button */}
         <button
           onClick={() => setIsOpen(false)}
           className="absolute right-4 top-4 z-10 bg-white/80 backdrop-blur-sm p-1.5 rounded-full 
@@ -59,7 +58,6 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
 
         <div className="flex-grow overflow-y-auto custom-scrollbar">
           <div className="p-4 sm:p-6 space-y-5">
-            {/* Store information */}
             <div className="space-y-4">
               <h3 className="font-medium text-[#5F4B32] text-base sm:text-lg flex items-center gap-2 border-b border-[#E6D7C3] pb-2">
                 <Coffee className="h-5 w-5 text-[#8B5A2B]" />
@@ -126,7 +124,6 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
 
         <DialogFooter className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 
           flex flex-col sm:flex-row gap-3 sm:gap-4 bg-[#FBF7F4]">
-          {/* Botón de reseñas - Ajustado para coincidir con GoToButton */}
           <div className="flex-1 order-2 sm:order-1">
             <button
               onClick={() => setReviewsOpen(true)}
@@ -139,7 +136,6 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
             </button>
           </div>
 
-          {/* Botón de visitar */}
           <div className="flex-1 order-1 sm:order-2">
             <GoToButton
               text={details.name}
@@ -151,13 +147,11 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
         </DialogFooter>
       </DialogContent>
 
-      {/* Modal de Reseñas - Corregido */}
       <Dialog open={reviewsOpen} onOpenChange={setReviewsOpen}>
         <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[65vw] lg:w-[55vw] xl:w-[50vw] 
           max-h-[85vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden flex flex-col">
           <DialogTitle className="sr-only">Reseñas de {details.name}</DialogTitle>
           
-          {/* Encabezado fijo */}
           <div className="p-4 sm:p-6 border-b border-[#E6D7C3]/50 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -171,8 +165,7 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
               </div>
               
             </div>
-          </div>
-          
+          </div>    
           <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar p-4 sm:p-6">
             <ReviewsWidget branchId={details.id} />
           </div>

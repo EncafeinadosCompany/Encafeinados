@@ -5,7 +5,7 @@ import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "../auth/authMutations";
 import toast from "react-hot-toast";
-import { EditCoffelover } from "@/api/types/coffelovers/coffelovers.type";
+import { UpdateProfileRequest } from "@/api/types/coffelovers/coffelovers.type";
 
 const authClient = new AuthClient();
 
@@ -46,8 +46,8 @@ export const useEditCoffeloverMutation = () => {
   const queryClient = useQueryClient()
   const useErrors = useError("editCoffelover")
 
-  return useMutation<EditCoffelover, Error, any>({
-    mutationFn: async (variables: { formData: EditCoffelover; id: number }): Promise<any> => {
+  return useMutation<UpdateProfileRequest, Error, any>({
+    mutationFn: async (variables: { formData: UpdateProfileRequest; id: number }): Promise<any> => {
 
       try {
         const response = await authClient.patch(`/clients/${variables.id}`, variables.formData);
