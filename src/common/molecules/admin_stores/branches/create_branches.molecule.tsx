@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/di
 import FormRegisterBrands from "@/common/widgets/forms/auth/form_register_branches.widget"
 import { Branch } from "@/api/types/branches/branches.types"
 import { Description } from "@radix-ui/react-dialog"
-import FormEditBrands from "@/common/widgets/forms/auth/form_edit_branches.widget"
+// import FormEditBrands from "@/common/widgets/forms/auth/form_edit_branches.widget"
 import { Coffee } from "lucide-react"
 
 
@@ -58,7 +58,8 @@ export function AddBranchModal({ isOpen, onClose, initialData, mode }: AddBranch
                 FORMULARIO
               </div>
               {mode === "edit" ? (
-                <FormEditBrands onClose={onClose} data={initialData} />
+                // <FormEditBrands onClose={onClose} data={initialData} />
+                <p>aún no</p>
               ) : (
                 <FormRegisterBrands onClose={onClose} />
               )}
