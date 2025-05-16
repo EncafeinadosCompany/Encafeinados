@@ -12,8 +12,11 @@ import {
   Phone,
   ExternalLink,
   ChevronDown,
+  ChevronUp,
   MessageSquare,
-  X
+  X,
+  Tag,
+  Loader
 } from "lucide-react";
 import { Cafe } from "@/api/types/map/map_search.types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
@@ -23,6 +26,7 @@ import {
 } from "@/common/utils/social_networks.utils";
 import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
 import toast from "react-hot-toast";
+import { useBranchAttributes } from "@/api/queries/branches/branch_attributes.query";
 
 
 const determineNetworkType = (
@@ -186,6 +190,8 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   copyToClipboard,
   copied,
 }) => {
+  const { data: attributesData, isLoading: attributesLoading } = useBranchAttributes(cafe.id);
+  const [showAllTags, setShowAllTags] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -271,7 +277,119 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
     );
   };
 
- 
+  // Función para renderizar las etiquetas/atributos
+  const renderTags = () => {
+    if (attributesLoading) {
+      return (
+        <div className="py-3 border-t md:border-t-0 border-gray-100">
+          <h4 className="font-medium text-[#2C1810] mb-2 flex items-center gap-1.5">
+            <Tag size={14} className="text-[#6F4E37]" />
+            <span>Características</span>
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="inline-block h-6 w-20 bg-[#F3D19E]/10 animate-pulse rounded-full"></div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // Si hay atributos, mostrarlos
+    if (attributesData?.attributes && attributesData.attributes.length > 0) {
+      const hasManyAttributes = attributesData.attributes.length > 6;
+      const displayAttributes = showAllTags 
+        ? attributesData.attributes 
+        : attributesData.attributes.slice(0, 6);
+
+      return (
+        <div className="py-3 border-t md:border-t-0 border-gray-100 overflow-x-hidden">
+          <h4 className="font-medium text-[#2C1810] mb-2 flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Tag size={14} className="text-[#6F4E37]" />
+              <span>Características</span>
+            </div>
+            {hasManyAttributes && (
+              <span className="text-xs text-[#6F4E37]/70">
+                {attributesData.attributes.length} en total
+              </span>
+            )}
+          </h4>
+          
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2 relative">
+              {displayAttributes.map((attr, idx) => (
+                <div key={idx} className="group">
+                  <span
+                    className="inline-block px-2.5 py-1 bg-[#F3D19E]/20 text-[#6F4E37] text-xs rounded-full truncate max-w-[180px]"
+                    title={attr.attributeName}
+                  >
+                    {attr.attributeName}
+                  </span>
+                  
+                  {/* Tooltip con posición fija para evitar scroll */}
+                  <div className="fixed opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200 z-50 pointer-events-none">
+                    <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 rounded-lg p-2 text-xs shadow-lg max-w-[200px] w-max">
+                      <div className="font-medium mb-0.5">{attr.attributeName}</div>
+                      <div className="text-gray-600">{attr.value}</div>
+                      <div className="absolute w-2 h-2 bg-white border-b border-r border-gray-200 transform rotate-45 -bottom-1 left-1/2 -translate-x-1/2"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Botón para ver más/menos */}
+            {hasManyAttributes && (
+              <div className="flex justify-center">
+                <button 
+                  onClick={() => setShowAllTags(!showAllTags)}
+                  className="bg-[#F3D19E]/30 hover:bg-[#F3D19E]/40 text-[#6F4E37] text-xs font-medium px-3 py-1 rounded-full transition-colors flex items-center gap-1"
+                >
+                  <span>{showAllTags ? "Ver menos" : "Ver todos"}</span>
+                  {showAllTags ? (
+                    <ChevronUp size={12} />
+                  ) : (
+                    <ChevronDown size={12} />
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Fallback a los tags predefinidos si no hay atributos
+    if (cafe.tags && cafe.tags.length > 0) {
+      return (
+        <div className="py-3 border-t md:border-t-0 border-gray-100">
+          <h4 className="font-medium text-[#2C1810] mb-2 flex items-center gap-1.5">
+            <Tag size={14} className="text-[#6F4E37]" />
+            <span>Características</span>
+          </h4>
+          <div
+            className={`flex flex-wrap gap-2 ${
+              cafe.tags.length > 6
+                ? "max-h-24 overflow-y-auto pr-1"
+                : ""
+            }`}
+          >
+            {cafe.tags.map((tag, idx) => (
+              <span
+                key={idx}
+                className="inline-block px-2.5 py-1 bg-[#F3D19E]/20 text-[#6F4E37] text-xs rounded-full whitespace-nowrap"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <>
@@ -398,30 +516,8 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                     </div>
                   )}
 
-                  {/* Resto del código para las etiquetas/tags */}
-                  {cafe.tags && cafe.tags.length > 0 && (
-                    <div className="py-3 border-t md:border-t-0 border-gray-100">
-                      <h4 className="font-medium text-[#2C1810] mb-2">
-                        Características
-                      </h4>
-                      <div
-                        className={`flex flex-wrap gap-2 ${
-                          cafe.tags.length > 6
-                            ? "max-h-24 overflow-y-auto pr-1"
-                            : ""
-                        }`}
-                      >
-                        {cafe.tags.map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="inline-block px-2.5 py-1 bg-[#F3D19E]/20 text-[#6F4E37] text-xs rounded-full whitespace-nowrap"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  {/* Renderizar las etiquetas/atributos */}
+                  {renderTags()}
                 </div>
               </div>
             </div>
