@@ -101,6 +101,9 @@ const AuthRoutes = () => {
                   <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
                   <Route path="album" element={<ListAlbum />} />
                   <Route path="review" element={<ReviewView />} />
+                  <Route path="Profile" element={<ProfileView />} />
+
+                  
                 
 
                 </Route>
