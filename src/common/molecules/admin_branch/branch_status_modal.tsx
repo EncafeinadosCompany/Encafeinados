@@ -1,13 +1,6 @@
 "use client"
 import { Button } from "@/common/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/common/ui/dialog"
+import {Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle} from "@/common/ui/dialog"
 import { AlertTriangle } from "lucide-react"
 
 interface BranchStatusModalProps {

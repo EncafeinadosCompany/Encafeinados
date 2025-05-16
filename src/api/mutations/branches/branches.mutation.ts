@@ -34,7 +34,6 @@ export const useRegisterBrandMutation = () => {
       });
         toast.remove();
         toast.success("Sucursal registrada con éxito"); 
-
         queryClient.invalidateQueries({ queryKey: ['branches'] });
       },
       onError: (error: any) => {
@@ -43,5 +42,35 @@ export const useRegisterBrandMutation = () => {
       }
     })
 }
+
+
+
+export const useUpdateBranchMutation = () => {
+  const useErrors = useError("branches");
+  const queryClient = useQueryClient();
+
+  return useMutation<any, Error, {  data: Partial<BranchPost> }>({
+      mutationFn: async ({ data }): Promise<LoginResponse> => {
+          try {
+              const response = await authClient.patch<any>(`/branches/${1}`, data);
+              return response;
+          } catch (error: any) {
+              throw handleApiError(error);
+          }
+      },
+      onSuccess: (data) => {
+          toast.remove();
+          toast.success("Sucursal actualizada con éxito");
+          queryClient.invalidateQueries({ queryKey: ['branches'] });
+      },
+      onError: (error: any) => {
+          toast.remove();
+          useErrors(error);
+      }
+  });
+};
+
+
+
 
 

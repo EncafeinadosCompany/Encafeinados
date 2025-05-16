@@ -9,7 +9,7 @@ export const AdminBranchesItems: NavItemType[] = [
   },
   {
     title: "Pefil",
-    href: "/pefil-sucursal",
+    href: "/sucursal/perfil",
     icon: <Store className="h-4 w-4" />,
   },
   

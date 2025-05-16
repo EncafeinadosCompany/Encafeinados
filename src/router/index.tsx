@@ -5,7 +5,8 @@ import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 
 import { RouteLoadingIndicator } from "./route_loading_indicador.router";
-import EditCoffelovers from "@/common/widgets/coffeelover/edit_coffelovers.widget";
+
+import Perfil_branches from "@/modules/admin_branches/views/perfil_branches.page";
 
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
@@ -29,9 +30,10 @@ const BranchManagement = lazy(() => import("@/common/widgets/admin_stores/branch
 const HomeAdminStores = lazy(() => import("@/modules/admin/views/home_admin_stores_nav"));
 const PendingBranchesView = lazy(() => import("@/modules/admin/components/branches/pending_branches_list.component"));
 const AlbumManager = lazy(() => import("@/modules/admin/components/album/album_manager.component"));
-
+const CanvasDashboard = lazy(() => import("@/common/widgets/admin_branches/create_attributes.widgets"));
+const CafeGallery = lazy(() => import("@/common/widgets/admin_branches/edit_images.widget"));
+const FormEditBranch = lazy(() => import("@/common/widgets/forms/auth/form_edit_branches_widget"));
 //BRANCHES
-const FormRegisterBranchPage = lazy(() => import("@/common/widgets/forms/auth/form_register_stores_page"));
 const HomeBranchesNav = lazy(() => import("@/modules/admin_branches/views/home_branches_nav"));
 const PrincipalBranchesPage = lazy(() => import("@/modules/admin_branches/views/principal_branches_page"));
 
@@ -70,7 +72,7 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-            <Route path="/prueba" element={<FormRegisterBranchPage />} /> Se tiene que especificar
+            {/* <Route path="/prueba" element={<CanvasDashboard />} /> Se tiene que especificar */}
 
 
             {/* PUBLIC ROUTES */}
@@ -99,9 +101,8 @@ const AuthRoutes = () => {
                   <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
                   <Route path="album" element={<ListAlbum />} />
                   <Route path="review" element={<ReviewView />} />
-                  <Route path="profile" element={<ProfileView />} />
+                
 
-                  
                 </Route>
                 <Route path="/open-album" element={<PageAlbum />} />
               </Route>
@@ -116,6 +117,14 @@ const AuthRoutes = () => {
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL]} />}>
                 <Route path="/sucursal" element={<HomeBranchesNav />}>
                   <Route index element={<PrincipalBranchesPage />} />
+                  <Route path="perfil" element={<Perfil_branches />}>
+                    <Route path="images" element={<CafeGallery />} />
+                    <Route path="attributes" element={<CanvasDashboard />} />
+                    <Route path="branch" element={<FormEditBranch />} /> 
+                  </Route> 
+
+
+      
                 </Route>
               </Route>
 
