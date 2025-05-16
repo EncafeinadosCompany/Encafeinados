@@ -42,6 +42,9 @@ export const errorMessages: Record<number, string> = {
     },
     editCoffelover:{
         409: "El correo eléctronico ya se encuentra registrado"
+    },
+    attributes:{
+        409: "Uno de los atributos ya se encuentra registrado" 
     }
   
   };

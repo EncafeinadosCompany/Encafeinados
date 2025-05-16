@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { BrancheIDresponse, BranchesImagen, BranchesResponse } from '../../types/branches/branches.types'
-import {  BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse} from '../../types/branches/branches_approval.types'
+import { Branch, BrancheIDresponse, BranchesImagen, BranchesResponse } from '../../types/branches/branches.types'
+import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse } from '../../types/branches/branches_approval.types'
 
 import AuthClient from '@/api/client/axios'
+import toast from 'react-hot-toast'
 
 const authClient = new AuthClient()
 
@@ -17,7 +18,7 @@ export const useBranches = () => {
 }
 
 
-export const useBranchesID = (id:number) => {
+export const useBranchesID = (id: number) => {
   return useQuery<BrancheIDresponse>({
     queryKey: ['branches'],
     queryFn: async () => {
@@ -27,12 +28,17 @@ export const useBranchesID = (id:number) => {
   })
 }
 
-export const useImagenBranch = (id: number) => {
-  return useQuery<string[]>({
-    queryKey: ['branches_imagen', id],
-    queryFn: async () => {
-      const response = await authClient.get<BranchesImagen[]>(`/images/branch/${id}`);
-      return response.map(img => img.image_url);
+export const useImagenBranch = () => {
+
+  return useQuery<BranchesImagen[]>({
+    queryKey: ['branches'],
+    queryFn: async (): Promise< BranchesImagen[]> => {
+      const BranchId = localStorage.getItem('storeOrBranchId')
+      if (!BranchId) {
+        toast.error('No se encontro el id de la sucursal')
+      }
+      const response = await authClient.get<BranchesImagen[]>(`/images/branch/${BranchId}`);
+      return response;
     },
   });
 }
@@ -54,7 +60,7 @@ export const useBranch = (branchId: number | undefined) => {
       const response = await authClient.get<BranchesResponse>(`/branches/${branchId}`)
       return response
     },
-    enabled: !!branchId, 
+    enabled: !!branchId,
   })
 }
 
@@ -78,7 +84,7 @@ export const useBranchApprovalDetails = (branchId: number | undefined) => {
       return response
     },
     enabled: !!branchId,
-    staleTime: 5 * 60 * 1000, 
+    staleTime: 5 * 60 * 1000,
   })
 }
 
@@ -103,5 +109,16 @@ export const useValidateVisit = (coordinates: any, shopId: any) => {
     data: "success",
     isLoading: false,
     isError: false,
+  }
+}
+
+
+
+export const  deleteImagenBrandQuery = async (id: number) => {
+  try {
+    const response = await authClient.delete(`/images/branch/${id}`)
+    return response
+  } catch (error) {
+    console.log(error)  
   }
 }
