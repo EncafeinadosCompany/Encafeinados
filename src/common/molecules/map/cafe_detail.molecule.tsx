@@ -16,7 +16,7 @@ import {
   MessageSquare,
   X,
   Tag,
-  Loader
+  Loader,
 } from "lucide-react";
 import { Cafe } from "@/api/types/map/map_search.types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
@@ -27,7 +27,6 @@ import {
 import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
 import toast from "react-hot-toast";
 import { useBranchAttributes } from "@/api/queries/branches/branch_attributes.query";
-
 
 const determineNetworkType = (
   social: any
@@ -190,7 +189,8 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   copyToClipboard,
   copied,
 }) => {
-  const { data: attributesData, isLoading: attributesLoading } = useBranchAttributes(cafe.id);
+  const { data: attributesData, isLoading: attributesLoading } =
+    useBranchAttributes(cafe.id);
   const [showAllTags, setShowAllTags] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
@@ -288,18 +288,20 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           </h4>
           <div className="flex flex-wrap gap-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="inline-block h-6 w-20 bg-[#F3D19E]/10 animate-pulse rounded-full"></div>
+              <div
+                key={i}
+                className="inline-block h-6 w-20 bg-[#F3D19E]/10 animate-pulse rounded-full"
+              ></div>
             ))}
           </div>
         </div>
       );
     }
 
-    // Si hay atributos, mostrarlos
     if (attributesData?.attributes && attributesData.attributes.length > 0) {
       const hasManyAttributes = attributesData.attributes.length > 6;
-      const displayAttributes = showAllTags 
-        ? attributesData.attributes 
+      const displayAttributes = showAllTags
+        ? attributesData.attributes
         : attributesData.attributes.slice(0, 6);
 
       return (
@@ -315,7 +317,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
               </span>
             )}
           </h4>
-          
+
           <div className="space-y-3">
             <div className="flex flex-wrap gap-2 relative">
               {displayAttributes.map((attr, idx) => (
@@ -326,11 +328,12 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   >
                     {attr.attributeName}
                   </span>
-                  
-                  {/* Tooltip con posición fija para evitar scroll */}
+
                   <div className="fixed opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200 z-50 pointer-events-none">
                     <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 rounded-lg p-2 text-xs shadow-lg max-w-[200px] w-max">
-                      <div className="font-medium mb-0.5">{attr.attributeName}</div>
+                      <div className="font-medium mb-0.5">
+                        {attr.attributeName}
+                      </div>
                       <div className="text-gray-600">{attr.value}</div>
                       <div className="absolute w-2 h-2 bg-white border-b border-r border-gray-200 transform rotate-45 -bottom-1 left-1/2 -translate-x-1/2"></div>
                     </div>
@@ -338,11 +341,10 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 </div>
               ))}
             </div>
-            
-            {/* Botón para ver más/menos */}
+
             {hasManyAttributes && (
               <div className="flex justify-center">
-                <button 
+                <button
                   onClick={() => setShowAllTags(!showAllTags)}
                   className="bg-[#F3D19E]/30 hover:bg-[#F3D19E]/40 text-[#6F4E37] text-xs font-medium px-3 py-1 rounded-full transition-colors flex items-center gap-1"
                 >
@@ -360,7 +362,6 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
       );
     }
 
-    // Fallback a los tags predefinidos si no hay atributos
     if (cafe.tags && cafe.tags.length > 0) {
       return (
         <div className="py-3 border-t md:border-t-0 border-gray-100">
@@ -370,9 +371,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           </h4>
           <div
             className={`flex flex-wrap gap-2 ${
-              cafe.tags.length > 6
-                ? "max-h-24 overflow-y-auto pr-1"
-                : ""
+              cafe.tags.length > 6 ? "max-h-24 overflow-y-auto pr-1" : ""
             }`}
           >
             {cafe.tags.map((tag, idx) => (
@@ -418,7 +417,9 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 {cafe.rating ? (
                   <>
                     <Star size={16} className="fill-amber-500" />
-                    <span className="font-medium text-white">{cafe.rating}</span>
+                    <span className="font-medium text-white">
+                      {cafe.rating}
+                    </span>
                     <button
                       onClick={() => setIsReviewsOpen(true)}
                       className="md:hidden ml-1 bg-white/20 backdrop-blur-sm rounded-full px-1.5 py-0.5 text-[10px] text-white/90 hover:bg-white/30 transition-colors flex items-center gap-0.5"
@@ -443,25 +444,24 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
             className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar md:pb-16 pb-24"
           >
             <div className="p-4 md:p-5 lg:p-6">
-            <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
-  {cafe.name}
-  {cafe.isOpen ? (
-    <span className="text-sm bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-      Abierto
-    </span>
-  ) : (
-    <span className="text-sm bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-      Cerrado
-    </span>
-  )}
-</h2>
+              <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
+                {cafe.name}
+                {cafe.isOpen ? (
+                  <span className="text-sm bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                    Abierto
+                  </span>
+                ) : (
+                  <span className="text-sm bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+                    Cerrado
+                  </span>
+                )}
+              </h2>
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-1 text-amber-500">
                   {cafe.rating ? (
                     <>
                       <Star size={16} className="fill-amber-500" />
                       <span className="font-medium">{cafe.rating}</span>
-                      {/* Mostrar solo "Reseñas disponibles" en lugar del contador exacto */}
                       <span className="text-sm text-gray-500">
                         (Reseñas disponibles)
                       </span>
@@ -473,8 +473,6 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                     </div>
                   )}
                 </div>
-
-             
               </div>
               <div className="md:grid md:grid-cols-2 md:gap-6 lg:gap-6 xl:grid-cols-12">
                 <div className="xl:col-span-5">
@@ -488,10 +486,11 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                     </p>
                   </div>
 
-                  <div className="bg-white rounded-lg">{renderSocialNetworks()}</div>
+                  <div className="bg-white rounded-lg">
+                    {renderSocialNetworks()}
+                  </div>
                 </div>
                 <div className="xl:col-span-7 md:pl-0 lg:pl-1">
-                  {/* Número de teléfono restaurado con diseño mejorado */}
                   {cafe.phone && (
                     <div className="mb-4">
                       <h4 className="font-medium text-[#2C1810] mb-2 flex items-center gap-1.5">
@@ -506,7 +505,9 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                           {cafe.phone}
                         </a>
                         <button
-                          onClick={() => window.open(`tel:${cafe.phone}`, "_self")}
+                          onClick={() =>
+                            window.open(`tel:${cafe.phone}`, "_self")
+                          }
                           className="ml-2 bg-amber-50 hover:bg-amber-100 text-amber-600 p-1 rounded-full"
                           aria-label="Llamar"
                         >
@@ -516,7 +517,6 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                     </div>
                   )}
 
-                  {/* Renderizar las etiquetas/atributos */}
                   {renderTags()}
                 </div>
               </div>
@@ -550,36 +550,38 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           <div className="absolute md:relative bottom-0 left-0 right-0 py-4 md:py-5 px-4 md:px-6 bg-white/95 md:bg-white backdrop-blur-sm md:backdrop-filter-none border-t border-gray-100 z-10">
             <div className="flex items-center gap-3">
               <div className="flex-1 flex gap-2">
-                {/* AQUÍ ES DONDE DEBES REEMPLAZAR EL BOTÓN */}
-<motion.button
-  className={`flex-1 py-3 md:py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-1.5 ${
-    cafe.isOpen
-      ? "bg-[#6F4E37] text-white hover:bg-[#5d4230]"
-      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-  }`}
-  whileHover={cafe.isOpen ? { scale: 1.02 } : {}}
-  whileTap={cafe.isOpen ? { scale: 0.98 } : {}}
-  onClick={() => {
-    if (cafe.isOpen) {
-      startRoute(cafe.id);
-    } else {
-      toast.error("Esta cafetería está cerrada actualmente", {
-        icon: "⏰",
-        duration: 3000
-      });
-    }
-  }}
-  disabled={!cafe.isOpen}
->
-  <Navigation size={16} className="hidden sm:inline" />
-  <span>
-    {window.innerWidth <= 380
-      ? cafe.isOpen ? "Ruta" : "Cerrado"
-      : cafe.isOpen ? "Iniciar ruta" : "Cerrado - No disponible"}
-  </span>
-</motion.button>
+                <motion.button
+                  className={`flex-1 py-3 md:py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-1.5 ${
+                    cafe.isOpen
+                      ? "bg-[#6F4E37] text-white hover:bg-[#5d4230]"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                  whileHover={cafe.isOpen ? { scale: 1.02 } : {}}
+                  whileTap={cafe.isOpen ? { scale: 0.98 } : {}}
+                  onClick={() => {
+                    if (cafe.isOpen) {
+                      startRoute(cafe.id);
+                    } else {
+                      toast.error("Esta cafetería está cerrada actualmente", {
+                        icon: "⏰",
+                        duration: 3000,
+                      });
+                    }
+                  }}
+                  disabled={!cafe.isOpen}
+                >
+                  <Navigation size={16} className="hidden sm:inline" />
+                  <span>
+                    {window.innerWidth <= 380
+                      ? cafe.isOpen
+                        ? "Ruta"
+                        : "Cerrado"
+                      : cafe.isOpen
+                      ? "Iniciar ruta"
+                      : "Cerrado - No disponible"}
+                  </span>
+                </motion.button>
 
-                {/* Por este botón fijo de reseñas */}
                 <motion.button
                   className="flex-1 md:max-w-[200px] bg-white border border-[#6F4E37] text-[#6F4E37] py-3 md:py-2.5 rounded-xl font-medium hover:bg-[#6F4E37]/5 transition-colors flex items-center justify-center gap-1.5"
                   whileHover={{ scale: 1.02 }}
@@ -588,9 +590,13 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 >
                   <MessageSquare size={16} className="hidden sm:inline" />
                   <span>
-                    {cafe.rating 
-                      ? (window.innerWidth <= 380 ? "Reseñas" : "Ver reseñas")
-                      : (window.innerWidth <= 380 ? "Reseñar" : "Añadir reseña")}
+                    {cafe.rating
+                      ? window.innerWidth <= 380
+                        ? "Reseñas"
+                        : "Ver reseñas"
+                      : window.innerWidth <= 380
+                      ? "Reseñar"
+                      : "Añadir reseña"}
                   </span>
                 </motion.button>
               </div>
@@ -651,7 +657,6 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
         </div>
       </div>
 
-      {/* Diálogo de reseñas */}
       <ReviewsDialog
         branchId={cafe.id}
         branchName={cafe.name}
