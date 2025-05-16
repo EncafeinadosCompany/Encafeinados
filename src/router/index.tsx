@@ -103,9 +103,6 @@ const AuthRoutes = () => {
                   <Route path="review" element={<ReviewView />} />
                   <Route path="Profile" element={<ProfileView />} />
 
-                  
-                
-
                 </Route>
                 <Route path="/open-album" element={<PageAlbum />} />
               </Route>
