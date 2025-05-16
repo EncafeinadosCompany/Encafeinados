@@ -16,12 +16,20 @@ export function ImageViewer({
   className,
   thumbnailClassName,
 }: ImageViewerProps) {
+  const [imgError, setImgError] = React.useState(false);
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    setImgError(true);
+    e.currentTarget.src = "https://placehold.co/100?text=No+disponible";
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <img
-          src={src}
+          src={imgError ? "https://placehold.co/100?text=No+disponible" : src}
           alt={alt}
+          onError={handleImageError}
           className={cn("cursor-pointer hover:opacity-90 transition-opacity", thumbnailClassName)}
         />
       </DialogTrigger>
@@ -40,8 +48,9 @@ export function ImageViewer({
             <X className="h-6 w-6" />
           </button>
           <img
-            src={src}
+            src={imgError ? "https://placehold.co/400x400?text=No+disponible" : src}
             alt={alt}
+            onError={handleImageError}
             className={cn("max-h-[85vh] max-w-full object-contain", className)}
           />
         </div>
