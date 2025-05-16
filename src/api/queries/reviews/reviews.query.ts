@@ -14,12 +14,12 @@ export const useReviewsByIdBranches = (id:number) => {
   })
 }
 
-export const useClientReviews = (clientId: number) => {
-  return useQuery<ClientReview[]>({
-    queryKey: ['clientReviews', clientId],
+export const useClientReviews = (id: number) => {
+  return useQuery<ClientWithReviews>({
+    queryKey: ['clientReviews', id],
     queryFn: async () => {
-      const response = await authClient.get<ClientWithReviews>(`/reviews/client/${clientId}`)
-      return response.reviews
+      const response = await authClient.get<ClientWithReviews>(`/reviews/client/${id}`)
+      return response
     },
   })
 }

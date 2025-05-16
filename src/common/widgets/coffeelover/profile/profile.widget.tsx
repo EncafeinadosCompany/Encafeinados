@@ -12,7 +12,6 @@ export const ProfileWidget: React.FC = () => {
   const updateProfile = useUpdateProfileMutation();
   const { height } = useWindowSize();
   
-  // Para ajustar espaciado basado en la altura de la pantalla
   const isLargeScreen = height > 800;
   
   if (isLoading) {

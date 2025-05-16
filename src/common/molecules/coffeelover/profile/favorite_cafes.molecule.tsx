@@ -40,6 +40,22 @@ const favoriteCafes = [
     rating: 4.9,
     image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80",
     isFavorite: true
+  },
+  {
+    id: 5,
+    name: "Café Gourmet",
+    address: "Calle del Gourmet #5",
+    rating: 4.6,
+    image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80",
+    isFavorite: true
+  },
+  {
+    id: 6,
+    name: "Café de la Calle",
+    address: "Calle 45 #67-89",
+    rating: 4.3,
+    image: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80",
+    isFavorite: false
   }
 ];
 
@@ -48,7 +64,6 @@ export const FavoriteCafes: React.FC<FavoriteCafesProps> = ({ heightAdjustment =
   const [scrollPosition, setScrollPosition] = useState(0);
   const { height } = useWindowSize();
   
-  // Calcular la altura adaptable de las tarjetas
   const cardHeight = heightAdjustment ? 
     (height > 900 ? "h-56" : height > 800 ? "h-48" : "h-40") : 
     "h-40";
@@ -145,7 +160,6 @@ export const FavoriteCafes: React.FC<FavoriteCafesProps> = ({ heightAdjustment =
         ))}
       </div>
       
-      {/* Añadir estilos globales para ocultar el scrollbar en algunos navegadores */}
       <style>{`
         .hide-scrollbar {
           -ms-overflow-style: none;  /* IE and Edge */
