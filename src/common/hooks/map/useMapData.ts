@@ -39,22 +39,19 @@ export const useMapData = (
         const baseData = {
           id: branch.id,
           name: branch.name,
-          // Usar el rating de la API o null si no está disponible
           rating: branch.average_rating ? parseFloat(branch.average_rating) : null,
-          // Eliminar la generación aleatoria del contador de reseñas
-          // reviewCount: Math.floor(Math.random() * 100) + 50, ← ELIMINAR ESTA LÍNEA
           openTime: "7:00 AM - 6:00 PM",
           image: storeLogo,
-          tags: ["Coffee", "Specialty"],
+          tags: ["Coffee", "Specialty"], // Mantener como fallback
           latitude: branch.latitude,
           longitude: branch.longitude,
-          isOpen: branch.is_open !== undefined ? branch.is_open : true, // Usar el valor de la API
+          isOpen: branch.is_open !== undefined ? branch.is_open : true,
           status: branch.status,
           phone: branch.phone_number,
           address: branch.address,
           storeId: branch.store?.store_id ?? 0,
           storeName: branch.store?.store_name ?? "",
-          socialNetworks: branch.social_branches || []
+          socialNetworks: branch.social_branches || [],
         };
 
         if (userLocation) {

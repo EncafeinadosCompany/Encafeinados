@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Coffee, ArrowLeft } from 'lucide-react';
 import { Cafe } from '@/api/types/map/map_search.types';
-import { FilterOptions } from '@/common/hooks/map/useSearchFilter'; // Añadir esta línea
+import { FilterOptions } from '@/common/hooks/map/useSearchFilter'; 
 import HighlightText from '@/common/atoms/HighlightText';
 import CafeCard from '@/common/molecules/map/cafe_card.molecule';
 
@@ -104,13 +104,13 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
               }}
             >
               {sortedCafes.length > 0 ? (
-                <div className="space-y-4 pb-16">
+                <div className="space-y-4 ">
                   {searchTerm.trim() !== "" || 
                    filterOptions.minRating > 0 || 
                    filterOptions.tags.length > 0 || 
                    filterOptions.onlyOpen === true ? (
                     <div className="text-xs text-gray-500 text-center mt-1 mb-3">
-                      Mostrando {sortedCafes.length} de {totalCafeCount} cafeterías
+                      Mostrando {sortedCafes?.length || 0} de {totalCafeCount || sortedCafes?.length || 0} cafeterías
                       {searchTerm.trim() !== "" && (
                         <span className="ml-1">para "<strong>{searchTerm}</strong>"</span>
                       )}

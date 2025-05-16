@@ -75,7 +75,6 @@ export const useGeolocation = (mapInstance: L.Map | null) => {
             });
           }
           
-          // Si es el primer intento y la precisión no es buena, intentar mejorarla
           if (attempt === 0 && posAccuracy > 100) {
             progressiveTimeoutRef.current = setTimeout(() => {
               getLocationWithPrecision(1);
@@ -87,7 +86,6 @@ export const useGeolocation = (mapInstance: L.Map | null) => {
         (error) => {
           console.error("Error obteniendo ubicación:", error);
           
-          // Manejar específicamente cada tipo de error
           switch (error.code) {
             case error.PERMISSION_DENIED:
               setLocationError(LocationErrorType.PERMISSION_DENIED);
@@ -98,7 +96,6 @@ export const useGeolocation = (mapInstance: L.Map | null) => {
             case error.TIMEOUT:
               setLocationError(LocationErrorType.TIMEOUT);
               
-              // Si es timeout y tenemos menos de 2 intentos, reducir la precisión
               if (attempt < 2) {
                 progressiveTimeoutRef.current = setTimeout(() => {
                   getLocationWithPrecision(attempt + 1);
@@ -116,14 +113,11 @@ export const useGeolocation = (mapInstance: L.Map | null) => {
       );
     };
     
-    // Comenzar con el primer intento (baja precisión)
     getLocationWithPrecision(0);
     
   }, [mapInstance]);
   
-  /**
-   * Obtener mensaje de error según el tipo
-   */
+
   const getErrorMessage = useCallback((): string | null => {
     if (!locationError) return null;
     
@@ -139,7 +133,6 @@ export const useGeolocation = (mapInstance: L.Map | null) => {
     }
   }, [locationError]);
 
-  // Obtener ubicación al montar el componente
   useEffect(() => {
     const timer = setTimeout(() => {
       getUserLocation();
