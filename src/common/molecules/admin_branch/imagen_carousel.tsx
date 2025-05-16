@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/common/ui/button"
+import { BranchesImagen } from "@/api/types/branches/branches.types"
 
 
 interface ImageCarouselProps {
-  images: string[]
+  images:  BranchesImagen[]
   alt: string
 }
 
@@ -42,7 +43,7 @@ export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
             }`}
           >
             <img
-               src={src || "/placeholder.svg"}
+               src={src.image_url || "/placeholder.svg"}
                alt={`${alt} - View ${index + 1}`}
                className="object-contain w-full h-full"
                loading={index === 0 ? "eager" : "lazy"}

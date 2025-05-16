@@ -5,10 +5,11 @@ import { QRCode } from "@/common/atoms/QRCode";
 import BranchStatusModal from "@/common/molecules/admin_branch/branch_status_modal";
 import ImageCarousel from "@/common/molecules/admin_branch/imagen_carousel";
 import { Badge } from "@/common/ui/badge";
+import { Button } from "@/common/ui/button";
 import { Card } from "@/common/ui/card";
 import { Switch } from "@/common/ui/switch";
 import { Label } from "@radix-ui/react-label";
-import { Clock1, Clock2,  PhoneIcon, Star } from "lucide-react";
+import { AlertCircle, Clock1, Clock2,  Coffee,  PhoneIcon, RefreshCw, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -19,22 +20,73 @@ export default function PrincipalBranchesPage() {
       return toast.error('No se encontro el id de la sucursal')
     }
     const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
-    const {data:branches, error, isPending} = useBranchesID(Number(BranchId))
+    const { data: branches, error: branchError, isPending: isBranchLoading } = useBranchesID(Number(BranchId));
+    const { data: imagen, error: imageError, isPending: isImageLoading } = useImagenBranch();
+    const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
     const [branchStatus, setBranchStatus] = useState<boolean>(branches?.branch.is_open ?? true);
-    const {data:imagen , error:errorImagen, isPending:isPendingImagen} = useImagenBranch(Number(BranchId))
-    const {mutateAsync:useStateOpen, error:errorStatus, status} = useStatesIsOpen()
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
 
     console.log('branches', branches, 'imagen', imagen)
-
-
-    useEffect(() => {
+    
+      useEffect(() => {
         if (branches?.branch.is_open !== undefined) {
             setBranchStatus(branches.branch.is_open);
         }
     }, [branches?.branch.is_open]);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    // Handle loading states
+    if (isBranchLoading || isImageLoading) {
+        return (
+            <div className="container h-full mx-auto max-w-7xl px-4 py-8">
+                <div className="flex items-center justify-center h-[60vh]">
+                    <div className="text-center space-y-4">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#43765C] mx-auto"></div>
+                        <p className="text-gray-500">Cargando información de la sucursal...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+
+    if (branchError || imageError || statusError) {
+        return (
+            <div className="container h-full mx-auto max-w-7xl px-4 py-8">
+                <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+                    <div className="text-red-600 mb-4">
+                        <AlertCircle className="h-12 w-12 mx-auto mb-2" />
+                        <h3 className="text-lg font-semibold">Error al cargar la información</h3>
+                    </div>
+                    <p className="text-red-500 mb-4">
+                        {branchError?.message || imageError?.message || statusError?.message || 
+                         'Ocurrió un error al cargar los datos de la sucursal'}
+                    </p>
+                    <Button 
+                        onClick={() => window.location.reload()}
+                        className="bg-red-100 hover:bg-red-200 text-red-600 transition-colors"
+                    >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Intentar nuevamente
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    // Handle empty data
+    if (!branches?.branch) {
+        return (
+            <div className="container h-full mx-auto max-w-7xl px-4 py-8">
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 text-center">
+                    <Coffee className="h-12 w-12 mx-auto mb-2 text-gray-400" />
+                    <h3 className="text-lg font-semibold text-gray-600">No hay información disponible</h3>
+                    <p className="text-gray-500 mt-2">No se encontraron datos de la sucursal</p>
+                </div>
+            </div>
+        );
+    }
+
 
     const handleConfirmStatusChange = () => {
         setBranchStatus(branchStatus === true ? false : true);
@@ -62,7 +114,7 @@ export default function PrincipalBranchesPage() {
                                 <Badge className={`${branches?.branch.status == 'APPROVED' ? 'bg-emerald-200/60 border-emerald-700' : 'bg-orange-300 border-orange-500'} p-1 px-2 rounded-full absolute z-10  right-0`}>{branches?.branch.status === 'APPROVED'? 'Aprobada': 'Pediente'}</Badge>
                                 {
                                    imagen && imagen?.length > 0 ? (
-                                        <ImageCarousel images={imagen||[]} alt="MacBook Air" />
+                                        <ImageCarousel images={imagen||[]} alt="MacBook Air" />         
                                     ):(
                                        <div>
                                         <p>No hay imagenes disponibles</p>
