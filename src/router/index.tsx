@@ -72,7 +72,7 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-            {/* <Route path="/prueba" element={<CanvasDashboard />} /> Se tiene que especificar */}
+            {/* <Route path="/prueba" element={<CanvasDashboard />} /> */}
 
 
             {/* PUBLIC ROUTES */}
