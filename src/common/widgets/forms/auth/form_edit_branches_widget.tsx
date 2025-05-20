@@ -16,17 +16,9 @@ import { EditBranchesSchemas, EditBrancheType } from "@/common/utils/schemas/aut
 
 import { useBranchesID } from "@/api/queries/branches/branch.query";
 
-
-
 import { Label } from "@/common/ui/label";
 import { useUpdateBranchMutation } from "@/api/mutations/branches/branches.mutation";
 
-
-
-type FormData = {
-    name: string;
-    phone_number: string;
-};
 
 export default function FormEditBranch() {
     const { data: useBranches } = useBranchesID(1)
@@ -44,9 +36,7 @@ export default function FormEditBranch() {
             phone_number: "",
             address: "",
             latitude: 0,
-            longitude: 0,
-            // addressDetails: "",
-            // social_networks: [],
+            longitude: 0
         }
     });
 
@@ -57,15 +47,12 @@ export default function FormEditBranch() {
                 phone_number: useBranches.branch.phone_number || "",
                 address: useBranches.branch.address,
                 latitude: useBranches.branch.latitude,
-                longitude: useBranches.branch.longitude,
-                // social_networks: useBranches.branch.social_branches?.map(branch => ({
-                //     value: branch.value,
-                //     social_network_id: socialNetworks?.social.find(
-                //         (b) => b.name === branch.social_network_id
-                //     )?.id || 0,
-                //     description: branch.description
-                // })) || []
+                longitude: useBranches.branch.longitude,      
             })
+
+            setValue('latitude', useBranches.branch.latitude)
+            setValue('longitude', useBranches.branch.longitude)
+            setBaseAddress(useBranches.branch.address)
         }
 
         console.log("useBranches:", useBranches);
@@ -76,14 +63,10 @@ export default function FormEditBranch() {
     const onSubmit = async (data: EditBrancheType) => {
         try {
             useUpdateBranches({data})
-            // Add your API call here
         } catch (error) {
             console.error("Error submitting form:", error);
         }
     };
-
-
-
 
     const onLocationSelect = (lat: number, lng: number, address: string) => {
         setValue("latitude", lat);
@@ -94,15 +77,15 @@ export default function FormEditBranch() {
 
     return (
 
-        <div className="max-w-4xl mx-auto">
-            <Card className=" border-none bg-white">
+        <div className="h-full w-full grid grid-cols-1 items-center">
+            <Card className=" border-none mx-auto min-w-5xl max-w-4xl bg-white h-[95vh]">
                 <CardHeader className="flex flex-col items-center relative z-10">
                     <div className="flex items-center justify-center mb-2">
                         <div className="bg-[#DB8935] p-2 rounded-full mr-3">
                             <Coffee className="text-white" size={24} />
                         </div>
                         <CardTitle className="text-[#020F17] font-semibold text-xl">
-                            Registrar una nueva sucursal
+                            Edita tu sucursal
                         </CardTitle>
                     </div>
                     <div className="flex items-center space-x-1 ">
@@ -111,9 +94,7 @@ export default function FormEditBranch() {
                         <div className="h-[2px] w-12 bg-[#DC3545]"></div>
                     </div>
                     <p className="text-[#546F75] text-sm text-center max-w-xs">
-
-                        "Formulario para registrar una sucursal"
-
+                        "Formulario para editar los datos de tu sucursal"
                     </p>
 
                     <div className="absolute opacity-5 -right-0 -top-0">
@@ -121,7 +102,7 @@ export default function FormEditBranch() {
                     </div>
 
                 </CardHeader>
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-6 space-y-4 overflow-y-auto max-h-[70vh] ">
 
                     <div className="grid gap-6 md:grid-cols-1">
 
@@ -130,7 +111,7 @@ export default function FormEditBranch() {
                         })} className="space-y-6">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <Label>Nombre de la sucursal</Label>
+                                    <Label className="mb-2">Nombre de la sucursal</Label>
 
                                     <div className="relative">
                                         <Store className="absolute h-4 w-4 top-3 left-3 text-gray-500" />
@@ -145,7 +126,7 @@ export default function FormEditBranch() {
                                 </div>
 
                                 <div>
-                                    <Label>Número de teléfono</Label>
+                                    <Label className="mb-2">Número de teléfono</Label>
 
                                     <div className="relative">
                                         <Phone className="absolute h-4 w-4 top-3 left-3 text-gray-500" />
@@ -170,25 +151,6 @@ export default function FormEditBranch() {
                                 />
 
                             </div>
-
-                            {/* <div>
-                                <Label>Detalles de la dirección</Label>
-
-                                <Input
-                                    {...register("addressDetails")}
-                                    placeholder="Ej. Calle 123 #45-67"
-                                />
-
-                                <p>{errors.addressDetails?.message}</p>
-                            </div> */}
-
-                            {/* Social Networks Section */}
-                            {/* <SocialNetworksForm
-                                register={register}
-                                control={control}
-                                availableSocialNetworks={socialNetworks}
-                            /> */}
-
                             <div className="flex justify-center">
                                 <Button
                                     type="submit"

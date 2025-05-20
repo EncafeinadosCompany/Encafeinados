@@ -146,7 +146,7 @@ export function BranchCard({
 
         {/* Footer with buttons */}
         <CardFooter className="p-3 border-t border-[#F5E4D2] bg-white flex gap-2">
-          <Button
+          {/* <Button
             onClick={onEdit}
             variant="outline"
             className="flex-1 border-[#DB8935] text-[#DB8935] hover:bg-[#F5E4D2]/50 transition-all text-xs py-2 h-auto rounded-full"
@@ -154,7 +154,7 @@ export function BranchCard({
           >
             <Edit className="mr-1.5 h-3.5 w-3.5" />
             Editar
-          </Button>
+          </Button> */}
 
           <Button
             onClick={onViewDetails}

@@ -6,8 +6,6 @@ import RoleRoute from "./RouleRoute";
 
 import { RouteLoadingIndicator } from "./route_loading_indicador.router";
 
-import Perfil_branches from "@/modules/admin_branches/views/perfil_branches.page";
-
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/about_page"));
@@ -30,12 +28,12 @@ const BranchManagement = lazy(() => import("@/common/widgets/admin_stores/branch
 const HomeAdminStores = lazy(() => import("@/modules/admin/views/home_admin_stores_nav"));
 const PendingBranchesView = lazy(() => import("@/modules/admin/components/branches/pending_branches_list.component"));
 const AlbumManager = lazy(() => import("@/modules/admin/components/album/album_manager.component"));
-const ImagesGallery = lazy(() => import("@/common/widgets/admin_branches/edit_images.widget"));
+const ImagesGallery = lazy(() => import("@/common/widgets/admin_branches/images.widget"));
 const FormEditBranch = lazy(() => import("@/common/widgets/forms/auth/form_edit_branches_widget"));
 //BRANCHES
 const HomeBranchesNav = lazy(() => import("@/modules/admin_branches/views/home_branches_nav"));
 const PrincipalBranchesPage = lazy(() => import("@/modules/admin_branches/views/principal_branches_page"));
-const AttributesDashboard = lazy(() => import("@/common/widgets/admin_branches/create_attributes.widgets"));
+const AttributesDashboard = lazy(() => import("@/common/widgets/admin_branches/attributes.widgets"));
 
 // COFFEELOVER
 const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/home_coffeelover_page"));
@@ -95,16 +93,15 @@ const AuthRoutes = () => {
             <Route element={<PrivateRoute />}>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
-                <Route path="/coffeelover" element={<HomeCoffeelover />}>
-                  <Route index element={<PrincipalCoffeelover />} />
-                  <Route path="map-coffelover" element={<MapView />} />
-                  <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
-                  <Route path="album" element={<ListAlbum />} />
-                  <Route path="review" element={<ReviewView />} />
-                  <Route path="Profile" element={<ProfileView />} />
-
-                </Route>
                 <Route path="/open-album" element={<PageAlbum />} />
+                <Route path="/coffeelover" element={<HomeCoffeelover />}>
+                    <Route index element={<PrincipalCoffeelover />} />
+                    <Route path="album" element={<ListAlbum />} />
+                    <Route path="review" element={<ReviewView />} />
+                    <Route path="Profile" element={<ProfileView />} />
+                    <Route path="map-coffelover" element={<MapView />} />
+                    <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
+                </Route>     
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
@@ -120,8 +117,6 @@ const AuthRoutes = () => {
                   <Route path="images" element={<ImagesGallery />} />
                   <Route path="perfil" element={<FormEditBranch />} />
                   <Route path="attributes" element={<AttributesDashboard />} />
-                  <Route path="perfil_prueba" element={<Perfil_branches />}>
-                  </Route>
                 </Route>
               </Route>
 

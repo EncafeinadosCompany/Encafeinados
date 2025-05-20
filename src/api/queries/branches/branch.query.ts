@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { Branch, BrancheIDresponse, BranchesImagen, BranchesResponse } from '../../types/branches/branches.types'
+import { BrancheIDresponse, BranchesImagen, BranchesResponse } from '../../types/branches/branches.types'
 import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse } from '../../types/branches/branches_approval.types'
 
 import AuthClient from '@/api/client/axios'
-import toast from 'react-hot-toast'
 
 const authClient = new AuthClient()
 
@@ -109,13 +108,3 @@ export const useValidateVisit = (coordinates: any, shopId: any) => {
   }
 }
 
-
-
-export const  deleteImagenBrandQuery = async (id: number) => {
-  try {
-    const response = await authClient.delete(`/images/branch/${id}`)
-    return response
-  } catch (error) {
-    console.log(error)  
-  }
-}

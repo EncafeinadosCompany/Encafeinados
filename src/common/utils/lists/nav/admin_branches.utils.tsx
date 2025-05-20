@@ -9,7 +9,7 @@ export const AdminBranchesItems: NavItemType[] = [
     icon: <Home className="h-4 w-4" />,
   },
   {
-    title: "Galeria",
+    title: "Galería",
     href: "/sucursal/images",
     icon: <Images className="h-4 w-4" />,
   },

@@ -24,7 +24,7 @@ export const useCreateAttributeMutation = () => {
     const queryClient = useQueryClient();
     const useErrors = useError("attributes");
 
-    return useMutation<CreateAttributes,Error, RegisterAttibute[]>({
+    return useMutation<CreateAttributes,Error, any>({
         mutationFn: async (data: RegisterAttibute[]): Promise<CreateAttributes> => {
             try {
 
@@ -49,11 +49,12 @@ export const useCreateAttributeMutation = () => {
         },
         onSuccess: () => {
 
+            queryClient.invalidateQueries({ queryKey: ['branch-attributes'] });
+
             const loadingToast = toast.loading('Creando attributos...', {id: "loading"});
 
             toast.success('¡Los attributos se han creado con éxito!', { id: loadingToast });
 
-            queryClient.invalidateQueries({ queryKey: ['attributes', 'branches'] });
 
         },
         onError: (error: any) => {

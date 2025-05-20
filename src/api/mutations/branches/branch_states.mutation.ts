@@ -2,7 +2,7 @@ import { useMutation, UseMutationResult, useQueryClient } from "@tanstack/react-
 import { ValidateVisitInput, ValidateVisitResponse } from "../../types/branches/branches_approval.types";
 import AuthClient from "../../client/axios";
 import { useError } from "@/common/hooks/auth/useErrors";
-import { formSchemaBranches } from "@/common/widgets/admin_branches/edit_images.widget";
+import { formSchemaBranches } from "@/common/widgets/admin_branches/images.widget";
 import { uploadImage } from "../image/image.mutations";
 import { AxiosResponse } from "axios";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
@@ -123,6 +123,9 @@ export const useStatesIsOpen = () => {
       const response = await authClient.patch(`/branches/open-close/${id}`, { isOpen: is_open });
       return response;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branches"] });
+    }
   });
 }
 
@@ -215,6 +218,7 @@ export const deleteImagenBrandMutation =  () => {
       toast.success('¡La imagen se ha eliminado con éxito!', { id: loadingToast });
 
       queryClient.invalidateQueries({ queryKey: ['branches'] });
+      queryClient.invalidateQueries({ queryKey: ['branches_imagen'] });
 
     },
     onError: (error: any) => {

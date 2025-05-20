@@ -1,22 +1,17 @@
 import {motion} from "framer-motion"
 import { Coffee, Star } from "lucide-react"
 import { Button } from "@/common/ui/button"
+import { RegisterAttibute } from "@/api/types/attributes/attributes.type"
 
 
-interface BadgeItem {
-    id: string
-    attributeId: number
-    type: string
-    value: string,
-    createdAt?: number
-}
+
 
 
 interface DetailsAttributesProps {
     selectedBadges: string[]
-    badges: BadgeItem[]
-    handleBadgeDoubleClick: (badge: BadgeItem) => void 
-    getTypeLabel: (type: string) => string
+    badges: RegisterAttibute[]
+    handleBadgeDoubleClick: (badge: RegisterAttibute) => void 
+    getTypeLabel: (type: number) => string | number
 }
 
 export const DetailsAttributes = ({selectedBadges, badges, handleBadgeDoubleClick, getTypeLabel}:DetailsAttributesProps)=>{
@@ -42,7 +37,7 @@ export const DetailsAttributes = ({selectedBadges, badges, handleBadgeDoubleClic
                         <Star className="h-4 w-4 text-[#D4A76A]" />
                         <span className="font-medium text-[#6F4E37]">Tipo:</span>
                         <span className="text-[#A67C52] bg-[#FAF3E0] px-3 py-1 rounded-full text-sm">
-                            {getTypeLabel(badges.find((b) => b.id === selectedBadges[0])!.type)}
+                            {/* {getTypeLabel(badges.find((b) => b.id === selectedBadges[0])!.id)} */}
                         </span>
                     </p>
                     <div className="space-y-2">

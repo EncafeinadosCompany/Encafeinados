@@ -5,9 +5,9 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Coffee, Loader2, Pencil, Plus, RefreshCw, Trash2, X } from "lucide-react"
 import { Button } from "@/common/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "@/common/ui/dialog"
-import {AlertDialog,AlertDialogAction,AlertDialogCancel,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle} from "@/common/ui/alert-dialog"
-import {  useImagenBranch } from "@/api/queries/branches/branch.query"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/common/ui/dialog"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/common/ui/alert-dialog"
+import { useImagenBranch } from "@/api/queries/branches/branch.query"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,11 +16,15 @@ import { BranchesImagen } from "@/api/types/branches/branches.types"
 import { deleteImagenBrandMutation, useUpdateImagenBrandMutation } from "@/api/mutations/branches/branch_states.mutation"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/common/ui/card"
 import toast from "react-hot-toast"
+import { Badge } from "@/common/ui/badge"
+
+import { ChevronDown, ChevronUp } from "lucide-react"; // Add to imports
+
 
 const tipo_imagen = [
     { id: 1, clasification: "LOGO" },
     { id: 2, clasification: "PORTADA" },
-    { id: 3, clasification: "GALERIA" },
+    { id: 3, clasification: "GALERÍA" },
     { id: 4, clasification: "PERFIL" },
     { id: 5, clasification: "MENÚ" },
     { id: 6, clasification: "PROMOCIONES" }
@@ -30,7 +34,7 @@ const tipo_imagen = [
 
 
 export const formSchemaBranches = z.object({
-    image_type: z.enum(['LOGO', 'PORTADA', 'GALERIA', 'PERFIL', 'MENÚ', 'PROMOCIONES'], {
+    image_type: z.enum(['LOGO', 'PORTADA', 'GALERÍA', 'PERFIL', 'MENÚ', 'PROMOCIONES'], {
         required_error: "Por favor selecciona un tipo de imagen",
     }),
     image_file: z.any()
@@ -43,11 +47,11 @@ export const formSchemaBranches = z.object({
 });
 
 
-export default function ImagesGallery()  {
+export default function ImagesGallery() {
 
-    const BranchId = localStorage.getItem('storeOrBranchId') 
-    if(!BranchId){
-      return toast.error('No se encontro el id de la sucursal')
+    const BranchId = localStorage.getItem('storeOrBranchId')
+    if (!BranchId) {
+        return toast.error('No se encontro el id de la sucursal')
     }
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [selectedCafe, setSelectedCafe] = useState<string | null>(null)
@@ -56,28 +60,32 @@ export default function ImagesGallery()  {
     const [previewUrl, setPreviewUrl] = useState<string>("")
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
-    const { data:data_images, isLoading, isError } = useImagenBranch(Number(BranchId))
+    const { data: data_images, isLoading, isError } = useImagenBranch(Number(BranchId))
     const [cafes, setCafes] = useState<BranchesImagen[]>([])
-    const {mutateAsync:useDeleteImagen, status, error}= deleteImagenBrandMutation()
-    const {mutateAsync:useImagen} = useUpdateImagenBrandMutation()
-    
+    const { mutateAsync: useDeleteImagen, status, error } = deleteImagenBrandMutation()
+    const { mutateAsync: useImagen } = useUpdateImagenBrandMutation()
+
+
+
+    // Add state for collapse
+    const [isTypeInfoVisible, setIsTypeInfoVisible] = useState(false);
     const form = useForm<z.infer<typeof formSchemaBranches>>({
         resolver: zodResolver(formSchemaBranches),
         defaultValues: {
             image_file: undefined
         },
     });
-  
+
     useEffect(() => {
         if (data_images) {
             setCafes(data_images)
-            console.log('data_images',cafes)
+            console.log('data_images', cafes)
         }
         console.log('no esta')
     }, [data_images, cafes])
 
 
-    console.log('hola',cafes)
+    console.log('hola', cafes)
 
 
 
@@ -115,10 +123,10 @@ export default function ImagesGallery()  {
 
 
 
-    const handleDeleteClick = (cafe:{value:string, id:number}) => {
-        
+    const handleDeleteClick = (cafe: { value: string, id: number }) => {
+
         setSelectedCafe(cafe.value || null)
-       
+
         setIsDeleteOpen(true)
     }
 
@@ -152,7 +160,7 @@ export default function ImagesGallery()  {
     const handleDeleteConfirm = () => {
         if (selectedCafe) {
             const datos = cafes.find((cafe) => cafe.image_url !== selectedCafe)
-            console.log('datos',datos?.id)
+            console.log('datos', datos?.id)
             useDeleteImagen(datos?.id)
             setIsDeleteOpen(false)
         }
@@ -160,7 +168,7 @@ export default function ImagesGallery()  {
 
 
 
-    
+
     if (isLoading) {
         return (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -184,7 +192,7 @@ export default function ImagesGallery()  {
                     <CardDescription className="text-red-600">
                         No pudimos cargar las imágenes. Por favor, intenta recargar la página.
                     </CardDescription>
-                    <Button 
+                    <Button
                         onClick={() => window.location.reload()}
                         className="mt-4 bg-red-600 hover:bg-red-700 text-white"
                     >
@@ -205,7 +213,7 @@ export default function ImagesGallery()  {
                     <CardDescription className="text-[#6F4E37]">
                         Comienza agregando imágenes a tu galería
                     </CardDescription>
-                    <Button 
+                    <Button
                         onClick={handleAddClick}
                         className="mt-4 bg-[#6F4E37] hover:bg-[#5a3e2c] text-white"
                     >
@@ -217,27 +225,130 @@ export default function ImagesGallery()  {
         );
     }
     return (
-        <div className="container mx-auto p-4 space-y-4">
-            <Button
-                onClick={handleAddClick}
-                className="bg-[#6F4E37] hover:bg-[#5a3e2c] text-white rounded-full"
-            >
-                <Plus className="h-4 w-4 mr-2" />
-                Agregar imagen
-            </Button>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="container h-full mx-auto max-w-7xl px-4 py-8">
+            <div className="relative bg-white h-full max-h-[92vh] overflow-y-auto rounded-2xl shadow-xl border border-[#D4A76A]/10 overflow-hidden hover:overflow-y-auto transition-all duration-300" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                {/* Decorative elements */}
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#D4A76A]/10 rounded-full blur-3xl"></div>
+                <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#6F4E37]/10 rounded-full blur-3xl"></div>
+                
+                <div className="relative p-8">
+                    <div className="text-center space-y-6 max-w-3xl mx-auto mb-1">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="space-y-4"
+                        >
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#6F4E37]/10 rounded-full text-[#6F4E37] font-medium">
+                                <Coffee className="h-5 w-5" />
+                                <span>Galería de Imágenes</span>
+                            </div>
+                            <h1 className="text-3xl md:text-4xl font-bold text-[#2C1810] leading-tight">
+                                Personaliza tu Cafetería de Especialidad
+                            </h1>
+                            <p className="text-[#6F4E37] text-lg max-w-2xl mx-auto">
+                                Comparte la esencia única de tu café a través de imágenes cautivadoras que cuenten tu historia
+                            </p>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                        >
+                            <Button
+                                onClick={() => setIsTypeInfoVisible(!isTypeInfoVisible)}
+                                variant="outline"
+                                className="mx-auto flex items-center gap-2 bg-gradient-to-r from-[#FAF3E0] to-[#FFF8ED] text-[#6F4E37] hover:from-[#F5E6C9] hover:to-[#FAF3E0] border-[#D4A76A]/20 shadow-md hover:shadow-lg transition-all duration-300"
+                            >
+                                {isTypeInfoVisible ? (
+                                    <>
+                                        <motion.div
+                                            animate={{ y: [0, -3, 0] }}
+                                            transition={{ 
+                                                repeat: Infinity, 
+                                                duration: 1.5,
+                                                ease: "easeInOut"
+                                            }}
+                                        >
+                                            <ChevronUp className="h-5 w-5" />
+                                        </motion.div>
+                                        <span className="font-medium">Ocultar tipos de imágenes</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <motion.div
+                                            animate={{ y: [0, 3, 0] }}
+                                            transition={{ 
+                                                repeat: Infinity, 
+                                                duration: 1.5,
+                                                ease: "easeInOut"
+                                            }}
+                                        >
+                                            <ChevronDown className="h-5 w-5" />
+                                        </motion.div>
+                                        <span className="font-medium">Ver tipos de imágenes</span>
+                                    </>
+                                )}
+                            </Button>
+                        </motion.div>
+
+                        <motion.div
+                            initial={false}
+                            animate={{
+                                height: isTypeInfoVisible ? "auto" : 0,
+                                opacity: isTypeInfoVisible ? 1 : 0
+                            }}
+                            transition={{ duration: 0.3 }}
+                            className="overflow-hidden"
+                        >
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-2">
+                                {tipo_imagen.map((tipo) => (
+                                    <motion.div
+                                        key={tipo.id}
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="bg-gradient-to-br from-[#F5E4D2] to-[#FFF8ED] p-4 rounded-xl border border-[#D4A76A]/20 shadow-sm hover:shadow-md transition-all duration-300"
+                                    >
+                                        <p className="font-semibold text-[#2C1810]">{tipo.clasification}</p>
+                                        <p className="text-[#6F4E37] text-xs mt-2">
+                                            {tipo.clasification === "LOGO" && "Tu identidad visual"}
+                                            {tipo.clasification === "PORTADA" && "Primera impresión"}
+                                            {tipo.clasification === "GALERÍA" && "Ambiente y detalles"}
+                                            {tipo.clasification === "PERFIL" && "Imagen principal"}
+                                            {tipo.clasification === "MENÚ" && "Productos destacados"}
+                                            {tipo.clasification === "PROMOCIONES" && "Ofertas especiales"}
+                                        </p>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    </div>
+
+            <div className="flex justify-end mb-5">
+                <Button
+                    onClick={handleAddClick}
+                    className="bg-black hover:bg-black/80 text-white rounded-full  shadow-lg hover:shadow-xl transition-all duration-300"
+                >    
+                    <span className="w-auto ml-3">Subir Imagen</span>
+                    <Plus className="h-5 w-5 mr-0" />
+                </Button>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                 {cafes.map((cafe) => (
                     <div key={cafe.id} className="relative rounded-lg overflow-hidden">
-                        <div className="relative h-64 w-full">
+                        <div className="relative h-52 w-full">
                             {/* Image loading state */}
                             <div className="absolute inset-0 bg-gray-100 animate-pulse flex items-center justify-center">
                                 <Loader2 className="h-8 w-8 text-[#6F4E37] animate-spin" />
                             </div>
 
                             {/* Actual image with loading handler */}
-                            <img 
-                                src={cafe.image_url || "/placeholder.svg"} 
-                                alt={cafe.image_type} 
+                            <img
+                                src={cafe.image_url || "/placeholder.svg"}
+                                alt={cafe.image_type}
                                 className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
                                 onLoad={(e) => {
                                     const target = e.target as HTMLImageElement;
@@ -246,15 +357,22 @@ export default function ImagesGallery()  {
                                 style={{ opacity: 0 }}
                                 loading="lazy"
                             />
-                            
+
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                            <div className="absolute top-2  left-2 flex gap-2">
+                                <Badge className="bg-amber-200">
+                                    {cafe.image_type}
+                                </Badge>
+                            </div>
                             <div className="absolute top-2 right-2 flex gap-2">
+
                                 <button
-                                    onClick={() => handleDeleteClick({id:cafe.id, value:cafe.image_url})}
-                                    className="bg-white/90 p-2 rounded-full hover:bg-white transition-colors"
+                                    onClick={() => handleDeleteClick({ id: cafe.id, value: cafe.image_url })}
+                                    className="bg-white/80 p-2 rounded-full hover:bg-white transition-colors"
                                 >
-                                    <Trash2 className="h-5 w-5 text-gray-700" />
+                                    <Trash2 className="h-4 w-4 text-gray-700" />
                                 </button>
+
                             </div>
                         </div>
                     </div>
@@ -262,10 +380,12 @@ export default function ImagesGallery()  {
 
                 {/* Modal para editar imagen */}
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                    <DialogContent className="sm:max-w-md bg-white backdrop-blur-sm border-2 border-[#D4A76A]/20 shadow-xl rounded-xl">
+                    <DialogContent className={`sm:max-w-md max-h-[90vh] ${previewUrl ? 'min-h-[500px]' : 'min-h-[400px] '}
+                            overflow-y-auto 
+                            overflow-x-hidden bg-white backdrop-blur-sm border-2 border-[#D4A76A]/20 shadow-xl rounded-xl scrollbar-subtle`}>
 
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        <Form {...form} >
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 ">
 
                                 {/* Decorative elements */}
                                 <div className="absolute -top-12 -right-12 w-40 h-40 bg-[#D4A76A]/10 rounded-full blur-3xl"></div>
@@ -273,7 +393,7 @@ export default function ImagesGallery()  {
 
                                 <DialogHeader className="flex flex-col mx-auto items-center relative">
                                     <motion.div
-                                        className="inline-flex items-center gap-2 px-4 py-2 bg-[#6F4E37]/10 rounded-full mb-4 text-[#6F4E37] font-medium text-sm w-fit"
+                                        className="inline-flex items-center gap-2 px-4 py-2 bg-[#6F4E37]/10 rounded-full mb-2 text-[#6F4E37] font-medium text-sm w-fit"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.3 }}
@@ -281,14 +401,14 @@ export default function ImagesGallery()  {
                                         <Coffee className="h-4 w-4" />
                                         <span>Galería de imágenes</span>
                                     </motion.div>
-                                    <DialogTitle className="text-2xl font-bold text-[#2C1810] mb-2"> {modalMode === 'add' ? 'Agregar nueva imagen' : 'Editar imagen'}</DialogTitle>
-                                    <DialogDescription className="text-[#6F4E37] text-center max-w-sm">
+                                    <DialogTitle className="text-2xl font-bold text-[#2C1810]"> {modalMode === 'add' ? 'Agregar nueva imagen' : 'Editar imagen'}</DialogTitle>
+                                    <DialogDescription className="text-[#6F4E37] text-center text-xs max-w-sm">
                                         ¡Comparte tu mejor foto del café! Buscamos imágenes que capturen la esencia y el ambiente único de este lugar.
                                     </DialogDescription>
                                 </DialogHeader>
 
                                 <motion.div
-                                    className="grid gap-4 py-6"
+                                    className="grid gap-4 py-1"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.3, delay: 0.1 }}
@@ -300,13 +420,13 @@ export default function ImagesGallery()  {
                                         name="image_type"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Tipo de Imagen</FormLabel>
+                                                <FormLabel className="text-xs">Tipo de Imagen</FormLabel>
                                                 <Select
                                                     onValueChange={field.onChange}
                                                     defaultValue={field.value}
                                                     value={field.value}
                                                 >
-                                                    <SelectTrigger className="w-full border-2 border-[#D4A76A]/30 focus:border-[#D4A76A] rounded-lg">
+                                                    <SelectTrigger className="w-full border-2 text-xs border-[#D4A76A]/30 focus:border-[#D4A76A] rounded-lg">
                                                         <SelectValue placeholder="Selecciona el tipo de imagen" />
                                                     </SelectTrigger>
                                                     <SelectContent>
@@ -409,9 +529,9 @@ export default function ImagesGallery()  {
                                                                         accept="image/*"
                                                                     />
                                                                 </Button>
-                                                              
+
                                                             </motion.div>
-                                                            
+
                                                         )}
                                                     </div>
                                                 </FormControl>
@@ -424,9 +544,9 @@ export default function ImagesGallery()  {
 
                                 </motion.div>
 
-                                <DialogFooter className="flex w-full relative border-t border-[#D4A76A]/20">
+                                <DialogFooter className="flex w-full relative ">
                                     <div className="w-full flex justify-between items-center">
-                                        <Button
+                                        {/* <Button
                                             variant="outline"
                                             onClick={() => {
                                                 setNewImage(null)
@@ -436,11 +556,11 @@ export default function ImagesGallery()  {
                                         >
                                             <X className="h-4 w-4 mr-2" />
                                             Cancelar
-                                        </Button>
+                                        </Button> */}
                                         <Button
                                             type="submit"
                                             disabled={!newImage}
-                                            className="bg-gradient-to-r from-[#43765C] to-[#386048] hover:from-[#386048] hover:to-[#2D4F3B] text-white shadow-md hover:shadow-lg transition-all duration-200"
+                                            className="bg-gradient-to-r w-full from-[#43765C] to-[#386048] hover:from-[#386048] hover:to-[#2D4F3B] text-white shadow-md hover:shadow-lg transition-all duration-200"
                                         >
                                             <Coffee className="h-4 w-4 mr-2" />
                                             Guardar cambios
@@ -470,6 +590,8 @@ export default function ImagesGallery()  {
                     </AlertDialogContent>
                 </AlertDialog>
             </div>
+          </div>
+        </div>
         </div>
     )
 
