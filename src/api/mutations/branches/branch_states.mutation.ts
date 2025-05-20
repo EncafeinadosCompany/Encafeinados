@@ -119,8 +119,8 @@ export const useRegisterVisitMutation = (): UseMutationResult<
 export const useStatesIsOpen = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, isOpen }: { id: number; isOpen: boolean }) => {
-      const response = await authClient.patch(`/branches/open-close/${id}`, { isOpen: isOpen });
+    mutationFn: async ({ id, is_open }: { id: number; is_open: boolean }) => {
+      const response = await authClient.patch(`/branches/open-close/${id}`, { isOpen: is_open });
       return response;
     },
   });

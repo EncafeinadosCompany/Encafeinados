@@ -31,11 +31,10 @@ export const useBranchesID = (id: number) => {
 export const useImagenBranch = (id:number) => {
 
   return useQuery<BranchesImagen[]>({
-    queryKey: ['branches'],
+    queryKey: ['branches_imagen'],
     queryFn: async (): Promise<BranchesImagen[]> => {
-      
       const response = await authClient.get<BranchesImagen[]>(`/images/branch/${id}`);
-      console.log("Imagenesdd", response)
+      console.log("Imagenes", response)
       return response;
     },
   });

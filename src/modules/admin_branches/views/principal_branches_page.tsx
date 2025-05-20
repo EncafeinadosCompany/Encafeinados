@@ -21,11 +21,10 @@ export default function PrincipalBranchesPage() {
     }
     const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
 
-
-    const { data: branches, error: branchError, isPending: isBranchLoading } = useBranchesID(Number(BranchId));
+    const { data: branches, error: branchError, isPending: isBranchLoading, status } = useBranchesID(Number(BranchId));
     const { data: imagen, error: imageError, isPending: isImageLoading } = useImagenBranch(Number(BranchId));
     const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
-    const [branchStatus, setBranchStatus] = useState<boolean>(branches?.branch.is_open ?? true);
+    const [branchStatus, setBranchStatus] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Add a loading check for both queries
@@ -39,7 +38,7 @@ export default function PrincipalBranchesPage() {
     }, [branches?.branch.is_open, imagen]);
 
     // Update the loading condition
-    if (isLoading) {
+    if (status === 'pending') {
         return (
             <div className="container h-full mx-auto max-w-7xl px-4 py-8">
                 <div className="flex items-center justify-center h-[60vh]">
@@ -117,7 +116,7 @@ export default function PrincipalBranchesPage() {
 
     const handleConfirmStatusChange = () => {
         setBranchStatus(branchStatus === true ? false : true);
-        useStateOpen({ id: Number(BranchId), isOpen: branchStatus === true ? false : true })
+        useStateOpen({ id: Number(BranchId), is_open: branchStatus === true ? false : true })
 
         setTimeout(() => {
             setIsModalOpen(false);

@@ -1,53 +1,21 @@
 "use client"
-
 import type React from "react"
 import z from "zod"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Coffee, Loader2, Pencil, Plus, RefreshCw, Trash2, X } from "lucide-react"
 import { Button } from "@/common/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from "@/common/ui/dialog"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/common/ui/alert-dialog"
-import { deleteImagenBrandQuery, useImagenBranch } from "@/api/queries/branches/branch.query"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "@/common/ui/dialog"
+import {AlertDialog,AlertDialogAction,AlertDialogCancel,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle} from "@/common/ui/alert-dialog"
+import {  useImagenBranch } from "@/api/queries/branches/branch.query"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/common/ui/form"
 import { BranchesImagen } from "@/api/types/branches/branches.types"
 import { deleteImagenBrandMutation, useUpdateImagenBrandMutation } from "@/api/mutations/branches/branch_states.mutation"
-import { ca } from "date-fns/locale"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/common/ui/card"
 import toast from "react-hot-toast"
-
-type Cafe = {
-    id: string
-    name: string
-    location: string
-    imageUrl: string
-}
-
-
-type ImageData = {
-    id: string;
-    url: string;
-    type: string;
-};
 
 const tipo_imagen = [
     { id: 1, clasification: "LOGO" },
@@ -58,20 +26,7 @@ const tipo_imagen = [
     { id: 6, clasification: "PROMOCIONES" }
 ] as const;
 
-// Enhanced Zod schema with validation
-const ImageSchema = z.object({
-    image_type: z.enum(['LOGO', 'PORTADA', 'GALERIA', 'PERFIL', 'MENÚ', 'PROMOCIONES'], {
-        required_error: "Por favor selecciona un tipo de imagen",
-        invalid_type_error: "Tipo de imagen inválido"
-    }),
-    image_file: z
-        .instanceof(File, { message: "Por favor selecciona una imagen" })
-        .refine((file) => file.size <= 5 * 1024 * 1024, "La imagen no debe superar 5MB")
-        .refine(
-            (file) => ['image/jpeg', 'image/png', 'image/gif'].includes(file.type),
-            "Formato de imagen no soportado. Use PNG, JPG o GIF"
-        ),
-});
+
 
 
 export const formSchemaBranches = z.object({
@@ -88,40 +43,42 @@ export const formSchemaBranches = z.object({
 });
 
 
-export default function CafeGallery  ()  {
+export default function ImagesGallery()  {
 
     const BranchId = localStorage.getItem('storeOrBranchId') 
     if(!BranchId){
       return toast.error('No se encontro el id de la sucursal')
     }
-    const [cafes, setCafes] = useState<BranchesImagen[]>([])
-    const [isEditOpen, setIsEditOpen] = useState(false)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [selectedCafe, setSelectedCafe] = useState<string | null>(null)
     const [newImage, setNewImage] = useState<File | null>(null)
-    const { data, isLoading, isError } = useImagenBranch(Number(BranchId))
-    const [previewUrl, setPreviewUrl] = useState<string>("")
-    const {mutateAsync:useDeleteImagen, status, error}= deleteImagenBrandMutation()
-  
     const [images, setImages] = useState<{ id: string; url: string; type: string }[]>([]);
-    useEffect(() => {
-        if (data) {
-            setCafes(data)
-        }
-    }, [data])
-
-
+    const [previewUrl, setPreviewUrl] = useState<string>("")
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
-
-const {mutateAsync:useImagen} = useUpdateImagenBrandMutation()
-
+    const { data:data_images, isLoading, isError } = useImagenBranch(Number(BranchId))
+    const [cafes, setCafes] = useState<BranchesImagen[]>([])
+    const {mutateAsync:useDeleteImagen, status, error}= deleteImagenBrandMutation()
+    const {mutateAsync:useImagen} = useUpdateImagenBrandMutation()
+    
     const form = useForm<z.infer<typeof formSchemaBranches>>({
         resolver: zodResolver(formSchemaBranches),
         defaultValues: {
             image_file: undefined
         },
     });
+  
+    useEffect(() => {
+        if (data_images) {
+            setCafes(data_images)
+            console.log('data_images',cafes)
+        }
+        console.log('no esta')
+    }, [data_images, cafes])
+
+
+    console.log('hola',cafes)
+
 
 
     const onSubmit = async (values: z.infer<typeof formSchemaBranches>) => {
@@ -239,7 +196,7 @@ const {mutateAsync:useImagen} = useUpdateImagenBrandMutation()
         );
     }
 
-    if (!data || data.length === 0) {
+    if (!cafes || cafes.length === 0) {
         return (
             <Card className="w-full bg-[#FAF3E0] border-[#D4A76A]/20">
                 <CardHeader className="space-y-1 flex flex-col items-center text-center p-6">
@@ -269,7 +226,7 @@ const {mutateAsync:useImagen} = useUpdateImagenBrandMutation()
                 Agregar imagen
             </Button>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {cafes?.map((cafe) => (
+                {cafes.map((cafe) => (
                     <div key={cafe.id} className="relative rounded-lg overflow-hidden">
                         <div className="relative h-64 w-full">
                             {/* Image loading state */}
@@ -472,7 +429,6 @@ const {mutateAsync:useImagen} = useUpdateImagenBrandMutation()
                                         <Button
                                             variant="outline"
                                             onClick={() => {
-                                                setIsEditOpen(false)
                                                 setNewImage(null)
                                                 setPreviewUrl("")
                                             }}
