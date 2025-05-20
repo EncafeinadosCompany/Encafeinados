@@ -1,14 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/common/ui/tabs";
-import CanvasDashboard from "@/common/widgets/admin_branches/create_attributes.widgets";
-import CafeGallery  from "@/common/widgets/admin_branches/edit_images.widget";
-import FormEditBranch from "@/common/widgets/forms/auth/form_edit_branches_widget";
 import { Coffee, ImageIcon, Settings } from "lucide-react";
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 export default function Perfil_branches() {
     const [activeTab, setActiveTab] = useState("atributos");
-    const navigate = useNavigate()
     return (
         <main className="h-full bg-[#FAF3E0] overflow-y-hidden overflow-x-hidden py-4 px-4">
              <div className="mb-8">

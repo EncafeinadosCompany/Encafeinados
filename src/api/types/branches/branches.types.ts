@@ -65,17 +65,11 @@ export interface BranchesResponseStore {
 }
 
 
-
-
-
-
-
-
 export interface BranchesImagen {
   id: number;
   image_url: string;
   image_type:string
-}[];
+};
 
 
 export interface BrancheIDresponse {

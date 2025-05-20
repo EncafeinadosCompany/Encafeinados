@@ -5,24 +5,23 @@ import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { Badge } from "@/common/ui/badge"
 import { Button } from "@/common/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog"
-import { Input } from "@/common/ui/input"
-import { X, AlertCircle, Coffee } from "lucide-react"
-import { useAttributes } from "@/api/queries/attributes/attributes.query"
-import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.type"
-import { motion } from "framer-motion"
+import { Dialog} from "@/common/ui/dialog"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/common/ui/form"
+
+import { FormAttributes } from "@/common/molecules/admin_branch/attributes/form_atributes.molecule"
 import { SelectAttributes } from "@/common/molecules/admin_branch/attributes/select_attributes.molecule"
 import { TooltipAttributes } from "@/common/molecules/admin_branch/attributes/tooltip_attributes.molecule"
 import { CardAttributes } from "@/common/molecules/admin_branch/attributes/card_attributes.molecule"
 import { DetailsAttributes } from "@/common/molecules/admin_branch/attributes/details_attributes.molecule"
+
+import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.type"
+import { useAttributes } from "@/api/queries/attributes/attributes.query"
 import { AttributeFormType, RegisterAttributeSchema } from "@/common/utils/schemas/attributes/create_attributes.schema"
 import { useCreateAttributeMutation } from "@/api/mutations/attributes/attributes.mutation"
 
 
-export default function CanvasDashboard() {
+export default function AttributesDashboard() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedBadges, setSelectedBadges] = useState<string[]>([])
     const [isDragging, setIsDragging] = useState(false)
@@ -50,10 +49,10 @@ export default function CanvasDashboard() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    // Obtener los tipos de badges que ya están en el canvas
-    const usedTypes = badges.map((badge) => badge.attributeId)
 
-    // Filtrar las opciones disponibles (excluir las que ya están en el canvas)
+    //filter
+
+    const usedTypes = badges.map((badge) => badge.attributeId)
     const availableOptions = attributes.filter((option) => !usedTypes.includes(option.id))
 
     const handleMultiSelectChange = (option:Attribute) => {
@@ -63,20 +62,17 @@ export default function CanvasDashboard() {
         });
     }
 
-
     const onSubmit = (data: AttributeFormType) => {
         setBadges(prev => {
             const updatedBadges = [...prev];
             data.values.forEach(newBadge => {
                 const existingIndex = updatedBadges.findIndex(b => b.id === newBadge.id);
                 if (existingIndex !== -1) {
-                    // Update existing badge
                     updatedBadges[existingIndex] = {
                         ...updatedBadges[existingIndex],
                         value: newBadge.value
                     };
                 } else {
-                    // Add new badge
                     updatedBadges.push(newBadge);
                 }
             });
@@ -131,7 +127,6 @@ export default function CanvasDashboard() {
         method.reset()
     }
 
-
     const handleBadgeDoubleClick = (badge: RegisterAttibute) => {
         const formValues = {
             values: [{
@@ -152,20 +147,15 @@ export default function CanvasDashboard() {
         setSelectedBadges((prev) => prev.filter((badgeId) => badgeId !== id))
     }
 
-
-    // Función para obtener el nombre legible del tipo de badge
     const getTypeLabel = (type: string) => {
         const option = attributes.find((opt) => opt.name === type)
         return option ? option.name : type
     }
 
-
     // Ordenar badges por tipo y luego por fecha de creación
     const sortedBadges = [...badges].sort((a, b) => {
-        // Primero ordenar por tipo
         const typeComparison = a.type.localeCompare(b.type)
         if (typeComparison !== 0) return typeComparison
-
         // Si el tipo es igual, ordenar por fecha de creación
         return (a.createdAt ?? 0) - (b.createdAt ?? 0)
     })
@@ -235,88 +225,15 @@ export default function CanvasDashboard() {
             )}
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="bg-white/95 backdrop-blur-sm border-2 border-[#D4A76A]/20 shadow-xl rounded-xl max-w-2xl">
-                    <DialogHeader>
-                        <DialogTitle className="text-[#6F4E37] text-xl font-bold flex items-center gap-2">
-                            <Coffee className="h-5 w-5 text-[#D4A76A]" />
-                            {selectedAttributes.length === 1
-                                ? `¿Cuenta con ${getTypeLabel(selectedAttributes[0].type)}?`
-                                : "Configurar atributos seleccionados"}
-                        </DialogTitle>
-                    </DialogHeader>
-                    <motion.div
-                        className="py-2 overflow-y-auto max-h-[410px] p-3"
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <Form {...method}>
-                            <form onSubmit={method.handleSubmit(onSubmit)} className="space-y-4">
-                                {selectedAttributes.map((attr, index) => (
-                                    <FormField
-                                        key={attr.id}
-                                        control={method.control}
-                                        name={`values.${index}.value`}
-                                        render={({ field, formState }) => (
-                                            <FormItem>
-                                                <FormLabel className="text-[#6F4E37] font-medium">
-                                                    {getTypeLabel(attr.type)}
-                                                </FormLabel>
-                                                <p className="text-sm text-gray-500 mb-2">
-                                                    {attributes.find(e => e.name === attr.type)?.description}
-                                                </p>
-                                                <FormControl>
-                                                    <Input
-                                                        {...field}
-                                                        placeholder={`Ingresa el valor para ${getTypeLabel(attr.type)}`}
-                                                        className={`border-2 ${formState.errors.values?.[index]
-                                                            ? "border-red-800 focus:border-red-800"
-                                                            : "border-[#D4A76A]/30 focus:border-[#D4A76A]"
-                                                            }`}
-                                                    />
-                                                </FormControl>
-                                                {formState.errors.values?.[index]?.value?.message && (
-                                                    <motion.div
-                                                        initial={{ opacity: 0, x: -10 }}
-                                                        animate={{ opacity: 1, x: 0 }}
-                                                        className="bg-red-50 text-red-600 px-3 py-2 rounded-md flex items-center gap-2 mt-2 border border-red-200"
-                                                    >
-                                                        <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
-                                                        <span className="text-sm text-red-500">
-                                                            {formState.errors.values[index].value?.message}
-                                                        </span>
-                                                    </motion.div>
-                                                )}
-
-                                            </FormItem>
-                                        )}
-                                    />
-                                ))}
-                                <div className="flex justify-between items-center pt-4 mt-6 border-t border-[#D4A76A]/20">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => {
-                                            setIsDialogOpen(false)
-                                            setSelectedAttributes([])
-                                        }}
-                                        className="bg-white hover:bg-gray-50 border-2 border-[#D4A76A] text-[#6F4E37] transition-all duration-200"
-                                    >
-                                        <X className="h-4 w-4 mr-2" />
-                                        Cancelar
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        className="bg-gradient-to-r from-[#43765C] to-[#386048] hover:from-[#386048] hover:to-[#2D4F3B] text-white shadow-md hover:shadow-lg transition-all duration-200"
-                                    >
-                                        <Coffee className="h-4 w-4 mr-2" />
-                                        {selectedAttributes.length === 1 ? 'Guardar' : 'Guardar todos'}
-                                    </Button>
-                                </div>
-                            </form>
-                        </Form>
-                    </motion.div>
-                </DialogContent>
+                <FormAttributes
+                    method={method}
+                    selectedAttributes={selectedAttributes}
+                    attributes={attributes}
+                    onSubmit={onSubmit}
+                    getTypeLabel={getTypeLabel}
+                    setSelectedAttributes={setSelectedAttributes}
+                    setIsDialogOpen={setIsDialogOpen}
+                    />     
             </Dialog>
 
             <div className="mt-6 text-sm text-slate-500">

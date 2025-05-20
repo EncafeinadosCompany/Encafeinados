@@ -30,19 +30,19 @@ const BranchManagement = lazy(() => import("@/common/widgets/admin_stores/branch
 const HomeAdminStores = lazy(() => import("@/modules/admin/views/home_admin_stores_nav"));
 const PendingBranchesView = lazy(() => import("@/modules/admin/components/branches/pending_branches_list.component"));
 const AlbumManager = lazy(() => import("@/modules/admin/components/album/album_manager.component"));
-const CanvasDashboard = lazy(() => import("@/common/widgets/admin_branches/create_attributes.widgets"));
-const CafeGallery = lazy(() => import("@/common/widgets/admin_branches/edit_images.widget"));
+const ImagesGallery = lazy(() => import("@/common/widgets/admin_branches/edit_images.widget"));
 const FormEditBranch = lazy(() => import("@/common/widgets/forms/auth/form_edit_branches_widget"));
 //BRANCHES
 const HomeBranchesNav = lazy(() => import("@/modules/admin_branches/views/home_branches_nav"));
 const PrincipalBranchesPage = lazy(() => import("@/modules/admin_branches/views/principal_branches_page"));
+const AttributesDashboard = lazy(() => import("@/common/widgets/admin_branches/create_attributes.widgets"));
 
 // COFFEELOVER
 const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/home_coffeelover_page"));
 const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover_nav"));
 const RegisterStoreVisit = lazy(() => import("@/modules/coffeelover/components/stores/register_store_visit.component"));
-const ReviewView = lazy(()=> import ('@/modules/coffeelover/components/review/review.view'));
-const ProfileView = lazy(()=> import ('@/modules/coffeelover/components/profile/profile.view'));
+const ReviewView = lazy(() => import('@/modules/coffeelover/components/review/review.view'));
+const ProfileView = lazy(() => import('@/modules/coffeelover/components/profile/profile.view'));
 
 
 // MAP
@@ -117,14 +117,11 @@ const AuthRoutes = () => {
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL]} />}>
                 <Route path="/sucursal" element={<HomeBranchesNav />}>
                   <Route index element={<PrincipalBranchesPage />} />
-                  <Route path="perfil" element={<Perfil_branches />}>
-                    <Route path="images" element={<CafeGallery />} />
-                    <Route path="attributes" element={<CanvasDashboard />} />
-                    <Route path="branch" element={<FormEditBranch />} /> 
-                  </Route> 
-
-
-      
+                  <Route path="images" element={<ImagesGallery />} />
+                  <Route path="perfil" element={<FormEditBranch />} />
+                  <Route path="attributes" element={<AttributesDashboard />} />
+                  <Route path="perfil_prueba" element={<Perfil_branches />}>
+                  </Route>
                 </Route>
               </Route>
 
