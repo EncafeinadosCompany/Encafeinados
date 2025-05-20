@@ -9,31 +9,58 @@ import { Button } from "@/common/ui/button";
 import { Card } from "@/common/ui/card";
 import { Switch } from "@/common/ui/switch";
 import { Label } from "@radix-ui/react-label";
-import { AlertCircle, Clock1, Clock2,  Coffee,  PhoneIcon, RefreshCw, Star } from "lucide-react";
+import { AlertCircle, Clock1, Clock2, Coffee, PhoneIcon, RefreshCw, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function PrincipalBranchesPage() {
-    
-    const BranchId = localStorage.getItem('storeOrBranchId') 
-    if(!BranchId){
-      return toast.error('No se encontro el id de la sucursal')
+
+    const BranchId = localStorage.getItem('storeOrBranchId')
+    if (!BranchId) {
+        return toast.error('No se encontro el id de la sucursal')
     }
     const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
+
+
     const { data: branches, error: branchError, isPending: isBranchLoading } = useBranchesID(Number(BranchId));
-    const { data: imagen, error: imageError, isPending: isImageLoading } = useImagenBranch();
+    const { data: imagen, error: imageError, isPending: isImageLoading } = useImagenBranch(Number(BranchId));
     const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
     const [branchStatus, setBranchStatus] = useState<boolean>(branches?.branch.is_open ?? true);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Add a loading check for both queries
+    const isLoading = isImageLoading || isBranchLoading;
+    const hasError = imageError || branchError || statusError;
 
-    console.log('branches', branches, 'imagen', imagen)
-    
-      useEffect(() => {
-        if (branches?.branch.is_open !== undefined) {
+    useEffect(() => {
+        if (branches?.branch.is_open !== undefined && imagen) {
             setBranchStatus(branches.branch.is_open);
         }
-    }, [branches?.branch.is_open]);
+    }, [branches?.branch.is_open, imagen]);
+
+    // Update the loading condition
+    if (isLoading) {
+        return (
+            <div className="container h-full mx-auto max-w-7xl px-4 py-8">
+                <div className="flex items-center justify-center h-[60vh]">
+                    <div className="text-center space-y-4">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#43765C] mx-auto"></div>
+                        <p className="text-gray-500">Cargando información de la sucursal...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+
+    // useEffect(() => {
+    //     if (branches?.branch.is_open !== undefined) {
+    //         setBranchStatus(branches.branch.is_open);
+    //     }
+    // }, [branches?.branch.is_open]);
+
+
+
 
     // Handle loading states
     if (isBranchLoading || isImageLoading) {
@@ -59,10 +86,10 @@ export default function PrincipalBranchesPage() {
                         <h3 className="text-lg font-semibold">Error al cargar la información</h3>
                     </div>
                     <p className="text-red-500 mb-4">
-                        {branchError?.message || imageError?.message || statusError?.message || 
-                         'Ocurrió un error al cargar los datos de la sucursal'}
+                        {branchError?.message || imageError?.message || statusError?.message ||
+                            'Ocurrió un error al cargar los datos de la sucursal'}
                     </p>
-                    <Button 
+                    <Button
                         onClick={() => window.location.reload()}
                         className="bg-red-100 hover:bg-red-200 text-red-600 transition-colors"
                     >
@@ -90,11 +117,11 @@ export default function PrincipalBranchesPage() {
 
     const handleConfirmStatusChange = () => {
         setBranchStatus(branchStatus === true ? false : true);
-        useStateOpen({ id: Number(BranchId), isOpen: branchStatus === true? false : true})
+        useStateOpen({ id: Number(BranchId), isOpen: branchStatus === true ? false : true })
 
         setTimeout(() => {
             setIsModalOpen(false);
-        },900);
+        }, 900);
     };
 
 
@@ -111,14 +138,20 @@ export default function PrincipalBranchesPage() {
                     <Card className="p-6 bg-white h-full shadow-lg rounded-xl border-none">
                         <div className="flex flex-col h-full">
                             <div className="flex-1 relative">
-                                <Badge className={`${branches?.branch.status == 'APPROVED' ? 'bg-emerald-200/60 border-emerald-700' : 'bg-orange-300 border-orange-500'} p-1 px-2 rounded-full absolute z-10  right-0`}>{branches?.branch.status === 'APPROVED'? 'Aprobada': 'Pediente'}</Badge>
+                                <Badge className={`${branches?.branch.status == 'APPROVED' ? 'bg-emerald-200/60 border-emerald-700' : 'bg-orange-300 border-orange-500'} p-1 px-2 rounded-full absolute z-10  right-0`}>{branches?.branch.status === 'APPROVED' ? 'Aprobada' : 'Pediente'}</Badge>
                                 {
-                                   imagen && imagen?.length > 0 ? (
-                                        <ImageCarousel images={imagen||[]} alt="MacBook Air" />         
-                                    ):(
-                                       <div>
-                                        <p>No hay imagenes disponibles</p>
-                                       </div> 
+                                    imagen && imagen?.length > 0 ? (
+                                        <ImageCarousel images={imagen || []} alt="Branch Images" />
+                                    ) : (
+                                        <div className="flex flex-col items-center justify-center p-6 bg-gray-50 rounded-lg">
+                                            <div className="text-gray-400 mb-2">
+                                                <AlertCircle className="h-8 w-8" />
+                                            </div>
+                                            <p className="text-gray-600 font-medium">No hay imágenes disponibles</p>
+                                            <p className="text-gray-400 text-sm mt-1">
+                                                Por favor, agregue imágenes de la sucursal
+                                            </p>
+                                        </div>
                                     )
                                 }
                                 <div className="mx-auto text-center">
@@ -126,7 +159,7 @@ export default function PrincipalBranchesPage() {
                                     <p className="text-gray-500 text-center mb-6">{branches?.branch.address}</p>
                                 </div>
                                 <div className="w-full text-sm text-gray-600 space-y-2.5">
-                                   
+
                                     <div className="flex items-center">
                                         <span className="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
                                         <Star className="w-4 h-4 mr-2 text-yellow-400" />
@@ -140,11 +173,10 @@ export default function PrincipalBranchesPage() {
                                                     {[...Array(5)].map((_, index) => (
                                                         <Star
                                                             key={index}
-                                                            className={`w-4 h-4 ${
-                                                                index < Math.floor(Number(branches?.branch.average_rating))
+                                                            className={`w-4 h-4 ${index < Math.floor(Number(branches?.branch.average_rating))
                                                                     ? 'text-yellow-400 fill-yellow-400'
                                                                     : 'text-gray-300'
-                                                            }`}
+                                                                }`}
                                                         />
                                                     ))}
                                                 </div>

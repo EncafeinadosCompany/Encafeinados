@@ -28,16 +28,14 @@ export const useBranchesID = (id: number) => {
   })
 }
 
-export const useImagenBranch = () => {
+export const useImagenBranch = (id:number) => {
 
   return useQuery<BranchesImagen[]>({
     queryKey: ['branches'],
-    queryFn: async (): Promise< BranchesImagen[]> => {
-      const BranchId = localStorage.getItem('storeOrBranchId')
-      if (!BranchId) {
-        toast.error('No se encontro el id de la sucursal')
-      }
-      const response = await authClient.get<BranchesImagen[]>(`/images/branch/${BranchId}`);
+    queryFn: async (): Promise<BranchesImagen[]> => {
+      
+      const response = await authClient.get<BranchesImagen[]>(`/images/branch/${id}`);
+      console.log("Imagenesdd", response)
       return response;
     },
   });

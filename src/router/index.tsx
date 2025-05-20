@@ -121,10 +121,7 @@ const AuthRoutes = () => {
                     <Route path="images" element={<CafeGallery />} />
                     <Route path="attributes" element={<CanvasDashboard />} />
                     <Route path="branch" element={<FormEditBranch />} /> 
-                  </Route> 
-
-
-      
+                  </Route>     
                 </Route>
               </Route>
 

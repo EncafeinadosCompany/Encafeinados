@@ -33,6 +33,7 @@ import { BranchesImagen } from "@/api/types/branches/branches.types"
 import { deleteImagenBrandMutation, useUpdateImagenBrandMutation } from "@/api/mutations/branches/branch_states.mutation"
 import { ca } from "date-fns/locale"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/common/ui/card"
+import toast from "react-hot-toast"
 
 type Cafe = {
     id: string
@@ -89,12 +90,16 @@ export const formSchemaBranches = z.object({
 
 export default function CafeGallery  ()  {
 
+    const BranchId = localStorage.getItem('storeOrBranchId') 
+    if(!BranchId){
+      return toast.error('No se encontro el id de la sucursal')
+    }
     const [cafes, setCafes] = useState<BranchesImagen[]>([])
     const [isEditOpen, setIsEditOpen] = useState(false)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [selectedCafe, setSelectedCafe] = useState<string | null>(null)
     const [newImage, setNewImage] = useState<File | null>(null)
-    const { data, isLoading, isError } = useImagenBranch()
+    const { data, isLoading, isError } = useImagenBranch(Number(BranchId))
     const [previewUrl, setPreviewUrl] = useState<string>("")
     const {mutateAsync:useDeleteImagen, status, error}= deleteImagenBrandMutation()
   
