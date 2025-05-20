@@ -12,18 +12,19 @@
   border-radius: 50%;
   overflow: visible;
   transform-origin: center bottom;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .cafe-marker .marker-content {
-  width: 100%;
+  width: 102%;
   height: 100%;
   position: relative;
   border-radius: 50%;
   overflow: hidden;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  border: 3px solid white;
+  border: 0.7px solid white;
   background-color: white;
+  
 }
 
 .cafe-marker.active .marker-content {
@@ -394,15 +395,19 @@
   border: none !important;
 }
 
+
+
 .coffee-marker-container {
-  width: 120%;
-  height: 120%;
+  width: 100%;
+  height: 80%;
   position: relative;
   animation: coffee-bounce 2s ease-in-out infinite alternate;
+   border-radius: 50%;
+  overflow: hidden;
+  background-color: white;
   transform-origin: bottom center;
 }
 
-/* Círculo de resplandor más visible */
 .coffee-marker-container::after {
   content: '';
   position: absolute;
@@ -412,7 +417,7 @@
   width: 120%; 
   height: 120%; 
   background: radial-gradient(circle, 
-    rgba(7, 122, 237, 0.7) 0%, 
+    rgba(241, 139, 66, 0.7) 0%, 
     rgba(0, 102, 204, 0) 70%);
   z-index: -1;
   border-radius: 50%;
@@ -446,6 +451,57 @@
   }
 }
 
+/* Animación de rebote para cafeterías abiertas */
+.marker-bounce {
+  animation: cafe-bounce 2s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+@keyframes cafe-bounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Arreglo para la animación de cafeterías abiertas */
+.cafe-marker.marker-bounce {
+  animation: cafe-bounce 2s ease-in-out infinite alternate !important;
+  transform-origin: bottom center !important;
+}
+
+/* Arreglar conflicto con hover */
+.cafe-marker.marker-bounce:hover,
+.cafe-marker.marker-bounce.hovered {
+  animation: cafe-bounce-hover 2s ease-in-out infinite alternate !important;
+}
+
+@keyframes cafe-bounce-hover {
+  0% {
+    transform: scale(1.1) translateY(0);
+  }
+  100% {
+    transform: scale(1.1) translateY(-5px);
+  }
+}
+
+/* Asegurar que el humo se vea correctamente */
+.cafe-marker .coffee-steam {
+  pointer-events: none;
+  z-index: 15 !important; /* Mayor z-index para asegurar visibilidad */
+}
+
+/* Mejorar la visualización del humo */
+.cafe-marker .coffee-steam {
+  pointer-events: none;
+  z-index: 10;
+}
+
+
+
+/* Reutilizar las animaciones de humo existentes - asegurarse que funcionan para ambos marcadores */
 .steam-path {
   stroke-dasharray: 12;
   stroke-dashoffset: 12;
@@ -457,30 +513,30 @@
 }
 
 .steam-2 {
-  animation: steam-rise 2s 0.6s infinite;
+  animation: steam-rise 2s 0.5s infinite;
 }
 
 .steam-3 {
-  animation: steam-rise 2s 1.2s infinite;
+  animation: steam-rise 2s 1s infinite;
 }
 
 @keyframes steam-rise {
   0% {
-    stroke-dashoffset: 10;
     opacity: 0;
+    stroke-dashoffset: 12;
     transform: translateY(0);
   }
-  20% {
-    opacity: 0.8;
+  30% {
+    opacity: 0.7;
   }
-  80% {
-    opacity: 0.3;
-    stroke-dashoffset: -10;
+  70% {
+    opacity: 0.5;
+    stroke-dashoffset: 0;
   }
   100% {
     opacity: 0;
-    transform: translateY(-10px);
-    stroke-dashoffset: -20;
+    stroke-dashoffset: -12;
+    transform: translateY(-8px);
   }
 }
 
@@ -594,4 +650,87 @@
     transform: translate(-50%, -50%) scale(2);
     opacity: 0;
   }
+}
+
+/* Nuevo wrapper para la animación de las cafeterías abiertas */
+.cafe-bounce-wrapper {
+  animation: coffee-bounce 2s ease-in-out infinite alternate;
+  transform-origin: center bottom;
+  display: block;
+}
+
+/* Ajustar el humo de las cafeterías */
+.cafe-steam {
+  position: absolute !important;
+  top: -8px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 24px !important;
+  height: 20px !important;
+  z-index: 20 !important;
+  pointer-events: none !important;
+}
+
+/* Mejorar la visibilidad del vapor */
+.cafe-steam .steam-path {
+  stroke: white !important;
+  stroke-width: 2.5 !important;
+  opacity: 0.9 !important;
+  stroke-linecap: round !important;
+  filter: drop-shadow(0 0 3px rgba(255,255,255,0.7)) !important;
+}
+
+/* Eliminar transición que interfiere con la animación */
+.cafe-marker {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.cafe-bounce-wrapper .cafe-marker {
+  transition: none !important;
+}
+
+/* Asegurarse de que el hover no rompa la animación */
+.cafe-bounce-wrapper:hover .cafe-marker,
+.cafe-bounce-wrapper .cafe-marker:hover,
+.cafe-bounce-wrapper .cafe-marker.hovered {
+  transform: scale(1.1) !important;
+}
+
+.closed-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  background-color: #e74c3c;
+  border: 2px solid white;
+  border-radius: 50%;
+  z-index: 100 !important;  /* Aumentar z-index */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  animation: pulse-dot 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse-dot {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Estilo suave para el contenido de cafeterías cerradas */
+.cafe-marker.closed img {
+  filter: grayscale(70%);
+}
+
+/* Remover overlay existente */
+.cafe-marker.closed .closed-overlay {
+  display: none;
 }

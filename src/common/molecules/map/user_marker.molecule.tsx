@@ -44,9 +44,9 @@ const UserMarker: React.FC<UserMarkerProps> = ({ position, pulsing = true }) => 
           ` : ''}
         </div>
       `,
-      iconSize: [size, size * 1.28], // Proporción aproximada del pin original
-      iconAnchor: [size / 2, size * 1.28], // Punto inferior del pin
-      tooltipAnchor: [0, -size / 1.2], // Ajuste para el tooltip
+      iconSize: [size, size * 1.28],
+      iconAnchor: [size / 2, size * 1.28],
+      tooltipAnchor: [0, -size / 1.2], 
     });
   }, [pulsing, map.getZoom()]);
   
