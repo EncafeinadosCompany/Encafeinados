@@ -4,7 +4,6 @@ import { Cafe } from '@/api/types/map/map_search.types';
 import CafeMarker from './cafe_marker.molecule';
 import L from 'leaflet';
 
-// Define la estructura de un cluster
 interface ClusterData {
   id: string;
   position: [number, number];

@@ -387,3 +387,211 @@
 .pulse-default {
   animation: pulseWalking 2s infinite;
 }
+
+/* Estilos para el nuevo marcador de usuario */
+.coffee-user-marker {
+  background: none !important;
+  border: none !important;
+}
+
+.coffee-marker-container {
+  width: 120%;
+  height: 120%;
+  position: relative;
+  animation: coffee-bounce 2s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+/* Círculo de resplandor más visible */
+.coffee-marker-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%; 
+  height: 120%; 
+  background: radial-gradient(circle, 
+    rgba(7, 122, 237, 0.7) 0%, 
+    rgba(0, 102, 204, 0) 70%);
+  z-index: -1;
+  border-radius: 50%;
+  animation: pulse-glow 2s infinite alternate;
+  pointer-events: none; 
+}
+
+@keyframes pulse-glow {
+  0% {
+    opacity: 0.6; /* Mayor opacidad inicial */
+    transform: translateX(-50%) scale(0.9);
+  }
+  100% {
+    opacity: 0.9; /* Mayor opacidad final */
+    transform: translateX(-50%) scale(1.2);
+  }
+}
+
+.coffee-marker-img {
+  width: 120%;
+  height: auto;
+  object-fit: contain;
+}
+
+@keyframes coffee-bounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-3px);
+  }
+}
+
+.steam-path {
+  stroke-dasharray: 12;
+  stroke-dashoffset: 12;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
+}
+
+.steam-1 {
+  animation: steam-rise 2s 0s infinite;
+}
+
+.steam-2 {
+  animation: steam-rise 2s 0.6s infinite;
+}
+
+.steam-3 {
+  animation: steam-rise 2s 1.2s infinite;
+}
+
+@keyframes steam-rise {
+  0% {
+    stroke-dashoffset: 10;
+    opacity: 0;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.3;
+    stroke-dashoffset: -10;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+    stroke-dashoffset: -20;
+  }
+}
+
+.user-location-tooltip {
+  background-color: #F98B3E !important;
+  border: none !important;
+  border-radius: 20px !important;
+  padding: 4px 8px !important;
+  color: white !important;
+  font-weight: 500 !important;
+  font-size: 11px !important;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2) !important;
+  white-space: nowrap !important;
+}
+
+.user-location-tooltip::before {
+  border-top-color: #F98B3E !important;
+}
+
+.coffee-steam {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 24px;
+  pointer-events: none;
+}
+
+.coffee-steam svg {
+  width: 100%;
+  height: 100%;
+}
+
+.coffee-steam .steam-path {
+  stroke: white;
+  stroke-width: 2.5;
+  opacity: 0.9;
+  stroke-linecap: round;
+  filter: url(#glow);
+}
+
+.coffee-steam .steam-1 {
+  animation: steam-rise 2s 0s infinite;
+}
+
+.coffee-steam .steam-2 {
+  animation: steam-rise 2s 0.6s infinite;
+}
+
+.coffee-steam .steam-3 {
+  animation: steam-rise 2s 1.2s infinite;
+}
+
+@keyframes steam-rise {
+  0% {
+    stroke-dashoffset: 10;
+    opacity: 0;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.3;
+    stroke-dashoffset: -10;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+    stroke-dashoffset: -20;
+  }
+}
+
+/* Estilos para el nuevo fondo */
+.coffee-marker-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  height: 130%;
+  background-color: white; /* Fondo blanco */
+  border: 3px solid #0066CC; /* Borde azul */
+  border-radius: 50%;
+  z-index: 1;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+/* Agregar al final de tus estilos */
+.coffee-marker-ping {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(0, 102, 204, 0.4); /* Azul semi-transparente */
+  z-index: 0;
+  animation: ping-animation 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes ping-animation {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
