@@ -108,13 +108,3 @@ export const useValidateVisit = (coordinates: any, shopId: any) => {
   }
 }
 
-
-
-export const  deleteImagenBrandQuery = async (id: number) => {
-  try {
-    const response = await authClient.delete(`/images/branch/${id}`)
-    return response
-  } catch (error) {
-    console.log(error)  
-  }
-}

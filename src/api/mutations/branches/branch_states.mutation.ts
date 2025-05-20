@@ -218,6 +218,7 @@ export const deleteImagenBrandMutation =  () => {
       toast.success('¡La imagen se ha eliminado con éxito!', { id: loadingToast });
 
       queryClient.invalidateQueries({ queryKey: ['branches'] });
+      queryClient.invalidateQueries({ queryKey: ['branches_imagen'] });
 
     },
     onError: (error: any) => {

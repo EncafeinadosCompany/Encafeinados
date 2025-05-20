@@ -41,7 +41,6 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat,
       })
   }
 
-  // Load recent searches from localStorage
   useEffect(() => {
     const savedSearches = localStorage.getItem('recentMapSearches');
     if (savedSearches) {
@@ -68,10 +67,7 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat,
 
       onLocationSelect(initialLat, initialLng, initialAddress || "Selected location");
       setInitialPositionSet(true);
-    } else {
-
-      GetCurrenLocation();
-    }
+    } 
   }, [initialLat, initialLng, initialAddress]);
 
   const GetCurrenLocation = () => {

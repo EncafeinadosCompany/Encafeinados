@@ -32,8 +32,8 @@ return useMutation<ImageType, Error, File>({
             throw useErrors(error);
         }
     },
-    onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ["imagen"] });
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["branches_imagen"] });
     },
     onError: (error: any) => {
         console.error("Error al subir imagen:", error);
