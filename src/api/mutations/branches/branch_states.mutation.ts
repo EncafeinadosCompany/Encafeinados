@@ -41,6 +41,7 @@ export const useRejectBranchMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    
     mutationFn: async ({
       approvalId,
       reason,
@@ -118,13 +119,14 @@ export const useRegisterVisitMutation = (): UseMutationResult<
 
 export const useStatesIsOpen = () => {
   const queryClient = useQueryClient();
-  return useMutation({
+  return useMutation<any, Error,{ id: number; is_open: boolean } >({
     mutationFn: async ({ id, is_open }: { id: number; is_open: boolean }) => {
       const response = await authClient.patch(`/branches/open-close/${id}`, { isOpen: is_open });
       return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branches"] });
+      
     }
   });
 }
@@ -183,6 +185,7 @@ export const useUpdateImagenBrandMutation = () => {
       toast.success('¡La imagen se ha subido con éxito!', { id: loadingToast });
 
       queryClient.invalidateQueries({ queryKey: ['branches'] });
+      queryClient.invalidateQueries({queryKey:['branch-approvals']})
 
     },
     onError: (error: any) => {
