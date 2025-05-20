@@ -187,17 +187,9 @@ export const UserReviews: React.FC<UserReviewsProps> = ({ heightAdjustment = fal
               
               <p className="text-gray-700 text-sm">{review.comment}</p>
               
-              {/* Usar el componente ReviewImages para mostrar imágenes, al igual que en ListReviews */}
               {review.imageUrls && review.imageUrls.length > 0 && (
                 <ReviewImages images={review.imageUrls} />
-              )}
-              
-              <Link 
-                to={`/coffeelover/map-coffelover?cafeId=${review.id}`}
-                className="mt-3 inline-flex items-center text-xs text-[#DB8935] hover:text-[#8B5A2B] transition-colors"
-              >
-                Ver cafetería
-              </Link>
+              )}          
             </div>
           </div>
         ))}
