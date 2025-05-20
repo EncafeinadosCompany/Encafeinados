@@ -596,7 +596,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                         : "Ver reseñas"
                       : window.innerWidth <= 380
                       ? "Reseñar"
-                      : "Añadir reseña"}
+                      : "Ver reseñas"}
                   </span>
                 </motion.button>
               </div>

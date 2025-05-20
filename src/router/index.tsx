@@ -70,8 +70,8 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-            {/* <Route path="/prueba" element={<CanvasDashboard />} /> */}
 
+            {/* <Route path="/prueba" element={<CanvasDashboard />} /> */}
 
             {/* PUBLIC ROUTES */}
             <Route path="/" element={<HomePage />} />
