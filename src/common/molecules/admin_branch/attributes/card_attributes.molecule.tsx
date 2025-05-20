@@ -1,28 +1,21 @@
 import { Card } from "@/common/ui/card"
 import { AlertCircle, Star, X } from "lucide-react"
 import {motion} from "framer-motion"
-import { Attribute } from "@/api/types/attributes/attributes.type"
+import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.type"
 
 
-interface BadgeItem {
-    id: string
-    attributeId: number
-    type: string
-    value: string,
-    createdAt?: number
-}
 
 
 interface CardAttributesProps {
     selectedBadges: string[]
     availableOptions: Attribute[]
-    badges: BadgeItem[]
-    handleDragStart: (e: React.MouseEvent<HTMLDivElement>, badge: BadgeItem) => void
-    handleBadgeDoubleClick: (badge: BadgeItem) => void
+    badges: RegisterAttibute[]
+    handleDragStart: (e: React.MouseEvent<HTMLDivElement>, badge: RegisterAttibute) => void
+    handleBadgeDoubleClick: (badge: RegisterAttibute) => void
     handleRemoveBadge: (badgeId: string, e: React.MouseEvent<HTMLButtonElement>) => void
     canvasRef: React.MutableRefObject<HTMLCanvasElement | null>
     containerRef: React.MutableRefObject<HTMLDivElement | null>
-    getTypeLabel: (type: string) => string
+    getTypeLabel: (type: number) => string | number
 }
 
 export const CardAttributes = ({containerRef, canvasRef, badges, selectedBadges, handleBadgeDoubleClick, handleDragStart, handleRemoveBadge, getTypeLabel}:CardAttributesProps)=>{
@@ -63,15 +56,15 @@ return (
                 >
                     <div className="flex items-center gap-3 mb-2 bg-inherit">
                         <Star className="h-5 w-5 text-[#D4A76A] flex-shrink-0" />
-                        <span className="font-semibold text-[#6F4E37] truncate">{getTypeLabel(badge.type)}</span>
-                        <motion.button
+                        <span className="font-semibold text-[#6F4E37] truncate">{getTypeLabel(badge.attributeId)}</span>
+                        {/* <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             className="ml-auto flex-shrink-0"
                             onClick={(e) => handleRemoveBadge(badge.id, e)}
                         >
                             <X className="h-5 w-5 text-[#A67C52] hover:text-red-500 transition-colors" />
-                        </motion.button>
+                        </motion.button> */}
                     </div>
                     {badge.value && (
                         <div className="text-sm text-[#A67C52] font-medium bg-[#FAF3E0]/50 p-2 rounded-lg">

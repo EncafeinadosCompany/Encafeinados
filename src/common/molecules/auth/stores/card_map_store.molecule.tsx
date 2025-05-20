@@ -236,7 +236,7 @@ export const CardMapStore = ({
                   <path d="M12 8v4M12 16h.01" stroke="#546F75" strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
               </span>
-              <span>Haz clic en el mapa o arrastra el marcador para ajustar la posición.</span>
+              <span>Arrastra el marcador para ajustar la posición.</span>
             </p>
           </div>
         </div>

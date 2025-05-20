@@ -24,6 +24,7 @@ export const clearAuthStorage = () => {
 export const getAuthStorage = () => {
     return {
         token: localStorage.getItem('token'),
-        user: JSON.parse(localStorage.getItem('user') || 'null')
+        user: JSON.parse(localStorage.getItem('user') || 'null'),
+        storeOrBranch:localStorage.getItem('storeOrBranchId') 
     };
 };

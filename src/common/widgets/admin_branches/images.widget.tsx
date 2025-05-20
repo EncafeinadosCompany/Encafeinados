@@ -20,7 +20,7 @@ import toast from "react-hot-toast"
 const tipo_imagen = [
     { id: 1, clasification: "LOGO" },
     { id: 2, clasification: "PORTADA" },
-    { id: 3, clasification: "GALERIA" },
+    { id: 3, clasification: "GALERÍA" },
     { id: 4, clasification: "PERFIL" },
     { id: 5, clasification: "MENÚ" },
     { id: 6, clasification: "PROMOCIONES" }
@@ -30,7 +30,7 @@ const tipo_imagen = [
 
 
 export const formSchemaBranches = z.object({
-    image_type: z.enum(['LOGO', 'PORTADA', 'GALERIA', 'PERFIL', 'MENÚ', 'PROMOCIONES'], {
+    image_type: z.enum(['LOGO', 'PORTADA', 'GALERÍA', 'PERFIL', 'MENÚ', 'PROMOCIONES'], {
         required_error: "Por favor selecciona un tipo de imagen",
     }),
     image_file: z.any()

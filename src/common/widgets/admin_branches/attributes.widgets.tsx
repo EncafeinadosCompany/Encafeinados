@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
 import { Badge } from "@/common/ui/badge"
-import { Button } from "@/common/ui/button"
 import { Dialog} from "@/common/ui/dialog"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -15,11 +14,11 @@ import { TooltipAttributes } from "@/common/molecules/admin_branch/attributes/to
 import { CardAttributes } from "@/common/molecules/admin_branch/attributes/card_attributes.molecule"
 import { DetailsAttributes } from "@/common/molecules/admin_branch/attributes/details_attributes.molecule"
 
-import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.type"
-import { useAttributes } from "@/api/queries/attributes/attributes.query"
+import { Attribute,RegisterAttibute } from "@/api/types/attributes/attributes.type"
+import { useAttributes, useBranchAttributes } from "@/api/queries/attributes/attributes.query"
 import { AttributeFormType, RegisterAttributeSchema } from "@/common/utils/schemas/attributes/create_attributes.schema"
 import { useCreateAttributeMutation } from "@/api/mutations/attributes/attributes.mutation"
-
+import { getAuthStorage } from "@/common/utils/auth_storage.utils"
 
 export default function AttributesDashboard() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -27,9 +26,24 @@ export default function AttributesDashboard() {
     const [isDragging, setIsDragging] = useState(false)
     const [isMultiSelectOpen, setIsMultiSelectOpen] = useState(false)
     const [selectedOptions, setSelectedOptions] = useState<Attribute[]>([])
-    const [selectedAttributes, setSelectedAttributes] = useState<RegisterAttibute[]>([])
     const [badges, setBadges] = useState<RegisterAttibute[]>([])
+    const {storeOrBranch} = getAuthStorage()
+    const [attributes, setAttributes] = useState<Attribute[]>([])
+    const [selectedAttributes, setSelectedAttributes] = useState<RegisterAttibute[]>([])
+    
+    if(!storeOrBranch) return null
+    const {data:attributesByID}=useBranchAttributes(storeOrBranch)
+    const { data: attribute } = useAttributes()
     const {mutateAsync:useAttribute} =  useCreateAttributeMutation()
+   
+   
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const usedTypes = badges.map((badge) => badge.attributeId)
+    const availableOptions = attributes.filter((option) => !usedTypes.includes(option.id))
+
+
     const method = useForm<AttributeFormType>({
         resolver: zodResolver(RegisterAttributeSchema),
         defaultValues: {
@@ -37,24 +51,25 @@ export default function AttributesDashboard() {
         }
     })
     
-    const { data: attribute } = useAttributes()
-    const [attributes, setAttributes] = useState<Attribute[]>([])
-
     useEffect(() => {
         if (attributes) {
             setAttributes(attribute || [])
         }
     }, [attribute])
 
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
+        if (attributesByID) {
+          const existingBadges: RegisterAttibute[] = attributesByID.attributes.map(attr => ({
+            id: `${attr.attributeId}`,
+            attributeId: attr.attributeId,
+            value: attr.value
+          }))
+          setBadges(existingBadges) 
+        }
+    }, [attributesByID])
 
-    //filter
-
-    const usedTypes = badges.map((badge) => badge.attributeId)
-    const availableOptions = attributes.filter((option) => !usedTypes.includes(option.id))
-
+  
     const handleMultiSelectChange = (option:Attribute) => {
         setSelectedOptions((prev) => {
             const isSelected = prev.some(item => item.id=== option.id);
@@ -62,28 +77,26 @@ export default function AttributesDashboard() {
         });
     }
 
-    const onSubmit = (data: AttributeFormType) => {
-        setBadges(prev => {
-            const updatedBadges = [...prev];
-            data.values.forEach(newBadge => {
-                const existingIndex = updatedBadges.findIndex(b => b.id === newBadge.id);
-                if (existingIndex !== -1) {
-                    updatedBadges[existingIndex] = {
-                        ...updatedBadges[existingIndex],
-                        value: newBadge.value
-                    };
+    const onSubmit = async (data: AttributeFormType) => {
+        try {
+             data.values.map(newAttr => {
+                const existingAttr = attributesByID?.attributes.find(
+                    attr => attr.attributeId === newAttr.attributeId
+                );
+                if (existingAttr) {
+                    console.log('Updating existing attribute:', data);
                 } else {
-                    updatedBadges.push(newBadge);
+                    useAttribute(data.values);
                 }
+                return newAttr;
             });
-            return updatedBadges;
-        });
-
-        setIsDialogOpen(false)
-        setSelectedAttributes([])
-        method.reset()
+            setIsDialogOpen(false);
+            setSelectedAttributes([]);
+            method.reset();
+        } catch (error) {
+            console.error('Error updating attributes:', error);
+        }
     }
-
 
     const handleDragStart = (e: React.MouseEvent, badge: RegisterAttibute) => {
         e.preventDefault()
@@ -120,19 +133,12 @@ export default function AttributesDashboard() {
         setIsMultiSelectOpen(false)
         setSelectedOptions([])
     }
-    const handleSubmit = () => {
-         console.log('valores', badges)
-        useAttribute(badges)
-        setBadges([])
-        method.reset()
-    }
 
     const handleBadgeDoubleClick = (badge: RegisterAttibute) => {
         const formValues = {
             values: [{
                 id: badge.id,
                 attributeId: badge.attributeId,
-                type: badge.type,
                 value: badge.value
             }]
         }
@@ -147,18 +153,12 @@ export default function AttributesDashboard() {
         setSelectedBadges((prev) => prev.filter((badgeId) => badgeId !== id))
     }
 
-    const getTypeLabel = (type: string) => {
-        const option = attributes.find((opt) => opt.name === type)
+    const getTypeLabel = (type: number) => {
+        const option = attributes.find((opt) => opt.id=== type)
         return option ? option.name : type
     }
 
-    // Ordenar badges por tipo y luego por fecha de creación
-    const sortedBadges = [...badges].sort((a, b) => {
-        const typeComparison = a.type.localeCompare(b.type)
-        if (typeComparison !== 0) return typeComparison
-        // Si el tipo es igual, ordenar por fecha de creación
-        return (a.createdAt ?? 0) - (b.createdAt ?? 0)
-    })
+   
 
     return (
         <div className="container mx-auto p-4 max-w-4xl">
@@ -172,12 +172,6 @@ export default function AttributesDashboard() {
                     availableOptions={availableOptions}
                     handleAddSelectedOptions={handleAddSelectedOptions}
                 />
-                <Button
-                    className="bg-[#43765C] hover:bg-[#386048] text-white transition-all"
-                    onClick={()=>handleSubmit()}
-                >
-                    Completar registro
-                </Button>
             </div>
 
             <TooltipAttributes
@@ -212,11 +206,10 @@ export default function AttributesDashboard() {
                     <p>{selectedBadges.length} elementos seleccionados</p>
                     <div className="flex gap-2 mt-2 flex-wrap">
                         {/* Mostrar badges seleccionados en orden */}
-                        {sortedBadges
+                        {badges
                             .filter((badge) => selectedBadges.includes(badge.id))
                             .map((badge) => (
                                 <Badge key={badge.id} variant="outline">
-                                    {getTypeLabel(badge.type)}
                                     {badge.value ? `: ${badge.value}` : ""}
                                 </Badge>
                             ))}

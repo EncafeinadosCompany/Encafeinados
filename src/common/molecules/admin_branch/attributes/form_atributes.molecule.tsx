@@ -16,7 +16,7 @@ interface form_atributes_props {
     setSelectedAttributes: React.Dispatch<React.SetStateAction<RegisterAttibute[]>>
     setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
     attributes: Attribute[]
-    getTypeLabel: (type: string) => string
+    getTypeLabel: (type: number) => string | number
     onSubmit: (data: AttributeFormType) => void
     method: ReturnType<typeof useForm<AttributeFormType>>
 }
@@ -30,7 +30,7 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
                 <DialogTitle className="text-[#6F4E37] text-xl font-bold flex items-center gap-2">
                     <Coffee className="h-5 w-5 text-[#D4A76A]" />
                     {selectedAttributes.length === 1
-                        ? `¿Cuenta con ${getTypeLabel(selectedAttributes[0].type)}?`
+                        ? `¿Cuenta con ${getTypeLabel(selectedAttributes[0].attributeId)}?`
                         : "Configurar atributos seleccionados"}
                 </DialogTitle>
             </DialogHeader>
@@ -50,15 +50,15 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
                                 render={({ field, formState }) => (
                                     <FormItem>
                                         <FormLabel className="text-[#6F4E37] font-medium">
-                                            {getTypeLabel(attr.type)}
+                                            {getTypeLabel(attr.attributeId)}
                                         </FormLabel>
                                         <p className="text-sm text-gray-500 mb-2">
-                                            {attributes.find(e => e.name === attr.type)?.description}
+                                            {attributes.find(e => e.id === attr.attributeId)?.description}
                                         </p>
                                         <FormControl>
                                             <Input
                                                 {...field}
-                                                placeholder={`Ingresa el valor para ${getTypeLabel(attr.type)}`}
+                                                placeholder={`Ingresa el valor para ${getTypeLabel(attr.attributeId)}`}
                                                 className={`border-2 ${formState.errors.values?.[index]
                                                     ? "border-red-800 focus:border-red-800"
                                                     : "border-[#D4A76A]/30 focus:border-[#D4A76A]"
