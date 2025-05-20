@@ -697,14 +697,14 @@
 
 .closed-dot {
   position: absolute;
-  top: -4px;
-  right: -4px;
-  width: 12px;
-  height: 12px;
+  top: 2px;
+  right: 3px;
+  width: 8px;
+  height: 8px;
   background-color: #e74c3c;
   border: 2px solid white;
   border-radius: 50%;
-  z-index: 100 !important;  /* Aumentar z-index */
+  z-index: 100 !important; 
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   animation: pulse-dot 2s infinite;
   pointer-events: none;
@@ -725,12 +725,10 @@
   }
 }
 
-/* Estilo suave para el contenido de cafeterías cerradas */
 .cafe-marker.closed img {
   filter: grayscale(70%);
 }
 
-/* Remover overlay existente */
 .cafe-marker.closed .closed-overlay {
   display: none;
 }
