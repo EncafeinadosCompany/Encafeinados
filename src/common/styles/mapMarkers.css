@@ -1,14 +1,12 @@
-/* Styles for coffee shop markers */
 .custom-cafe-marker {
   background: none !important;
   border: none !important;
 }
 
-/* Modify these values to return to a larger size */
 .cafe-marker {
   position: relative;
-  width: 40px; /* Volvemos al tamaño original de 40px */
-  height: 40px; /* Volvemos al tamaño original de 40px */
+  width: 40px; 
+  height: 40px; 
   border-radius: 50%;
   overflow: visible;
   transform-origin: center bottom;
@@ -49,7 +47,6 @@
   transform: scale(1.1);
 }
 
-/* Ajustar el tamaño del tooltip */
 .cafe-label {
   position: absolute;
   top: calc(100% + 3px);
@@ -59,13 +56,13 @@
   border: 1px solid rgba(111, 78, 55, 0.3);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
-  padding: 4px 10px; /* Volviendo al original */
+  padding: 4px 10px; 
   white-space: nowrap;
-  font-size: 12px; /* Volviendo al original */
+  font-size: 12px; 
   color: #6F4E37;
   font-weight: 500;
   text-align: center;
-  min-width: 110px; /* Volviendo al original */
+  min-width: 110px; 
   z-index: 1000;
   animation: fadeIn 0.2s forwards;
 }
@@ -88,7 +85,6 @@
   animation: pulse-animation 2s infinite;
 }
 
-/* Visual indicator for nearby cafes */
 .cafe-marker.has-nearby:not(.active):not(.hovered)::after {
   content: '';
   position: absolute;
@@ -101,7 +97,6 @@
   border-radius: 50%;
 }
 
-/* Animaciones */
 @keyframes pulse-animation {
   0% {
     transform: scale(0.8);
@@ -121,8 +116,6 @@
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* Reemplazar los estilos existentes del marcador de usuario */
-
 .custom-user-marker {
   background: none !important;
   border: none !important;
@@ -137,7 +130,6 @@
   position: relative;
 }
 
-/* Sombra debajo del marcador */
 .user-marker-shadow {
   position: absolute;
   width: 32px;
@@ -149,7 +141,6 @@
   z-index: -1;
 }
 
-/* Círculo exterior con efecto 3D */
 .user-marker-outer {
   width: 32px;
   height: 32px;
@@ -190,7 +181,6 @@
   background-color: white;
 }
 
-/* Anillo pulsante */
 .user-marker-pulse {
   position: absolute;
   width: 48px;
@@ -201,7 +191,6 @@
   z-index: -1;
 }
 
-/* Círculo de precisión */
 .user-marker-accuracy {
   position: absolute;
   width: 46px;
@@ -219,7 +208,6 @@
   animation: breathe 4s infinite ease-in-out;
 }
 
-/* Tooltip personalizado */
 .user-location-tooltip .leaflet-tooltip {
   background: white !important;
   border: 1px solid #6F4E37 !important;
@@ -234,7 +222,6 @@
   border-right-color: white !important;
 }
 
-/* Animaciones */
 @keyframes user-marker-pulse {
   0% {
     transform: scale(0.9);
@@ -261,7 +248,6 @@
   }
 }
 
-/* Styles for cluster markers */
 .cluster-marker-container {
   background: none !important;
   border: none !important;
@@ -287,7 +273,6 @@
   transform: scale(1.1);
 }
 
-/* Style for Leaflet tooltip */
 .leaflet-tooltip {
   background-color: white !important;
   border: 1px solid rgba(111, 78, 55, 0.3) !important;
@@ -302,7 +287,6 @@
   border-top-color: white !important;
 }
 
-/* Añadir al final del archivo */
 .cafe-tooltip {
   background-color: white;
   border: none;
@@ -322,11 +306,10 @@
   border-top-color: white;
 }
 
-/* Estilos para marcadores cerrados */
 .cafe-marker.closed {
-  opacity: 0.85; /* Menos transparente que antes */
-  filter: grayscale(60%) saturate(40%); /* Gris con algo de color */
-  transform: scale(0.95); /* Ligeramente más pequeño */
+  opacity: 0.85; 
+  filter: grayscale(60%) saturate(40%); 
+  transform: scale(0.95); 
 }
 
 .cafe-marker .closed-badge {
@@ -338,23 +321,21 @@
   font-size: 9px;
   padding: 3px 5px;
   border-radius: 4px;
-  transform: rotate(0deg); /* Sin rotación para mejor legibilidad */
+  transform: rotate(0deg); 
   font-weight: bold;
-  z-index: 10; /* Mayor z-index para asegurar visibilidad */
+  z-index: 10; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.4);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* Estilo para hover en marcadores cerrados */
 .cafe-marker.closed:hover {
   opacity: 1;
   filter: grayscale(30%);
   transform: scale(1.05);
 }
 
-/* Animaciones para las líneas de ruta */
 @keyframes pulseWalking {
   0% { stroke-opacity: 0.7; }
   50% { stroke-opacity: 1; }
@@ -389,7 +370,6 @@
   animation: pulseWalking 2s infinite;
 }
 
-/* Estilos para el nuevo marcador de usuario */
 .coffee-user-marker {
   background: none !important;
   border: none !important;
@@ -427,11 +407,11 @@
 
 @keyframes pulse-glow {
   0% {
-    opacity: 0.6; /* Mayor opacidad inicial */
+    opacity: 0.6; 
     transform: translateX(-50%) scale(0.9);
   }
   100% {
-    opacity: 0.9; /* Mayor opacidad final */
+    opacity: 0.9;
     transform: translateX(-50%) scale(1.2);
   }
 }
@@ -451,7 +431,6 @@
   }
 }
 
-/* Animación de rebote para cafeterías abiertas */
 .marker-bounce {
   animation: cafe-bounce 2s ease-in-out infinite alternate;
   transform-origin: bottom center;
@@ -466,13 +445,11 @@
   }
 }
 
-/* Arreglo para la animación de cafeterías abiertas */
 .cafe-marker.marker-bounce {
   animation: cafe-bounce 2s ease-in-out infinite alternate !important;
   transform-origin: bottom center !important;
 }
 
-/* Arreglar conflicto con hover */
 .cafe-marker.marker-bounce:hover,
 .cafe-marker.marker-bounce.hovered {
   animation: cafe-bounce-hover 2s ease-in-out infinite alternate !important;
@@ -487,21 +464,16 @@
   }
 }
 
-/* Asegurar que el humo se vea correctamente */
 .cafe-marker .coffee-steam {
   pointer-events: none;
-  z-index: 15 !important; /* Mayor z-index para asegurar visibilidad */
+  z-index: 15 !important; 
 }
 
-/* Mejorar la visualización del humo */
 .cafe-marker .coffee-steam {
   pointer-events: none;
   z-index: 10;
 }
 
-
-
-/* Reutilizar las animaciones de humo existentes - asegurarse que funcionan para ambos marcadores */
 .steam-path {
   stroke-dasharray: 12;
   stroke-dashoffset: 12;
@@ -611,7 +583,6 @@
   }
 }
 
-/* Estilos para el nuevo fondo */
 .coffee-marker-background {
   position: absolute;
   top: 50%;
@@ -619,14 +590,13 @@
   transform: translate(-50%, -50%);
   width: 130%;
   height: 130%;
-  background-color: white; /* Fondo blanco */
-  border: 3px solid #0066CC; /* Borde azul */
+  background-color: white; 
+  border: 3px solid #0066CC; 
   border-radius: 50%;
   z-index: 1;
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
 }
 
-/* Agregar al final de tus estilos */
 .coffee-marker-ping {
   position: absolute;
   top: 50%;
@@ -635,7 +605,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: rgba(0, 102, 204, 0.4); /* Azul semi-transparente */
+  background-color: rgba(0, 102, 204, 0.4); 
   z-index: 0;
   animation: ping-animation 2s infinite;
   pointer-events: none;
@@ -652,14 +622,12 @@
   }
 }
 
-/* Nuevo wrapper para la animación de las cafeterías abiertas */
 .cafe-bounce-wrapper {
   animation: coffee-bounce 2s ease-in-out infinite alternate;
   transform-origin: center bottom;
   display: block;
 }
 
-/* Ajustar el humo de las cafeterías */
 .cafe-steam {
   position: absolute !important;
   top: -8px !important;
@@ -680,7 +648,6 @@
   filter: drop-shadow(0 0 3px rgba(255,255,255,0.7)) !important;
 }
 
-/* Eliminar transición que interfiere con la animación */
 .cafe-marker {
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -688,7 +655,6 @@
   transition: none !important;
 }
 
-/* Asegurarse de que el hover no rompa la animación */
 .cafe-bounce-wrapper:hover .cafe-marker,
 .cafe-bounce-wrapper .cafe-marker:hover,
 .cafe-bounce-wrapper .cafe-marker.hovered {
