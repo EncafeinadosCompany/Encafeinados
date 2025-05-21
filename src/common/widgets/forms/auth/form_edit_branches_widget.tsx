@@ -1,6 +1,6 @@
 import { Input } from "@/common/ui/input";
 
-import { Store, Phone, Coffee } from "lucide-react";
+import { Store, Phone, Coffee, ChevronDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -10,7 +10,7 @@ import SocialNetworksForm from "./form_social_network.widget";
 import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query";
 import MapSearch from "../../map/map_search.widget";
 import { useEffect, useState } from "react";
-
+import { motion } from "framer-motion";
 import { Button } from "@/common/ui/button";
 import { EditBranchesSchemas, EditBrancheType } from "@/common/utils/schemas/auth/edit_branches.schema";
 
@@ -22,7 +22,7 @@ import { useUpdateBranchMutation } from "@/api/mutations/branches/branches.mutat
 
 export default function FormEditBranch() {
     const { data: useBranches } = useBranchesID(1)
-    const {mutateAsync: useUpdateBranches}= useUpdateBranchMutation()
+    const { mutateAsync: useUpdateBranches } = useUpdateBranchMutation()
 
     const [baseAddress, setBaseAddress] = useState("");
 
@@ -47,7 +47,7 @@ export default function FormEditBranch() {
                 phone_number: useBranches.branch.phone_number || "",
                 address: useBranches.branch.address,
                 latitude: useBranches.branch.latitude,
-                longitude: useBranches.branch.longitude,      
+                longitude: useBranches.branch.longitude,
             })
 
             setValue('latitude', useBranches.branch.latitude)
@@ -62,7 +62,7 @@ export default function FormEditBranch() {
 
     const onSubmit = async (data: EditBrancheType) => {
         try {
-            useUpdateBranches({data})
+            useUpdateBranches({ data })
         } catch (error) {
             console.error("Error submitting form:", error);
         }
@@ -102,8 +102,17 @@ export default function FormEditBranch() {
                     </div>
 
                 </CardHeader>
-                <CardContent className="p-6 space-y-4 overflow-y-auto max-h-[70vh] ">
-
+                <CardContent className="p-6 space-y-4 overflow-y-auto max-h-[70vh] scrollbar-subtle ">
+                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+                        <motion.button
+                            initial={{ opacity: 0.5 }}
+                            animate={{ y: [0, 5, 0] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            className="bg-white/80  p-2 rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-300"
+                        >
+                            <ChevronDown className="h-4 w-4 text-[#6F4E37]" />
+                        </motion.button>
+                    </div>
                     <div className="grid gap-6 md:grid-cols-1">
 
                         <form onSubmit={handleSubmit(onSubmit, (errors) => {
@@ -142,15 +151,14 @@ export default function FormEditBranch() {
                             </div>
 
                             {/* Map Section */}
-                            <div className="space-y-4">
+                            {watch("latitude") && watch("longitude") ? (
                                 <MapSearch
                                     initialAddress={baseAddress}
                                     initialLat={watch("latitude")}
                                     initialLng={watch("longitude")}
                                     onLocationSelect={onLocationSelect}
                                 />
-
-                            </div>
+                            ) : null}
                             <div className="flex justify-center">
                                 <Button
                                     type="submit"

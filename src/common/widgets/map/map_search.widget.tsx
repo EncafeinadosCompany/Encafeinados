@@ -4,6 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import MapSettings from "@/api/mutations/map/map_settings.mutations";
 import { CardMapStore } from "../../molecules/auth/stores/card_map_store.molecule";
+import { time } from "console";
 
 interface MapSearchProps {
   onLocationSelect: (lat: number, lng: number, address: string) => void;
@@ -58,18 +59,23 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat,
   }
 
   useEffect(() => {
-    if (initialLat && initialLng) {
-
-      setSelectedPosition([initialLat, initialLng]);
+    if (initialLat && initialLng) {    
+    
+        setSelectedPosition([initialLat, initialLng]);
       if (initialAddress) {
         setSearchQuery(initialAddress);
       }
 
       onLocationSelect(initialLat, initialLng, initialAddress || "Selected location");
       setInitialPositionSet(true);
-    } 
+
+    } else{
+      GetCurrenLocation();
+    }
   }, [initialLat, initialLng, initialAddress]);
 
+
+  
   const GetCurrenLocation = () => {
 
     if (!initialPositionSet) {

@@ -25,44 +25,66 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
 
 
     return (
-        <DialogContent className="bg-white/95 backdrop-blur-sm border-2 border-[#D4A76A]/20 shadow-xl rounded-xl max-w-2xl">
-            <DialogHeader>
-                <DialogTitle className="text-[#6F4E37] text-xl font-bold flex items-center gap-2">
-                    <Coffee className="h-5 w-5 text-[#D4A76A]" />
-                    {selectedAttributes.length === 1
-                        ? `¿Cuenta con ${getTypeLabel(selectedAttributes[0].attributeId)}?`
-                        : "Configurar atributos seleccionados"}
-                </DialogTitle>
-            </DialogHeader>
+        <DialogContent className="bg-white/95  border-none shadow-xl rounded-2xl">
+           <div className="w-full flex flex-col items-center">
+           <div className="flex justify-between items-center mb-6">
+                <DialogHeader>
+                    <DialogTitle className="text-[#2C1810] text-xl font-semibold flex items-center gap-3">
+                        <div className="bg-[#6F4E37]/10 p-2 rounded-lg">
+                            <Coffee className="h-5 w-5 text-[#6F4E37]" />
+                        </div>
+                        {selectedAttributes.length === 1
+                            ? `Configurar ${getTypeLabel(selectedAttributes[0].attributeId)}`
+                            : "Configurar atributos"}
+                    </DialogTitle>
+                </DialogHeader>
+                {/* <Button
+                    variant="ghost"
+                    onClick={() => setIsDialogOpen(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                >
+                    <X className="h-5 w-5" />
+                </Button> */}
+            </div>
+
+            <div className="border-b border-gray-100 pb-4">
+                <p className="text-gray-500 text-sm">
+                    Complete la información solicitada para cada atributo seleccionado.
+                </p>
+            </div>
+           </div>
+
             <motion.div
-                className="py-2 overflow-y-auto max-h-[410px] p-3"
+                className="py-1 overflow-y-auto max-h-[460px] pr-4"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
             >
                 <Form {...method}>
-                    <form onSubmit={method.handleSubmit(onSubmit)} className="space-y-4">
+                    <form onSubmit={method.handleSubmit(onSubmit)} className="space-y-6">
+                    <div className={`grid gap-4 ${
+                            selectedAttributes.length > 1 
+                                ? "md:grid-cols-2 grid-cols-1" 
+                                : "grid-cols-1"
+                        }`}>
                         {selectedAttributes.map((attr, index) => (
-                            <FormField
+                             <FormField
                                 key={attr.id}
                                 control={method.control}
                                 name={`values.${index}.value`}
                                 render={({ field, formState }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-[#6F4E37] font-medium">
-                                            {getTypeLabel(attr.attributeId)}
+                                    <FormItem className="bg-gray-50/50 p-4 rounded-xl border border-gray-100">
+                                        <FormLabel className="text-[#2C1810] font-medium text-base mb-1 block">
+                                            ¿Cuenta con {getTypeLabel(attr.attributeId)}?
                                         </FormLabel>
-                                        <p className="text-sm text-gray-500 mb-2">
+                                        <p className="text-sm text-gray-500 mb-3">
                                             {attributes.find(e => e.id === attr.attributeId)?.description}
                                         </p>
                                         <FormControl>
                                             <Input
                                                 {...field}
                                                 placeholder={`Ingresa el valor para ${getTypeLabel(attr.attributeId)}`}
-                                                className={`border-2 ${formState.errors.values?.[index]
-                                                    ? "border-red-800 focus:border-red-800"
-                                                    : "border-[#D4A76A]/30 focus:border-[#D4A76A]"
-                                                    }`}
+                                                className="border border-gray-200 focus:border-[#6F4E37] focus:ring-[#6F4E37]/10 rounded-lg"
                                             />
                                         </FormControl>
                                         {formState.errors.values?.[index]?.value?.message && (
@@ -77,30 +99,30 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
                                                 </span>
                                             </motion.div>
                                         )}
-
                                     </FormItem>
                                 )}
                             />
                         ))}
-                        <div className="flex justify-between items-center pt-4 mt-6 border-t border-[#D4A76A]/20">
-                            <Button
+                        </div>
+
+                        <div className="flex justify-center items-center gap-3 pt-4 mt-6 border-t border-gray-100">
+                            {/* <Button
                                 type="button"
                                 variant="outline"
                                 onClick={() => {
                                     setIsDialogOpen(false)
                                     setSelectedAttributes([])
                                 }}
-                                className="bg-white hover:bg-gray-50 border-2 border-[#D4A76A] text-[#6F4E37] transition-all duration-200"
+                                className="bg-transparent hover:bg-gray-50 border border-gray-200 text-gray-600"
                             >
-                                <X className="h-4 w-4 mr-2" />
                                 Cancelar
-                            </Button>
+                            </Button> */}
                             <Button
                                 type="submit"
-                                className="bg-gradient-to-r from-[#43765C] to-[#386048] hover:from-[#386048] hover:to-[#2D4F3B] text-white shadow-md hover:shadow-lg transition-all duration-200"
+                                disabled={method.formState.isValidating || !method.formState.isValid}
+                                className="bg-[#6F4E37] w-1xl hover:bg-[#5C4130] text-white shadow-sm"
                             >
-                                <Coffee className="h-4 w-4 mr-2" />
-                                {selectedAttributes.length === 1 ? 'Guardar' : 'Guardar todos'}
+                                {selectedAttributes.length === 1 ? 'Guardar atributo' : 'Guardar todos'}
                             </Button>
                         </div>
                     </form>

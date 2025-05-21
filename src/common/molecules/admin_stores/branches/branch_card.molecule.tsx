@@ -67,15 +67,17 @@ export function BranchCard({
         {/* Status indicator as a floating badge */}
         <div className="absolute top-3 right-3 z-10">
           <div
+            onClick={onGenerateQrCode}
             className={`flex items-center gap-1.5 px-2 py-1 rounded-full ${statusConfig?.bgColor} ${statusConfig?.textColor} text-xs font-medium shadow-sm`}
           >
             <Button
               variant="ghost"
               size="icon"
               className="h-7 w-7 text-[#DB8935] hover:bg-[#F5E4D2]/50"
-              onClick={onGenerateQrCode}
+              
             >
               <QrCodeIcon className="h-4 w-4 text-[#DB8935]" />
+            
             </Button>
 
             <span
