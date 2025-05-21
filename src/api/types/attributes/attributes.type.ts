@@ -2,7 +2,7 @@ export interface Attribute {
     id: number;
     name: string;
     description?: string;
-    requires_response:boolean
+    requires_response?:boolean
     status?: boolean;
 }
 
