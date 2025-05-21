@@ -44,7 +44,7 @@ export const CardAttributes = ({ containerRef, canvasRef, badges, selectedBadges
                     {badges.map((badge) => (
                         <motion.div
                             key={badge.id}
-                            className={`relative p-4 rounded-xl transition-all duration-300 min-h-[110px] ${selectedBadges.includes(badge.id)
+                            className={`relative p-4 rounded-xl transition-all duration-300 min-h-[70px] ${selectedBadges.includes(badge.id)
                                 ? "bg-[#FAF3E0] ring-2 ring-[#D4A76A]"
                                 : "bg-white hover:bg-[#FAF3E0]/50"
                                 } shadow-lg hover:shadow-xl cursor-pointer transform hover:-translate-y-1`}

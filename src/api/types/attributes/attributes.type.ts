@@ -2,6 +2,7 @@ export interface Attribute {
     id: number;
     name: string;
     description?: string;
+    requires_response:boolean
     status?: boolean;
 }
 
@@ -24,7 +25,6 @@ export interface attributeValue {
 export interface RegisterAttibute {
     id: string
     attributeId: number
-    // type: string
     value?: string,
     createdAt?: number
 }
