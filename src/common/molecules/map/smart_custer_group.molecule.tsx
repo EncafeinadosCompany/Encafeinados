@@ -85,11 +85,11 @@ const SmartClusterGroup: React.FC<SmartClusterGroupProps> = ({
       totalMinDistance / minDistancesCount : 80;
     
     if (visibleCafes.length > 100) {
-      return Math.max(13, avgMinDistance * 0.2);
+      return Math.max(18, avgMinDistance * 0.25);
     } else if (visibleCafes.length > 30) { 
-      return Math.max(20, avgMinDistance * 0.4);
+      return Math.max(22, avgMinDistance * 0.35);
     } else {
-      return Math.max(27, avgMinDistance * 0.5);
+      return Math.max(25, avgMinDistance * 0.55);
     }
   }, [map, cafes]);
 
