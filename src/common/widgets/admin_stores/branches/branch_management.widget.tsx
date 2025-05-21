@@ -186,19 +186,19 @@ export default function BranchManagement() {
         mode={isEditing ? "edit" : "add"}
       />
 
+
+      {selectedBranch && (
+        <BranchDetails
+        branch={selectedBranch}
+        isOpen={!!selectedBranch}
+        onClose={closeDetails}
+        />
+      )}
       <QRCodeBranchModal
         isOpen={isQrCodeModalOpen}
         onClose={() => setIsQrCodeModalOpen(false)}
         qrCodeUrl={`${EXPOSED_URL}/coffeelover/register-branch-visit?branch_id=${selectedQrCodeBranch?.id}`}
       />
-
-      {selectedBranch && (
-        <BranchDetails
-          branch={selectedBranch}
-          isOpen={!!selectedBranch}
-          onClose={closeDetails}
-        />
-      )}
     </Card>
   );
 }

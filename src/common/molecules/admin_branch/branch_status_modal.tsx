@@ -4,13 +4,14 @@ import {Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogT
 import { AlertTriangle } from "lucide-react"
 
 interface BranchStatusModalProps {
-    isOpen: boolean
-    onClose: () => void
-    currentStatus: true | false
-    onConfirm: () => void
+    isOpen: boolean;
+    onClose: () => void;
+    currentStatus: boolean;
+    onConfirm: () => void;
+    message?: string;
 }
 
-export default function BranchStatusModal({ isOpen, onClose, currentStatus, onConfirm }: BranchStatusModalProps) {
+export default function BranchStatusModal({ isOpen, onClose, currentStatus, onConfirm, message}: BranchStatusModalProps) {
     const newStatus = currentStatus === true ? "cerrada" : "abierta"
 
     return (
@@ -24,7 +25,7 @@ export default function BranchStatusModal({ isOpen, onClose, currentStatus, onCo
                     <span>{currentStatus ? 'Cerrar' : 'Abrir'} Sucursal</span>
                 </DialogTitle>
                 <DialogDescription className="text-gray-600 text-base">
-                    ¿Está seguro que desea {currentStatus ? "cerrar" : "abrir"} esta sucursal?
+                {message || `¿Está seguro que desea ${currentStatus ? "cerrar" : "abrir"} la sucursal?`}
                 </DialogDescription>
             </DialogHeader>
 

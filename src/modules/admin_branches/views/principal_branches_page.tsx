@@ -1,5 +1,6 @@
 import { useStatesIsOpen } from "@/api/mutations/branches/branch_states.mutation";
 import { useBranchesID, useImagenBranch } from "@/api/queries/branches/branch.query";
+import { ScrollIndicator } from "@/common/atoms/indicator";
 
 import { QRCode } from "@/common/atoms/QRCode";
 import BranchStatusModal from "@/common/molecules/admin_branch/branch_status_modal";
@@ -10,7 +11,7 @@ import { Card } from "@/common/ui/card";
 import { Switch } from "@/common/ui/switch";
 import { Label } from "@radix-ui/react-label";
 import { AlertCircle, Clock1, Clock2, Coffee, PhoneIcon, RefreshCw, Star } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function PrincipalBranchesPage() {
@@ -26,16 +27,16 @@ export default function PrincipalBranchesPage() {
     const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
     const [branchStatus, setBranchStatus] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
     // Add a loading check for both queries
     const isLoading = isImageLoading || isBranchLoading;
     const hasError = imageError || branchError || statusError;
 
     useEffect(() => {
-        if (branches?.branch.is_open !== undefined && imagen) {
+        if (branches?.branch.is_open !== undefined) {
             setBranchStatus(branches.branch.is_open);
         }
-    }, [branches?.branch.is_open, imagen]);
+    }, [branches?.branch.is_open]);
 
     // Update the loading condition
     if (status === 'pending') {
@@ -130,8 +131,14 @@ export default function PrincipalBranchesPage() {
 
 
     return (
-        <div className="container h-full mx-auto max-w-7xl px-4 py-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full xl:h-full">
+        <div className="container h-full max-w-full px-5 py-5 scrollbar-subtle">
+            <div ref={scrollContainerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full max-h-[95vh] overflow-y-auto  scrollbar-subtle">
+
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+                    <ScrollIndicator className="bg-[#6F4E37]/10 hover:bg-[#6F4E37]/20" containerRef={scrollContainerRef as React.RefObject<HTMLElement>}></ScrollIndicator>
+
+                </div>
+
                 {/* Left column */}
                 <div className="h-full">
                     <Card className="p-6 bg-white h-full shadow-lg rounded-xl border-none">

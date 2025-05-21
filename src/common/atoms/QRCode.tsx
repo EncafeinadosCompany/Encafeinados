@@ -1,6 +1,6 @@
 import { QRCodeSVG } from "qrcode.react";
 
-export function QRCode({ url }: { url: string }) {
+export function QRCode({ url, width }: { url: string, width?:number }) {
   return (
     <div className="w-full h-auto flex justify-center items-center">
       <QRCodeSVG
@@ -9,7 +9,7 @@ export function QRCode({ url }: { url: string }) {
         style={{
           width: "100%",
           height: "auto",
-          maxWidth: "300px",
+          maxWidth: width ? width : 300,
         }}
       />
     </div>
