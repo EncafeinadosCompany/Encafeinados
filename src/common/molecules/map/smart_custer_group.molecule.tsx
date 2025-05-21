@@ -85,11 +85,11 @@ const SmartClusterGroup: React.FC<SmartClusterGroupProps> = ({
       totalMinDistance / minDistancesCount : 80;
     
     if (visibleCafes.length > 100) {
-      return Math.max(18, avgMinDistance * 0.3);
+      return Math.max(13, avgMinDistance * 0.2);
     } else if (visibleCafes.length > 30) { 
-      return Math.max(25, avgMinDistance * 0.5);
+      return Math.max(20, avgMinDistance * 0.4);
     } else {
-      return Math.max(35, avgMinDistance * 0.7);
+      return Math.max(27, avgMinDistance * 0.5);
     }
   }, [map, cafes]);
 
@@ -321,10 +321,33 @@ const SmartClusterGroup: React.FC<SmartClusterGroupProps> = ({
       } else {
         setActiveCafeObject(null);
         
-        if (markersRef.current['active'] && map.hasLayer(markersRef.current['active'])) {
-          map.removeLayer(markersRef.current['active']);
+        // 1. Guarda la referencia del marcador activo que vamos a eliminar
+        const activeMarker = markersRef.current['active'];
+        const activeMarkerId = Object.keys(markersRef.current).find(
+          key => markersRef.current[key] === activeMarker && key !== 'active'
+        );
+        
+        if (activeMarker && map.hasLayer(activeMarker)) {
+          map.removeLayer(activeMarker);
           delete markersRef.current['active'];
+          
+          if (activeMarkerId) {
+            const cafeToRestore = cafes.find(c => c.id.toString() === activeMarkerId);
+            if (cafeToRestore) {
+              const restoredMarker = createLeafletMarker(cafeToRestore);
+              markersRef.current[cafeToRestore.id] = restoredMarker;
+              mcg.addLayer(restoredMarker);
+            }
+          }
         }
+        
+        cafes.forEach(cafe => {
+          if (!markersRef.current[cafe.id] && !mcg.hasLayer(markersRef.current[cafe.id])) {
+            const marker = createLeafletMarker(cafe);
+            markersRef.current[cafe.id] = marker;
+            mcg.addLayer(marker);
+          }
+        });
       }
       
       previousCafesRef.current = [...cafes];
@@ -420,6 +443,54 @@ const SmartClusterGroup: React.FC<SmartClusterGroupProps> = ({
     };
   }, [map, updateMarkers, getOptimalClusterRadius]);
   
+  useEffect(() => {
+    if (!map || !cafes.length || !markerClusterGroupRef.current) return;
+    
+    const mcg = markerClusterGroupRef.current;
+    
+    if (activeCafe === null) {
+      if (markersRef.current['active'] && map.hasLayer(markersRef.current['active'])) {
+        map.removeLayer(markersRef.current['active']);
+        delete markersRef.current['active'];
+      }
+      
+      mcg.clearLayers();
+      
+      Object.keys(markersRef.current).forEach(key => {
+        if (key !== 'active') {
+          delete markersRef.current[key];
+        }
+      });
+      
+      cafes.forEach(cafe => {
+        const marker = createLeafletMarker(cafe);
+        markersRef.current[cafe.id] = marker;
+        mcg.addLayer(marker);
+      });
+      
+      mcg.refreshClusters();
+    }
+    else {
+      const activeCafeData = cafes.find(cafe => cafe.id === activeCafe);
+      
+      if (activeCafeData) {
+        setActiveCafeObject(activeCafeData);
+        
+        if (markersRef.current[activeCafe]) {
+          mcg.removeLayer(markersRef.current[activeCafe]);
+        }
+        
+        if (markersRef.current['active'] && map.hasLayer(markersRef.current['active'])) {
+          map.removeLayer(markersRef.current['active']);
+        }
+        
+        const activeMarker = createLeafletMarker(activeCafeData);
+        markersRef.current['active'] = activeMarker;
+        activeMarker.addTo(map);
+      }
+    }
+  }, [activeCafe, cafes, map, createLeafletMarker]);
+
   useEffect(() => {
     return () => {
       if (!map) return;
