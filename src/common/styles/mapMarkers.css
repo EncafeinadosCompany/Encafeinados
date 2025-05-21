@@ -698,3 +698,224 @@
 .cafe-marker.closed .closed-overlay {
   display: none;
 }
+
+.custom-marker-cluster {
+  background: none !important;
+  border: none !important;
+}
+
+.cluster-marker {
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid #6F4E37;
+  color: #6F4E37;
+  font-weight: bold;
+  font-size: 14px;
+  position: relative;
+}
+
+.cluster-marker::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(111, 78, 55, 0.15);
+  animation: cluster-pulse 2s infinite;
+  z-index: -1;
+}
+
+@keyframes cluster-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+.cluster-small {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.cluster-medium {
+  background-color: rgba(212, 167, 106, 0.9);
+  color: white;
+}
+
+.cluster-large {
+  background-color: rgba(111, 78, 55, 0.9);
+  color: white;
+}
+
+/* Estilos para marcadores expandidos (spider) */
+.leaflet-marker-icon.leaflet-marker-icon-spider {
+  transition: all 0.3s ease-out;
+}
+
+/* Agregar estos estilos al final del archivo */
+
+/* Mejoras para los clusters */
+.cluster-indicator {
+  font-size: 10px;
+  margin-top: 2px;
+  display: inline-block;
+  line-height: 1;
+}
+
+.open-indicator {
+  width: 6px;
+  height: 6px;
+  background-color: #34a853;
+  border-radius: 50%;
+  margin: 3px auto 0;
+}
+
+.rating-indicator {
+  color: #f9a825;
+  margin-top: 1px;
+  vertical-align: middle;
+}
+
+/* Mejorar apariencia general de clusters */
+.cluster-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* Mejorar apariencia y feedback de los clusters */
+.cluster-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.25);
+  border: 1.5px solid #6F4E37;
+  color: #6F4E37;
+  font-weight: 700;
+  font-size: 15px;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: visible;
+}
+
+.cluster-marker:hover {
+  transform: scale(1.05);
+  z-index: 1000;
+}
+
+.cluster-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.cluster-count {
+  display: block;
+  line-height: 1;
+}
+
+/* Clusters con cafeterías abiertas */
+.cluster-marker.has-open {
+  box-shadow: 0 3px 14px rgba(36, 148, 77, 0.3);
+  border-color: #34a853;
+}
+
+.cluster-marker.has-open::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background-color: #34a853;
+  border-radius: 50%;
+  border: 1.5px solid white;
+}
+
+/* Clusters con cafeterías de alta calificación */
+.cluster-marker.has-high-rated {
+  background: linear-gradient(to bottom, white 60%, #ffefc3 100%);
+}
+
+.cluster-marker.has-high-rated .rating-indicator {
+  color: #f9a825;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+/* Tamaños de clusters */
+.cluster-small {
+  font-size: 13px;
+}
+
+.cluster-medium {
+  font-size: 15px;
+  background-color: rgba(212, 167, 106, 0.9);
+  color: white;
+}
+
+.cluster-large {
+  font-size: 18px;
+  background-color: rgba(111, 78, 55, 0.9);
+  color: white;
+}
+
+/* Efecto de onda/ripple para feedback visual */
+.cluster-ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  animation: cluster-ripple 1.5s infinite ease-out;
+  border: 2px solid rgba(111, 78, 55, 0.3);
+  z-index: -1;
+}
+
+@keyframes cluster-ripple {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* Estilo para marcador con clic */
+.custom-cafe-marker.clicked .cafe-marker {
+  transform: scale(1.2);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Animación para transformación de clusters */
+.leaflet-cluster-anim .leaflet-marker-icon {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+/* Mejorar visibilidad de las patas de araña */
+.leaflet-cluster-spider-leg {
+  stroke-dashoffset: 0;
+  stroke-opacity: 0.5;
+  stroke-width: 2;
+  stroke: #6F4E37;
+  transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
+}

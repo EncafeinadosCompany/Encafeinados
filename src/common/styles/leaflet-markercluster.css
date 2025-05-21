@@ -1,0 +1,29 @@
+.leaflet-cluster-anim .leaflet-marker-icon, 
+.leaflet-cluster-anim .leaflet-marker-shadow {
+  transition: transform 0.25s ease-out, opacity 0.25s ease-in;
+}
+
+.leaflet-cluster-spider-leg {
+  stroke-dashoffset: 0;
+  stroke-opacity: 0.5;
+  stroke-width: 1.8;
+  stroke: #6F4E37;
+  transition: stroke-dashoffset 0.5s ease-out, stroke-opacity 0.5s ease-in;
+}
+
+/* Prevenir problemas de z-index */
+.leaflet-marker-pane {
+  z-index: 610;
+}
+
+.leaflet-overlay-pane {
+  z-index: 600;
+}
+
+.leaflet-cluster-pane {
+  z-index: 620;
+}
+
+.leaflet-popup-pane {
+  z-index: 630;
+}
