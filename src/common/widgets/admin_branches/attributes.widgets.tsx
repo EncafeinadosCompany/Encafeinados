@@ -17,11 +17,11 @@ import { DetailsAttributes } from "@/common/molecules/admin_branch/attributes/de
 import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.type"
 import { useAttributes, useBranchAttributes } from "@/api/queries/attributes/attributes.query"
 import { AttributeFormType, RegisterAttributeSchema } from "@/common/utils/schemas/attributes/create_attributes.schema"
-import { useCreateAttributeMutation } from "@/api/mutations/attributes/attributes.mutation"
+import { useCreateAttributeMutation, useUpdateAttributeMutation } from "@/api/mutations/attributes/attributes.mutation"
 import { getAuthStorage } from "@/common/utils/auth_storage.utils"
 import { ChevronDown, Coffee } from "lucide-react"
-import { motion } from "framer-motion"
 import { ScrollIndicator } from "@/common/atoms/indicator"
+import DateTimePickerOpenTo from "@/common/ui/dataTimePickerOpenTo"
 
 export default function AttributesDashboard() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -33,11 +33,13 @@ export default function AttributesDashboard() {
     const { storeOrBranch } = getAuthStorage()
     const [attributes, setAttributes] = useState<Attribute[]>([])
     const [selectedAttributes, setSelectedAttributes] = useState<RegisterAttibute[]>([])
-
+    
     if (!storeOrBranch) return null
     const { data: attributesByID } = useBranchAttributes(storeOrBranch)
     const { data: attribute } = useAttributes()
+    
     const { mutateAsync: useAttribute } = useCreateAttributeMutation()
+    const { mutateAsync: useUpdateMutation } = useUpdateAttributeMutation()
 
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -46,8 +48,6 @@ export default function AttributesDashboard() {
 
     const usedTypes = badges.map((badge) => badge.attributeId)
     const availableOptions = attributes.filter((option) => !usedTypes.includes(option.id))
-
-
 
 
     const method = useForm<AttributeFormType>({
@@ -85,17 +85,15 @@ export default function AttributesDashboard() {
 
     const onSubmit = async (data: AttributeFormType) => {
         try {
-            data.values.map(newAttr => {
-                const existingAttr = attributesByID?.attributes.find(
-                    attr => attr.attributeId === newAttr.attributeId
-                );
-                if (existingAttr) {
-                    console.log('Updating existing attribute:', data);
-                } else {
-                    useAttribute(data.values);
-                }
-                return newAttr;
-            });
+            const existingAttr = attributesByID?.attributes.find(
+                attr => attr.attributeId === data.values[0].attributeId
+            );
+            if (existingAttr) {
+                await useUpdateMutation({ data: data.values[0] });
+            } else {
+                await useAttribute(data.values);
+            }
+            
             setIsDialogOpen(false);
             setSelectedAttributes([]);
             method.reset();
@@ -249,6 +247,8 @@ export default function AttributesDashboard() {
                         setIsDialogOpen={setIsDialogOpen}
                     />
                 </Dialog>
+
+      
 
                 <div className="mt-8 p-4 bg-gray-50/10 rounded-xl border border-[#E5E7EB]">
                     <h3 className="text-[#2C1810] font-medium mb-2">Guía Rápida</h3>

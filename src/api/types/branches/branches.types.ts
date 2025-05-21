@@ -64,11 +64,13 @@ export interface BranchesResponseStore {
  
 }
 
-
-export interface BranchesImagen {
+export interface image {
   id: number;
   image_url: string;
   image_type:string
+}
+export interface BranchesImagen {
+ images:image[];
 };
 
 

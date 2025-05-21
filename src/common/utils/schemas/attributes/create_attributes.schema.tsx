@@ -5,9 +5,32 @@ export const RegisterAttributeSchema = z.object({
         id: z.string(),
         attributeId: z.number(),
         value: z.string()
-            .min(2, "La descripción debe tener al menos 3 caracteres")
-            .max(100, "La descripción no puede exceder los 100 caracteres")
-           .optional()
+        .transform((val) => val === "" ? undefined : val)
+        .optional()
+        .superRefine((val, ctx) => {
+            if ((ctx.path[ctx.path.length - 1] as any).requires_response && !val) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: "Este campo es requerido"
+                });
+            }
+            if (val) {
+                if (val.length < 2) {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: "La descripción debe tener al menos 3 caracteres"
+                    });
+                }
+                if (val.length > 100) {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: "La descripción no puede exceder los 100 caracteres"
+                    });
+                }
+            }
+        })
+        
+           
     }))
 })
 

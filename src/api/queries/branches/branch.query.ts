@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { BrancheIDresponse, BranchesImagen, BranchesResponse } from '../../types/branches/branches.types'
+import { BrancheIDresponse, BranchesImagen, BranchesResponse, image } from '../../types/branches/branches.types'
 import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse } from '../../types/branches/branches_approval.types'
 
 import AuthClient from '@/api/client/axios'
@@ -29,12 +29,13 @@ export const useBranchesID = (id: number) => {
 
 export const useImagenBranch = (id:number) => {
 
-  return useQuery<BranchesImagen[]>({
+  return useQuery<image[]>({
     queryKey: ['branches_imagen'],
-    queryFn: async (): Promise<BranchesImagen[]> => {
-      const response = await authClient.get<BranchesImagen[]>(`/images/branch/${id}`);
+    queryFn: async (): Promise<image[]> => {
+      const response = await authClient.get<BranchesImagen>(`/images/branch/${id}`);
       console.log("Imagenes", response)
-      return response;
+      
+      return response.images;
     },
   });
 }

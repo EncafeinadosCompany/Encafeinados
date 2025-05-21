@@ -6,6 +6,7 @@ import RoleRoute from "./RouleRoute";
 
 import { RouteLoadingIndicator } from "./route_loading_indicador.router";
 
+
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
 const AboutPage = lazy(() => import("@/modules/home/views/landing/about_page"));
@@ -75,6 +76,8 @@ const AuthRoutes = () => {
 
             {/* PUBLIC ROUTES */}
             <Route path="/" element={<HomePage />} />
+            {/* <Route path="/hora" element={<ScheduleModule branchId={1} />} /> */}
+
             <Route path="/map" element={<MapView view={true} />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage />} />
