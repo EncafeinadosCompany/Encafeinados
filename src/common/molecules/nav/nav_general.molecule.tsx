@@ -232,8 +232,7 @@ export const NavGeneral = ({
         </div>
       )}
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <main className={`flex-1 w-full ${isMobile ?  ''  : ''}`}>
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">        <main className={`flex-1 w-full ${isMobile ? 'has-mobile-nav' : ''}`}>
           <Outlet />   
         </main>
       

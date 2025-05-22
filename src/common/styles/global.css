@@ -19,6 +19,27 @@
   scroll-snap-stop: always;
 }
 
+/* Mobile navigation utilities */
+.mobile-nav-spacing {
+  padding-bottom: 64px; /* Height of the mobile navigation bar */
+}
+
+.mobile-screen-height {
+  height: calc(100vh - 64px); /* Adjust screen height for mobile navigation */
+}
+
+/* Fix for content elements being shown under navigation */
+@media (max-width: 767px) {
+  .has-mobile-nav {
+    padding-bottom: 64px;
+  }
+  
+  .has-mobile-nav-screen {
+    height: calc(100vh - 64px);
+    max-height: calc(100vh - 64px);
+  }
+}
+
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);

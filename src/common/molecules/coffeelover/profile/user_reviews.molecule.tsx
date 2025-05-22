@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { MessageSquare, Star, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MessageSquare, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWindowSize } from '@/common/hooks/useWindowSize';
 import { useClientReviews } from '@/api/queries/reviews/reviews.query';
@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { getAuthStorage } from '@/common/utils/auth_storage.utils';
 import ReviewImages from '@/common/atoms/reviews/review_images.atom';
+import StarsRating from '@/common/atoms/reviews/stars_rating.atom';
 
 interface UserReviewsProps {
   heightAdjustment?: boolean;
@@ -172,16 +173,9 @@ export const UserReviews: React.FC<UserReviewsProps> = ({ heightAdjustment = fal
                   <div className="flex items-center gap-2 text-xs text-gray-500">
                     <Calendar className="h-3 w-3" />
                     <span>{formatDate(review.createdAt)}</span>
-                  </div>
-                </div>
-                <div className="ml-auto flex">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      size={14}
-                      className={i < review.rating ? "text-amber-400 fill-amber-400" : "text-gray-300"}
-                    />
-                  ))}
+                  </div>                </div>
+                <div className="ml-auto">
+                  <StarsRating value={review.rating} size="xs" readOnly />
                 </div>
               </div>
               

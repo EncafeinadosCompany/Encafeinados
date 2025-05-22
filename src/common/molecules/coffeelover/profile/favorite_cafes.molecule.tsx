@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Coffee, Star, MapPin, Heart, ChevronRight, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWindowSize } from '@/common/hooks/useWindowSize';
+import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
 
 interface FavoriteCafesProps {
   heightAdjustment?: boolean;
@@ -146,10 +147,15 @@ export const FavoriteCafes: React.FC<FavoriteCafesProps> = ({ heightAdjustment =
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
               <div className="absolute bottom-2 left-2 text-white">
-                <div className="font-medium text-sm">{cafe.name}</div>
-                <div className="flex items-center text-xs">
+                <div className="font-medium text-sm">{cafe.name}</div>                <div className="flex items-center text-xs">
                   <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                  <span className="ml-1">{cafe.rating}</span>
+                  <span className="ml-1">
+                    <SafeNumericDisplay 
+                      value={cafe.rating} 
+                      format={(val) => val.toFixed(1)} 
+                      defaultValue="..." 
+                    />
+                  </span>
                 </div>
               </div>
               <button className="absolute bottom-2 right-2 bg-white/80 p-1.5 rounded-full">

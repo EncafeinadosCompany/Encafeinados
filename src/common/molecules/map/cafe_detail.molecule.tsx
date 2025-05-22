@@ -27,6 +27,7 @@ import {
 import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
 import toast from "react-hot-toast";
 import { useBranchAttributes } from "@/api/queries/branches/branch_attributes.query";
+import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
 
 const determineNetworkType = (
   social: any
@@ -411,14 +412,16 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           <div className="absolute bottom-0 left-0 p-4 w-full">
             <h3 className="font-bold text-2xl md:text-3xl lg:text-3xl text-white line-clamp-2">
               {cafe.name}
-            </h3>
-            <div className="flex items-center justify-between mt-2">
+            </h3>              <div className="flex items-center justify-between mt-2">
               <div className="flex items-center gap-1 text-amber-500">
                 {cafe.rating ? (
                   <>
                     <Star size={16} className="fill-amber-500" />
                     <span className="font-medium text-white">
-                      {cafe.rating}
+                      <SafeNumericDisplay 
+                        value={cafe.rating} 
+                        format={(val) => val.toFixed(1)} 
+                      />
                     </span>
                     <button
                       onClick={() => setIsReviewsOpen(true)}
@@ -456,12 +459,16 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   </span>
                 )}
               </h2>
-              <div className="flex items-center justify-between mt-2">
-                <div className="flex items-center gap-1 text-amber-500">
+              <div className="flex items-center justify-between mt-2">                <div className="flex items-center gap-1 text-amber-500">
                   {cafe.rating ? (
                     <>
                       <Star size={16} className="fill-amber-500" />
-                      <span className="font-medium">{cafe.rating}</span>
+                      <span className="font-medium">
+                        <SafeNumericDisplay 
+                          value={cafe.rating} 
+                          format={(val) => val.toFixed(1)} 
+                        />
+                      </span>
                       <span className="text-sm text-gray-500">
                         (Reseñas disponibles)
                       </span>
