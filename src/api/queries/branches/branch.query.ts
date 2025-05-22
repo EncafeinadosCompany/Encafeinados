@@ -35,7 +35,7 @@ export const useImagenBranch = (id:number) => {
       const response = await authClient.get<BranchesImagen>(`/images/branch/${id}`);
       console.log("Imagenes", response)
       
-      return response.images;
+      return response.images ?? [];
     },
   });
 }

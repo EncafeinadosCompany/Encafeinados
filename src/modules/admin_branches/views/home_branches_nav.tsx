@@ -5,8 +5,8 @@ import NavbarGeneral from "@/common/widgets/nav/nav.widget"
 export default function HomeBranchesNav () {
   
   return(
-    <div className="h-full bg-gray-100 flex flex-col  overflow-hidden">
-        <NavbarGeneral navItems={AdminBranchesItems}></NavbarGeneral>
+    <div className="relative h-[95vh] md:h-full bg-gray-100 flex flex-col overflow-hidden">
+        <NavbarGeneral navItems={AdminBranchesItems}/>
     </div>
        
   )
