@@ -133,7 +133,9 @@ const AuthRoutes = () => {
                 <Route path="/admin" element={<HomeAdmin />}>
                   <Route index element={<PendingBranchesView />} />
                   <Route path="albums" element={<AlbumManager />}/>
-                  <Route path="form" element={< EventList/>} />
+                  <Route path="event" element={<EventList/>} />
+                  <Route path="form" element={<FormRegisterEvents/>} />
+
                 </Route>
               </Route>
             </Route>

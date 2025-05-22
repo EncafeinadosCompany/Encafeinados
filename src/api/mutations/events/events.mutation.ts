@@ -24,7 +24,6 @@ export const useEventMutation = () => {
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: ['events'] });
-        console.log(data)
         toast.success("Evento creado correctamente");
       },
       onError: (error: any) => {

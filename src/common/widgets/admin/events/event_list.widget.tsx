@@ -173,10 +173,10 @@ export const EventList = () => {
                             >
                                 {viewAll ? "Ver eventos por mes" : "Ver todos los eventos"}
                             </Button>
-                            <Button className="bg-black text-white rounded-full hover:bg-gray-600/90">
+                            <a href={`/admin/form`} className="bg-black  font-bold  flex items-center px-2 text-[14px] text-white rounded-full hover:bg-gray-600/90">
                                 <Plus className="h-5 w-5 mr-1" />
                                 <span className="me-2"> Nuevo Evento</span>
-                            </Button>
+                            </a>
                         </div>
                     </div>
 
@@ -279,7 +279,7 @@ export const EventList = () => {
                     ) : (
                         <div 
                             ref={scrollContainerRef} 
-                            className="relative pl-8 flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-2  scrollbar-subtle"
+                            className="relative pl-4 flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-2  scrollbar-subtle"
                             style={{
                                 height: 'calc(100vh - 320px)', 
                                 minHeight: '400px',
@@ -304,7 +304,7 @@ export const EventList = () => {
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ duration: 0.3, delay: index * 0.1 }}
-                                        className="mb-8 relative "
+                                        className="relative "
                                     >
 
                                         {/* Event card */}

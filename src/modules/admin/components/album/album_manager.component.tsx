@@ -2,8 +2,13 @@ import React from "react";
 import { CreateAlbumWidget } from "@/common/widgets/admin/album/create_album.widget"; 
 import { BookOpen } from "lucide-react";
 import { ListAlbumWidget } from "@/common/widgets/admin/album/list_album_admin.widget";
+import { useSearchParams } from "react-router-dom";
 
 const AlbumManager = () => {
+  const [searchParams] = useSearchParams();
+
+  console.log(searchParams.get("event"))
+
   return (
     <div className="w-full h-full flex flex-col bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
       <header className="flex-shrink-0 bg-white/95 border-b border-gray-100 py-6 px-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

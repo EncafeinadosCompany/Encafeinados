@@ -15,7 +15,7 @@ export const AdminItems: NavItemType[] = [
   },
   {
     title: "Eventos",
-    href: "/admin/form",
+    href: "/admin/event",
     icon: <CalendarFold className="h-4 w-4" />,
   }
 ]
