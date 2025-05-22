@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/common/ui/button"
-import { BranchesImagen } from "@/api/types/branches/branches.types"
+import { image } from "@/api/types/branches/branches.types"
 
 
 interface ImageCarouselProps {
-  images:  BranchesImagen[]
+  images:  image[]
   alt: string
 }
 

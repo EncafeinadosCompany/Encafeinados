@@ -9,6 +9,8 @@ import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import toast from 'react-hot-toast';
 import 'leaflet/dist/leaflet.css';
+import '@/common/styles/leaflet-markercluster.css';
+import '@/common/styles/mapMarkers.css';
 import '@/common/styles/desktopDetails.css';
 
 //   COMMENTS FOR EACH SECTION ARE NECESSARY IN THIS MODULE BECAUSE I GET LOST :(
@@ -42,6 +44,8 @@ import MapSidebar from '@/common/molecules/map/map_sidebar.molecule';
 import { containerVariants, cardVariants, pulseVariants } from './map_animations.widget';
 import { useBranches } from '@/api/queries/branches/branch.query';
 import LoadingSpinner from '@/common/atoms/LoadingSpinner';
+// import 'leaflet.markercluster/dist/leaflet.markercluster.css';
+import '@/common/styles/leaflet-markercluster.css';
 
 const MapController: React.FC<{
   setMapInstance: (map: L.Map) => void;

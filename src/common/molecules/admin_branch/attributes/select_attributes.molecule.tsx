@@ -26,49 +26,65 @@ export const SelectAttributes = ({ isMultiSelectOpen, setIsMultiSelectOpen, sele
                     variant="outline"
                     role="combobox"
                     aria-expanded={isMultiSelectOpen}
-                    className="w-full md:w-[300px] justify-between rounded-full border-gray-400 bg-gray-50/50"
+                    className="w-full md:w-[600px] justify-between rounded-xl border-[#E5E7EB] bg-white hover:bg-[#FDF8F3] transition-colors duration-200 shadow-sm"
                 >
-                    {selectedOptions.length > 0
-                        ? `${selectedOptions.length} elemento(s) seleccionado(s)`
-                        : "Seleccionar atributos para añadir"}
-                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    <div className="flex items-center gap-2">
+                        <div className="bg-[#6F4E37]/10 p-1.5 rounded-md">
+                            <Check className="h-4 w-4 text-[#6F4E37]" />
+                        </div>
+                        <span className="text-[#2C1810]">
+                            {selectedOptions.length > 0
+                                ? `${selectedOptions.length} atributo${selectedOptions.length > 1 ? 's' : ''} seleccionado${selectedOptions.length > 1 ? 's' : ''}`
+                                : "Seleccionar atributos"}
+                        </span>
+                    </div>
+                    <ChevronDown className="h-4 w-4 text-[#6F4E37]" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[300px] p-2 bg-white shadow-lg border border-amber-100" align="start">
-                <div className="p-2">
+            <PopoverContent className="w-[300px] p-3 bg-white shadow-lg border-none rounded-xl" align="start">
+                <div className="space-y-1">
                     {availableOptions.length > 0 ? (
-                        availableOptions.map((option) => (
+                        availableOptions.map((option, index) => (
                             <div
                                 key={option.id}
-                                className="flex items-center space-x-2 p-2 hover:bg-slate-100 rounded cursor-pointer"
+                                className="flex items-center space-x-2 p-2.5 hover:bg-[#FDF8F3] rounded-lg cursor-pointer transition-colors duration-200"
                                 onClick={() => handleMultiSelectChange({ id: option.id, name: option.name })}
                             >
-                                <Checkbox
+                                {/* <Checkbox
                                     id={`option-${option.id}`}
                                     checked={selectedOptions.some(item => item.id === option.id)}
                                     onCheckedChange={() => handleMultiSelectChange({ id: option.id, name: option.name })}
-                                />
-                                <Label htmlFor={`option-${option.id}`} className="flex-grow cursor-pointer">
+                                    className="border-[#6F4E37]/30 data-[state=checked]:bg-[#6F4E37] data-[state=checked]:border-[#6F4E37]"
+                                /> */}
+                                <p className="text-gray-400 text-xs ">
+                                    {index + 1}.
+                                </p>
+                                <Label htmlFor={`option-${option.id}`} className="flex-grow cursor-pointer text-[#2C1810] font-medium">
                                     {option.name}
                                 </Label>
-                                {selectedOptions.some(item => item.id === option.id) && <Check className="h-4 w-4 text-green-700" />}
+                                {selectedOptions.some(item => item.id === option.id) && (
+                                    <Check className="h-4 w-4 text-[#6F4E37]" />
+                                )}
                             </div>
                         ))
                     ) : (
-                        <div className="p-4 text-center flex flex-col items-center gap-2 text-slate-500 ">
-                            <AlertCircle className="h-5 w-5" />
-                            <p>Todos los elementos ya están en el canvas</p>
+                        <div className="py-8 text-center flex flex-col items-center gap-3 text-[#6B7280]">
+                            <div className="bg-[#FDF8F3] p-3 rounded-full">
+                                <AlertCircle className="h-5 w-5 text-[#6F4E37]" />
+                            </div>
+                            <p className="text-sm">Todos los atributos están en uso</p>
                         </div>
                     )}
                 </div>
                 {availableOptions.length > 0 && (
-                    <div className="border-t border-gray-300 p-2 flex justify-end">
+                    <div className="mt-3 pt-3 border-t border-[#E5E7EB]">
                         <Button
                             size="sm"
-                            className="mx-auto text-white rounded-md bg-amber-600 hover:bg-amber-700"
+                            className="w-full bg-[#6F4E37] hover:bg-[#5C4130] text-white rounded-lg transition-colors duration-200"
                             onClick={handleAddSelectedOptions}
-                            disabled={selectedOptions.length === 0}>
-                            Añadir al canvas
+                            disabled={selectedOptions.length === 0}
+                        >
+                            Añadir atributos
                         </Button>
                     </div>
                 )}

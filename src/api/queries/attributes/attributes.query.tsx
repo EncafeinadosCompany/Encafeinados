@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import AuthClient from '@/api/client/axios'
-import { Attribute, Attributes } from '@/api/types/attributes/attributes.type'
+import { Attribute, AttributeByID, Attributes} from '@/api/types/attributes/attributes.type'
 
 
 const authClient = new AuthClient()
@@ -12,6 +12,19 @@ export const useAttributes = () => {
         const response = await authClient.get<Attributes>('/attributes')
         return response.attributes
       },
+    })
+  }
+
+
+  export const useBranchAttributes = (branchId: string) => {
+    return useQuery<AttributeByID, Error>({
+      queryKey: ["branch-attributes"],
+      queryFn: async (): Promise<AttributeByID> => {
+        const response =  await authClient.get<AttributeByID>(`/branch-attributes/${branchId}`)
+        console.log('attributos por id',response.attributes)
+        return response
+      },
+      enabled: !!branchId
     })
   }
   

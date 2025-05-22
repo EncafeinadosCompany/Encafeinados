@@ -2,7 +2,7 @@ import { useMutation, UseMutationResult, useQueryClient } from "@tanstack/react-
 import { ValidateVisitInput, ValidateVisitResponse } from "../../types/branches/branches_approval.types";
 import AuthClient from "../../client/axios";
 import { useError } from "@/common/hooks/auth/useErrors";
-import { formSchemaBranches } from "@/common/widgets/admin_branches/edit_images.widget";
+import { formSchemaBranches } from "@/common/widgets/admin_branches/images.widget";
 import { uploadImage } from "../image/image.mutations";
 import { AxiosResponse } from "axios";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
@@ -41,6 +41,7 @@ export const useRejectBranchMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    
     mutationFn: async ({
       approvalId,
       reason,
@@ -118,11 +119,15 @@ export const useRegisterVisitMutation = (): UseMutationResult<
 
 export const useStatesIsOpen = () => {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ id, isOpen }: { id: number; isOpen: boolean }) => {
-      const response = await authClient.patch(`/branches/open-close/${id}`, { isOpen: isOpen });
+  return useMutation<any, Error,{ id: number; is_open: boolean } >({
+    mutationFn: async ({ id, is_open }: { id: number; is_open: boolean }) => {
+      const response = await authClient.patch(`/branches/open-close/${id}`, { isOpen: is_open });
       return response;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branches"] });
+      
+    }
   });
 }
 
@@ -180,6 +185,7 @@ export const useUpdateImagenBrandMutation = () => {
       toast.success('¡La imagen se ha subido con éxito!', { id: loadingToast });
 
       queryClient.invalidateQueries({ queryKey: ['branches'] });
+      queryClient.invalidateQueries({queryKey:['branch-approvals']})
 
     },
     onError: (error: any) => {
@@ -215,6 +221,7 @@ export const deleteImagenBrandMutation =  () => {
       toast.success('¡La imagen se ha eliminado con éxito!', { id: loadingToast });
 
       queryClient.invalidateQueries({ queryKey: ['branches'] });
+      queryClient.invalidateQueries({ queryKey: ['branches_imagen'] });
 
     },
     onError: (error: any) => {

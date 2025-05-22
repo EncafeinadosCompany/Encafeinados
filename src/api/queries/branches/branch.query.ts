@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { Branch, BrancheIDresponse, BranchesImagen, BranchesResponse } from '../../types/branches/branches.types'
+import { BrancheIDresponse, BranchesImagen, BranchesResponse, image } from '../../types/branches/branches.types'
 import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse } from '../../types/branches/branches_approval.types'
 
 import AuthClient from '@/api/client/axios'
-import toast from 'react-hot-toast'
 
 const authClient = new AuthClient()
 
@@ -28,17 +27,15 @@ export const useBranchesID = (id: number) => {
   })
 }
 
-export const useImagenBranch = () => {
+export const useImagenBranch = (id:number) => {
 
-  return useQuery<BranchesImagen[]>({
-    queryKey: ['branches'],
-    queryFn: async (): Promise< BranchesImagen[]> => {
-      const BranchId = localStorage.getItem('storeOrBranchId')
-      if (!BranchId) {
-        toast.error('No se encontro el id de la sucursal')
-      }
-      const response = await authClient.get<BranchesImagen[]>(`/images/branch/${BranchId}`);
-      return response;
+  return useQuery<image[]>({
+    queryKey: ['branches_imagen'],
+    queryFn: async (): Promise<image[]> => {
+      const response = await authClient.get<BranchesImagen>(`/images/branch/${id}`);
+      console.log("Imagenes", response)
+      
+      return response.images ?? [];
     },
   });
 }
@@ -112,13 +109,3 @@ export const useValidateVisit = (coordinates: any, shopId: any) => {
   }
 }
 
-
-
-export const  deleteImagenBrandQuery = async (id: number) => {
-  try {
-    const response = await authClient.delete(`/images/branch/${id}`)
-    return response
-  } catch (error) {
-    console.log(error)  
-  }
-}

@@ -6,7 +6,6 @@ import RoleRoute from "./RouleRoute";
 
 import { RouteLoadingIndicator } from "./route_loading_indicador.router";
 
-import Perfil_branches from "@/modules/admin_branches/views/perfil_branches.page";
 
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
@@ -30,19 +29,19 @@ const BranchManagement = lazy(() => import("@/common/widgets/admin_stores/branch
 const HomeAdminStores = lazy(() => import("@/modules/admin/views/home_admin_stores_nav"));
 const PendingBranchesView = lazy(() => import("@/modules/admin/components/branches/pending_branches_list.component"));
 const AlbumManager = lazy(() => import("@/modules/admin/components/album/album_manager.component"));
-const CanvasDashboard = lazy(() => import("@/common/widgets/admin_branches/create_attributes.widgets"));
-const CafeGallery = lazy(() => import("@/common/widgets/admin_branches/edit_images.widget"));
+const ImagesGallery = lazy(() => import("@/common/widgets/admin_branches/images.widget"));
 const FormEditBranch = lazy(() => import("@/common/widgets/forms/auth/form_edit_branches_widget"));
 //BRANCHES
 const HomeBranchesNav = lazy(() => import("@/modules/admin_branches/views/home_branches_nav"));
-const PrincipalBranchesPage = lazy(() => import("@/modules/admin_branches/views/principal_branches_page"));
+const DetailsBranches = lazy(() => import("@/common/widgets/admin_branches/details_branches.widget"));
+const AttributesDashboard = lazy(() => import("@/common/widgets/admin_branches/attributes.widget"));
 
 // COFFEELOVER
 const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/home_coffeelover_page"));
 const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover_nav"));
 const RegisterStoreVisit = lazy(() => import("@/modules/coffeelover/components/stores/register_store_visit.component"));
-const ReviewView = lazy(()=> import ('@/modules/coffeelover/components/review/review.view'));
-const ProfileView = lazy(()=> import ('@/modules/coffeelover/components/profile/profile.view'));
+const ReviewView = lazy(() => import('@/modules/coffeelover/components/review/review.view'));
+const ProfileView = lazy(() => import('@/modules/coffeelover/components/profile/profile.view'));
 
 
 // MAP
@@ -72,11 +71,13 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-            {/* <Route path="/prueba" element={<CanvasDashboard />} /> */}
 
+            {/* <Route path="/prueba" element={<CanvasDashboard />} /> */}
 
             {/* PUBLIC ROUTES */}
             <Route path="/" element={<HomePage />} />
+            {/* <Route path="/hora" element={<ScheduleModule branchId={1} />} /> */}
+
             <Route path="/map" element={<MapView view={true} />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -95,16 +96,15 @@ const AuthRoutes = () => {
             <Route element={<PrivateRoute />}>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
-                <Route path="/coffeelover" element={<HomeCoffeelover />}>
-                  <Route index element={<PrincipalCoffeelover />} />
-                  <Route path="map-coffelover" element={<MapView />} />
-                  <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
-                  <Route path="album" element={<ListAlbum />} />
-                  <Route path="review" element={<ReviewView />} />
-                  <Route path="Profile" element={<ProfileView />} />
-
-                </Route>
                 <Route path="/open-album" element={<PageAlbum />} />
+                <Route path="/coffeelover" element={<HomeCoffeelover />}>
+                    <Route index element={<PrincipalCoffeelover />} />
+                    <Route path="album" element={<ListAlbum />} />
+                    <Route path="review" element={<ReviewView />} />
+                    <Route path="Profile" element={<ProfileView />} />
+                    <Route path="map-coffelover" element={<MapView />} />
+                    <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
+                </Route>     
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
@@ -116,15 +116,10 @@ const AuthRoutes = () => {
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL]} />}>
                 <Route path="/sucursal" element={<HomeBranchesNav />}>
-                  <Route index element={<PrincipalBranchesPage />} />
-                  <Route path="perfil" element={<Perfil_branches />}>
-                    <Route path="images" element={<CafeGallery />} />
-                    <Route path="attributes" element={<CanvasDashboard />} />
-                    <Route path="branch" element={<FormEditBranch />} /> 
-                  </Route> 
-
-
-      
+                  <Route index element={<DetailsBranches/>} />
+                  <Route path="images" element={<ImagesGallery />} />
+                  <Route path="perfil" element={<FormEditBranch />} />
+                  <Route path="attributes" element={<AttributesDashboard />} />
                 </Route>
               </Route>
 

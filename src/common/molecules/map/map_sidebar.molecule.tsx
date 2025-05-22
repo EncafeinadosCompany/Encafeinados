@@ -64,9 +64,9 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
               <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
                 <Coffee size={20} className="text-[#6F4E37]" />
                 <span>Cafeterías cercanas</span>
-                {sortedCafes.length > 0 && (
+                {totalCafeCount > 0 && (
                   <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
-                    {sortedCafes.length}
+                    {totalCafeCount}
                   </span>
                 )}
               </h2>
@@ -110,7 +110,9 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                    filterOptions.tags.length > 0 || 
                    filterOptions.onlyOpen === true ? (
                     <div className="text-xs text-gray-500 text-center mt-1 mb-3">
-                      Mostrando {sortedCafes?.length || 0} de {totalCafeCount || sortedCafes?.length || 0} cafeterías
+                      Mostrando{" "}
+                      {sortedCafes.length > 0 ? sortedCafes.length : totalCafeCount}{" "}
+                      de {totalCafeCount} cafeterías
                       {searchTerm.trim() !== "" && (
                         <span className="ml-1">para "<strong>{searchTerm}</strong>"</span>
                       )}
