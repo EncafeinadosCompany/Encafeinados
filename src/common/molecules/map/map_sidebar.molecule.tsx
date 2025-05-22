@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Coffee, ArrowLeft } from 'lucide-react';
 import { Cafe } from '@/api/types/map/map_search.types';
@@ -39,6 +39,20 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   navigateToCafe,
   resetFilters
 }) => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
   
   }, [filterOptions, searchTerm]);
@@ -64,9 +78,9 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
               <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
                 <Coffee size={20} className="text-[#6F4E37]" />
                 <span>Cafeterías cercanas</span>
-                {totalCafeCount > 0 && (
+                {sortedCafes.length > 0 && (
                   <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
-                    {totalCafeCount}
+                    {sortedCafes.length}
                   </span>
                 )}
               </h2>
@@ -110,9 +124,7 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                    filterOptions.tags.length > 0 || 
                    filterOptions.onlyOpen === true ? (
                     <div className="text-xs text-gray-500 text-center mt-1 mb-3">
-                      Mostrando{" "}
-                      {sortedCafes.length > 0 ? sortedCafes.length : totalCafeCount}{" "}
-                      de {totalCafeCount} cafeterías
+                      Mostrando {isMounted ? (sortedCafes?.length || 0) : '...'} de {isMounted ? (totalCafeCount || 0) : '...'} cafeterías
                       {searchTerm.trim() !== "" && (
                         <span className="ml-1">para "<strong>{searchTerm}</strong>"</span>
                       )}
