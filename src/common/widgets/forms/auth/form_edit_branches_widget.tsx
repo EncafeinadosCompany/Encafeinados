@@ -5,9 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/ui/card";
-import SocialNetworksForm from "./form_social_network.widget";
-
-import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query";
 import MapSearch from "../../map/map_search.widget";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -18,6 +15,7 @@ import { useBranchesID } from "@/api/queries/branches/branch.query";
 
 import { Label } from "@/common/ui/label";
 import { useUpdateBranchMutation } from "@/api/mutations/branches/branches.mutation";
+import { InputForm } from "@/common/atoms/auth/input_form.atom";
 
 
 export default function FormEditBranch() {
@@ -76,9 +74,8 @@ export default function FormEditBranch() {
     };
 
     return (
-
-        <div className="h-full w-full grid grid-cols-1 items-center">
-            <Card className=" border-none mx-auto min-w-5xl max-w-4xl bg-white h-[95vh]">
+        <div className="h-[95-vh] md:h-full w-full p-4 grid grid-cols-1 items-center">
+            <Card className=" border-none mx-auto w-full  md:w-5xl bg-white ">
                 <CardHeader className="flex flex-col items-center relative z-10">
                     <div className="flex items-center justify-center mb-2">
                         <div className="bg-[#DB8935] p-2 rounded-full mr-3">
@@ -118,16 +115,16 @@ export default function FormEditBranch() {
                         <form onSubmit={handleSubmit(onSubmit, (errors) => {
                             console.error("Errores del formulario:", errors);
                         })} className="space-y-6">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <Label className="mb-2">Nombre de la sucursal</Label>
 
                                     <div className="relative">
                                         <Store className="absolute h-4 w-4 top-3 left-3 text-gray-500" />
-                                        <Input
+                                        <InputForm
                                             {...register("name")}
                                             placeholder="Ej: Café del Centro"
-                                            className="pl-10 pr-4 py-2 w-full rounded-lg border"
+                                            className="pl-10 pr-4 py-2 w-full"
                                         />
                                     </div>
 
@@ -139,10 +136,10 @@ export default function FormEditBranch() {
 
                                     <div className="relative">
                                         <Phone className="absolute h-4 w-4 top-3 left-3 text-gray-500" />
-                                        <Input
+                                        <InputForm
                                             {...register("phone_number")}
                                             placeholder="Ej: +1234567890"
-                                            className="pl-10 pr-4 py-2 w-full rounded-lg border"
+                                            className="pl-10 pr-4 py-2 w-full"
                                         />
                                     </div>
 

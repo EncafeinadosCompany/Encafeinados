@@ -10,7 +10,7 @@ export type NavItem = {
   isloading?: boolean | null
 }
 
-export default function NavbarGeneral({ navItems, coffeecoins, isloading }: NavItem) {
+export default function NavbarGeneral({ navItems, coffeecoins, isloading}: NavItem) {
   const [isExpanded, setIsExpanded] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
   const {user} =  getAuthStorage();

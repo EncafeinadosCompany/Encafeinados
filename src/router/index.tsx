@@ -33,8 +33,8 @@ const ImagesGallery = lazy(() => import("@/common/widgets/admin_branches/images.
 const FormEditBranch = lazy(() => import("@/common/widgets/forms/auth/form_edit_branches_widget"));
 //BRANCHES
 const HomeBranchesNav = lazy(() => import("@/modules/admin_branches/views/home_branches_nav"));
-const PrincipalBranchesPage = lazy(() => import("@/modules/admin_branches/views/principal_branches_page"));
-const AttributesDashboard = lazy(() => import("@/common/widgets/admin_branches/attributes.widgets"));
+const DetailsBranches = lazy(() => import("@/common/widgets/admin_branches/details_branches.widget"));
+const AttributesDashboard = lazy(() => import("@/common/widgets/admin_branches/attributes.widget"));
 
 // COFFEELOVER
 const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/home_coffeelover_page"));
@@ -116,7 +116,7 @@ const AuthRoutes = () => {
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL]} />}>
                 <Route path="/sucursal" element={<HomeBranchesNav />}>
-                  <Route index element={<PrincipalBranchesPage />} />
+                  <Route index element={<DetailsBranches/>} />
                   <Route path="images" element={<ImagesGallery />} />
                   <Route path="perfil" element={<FormEditBranch />} />
                   <Route path="attributes" element={<AttributesDashboard />} />

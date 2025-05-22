@@ -165,7 +165,7 @@ export default function AttributesDashboard() {
 
 
     return (
-        <div className="container mx-auto p-4 max-w-6xl ">
+        <div className="container h-[95vh] mx-auto p-4 max-w-6xl ">
             <div ref={scrollContainerRef} className="bg-white rounded-2xl shadow-sm border border-[#E5E7EB] h-full min-h-[95vh] max-h-[70vh] overflow-y-auto scrollbar-subtle p-6">
                 <div className="mb-8 mt-4 text-center">
                     <div className="inline-flex items-center justify-center mb-2">

@@ -18,6 +18,7 @@ interface NavGeneralProps {
   coffeecoins?: number;
   isLoading?: boolean;
   role?: string | null;
+  children?: React.ReactNode;
 }
 
 const cn = (...classes: string[]) => {
@@ -31,6 +32,7 @@ export const NavGeneral = ({
   setIsExpanded,
   coffeecoins,
   role,
+
   logoPath = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
@@ -200,7 +202,7 @@ export const NavGeneral = ({
                       isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
                     )}
                   >
-                    <p className="text-sm">{ coffeecoins }</p>
+                    <p className="text-sm">{coffeecoins}</p>
                   </span>
                 </Link>
               )}
@@ -231,50 +233,50 @@ export const NavGeneral = ({
       )}
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <main className={`flex-1 w-full relative ${isMobile ? '' : ''}`}>
-          <Outlet />
+        <main className={`flex-1 w-full ${isMobile ?  ''  : ''}`}>
+          <Outlet />   
         </main>
-
+      
         {isMobile && (
-          <div className="md:hidden absolute bottom-0 left-0 right-0 bg-white z-[100]">
+          <div className="md:hidden fixed bottom-0  left-0 right-0 bg-white z-[100]">
             {isMenuExpanded && navItems.length > 4 && (
               <div className="absolute bottom-full w-full bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] rounded-t-2xl border-t border-gray-100 transition-all duration-300">
                 <nav className="grid grid-cols-4 gap-2 p-4">
                   {navItems.slice(4).map((item) => (
-                    
-                      <Link
-                        key={item.href}
-                        to={item.href}
-                        className={cn(
-                          "flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 relative",
-                          isRouteActive(item.href)
-                            ? "text-amber-800 bg-amber-50"
-                            : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
-                        )}
-                        onClick={() => setIsMenuExpanded(false)}
-                      >
-                        <div className={cn(
-                          "p-1 rounded-lg",
-                          isRouteActive(item.href) ? "bg-amber-100" : ""
-                        )}>
-                          {item.icon}
-                        </div>
-                        <span className="text-[10px] font-medium mt-0.5 truncate max-w-[60px] text-center">
-                          {item.title}
-                        </span>
-                      </Link>
+
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      className={cn(
+                        "flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-300 relative",
+                        isRouteActive(item.href)
+                          ? "text-amber-800 bg-amber-50"
+                          : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
+                      )}
+                      onClick={() => setIsMenuExpanded(false)}
+                    >
+                      <div className={cn(
+                        "p-1 rounded-lg",
+                        isRouteActive(item.href) ? "bg-amber-100" : ""
+                      )}>
+                        {item.icon}
+                      </div>
+                      <span className="text-[10px] font-medium mt-0.5 truncate max-w-[60px] text-center">
+                        {item.title}
+                      </span>
+                    </Link>
 
                   ))}
-                   <Link
-                  to="/"
-                  className="flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
-                  onClick={clearAuthStorage}
-                >
-                  <div className="p-1">
-                    <LogOutIcon className="h-4 w-4" />
-                  </div>
-                  <span className="text-[10px] font-medium mt-0.5">Salir</span>
-                </Link>
+                  <Link
+                    to="/"
+                    className="flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
+                    onClick={clearAuthStorage}
+                  >
+                    <div className="p-1">
+                      <LogOutIcon className="h-4 w-4" />
+                    </div>
+                    <span className="text-[10px] font-medium mt-0.5">Salir</span>
+                  </Link>
 
                 </nav>
               </div>

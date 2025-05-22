@@ -131,25 +131,24 @@ export default function PrincipalBranchesPage() {
 
 
     return (
-        <div className="container h-full max-w-full px-5 py-5 scrollbar-subtle">
-            <div ref={scrollContainerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full max-h-[95vh] overflow-y-auto  scrollbar-subtle">
+        <div className="container h-full max-w-full  px-5 py-5 scrollbar-subtle">
+            <div ref={scrollContainerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8  h-[90vh] md:h-[95vh] md:max-h-full  overflow-y-auto  scrollbar-subtle">
 
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
                     <ScrollIndicator className="bg-[#6F4E37]/10 hover:bg-[#6F4E37]/20" containerRef={scrollContainerRef as React.RefObject<HTMLElement>}></ScrollIndicator>
-
                 </div>
-
                 {/* Left column */}
                 <div className="h-full">
-                    <Card className="p-6 bg-white h-full shadow-lg rounded-xl border-none">
+                    <Card className="p-6 bg-white h-full  shadow-lg rounded-xl border-none">
                         <div className="flex flex-col h-full">
                             <div className="flex-1 relative">
                                 <Badge className={`${branches?.branch.status == 'APPROVED' ? 'bg-emerald-200/60 border-emerald-700' : 'bg-orange-300 border-orange-500'} p-1 px-2 rounded-full absolute z-10  right-0`}>{branches?.branch.status === 'APPROVED' ? 'Aprobada' : 'Pediente'}</Badge>
+                                <div className="h-[40vh] relative">
                                 {
                                     imagen && imagen?.length > 0 ? (
                                         <ImageCarousel images={imagen || []} alt="Branch Images" />
                                     ) : (
-                                        <div className="flex flex-col items-center justify-center p-6 bg-gray-50 rounded-lg">
+                                        <div className="flex flex-col items-center h-full justify-center p-6 bg-gray-50 rounded-lg">
                                             <div className="text-gray-400 mb-2">
                                                 <AlertCircle className="h-8 w-8" />
                                             </div>
@@ -160,6 +159,7 @@ export default function PrincipalBranchesPage() {
                                         </div>
                                     )
                                 }
+                                </div>
                                 <div className="mx-auto text-center">
                                     <h2 className="text-2xl font-semibold text-gray-900 mb-3 mt-6 ">{branches?.branch.name}</h2>
                                     <p className="text-gray-500 text-center mb-6">{branches?.branch.address}</p>
