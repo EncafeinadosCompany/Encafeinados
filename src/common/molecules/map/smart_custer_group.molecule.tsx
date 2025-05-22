@@ -97,44 +97,63 @@ const SmartClusterGroup: React.FC<SmartClusterGroupProps> = ({
     const markers = cluster.getAllChildMarkers();
     const count = markers.length;
     
-    let size: number;
-    let className: string;
+    let size, mainColor, textColor, borderColor;
     
     if (count < 5) {
-      size = 40;
-      className = 'cluster-small';
-    } else if (count < 20) {
-      size = 50;
-      className = 'cluster-medium';
+      size = 42;
+      mainColor = '#FFFFFF';
+      textColor = '#6F4E37';
+      borderColor = '#6F4E37';
+    } else if (count < 15) {
+      size = 48;
+      mainColor = '#F5EDE4';
+      textColor = '#5D4037';
+      borderColor = '#8B6D51';
+    } else if (count < 30) {
+      size = 54;
+      mainColor = '#E6D2BA';
+      textColor = '#5D4037';
+      borderColor = '#5D4037';
     } else {
       size = 60;
-      className = 'cluster-large';
+      mainColor = '#C4A484';
+      textColor = '#FFFFFF';
+      borderColor = '#5D4037';
     }
     
-    const hasOpenCafes = markers.some(m => {
+    const openCount = markers.filter(m => {
       const cafeId = m.options.alt;
       if (!cafeId) return false;
       const cafe = cafes.find(c => c.id.toString() === cafeId);
       return cafe?.isOpen;
-    });
+    }).length;
     
-    const hasHighRatedCafes = markers.some(m => {
+    const hasHighRated = markers.some(m => {
       const cafeId = m.options.alt;
       if (!cafeId) return false;
       const cafe = cafes.find(c => c.id.toString() === cafeId);
       return cafe?.rating && cafe.rating >= 4.5;
     });
     
+    const openIndicator = openCount > 0 
+      ? `<div class="cluster-open-dot" style="background-color: #34a853;"></div>` 
+      : '';
+    
+    const ratingIndicator = hasHighRated 
+      ? `<div class="cluster-rating-star">★</div>` 
+      : '';
+    
     return L.divIcon({
       html: `
-        <div class="cluster-marker ${className} ${hasOpenCafes ? 'has-open' : ''} ${hasHighRatedCafes ? 'has-high-rated' : ''}" 
-             style="width:${size}px; height:${size}px;">
-          <div class="cluster-content">
+        <div class="cluster-marker" 
+             style="width:${size}px; height:${size}px; background-color:${mainColor}; color:${textColor}; border:2.5px solid ${borderColor};">
+          <div class="cluster-inner">
             <span class="cluster-count">${count}</span>
-            ${hasOpenCafes ? '<div class="cluster-indicator open-indicator"></div>' : ''}
-            ${hasHighRatedCafes ? '<div class="cluster-indicator rating-indicator">★</div>' : ''}
+            <div class="cluster-indicators">
+              ${openIndicator}
+              ${ratingIndicator}
+            </div>
           </div>
-          <div class="cluster-ripple"></div>
         </div>
       `,
       className: 'custom-marker-cluster',

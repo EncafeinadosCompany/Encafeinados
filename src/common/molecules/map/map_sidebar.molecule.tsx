@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Coffee, ArrowLeft } from 'lucide-react';
 import { Cafe } from '@/api/types/map/map_search.types';
@@ -39,6 +39,20 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   navigateToCafe,
   resetFilters
 }) => {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
   
   }, [filterOptions, searchTerm]);
@@ -110,7 +124,7 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                    filterOptions.tags.length > 0 || 
                    filterOptions.onlyOpen === true ? (
                     <div className="text-xs text-gray-500 text-center mt-1 mb-3">
-                      Mostrando {sortedCafes?.length || 0} de {totalCafeCount || sortedCafes?.length || 0} cafeterías
+                      Mostrando {isMounted ? (sortedCafes?.length || 0) : '...'} de {isMounted ? (totalCafeCount || 0) : '...'} cafeterías
                       {searchTerm.trim() !== "" && (
                         <span className="ml-1">para "<strong>{searchTerm}</strong>"</span>
                       )}
