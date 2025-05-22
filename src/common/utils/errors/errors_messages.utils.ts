@@ -45,6 +45,8 @@ export const errorMessages: Record<number, string> = {
     },
     attributes:{
         409: "Uno de los atributos ya se encuentra registrado" 
+    },
+    events:{
+        409: "El evento ya se encuentra registrado"
     }
-  
   };

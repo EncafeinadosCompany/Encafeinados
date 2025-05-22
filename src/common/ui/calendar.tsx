@@ -192,7 +192,7 @@ function Calendar({
                       className={cn(
                         buttonVariants({ variant: "ghost" }),
                         "size-8 p-0 font-normal w-full",
-                        isSelectedDay && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                        isSelectedDay && "bg-green-200 text-primary-foreground hover:bg-green-100 hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
                         isDayToday && !isSelectedDay && "bg-accent text-accent-foreground",
                         day.isOutside && "text-muted-foreground",
                         isDayDisabled && "text-muted-foreground opacity-50",
