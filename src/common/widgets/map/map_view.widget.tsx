@@ -190,6 +190,7 @@ export interface MapViewProps {
 }
 
 const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
+  const { isMobile } = useAppData();
   const [searchParams] = useSearchParams();
   
   // ==============================
@@ -731,7 +732,7 @@ useEffect(() => {
 
 return (
   <motion.div
-    className={`h-screen w-full relative bg-gray-50 font-sans ${
+    className={`${isMobile ? 'h-[calc(100vh-64px)]' : 'h-screen'} w-full relative bg-gray-50 font-sans ${
       viewMode === 'list' && window.innerWidth >= 768 ? 'md:grid md:grid-cols-[1fr_390px]' : ''
     }`}
     variants={containerVariants}

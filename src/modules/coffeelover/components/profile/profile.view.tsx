@@ -2,14 +2,11 @@ import React from 'react';
 import ProfileWidget from '@/common/widgets/coffeelover/profile/profile.widget';
 import { useWindowSize } from '@/common/hooks/useWindowSize';
 import { CoffeeBackground } from '@/common/widgets/coffee_background.widget';
+import { useAppData } from '@/common/context/AppDataContext';
 
 const ProfileView: React.FC = () => {
   const { height } = useWindowSize();
-  
-  // Ya no necesitamos esta variable, ya que implementaremos scroll
-  // const viewClass = height > 800 
-  //   ? "min-h-screen flex flex-col justify-between" 
-  //   : "min-h-screen";
+  const { isMobile } = useAppData();
   
   return (
     <div className="relative h-screen">
@@ -22,7 +19,7 @@ const ProfileView: React.FC = () => {
         gradientTo="#FAF3E0"
       />
       
-      <div className="absolute inset-0 overflow-y-auto overflow-x-hidden z-10">
+      <div className={`absolute inset-0 overflow-y-auto overflow-x-hidden z-10 ${isMobile ? 'pb-16' : ''}`}>
         <ProfileWidget />
       </div>
     </div>

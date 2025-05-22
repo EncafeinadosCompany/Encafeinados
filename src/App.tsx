@@ -1,4 +1,5 @@
 import './App.css'
+import '@/common/styles/global.css'
 import { RecoilRoot } from 'recoil'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AuthRoutes from './router';

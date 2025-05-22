@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useDeviceDetection } from './useDeviceDetection';
+import { useState, useEffect, useRef } from 'react';
+import { useAppData } from '@/common/context/AppDataContext';
 
 /**
  * Hook personalizado para manejar valores numéricos de forma segura,
@@ -17,27 +17,25 @@ export function useSafeNumericValue<T>(
 ) {
   const [safeValue, setSafeValue] = useState<T | null>(defaultValue);
   const [isReady, setIsReady] = useState(false);
-  const { isMobile } = useDeviceDetection();
+  const { isMobile } = useAppData();
+  const isFirstMount = useRef(true);
 
   useEffect(() => {
-    // En dispositivos móviles, retrasamos la asignación del valor para asegurar
-    // que el componente esté completamente montado y evitar problemas de renderizado
-    if (isMobile) {
+    if (isMobile && isFirstMount.current) {
       const timer = setTimeout(() => {
         if (value !== undefined) {
           setSafeValue(value);
         }
         setIsReady(true);
       }, readyDelay);
-
+      isFirstMount.current = false;
       return () => clearTimeout(timer);
-    } else {
-      // En dispositivos de escritorio, podemos asignar el valor inmediatamente
-      if (value !== undefined) {
-        setSafeValue(value);
-      }
-      setIsReady(true);
     }
+    if (value !== undefined) {
+      setSafeValue(value);
+    }
+    setIsReady(true);
+    isFirstMount.current = false;
   }, [value, isMobile, readyDelay]);
 
   return { safeValue, isReady };
