@@ -44,6 +44,7 @@ import MapSidebar from '@/common/molecules/map/map_sidebar.molecule';
 import { containerVariants, cardVariants, pulseVariants } from './map_animations.widget';
 import { useBranches } from '@/api/queries/branches/branch.query';
 import LoadingSpinner from '@/common/atoms/LoadingSpinner';
+import { useAppData } from '@/common/context/AppDataContext';
 // import 'leaflet.markercluster/dist/leaflet.markercluster.css';
 import '@/common/styles/leaflet-markercluster.css';
 

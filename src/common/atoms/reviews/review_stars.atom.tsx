@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star } from 'lucide-react';
+import { useSafeNumericValue } from '@/common/hooks/useSafeNumericValue';
 
 interface ReviewStarsProps {
   rating: number;
@@ -7,6 +8,8 @@ interface ReviewStarsProps {
 }
 
 const ReviewStars: React.FC<ReviewStarsProps> = ({ rating, size = 'md' }) => {
+  const { safeValue } = useSafeNumericValue(rating);
+  
   const starSizes = {
     xs: 'h-2.5 w-2.5',
     sm: 'h-3 w-3',
@@ -26,7 +29,7 @@ const ReviewStars: React.FC<ReviewStarsProps> = ({ rating, size = 'md' }) => {
       {[1, 2, 3, 4, 5].map((star) => (
         <Star 
           key={star} 
-          className={`${starSizes[size]} ${star <= rating 
+          className={`${starSizes[size]} ${star <= (safeValue as number) 
             ? 'text-amber-400 fill-amber-400' 
             : 'text-gray-300'}`}
         />

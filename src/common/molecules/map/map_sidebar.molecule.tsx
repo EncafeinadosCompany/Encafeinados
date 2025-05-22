@@ -5,6 +5,8 @@ import { Cafe } from '@/api/types/map/map_search.types';
 import { FilterOptions } from '@/common/hooks/map/useSearchFilter'; 
 import HighlightText from '@/common/atoms/HighlightText';
 import CafeCard from '@/common/molecules/map/cafe_card.molecule';
+import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
+import { useAppData } from '@/common/context/AppDataContext';
 
 interface MapSidebarProps {
   viewMode: 'map' | 'list';
@@ -38,13 +40,10 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   toggleFavorite,
   navigateToCafe,
   resetFilters
-}) => {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [isMounted, setIsMounted] = useState(false);
+}) => {  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const { isMobile } = useAppData();
 
   useEffect(() => {
-    setIsMounted(true);
-    
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -78,9 +77,8 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
               <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
                 <Coffee size={20} className="text-[#6F4E37]" />
                 <span>Cafeterías cercanas</span>
-                {sortedCafes.length > 0 && (
-                  <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
-                    {sortedCafes.length}
+                {sortedCafes.length > 0 && (                  <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
+                    <SafeNumericDisplay value={sortedCafes.length} defaultValue="..." />
                   </span>
                 )}
               </h2>
@@ -122,9 +120,8 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                   {searchTerm.trim() !== "" || 
                    filterOptions.minRating > 0 || 
                    filterOptions.tags.length > 0 || 
-                   filterOptions.onlyOpen === true ? (
-                    <div className="text-xs text-gray-500 text-center mt-1 mb-3">
-                      Mostrando {isMounted ? (sortedCafes?.length || 0) : '...'} de {isMounted ? (totalCafeCount || 0) : '...'} cafeterías
+                   filterOptions.onlyOpen === true ? (                    <div className="text-xs text-gray-500 text-center mt-1 mb-3">
+                      Mostrando <SafeNumericDisplay value={sortedCafes.length} defaultValue="..." /> de <SafeNumericDisplay value={totalCafeCount} defaultValue="..." /> cafeterías
                       {searchTerm.trim() !== "" && (
                         <span className="ml-1">para "<strong>{searchTerm}</strong>"</span>
                       )}
