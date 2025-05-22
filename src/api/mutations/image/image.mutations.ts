@@ -12,7 +12,7 @@ export const useImagenMutation = () => {
   const useErrors = useError('images')
   
 return useMutation<ImageType, Error, File>({
-    mutationFn: async (file: File) => {
+    mutationFn: async (file: File):Promise<any> => {
         const formData = new FormData();
         formData.append("file", file); 
         try {

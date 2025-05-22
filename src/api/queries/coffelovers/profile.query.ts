@@ -6,9 +6,6 @@ const authClient = new AuthClient();
 
 export const useCoffeeLoverProfile = () => {
   const userId = 1;
-  
-  // const userId = localStorage.getItem("userId");
-
   return useQuery<CoffeeLoverProfile>({
     queryKey: ['coffeeLoverProfile', userId],
     queryFn: async () => {

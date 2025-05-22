@@ -1,0 +1,282 @@
+import { useEventMutation } from "@/api/mutations/events/events.mutation"
+import { Button } from "@/common/ui/button"
+import { Calendar } from "@/common/ui/calendar"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/common/ui/form"
+import { Input } from "@/common/ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover"
+import { Switch } from "@/common/ui/switch"
+import { Textarea } from "@/common/ui/textarea"
+import { RegisterEventSchema, RegisterEventSchemaType } from "@/common/utils/schemas/events/register_events.schema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { format } from "date-fns"
+import {  es } from "date-fns/locale"
+import { CalendarIcon } from "lucide-react"
+import { useForm } from "react-hook-form"
+import MapSearch from "../../map/map_search.widget"
+
+import { TimePicker } from "@/common/ui/time-picker"
+import { combineDateTime } from "@/common/utils/dataTime.utils"
+
+export const FormRegisterEvents = () => {
+    const { mutateAsync: useRegisterEvent } = useEventMutation()
+
+    const method = useForm<RegisterEventSchemaType>({
+        resolver: zodResolver(RegisterEventSchema),
+        defaultValues: {
+            name: '',
+            description: '',
+            location: '',
+            is_free: true,
+            organizer: 'Carlitos'
+        }
+    })
+
+    function onSubmit(values: RegisterEventSchemaType) {
+
+        const date_time_start = combineDateTime(values.start_date, values.start_time||"00:00")
+        const data_time_end = combineDateTime(values.end_date, values.end_time || "00:00") 
+        const eventData = {
+            name: values.name,
+            description: values.description,
+            start_date: date_time_start,
+            end_date: data_time_end,
+            location: values.location,
+            is_free: values.is_free,
+            organizer: values.organizer,
+        }
+
+        try{
+            useRegisterEvent(eventData)
+            method.reset()
+        }catch(error){
+          
+        }
+
+
+        console.log("useRegisterEvent llamado con:", eventData)
+
+
+    }
+
+    const onLocationSelect = (lat: number, lng: number, address: string) => {
+        method.setValue("location", address);
+
+    };
+
+    return (
+        <Form {...method}>
+            <form onSubmit={method.handleSubmit(onSubmit)} className="space-y-6  h-full overflow-y-auto">
+                <FormField
+                    control={method.control}
+                    name="name"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Nombre del evento</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Nombre del evento" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={method.control}
+                    name="description"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Descripción</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    placeholder="Descripción del evento (mínimo 10 caracteres)"
+                                    className="min-h-[100px]"
+                                    {...field}
+                                />
+                            </FormControl>
+                            {/* <FormDescription>La descripción debe tener al menos 10 caracteres.</FormDescription> */}
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                        <FormField
+                            control={method.control}
+                            name="start_date"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Fecha de inicio</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={`w-full pl-3 text-left font-normal ${!field.value && "text-muted-foreground"}`}
+                                                >
+                                                    {field.value ? format(field.value, "PPP", { locale: es }) : <span>Seleccionar fecha</span>}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={field.value}
+                                                onSelect={field.onChange}
+                                                disabled={(date) => date < new Date()}
+                                            // initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={method.control}
+                            name="start_time"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Hora de inicio</FormLabel>
+                                    <FormControl>
+                                        <TimePicker value={field.value} onChange={field.onChange} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
+                    <div className="space-y-4">
+                        <FormField
+                            control={method.control}
+                            name="end_date"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Fecha de fin</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={`w-full pl-3 text-left font-normal ${!field.value && "text-muted-foreground"}`}
+                                                >
+                                                    {field.value ? format(field.value, "PPP", { locale: es }) : <span>Seleccionar fecha</span>}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={field.value}
+                                                onSelect={field.onChange}
+                                                disabled={(date) => {
+                                                    const startDate = method.getValues("start_date")
+                                                    return startDate && date < startDate
+                                                }}
+                                            // initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={method.control}
+                            name="end_time"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>Hora de fin</FormLabel>
+                                    <FormControl>
+                                        <TimePicker value={field.value} onChange={field.onChange} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                </div>
+
+
+            <div>
+          
+
+                <FormField
+                    control={method.control}
+                    name="location"
+                    render={({ field }) => (
+                        <FormItem className="w-full  flex flex-col items-center justify-center">
+                            <FormLabel>Ubicación</FormLabel>
+                            <FormControl>
+                                <MapSearch
+                                    onLocationSelect={onLocationSelect}
+                                    
+
+                                >
+
+                                </MapSearch>
+                                {/* <Input placeholder="Ubicación del evento" {...field} /> */}
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+
+                    )}
+                />
+                <p>aqui puedes confirmar tu dirección</p>
+                  <FormField
+                    control={method.control}
+                    name="location"
+                    render={({ field }) => (
+                        <FormItem>
+                            {/* <FormLabel>Organizador</FormLabel> */}
+                            <FormControl>
+                                <Input placeholder="Dirección" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </div>
+
+                <FormField
+                    control={method.control}
+                    name="is_free"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                            <div className="space-y-0.5">
+                                <FormLabel className="text-base">Evento gratuito</FormLabel>
+                                <FormDescription>Indica si el evento es gratuito o de pago</FormDescription>
+                            </div>
+                            <FormControl>
+                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={method.control}
+                    name="organizer"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Organizador</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Nombre del organizador" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <Button type="submit" className="w-full">
+                    Registrar Evento
+                </Button>
+            </form>
+        </Form>
+    )
+}
