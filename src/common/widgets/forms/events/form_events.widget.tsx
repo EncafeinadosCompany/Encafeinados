@@ -95,7 +95,7 @@ export const FormRegisterEvents = () => {
                     </div>
 
                 </CardHeader>
-                <CardContent className="relative mx-auto w-full max-w-6xl h-[65vh]  min-h-[59vh] overflow-y-auto scrollbar-subtle">
+                <CardContent className="relative mx-auto w-full max-w-6xl h-[60vh]  min-h-[50vh] overflow-y-auto scrollbar-subtle">
                     <Form {...method}>
                         <form onSubmit={method.handleSubmit(onSubmit)} className="space-y-6 px-2 ">
                             <FormField
