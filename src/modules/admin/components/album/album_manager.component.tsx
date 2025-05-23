@@ -8,15 +8,11 @@ const AlbumManager = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   
-  // Extraer parámetros de manera más robusta
   const getParam = (name: string) => {
-    // Primero intentar con searchParams normal
     let param = searchParams.get(name);
     
-    // Si no está, intentar extraerlo manualmente de la URL mal formada con ?
     if (!param) {
       const urlString = location.search || "";
-      // Esta regex busca tanto ?param= como &param=
       const regex = new RegExp(`[?&]${name}=([^?&]+)`);
       const matches = urlString.match(regex);
       param = matches ? decodeURIComponent(matches[1]) : null;
@@ -31,13 +27,10 @@ const AlbumManager = () => {
   const start_time = getParam("start_time");
   const end_time = getParam("end_time");
   
-  // Depurar qué valores se están obteniendo
   console.log("URL Params:", { eventId, start_time, end_time });
   
-  // Estado para controlar la apertura automática del modal
   const [autoOpenModal, setAutoOpenModal] = useState(false);
   
-  // Verificar si tenemos los parámetros necesarios para abrir el modal automáticamente
   useEffect(() => {
     console.log("Checking params:", { eventId, start_time, end_time });
     if (eventId && start_time && end_time) {
