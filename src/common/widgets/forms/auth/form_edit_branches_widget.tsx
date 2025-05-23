@@ -69,7 +69,7 @@ export default function FormEditBranch() {
     const onLocationSelect = (lat: number, lng: number, address: string) => {
         setValue("latitude", lat);
         setValue("longitude", lng);
-        setValue("address", address);
+        // setValue("address", address);
         console.log("Latitud:", lat);
         console.log("Longitud:", lng);
         console.log("Dirección:", address);
@@ -157,6 +157,7 @@ export default function FormEditBranch() {
                                     initialLat={watch("latitude")}
                                     initialLng={watch("longitude")}
                                     onLocationSelect={onLocationSelect}
+                                    
                                 />
                             ) : null}
                             <div className="flex justify-center">

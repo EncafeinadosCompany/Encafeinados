@@ -70,7 +70,7 @@ export const FormRegisterEvents = () => {
     };
 
     return (
-        <div className="container h-[98vh] flex flex-col justify-self-center p-2 ">
+        <div className="container h-[98vh] flex flex-col justify-self-center pb-2">
             <Card className="relative bg-white rounded-xl p-6 h-full shadow-md border border-[#D4A76A]/20">
                 <CardHeader className="flex flex-col items-center relative z-10">
                     <div className="flex items-center justify-center mb-2">
@@ -86,12 +86,8 @@ export const FormRegisterEvents = () => {
                         <div className="text-[#DB8935]">●</div>
                         <div className="h-[2px] w-12 bg-[#DC3545]"></div>
                     </div>
-                    <p className="text-[#546F75] text-sm text-center max-w-xs">
-                        "Completa el formulario para crear tu nuevo evento"
-                    </p>
-
                     <div className="absolute opacity-5 -right-0 -top-0">
-                        <CalendarCheck className="text-[#2B2B2B]" size={120} />
+                        <CalendarCheck className="text-[#2B2B2B]" size={100} />
                     </div>
 
                 </CardHeader>

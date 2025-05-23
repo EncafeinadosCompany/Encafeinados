@@ -48,5 +48,9 @@ export const errorMessages: Record<number, string> = {
     },
     events:{
         409: "El evento ya se encuentra registrado"
-    }
+    },
+    recommendations:{
+        400:"No tienes la stampa de esta sucursal, ¡te invitamos a conocerla!",
+        404: "No se encuentra el cliente o la sucursal"
+    },
   };
