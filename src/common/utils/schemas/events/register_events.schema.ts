@@ -18,13 +18,14 @@ export const RegisterEventSchema = z
       message: "La ubicación es obligatoria",
     }),
     is_free: z.boolean().default(false),
+    branch_ids: z.array(z.number()).nonempty({message:"Debe seleccionar al menos una sucursal"}),
     organizer: z.string()
-    .min(3, {
+      .min(3, {
         message: "El organizador es obligatorio",
       })
-    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/, {
+      .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/, {
         message: "El organizador solo debe contener letras",
-      }),   
+      }),
     start_time: z.string().optional(),
 
     end_time: z.string().optional(),
@@ -36,4 +37,4 @@ export const RegisterEventSchema = z
   })
 
 
-  export type RegisterEventSchemaType = z.infer<typeof RegisterEventSchema>; // exportar el tip
+export type RegisterEventSchemaType = z.infer<typeof RegisterEventSchema>; // exportar el tip

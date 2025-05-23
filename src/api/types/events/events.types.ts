@@ -9,4 +9,5 @@ export interface EvenType {
     organizer: string;
     value?:number;
     status?: string;
+    branch_ids?: number[];
 }

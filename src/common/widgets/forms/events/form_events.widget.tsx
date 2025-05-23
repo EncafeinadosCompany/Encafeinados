@@ -18,13 +18,15 @@ import { combineDateTime } from "@/common/utils/dataTime.utils"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/ui/card"
 import { Calendar } from "@/common/ui/calendar"
+import { useApprovedBranches } from "@/api/queries/branches/branch.query"
+import Select from "react-select"
 
 export const FormRegisterEvents = () => {
     const { mutateAsync: useRegisterEvent } = useEventMutation()
     const navigate = useNavigate();
     const [searchParams] = useSearchParams()
     const start_time = searchParams.get("start_time")
-   
+    const { data: BranchesAll } = useApprovedBranches()
 
     const method = useForm<RegisterEventSchemaType>({
         resolver: zodResolver(RegisterEventSchema),
@@ -93,7 +95,7 @@ export const FormRegisterEvents = () => {
                     </div>
 
                 </CardHeader>
-                <CardContent className="relative mx-auto w-full max-w-6xl h-[70vh] overflow-y-auto scrollbar-subtle">
+                <CardContent className="relative mx-auto w-full max-w-6xl h-[65vh]  min-h-[59vh] overflow-y-auto scrollbar-subtle">
                     <Form {...method}>
                         <form onSubmit={method.handleSubmit(onSubmit)} className="space-y-6 px-2 ">
                             <FormField
@@ -229,6 +231,39 @@ export const FormRegisterEvents = () => {
                                             </FormItem>
                                         )}
                                     />
+                                    <FormField
+                                control={method.control}
+                                name="branch_ids"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Sucursales</FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                isMulti
+                                                options={BranchesAll?.map(branch => ({
+                                                    value: branch.id,
+                                                    label: branch.name
+                                                })) || []}
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                placeholder="Buscar sucursales..."
+                                                noOptionsMessage={() => "No se encontraron sucursales"}
+                                                onChange={(selected) => {
+                                                    const selectedIds = selected.map(item => item.value);
+                                                    field.onChange(selectedIds);
+                                                }}
+                                                value={BranchesAll?.filter(branch => field.value?.includes(branch.id))
+                                                    .map(branch => ({
+                                                        value: branch.id,
+                                                        label: branch.name
+                                                    })) || []}
+                                            />
+                                        </FormControl>
+                                        <FormDescription>Selecciona las sucursales donde se realizará el evento</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                                 </div>
                             </div>
 

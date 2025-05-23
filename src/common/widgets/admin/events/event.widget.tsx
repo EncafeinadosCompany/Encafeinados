@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { format, parseISO, isSameMonth, addMonths, subMonths, isSameDay } from "date-fns";
 import { es } from "date-fns/locale";
 import { motion } from "framer-motion";
+import Select from 'react-select';
 import {
     Calendar,
     ChevronLeft,
@@ -24,6 +25,7 @@ import { EvenType } from "@/api/types/events/events.types";
 import { Input } from "@/common/ui/input";
 import { ScrollIndicator } from "@/common/atoms/indicator";
 
+
 export const EventList = () => {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [selectedDay, setSelectedDay] = useState<Date | null>(null);
@@ -34,6 +36,7 @@ export const EventList = () => {
     const [daysWithEvents, setDaysWithEvents] = useState<number[]>([]);
     const [isSearching, setIsSearching] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+  
 
     useEffect(() => {
         if (events) {
