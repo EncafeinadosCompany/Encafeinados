@@ -392,14 +392,14 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden bg-[#FBF7F4]">
-        <div className="relative h-48 sm:h-40 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3 flex-shrink-0">
+      <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden bg-[#FBF7F4] rounded-t-3xl md:rounded-3xl">
+        <div className="relative h-48 sm:h-56 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3 flex-shrink-0">
           <img
             src={cafe.image}
             alt={cafe.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover md:rounded-l-3xl"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent md:rounded-l-3xl"></div>
 
           <button
             onClick={onClose}

@@ -1087,7 +1087,7 @@ return (
               </div>
               
               {/* Wrapper para scroll */}
-              <div className="flex-1 overflow-hidden">
+<div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden bg-[#FBF7F4] rounded-t-3xl md:rounded-3xl">
                 {activeCafeData && (
                   <CafeDetail
                     cafe={activeCafeData}
