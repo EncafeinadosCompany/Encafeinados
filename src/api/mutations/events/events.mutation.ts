@@ -4,12 +4,14 @@ import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const authClient = new AuthClient();
 
 export const useEventMutation = () => {
     const queryClient = useQueryClient()
     const useErrors = useError("events")
+    const navigate = useNavigate()
   
     return useMutation<any, Error, EvenType>({
       mutationFn: async (formData: EvenType): Promise<any> => {
@@ -23,7 +25,8 @@ export const useEventMutation = () => {
         }
       },
       onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ['events'] });
+        queryClient.invalidateQueries({ queryKey: ['events'] })
+        navigate(`/admin/albums?event=${data.event.id}?start_time=${data.event.start_date}?end_time=${data.event.end_date}`)
         toast.success("Evento creado correctamente");
       },
       onError: (error: any) => {

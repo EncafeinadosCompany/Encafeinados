@@ -9,7 +9,13 @@ import { Textarea } from "@/common/ui/textarea";
 import { Button } from "@/common/ui/button";
 import { useBranchesID } from "@/api/queries/branches/branch.query";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, MoveLeftIcon } from "lucide-react";
+import { ArrowLeft, Loader2, MoveLeftIcon } from "lucide-react";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/common/ui/form";
+import { useCreateRecommendationMutation } from "@/api/mutations/recommendation/recommendation.mutation";
+import { useForm } from "react-hook-form";
+import { RecommendationType } from "@/api/types/recommendation/recommendation.type";
+import { recommendationSchema, RecommendationSchemaType } from "@/common/utils/schemas/recommendation/recommendation.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function StoreDetailsCard() {
   const [searchParams] = useSearchParams();
@@ -20,15 +26,35 @@ export default function StoreDetailsCard() {
     return null;
   }
   const { data: details, isLoading, isError } = useBranchesID(Number(id));
+  const verifit = localStorage.getItem("isVerified");
   const [imageLoaded, setImageLoaded] = useState(false);
   const [reviewsOpen, setReviewsOpen] = useState(false);
   const [recommendOpen, setRecommendOpen] = useState(false);
-  const [recommendation, setRecommendation] = useState("");
+
+  const recommendationMutation = useCreateRecommendationMutation();
 
 
-  const handleRecommend = () => {
-    setRecommendation("");
-    setRecommendOpen(false);
+  const form = useForm<RecommendationSchemaType>({
+    resolver: zodResolver(recommendationSchema),
+    defaultValues: {
+      message: "",
+    },
+  });
+
+
+  const handleRecommend = (values: RecommendationSchemaType) => {
+    console.log(values);
+    if (!details) return;
+    
+    recommendationMutation.mutate({
+      branch_id: details.branch.id,
+      message: values.message
+    }, {
+      onSuccess: () => {
+        form.reset();
+        setRecommendOpen(false);
+      }
+    });
   };
 
   if (!details) return null;
@@ -101,7 +127,9 @@ export default function StoreDetailsCard() {
 
 
           <div className="absolute top-4 right-4">
-            <button
+           {
+            verifit==="true" && (
+              <button
               onClick={() => setRecommendOpen(true)}
               
               className="bg-white/80 border border-[#DB8935] text-[#DB8935] rounded-full 
@@ -111,6 +139,8 @@ export default function StoreDetailsCard() {
               <Star className="h-4 w-4" />
               <span className="text-sm">Recomendar</span>
             </button>
+            )
+           }
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
@@ -254,10 +284,16 @@ export default function StoreDetailsCard() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={recommendOpen} onOpenChange={setRecommendOpen}>
+      <Dialog 
+        open={recommendOpen} 
+        onOpenChange={(open) => {
+          if (!open) form.reset();
+          setRecommendOpen(open);
+        }}
+      >
         <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[65vw] lg:w-[55vw] xl:w-[50vw] 
           max-h-[85vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden flex flex-col">
-          <DialogTitle className="sr-only">Recomendar {details.branch.name}</DialogTitle>
+          <DialogTitle className="sr-only">Recomendar {details?.branch.name}</DialogTitle>
 
           <div className="p-4 sm:p-6 border-b border-[#E6D7C3]/50 flex-shrink-0">
             <div className="flex items-center justify-between">
@@ -267,40 +303,60 @@ export default function StoreDetailsCard() {
                 </div>
                 <h2 className="font-medium text-[#5F4B32] text-lg truncate">
                   Recomendar{" "}
-                  <span className="font-semibold">{details.branch.name}</span>
+                  <span className="font-semibold">{details?.branch.name}</span>
                 </h2>
               </div>
-              {/* <button
-                onClick={() => setRecommendOpen(false)}
-                className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full 
-                  hover:bg-white transition-all duration-300 text-[#5F4B32] hover:text-[#8B5A2B]"
-              >
-                <X className="h-5 w-5" />
-              </button> */}
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar p-4 sm:p-6">
-            <div className="space-y-4">
-              <p className="text-[#5F4B32]">
-                Comparte tu experiencia y ayuda a otros a descubrir este lugar.
-              </p>
-              <Textarea
-                placeholder="¿Qué te gustó de este lugar?"
-                className="min-h-[120px] border-amber-200 focus:border-amber-400 focus:ring-amber-400/20"
-                value={recommendation}
-                onChange={(e) => setRecommendation(e.target.value)}
-              />
-            </div>
-          </div>
-          <DialogFooter className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 bg-[#FBF7F4]">
-            <Button
-              onClick={handleRecommend}
-              className="bg-[#DB8935] hover:bg-[#C07830] text-white w-full"
-              disabled={!recommendation.trim()}
-            >
-              Enviar recomendación
-            </Button>
-          </DialogFooter>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleRecommend)} className="flex flex-col flex-1">
+              <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar p-4 sm:p-6">
+                <div className="space-y-4">
+                  <p className="text-[#5F4B32]">
+                    Comparte tu experiencia y ayuda a otros a descubrir este lugar.
+                  </p>
+                  
+                  <FormField
+                    control={form.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Textarea
+                            placeholder="¿Qué te gustó de este lugar?"
+                            className="min-h-[120px] border-amber-200 focus:border-amber-400 focus:ring-amber-400/20"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="flex justify-end text-xs text-gray-500">
+                          {field.value.length}/150
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              
+              <DialogFooter className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 bg-[#FBF7F4]">
+                <Button
+                  type="submit"
+                  className="bg-[#DB8935] hover:bg-[#C07830] text-white w-full"
+                  disabled={!form.formState.isValid || recommendationMutation.isPending}
+                >
+                  {recommendationMutation.isPending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Enviando...
+                    </>
+                  ) : (
+                    "Enviar recomendación"
+                  )}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </>

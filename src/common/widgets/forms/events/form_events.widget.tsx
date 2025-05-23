@@ -57,9 +57,7 @@ export const FormRegisterEvents = () => {
         }
 
         try {
-            useRegisterEvent(eventData).then((res) => {
-                navigate(`/admin/albums?event=${res.event.id}?start_time=${date_time_start}?end_time=${data_time_end}`)
-            })
+            useRegisterEvent(eventData)
             method.reset()
         } catch (error) {
 
