@@ -27,7 +27,7 @@ import {
 import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
 import toast from "react-hot-toast";
 import { useBranchAttributes } from "@/api/queries/branches/branch_attributes.query";
-import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
+import SafeNumericDisplay from "@/common/atoms/SafeNumericDisplay";
 
 const determineNetworkType = (
   social: any
@@ -393,7 +393,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   return (
     <>
       <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden bg-[#FBF7F4]">
-        <div className="relative h-32 sm:h-40 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3 flex-shrink-0">
+        <div className="relative h-48 sm:h-40 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3 flex-shrink-0">
           <img
             src={cafe.image}
             alt={cafe.name}
@@ -412,15 +412,16 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           <div className="absolute bottom-0 left-0 p-4 w-full">
             <h3 className="font-bold text-2xl md:text-3xl lg:text-3xl text-white line-clamp-2">
               {cafe.name}
-            </h3>              <div className="flex items-center justify-between mt-2">
+            </h3>{" "}
+            <div className="flex items-center justify-between mt-2">
               <div className="flex items-center gap-1 text-amber-500">
                 {cafe.rating ? (
                   <>
                     <Star size={16} className="fill-amber-500" />
                     <span className="font-medium text-white">
-                      <SafeNumericDisplay 
-                        value={cafe.rating} 
-                        format={(val) => val.toFixed(1)} 
+                      <SafeNumericDisplay
+                        value={cafe.rating}
+                        format={(val) => val.toFixed(1)}
                       />
                     </span>
                     <button
@@ -459,14 +460,16 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   </span>
                 )}
               </h2>
-              <div className="flex items-center justify-between mt-2">                <div className="flex items-center gap-1 text-amber-500">
+              <div className="flex items-center justify-between mt-2">
+                {" "}
+                <div className="flex items-center gap-1 text-amber-500">
                   {cafe.rating ? (
                     <>
                       <Star size={16} className="fill-amber-500" />
                       <span className="font-medium">
-                        <SafeNumericDisplay 
-                          value={cafe.rating} 
-                          format={(val) => val.toFixed(1)} 
+                        <SafeNumericDisplay
+                          value={cafe.rating}
+                          format={(val) => val.toFixed(1)}
                         />
                       </span>
                       <span className="text-sm text-gray-500">
@@ -561,10 +564,10 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   className={`flex-1 py-3 md:py-2.5 rounded-full font-medium transition-all duration-300 
     transform hover:scale-[1.02] shadow-md hover:shadow-lg 
     flex items-center justify-center gap-1.5 ${
-                    cafe.isOpen
-                      ? "bg-[#6F4E37] text-white hover:bg-[#5d4230]"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }`}
+      cafe.isOpen
+        ? "bg-[#6F4E37] text-white hover:bg-[#5d4230]"
+        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+    }`}
                   whileHover={cafe.isOpen ? { scale: 1.02 } : {}}
                   whileTap={cafe.isOpen ? { scale: 0.98 } : {}}
                   onClick={() => {
@@ -613,7 +616,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 </motion.button>
               </div>
 
-              <div className="relative">
+              {/* <div className="relative">
                 <Popover>
                   <PopoverTrigger asChild>
                     <motion.button
@@ -641,7 +644,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                         </div>
                       </h3>
                     </div>
-                    
+
                     <div className="p-4 sm:p-5 space-y-3">
                       <button
                         className="group relative overflow-hidden rounded-xl bg-white/80 hover:bg-white hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 w-full p-3 flex items-center gap-3"
@@ -675,7 +678,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                     </div>
                   </PopoverContent>
                 </Popover>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
