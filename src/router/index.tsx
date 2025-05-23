@@ -6,7 +6,7 @@ import RoleRoute from "./RouleRoute";
 
 import { RouteLoadingIndicator } from "./route_loading_indicador.router";
 import { FormRegisterEvents } from "@/common/widgets/forms/events/form_events.widget";
-import { EventList } from "@/common/widgets/admin/events/event_list.widget";
+import { EventList } from "@/common/widgets/admin/events/event.widget";
 
 
 // LAYOUTS

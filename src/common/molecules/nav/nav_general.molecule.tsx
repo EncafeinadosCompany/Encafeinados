@@ -18,6 +18,7 @@ interface NavGeneralProps {
   coffeecoins?: number;
   isLoading?: boolean;
   role?: string | null;
+  name?: string | null;
   children?: React.ReactNode;
 }
 
@@ -32,7 +33,7 @@ export const NavGeneral = ({
   setIsExpanded,
   coffeecoins,
   role,
-
+  name,
   logoPath = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
@@ -58,7 +59,7 @@ export const NavGeneral = ({
   };
 
   return (
-    <div className="flex min-h-screen w-full overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden">
       {/* Sidebar by desktop */}
       {!isMobile && (
         <div
@@ -89,26 +90,38 @@ export const NavGeneral = ({
                 <div className="absolute inset-0"></div>
 
                 <div className="absolute inset-0 p-0.5">
-                  {logoPath ? (
+                  {logoPath && !name ? (
                     <img
                       src={logoPath}
                       alt="Encafeinados"
-                      className="h-full w-full object-cover rounded "
+                      className="h-full w-full object-cover rounded"
                     />
                   ) : (
-                    <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-amber-500 to-amber-700 rounded shadow-sm">
-                      <Coffee className="h-4 w-4 text-white" />
+                    <div className="flex items-center justify-center h-full w-full bg-[#6F4E37] rounded-full shadow-sm">
+                      {name ? (
+                        <span className="text-[#F5E6C9] font-medium text-sm">
+                          {name.charAt(0).toUpperCase()}
+                        </span>
+                      ) : (
+                        <Coffee className="h-4 w-4 text-[#F5E6C9]" />
+                      )}
                     </div>
                   )}
                 </div>
               </div>
               {isExpanded && (
                 <div className="flex-grow min-w-0 overflow-hidden">
-                  <h1 className="font-bold text-gray-800 leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
-                    <span className="md:text-xs lg:text-sm xl:text-base">
-                      <span className="text-amber-700">ENCA</span>FEINADOS
+                   <h1 className="font-medium text-[#6F4E37] leading-tight truncate max-w-[120px]">
+                    <span className="text-sm">
+                      {name ? `Bienvenido, ${name.split('@')[0]}` : 'Encafeinados'}
                     </span>
                   </h1>
+                  {role === ROLES.COFFEE_LOVER && coffeecoins !== undefined && (
+                    <div className="flex items-center mt-1 text-[#8B593C]">
+                      <img className="w-4 h-4 mr-1 opacity-80" src="/coins.png" alt="Coffee Coins" />
+                      <span className="text-xs">{coffeecoins} granos</span>
+                    </div>
+                  )}
                 </div>
               )}
 

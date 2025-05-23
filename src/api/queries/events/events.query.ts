@@ -14,3 +14,14 @@ export const useEventAll= () => {
       } 
     })
   }
+
+
+  export const useEventByStatus= () => {
+    return useQuery<EvenType[], Error>({
+      queryKey: ['events-status	'],
+      queryFn: async () => {
+        const response = await authClient.get<EvenType[]>(`/events/status/PUBLISHED`)
+        return response
+      } 
+    })
+  }

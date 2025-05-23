@@ -18,7 +18,7 @@ import {
     X
 } from "lucide-react";
 import { Button } from "@/common/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/common/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/common/ui/card";
 import { Badge } from "@/common/ui/badge";
 import { EvenType } from "@/api/types/events/events.types";
 import { Input } from "@/common/ui/input";
@@ -254,7 +254,7 @@ export const EventList = () => {
                 {/* Events timeline */}
                 <div className="p-4">
                     {filteredEvents.length === 0 ? (
-                        <div className="flex flex-col md:max-h-[60vh] items-center justify-center py-10 text-center">
+                        <div className="flex flex-col md:max-h-[40vh] items-center justify-center py-10 text-center">
 
                             <div className="h-50 w-50">
 
@@ -272,20 +272,24 @@ export const EventList = () => {
                                 }
                             </p>
                             <Button className="mt-6 bg-[#6F4E37] hover:bg-[#5C4130] text-white">
-                                <Plus className="h-4 w-4 mr-2" />
-                                <span className="me-2">Crear Evento</span>
+                                <a href={`/admin/form?start_time=${selectedDay ? format(selectedDay, 'dd MMMM yyyy', { locale: es }) : format(new Date(), 'dd MMMM yyyy', { locale: es })}`} className="flex items-center">
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    <span className="me-2">Crear Evento</span>
+                                </a>
                             </Button>
                         </div>
                     ) : (
-                        <div 
-                            ref={scrollContainerRef} 
-                            className="relative pl-4 flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-2  scrollbar-subtle"
+                        <div
+                            ref={scrollContainerRef}
+                            className="relative pl-4 flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-4 scrollbar-subtle pb-16"
                             style={{
-                                height: 'calc(100vh - 320px)', 
-                                minHeight: '400px',
-                                maxHeight: '80vh'
+                                height: 'auto',
+                                maxHeight: 'calc(100vh - 320px)',
+                                overflowY: 'auto',
+                                paddingBottom: '80px'
                             }}
                         >
+
 
                             {filteredEvents.map((event: EvenType, index) => {
                                 // Determine color based on index for variety
@@ -345,6 +349,7 @@ export const EventList = () => {
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
                         <ScrollIndicator className="bg-[#6F4E37]/10 hover:bg-[#6F4E37]/20" containerRef={scrollContainerRef as React.RefObject<HTMLElement>}></ScrollIndicator>
                     </div>
+
                 </div>
             </div>
         </div>

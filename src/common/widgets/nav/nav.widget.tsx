@@ -41,6 +41,7 @@ export default function NavbarGeneral({ navItems, coffeecoins, isloading}: NavIt
         coffeecoins={coffeecoins ? coffeecoins : 0}
         isLoading={isloading? isloading : false}
         role={user.role || null}
+        name={user.email || null}
         >
       </NavGeneral>
    

@@ -22,6 +22,9 @@ import { Calendar } from "@/common/ui/calendar"
 export const FormRegisterEvents = () => {
     const { mutateAsync: useRegisterEvent } = useEventMutation()
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams()
+    const start_time = searchParams.get("start_time")
+   
 
     const method = useForm<RegisterEventSchemaType>({
         resolver: zodResolver(RegisterEventSchema),
@@ -29,6 +32,7 @@ export const FormRegisterEvents = () => {
             name: '',
             description: '',
             location: '',
+            start_date: start_time ? new Date(start_time) : new Date(),
             is_free: true,
             organizer: 'Carlitos'
         }
