@@ -57,12 +57,13 @@ const PrincipalCoffeelover = () => {
         </div>
       </div>
 
-      <div className={`flex flex-col p-4 gap-6 max-h-[90vh] mx-auto w-full overflow-auto relative z-10 ${isMobile ? 'pb-24' : ''}`}>
+      <div className={`flex flex-col p-4 gap-6 max-h-[85vh] xl:w-7xl mx-auto w-full overflow-auto relative z-10 pb-4 ${isMobile ? 'pb-24' : ''}`}>
         <FeaturedStoresWidget
           globalSearchTerm={globalSearchTerm}
           setGlobalSearchTerm={setGlobalSearchTerm}
         />
-        <EventList></EventList>
+        <EventList>         
+        </EventList>
       </div>
 
       <div className={`fixed ${isMobile ? 'bottom-20' : 'bottom-6'} right-6 z-20`}>
