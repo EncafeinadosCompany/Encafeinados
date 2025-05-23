@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogTrigger } from '@/common/ui/dialog';
 import { Button } from '@/common/ui/button';
 import { BookPlus, Coffee, Sparkles } from 'lucide-react';
-import { CreateAlbumDto } from '@/api/types/album/album.types';
+import { CreateAlbumDto,  AlbumType  } from '@/api/types/album/album.types';
 import { cn } from '@/lib/utils';
 import { useCreateAlbumMutation } from '@/api/mutations/album/album.mutation';
 import AlbumForm from '@/common/molecules/admin/album/album_form.molecule';
@@ -10,29 +10,68 @@ import AlbumForm from '@/common/molecules/admin/album/album_form.molecule';
 
 interface CreateAlbumWidgetProps {
   className?: string;
+  autoOpen?: boolean;
+  onAfterOpen?: () => void;
+  eventId?: number;
+  startDate?: string;
+  endDate?: string;
 }
 
-export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({ className }) => {
-  const [open, setOpen] = useState(false);
-  const { mutateAsync: UseCreateAlbumMutation , isPending } = useCreateAlbumMutation();
+export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({ 
+  className, 
+  autoOpen = false,
+  onAfterOpen,
+  eventId, 
+  startDate, 
+  endDate 
+}) => {
+  const [open, setOpen] = useState(autoOpen); // Inicializa con el valor de autoOpen
+  const { mutateAsync: UseCreateAlbumMutation, isPending } = useCreateAlbumMutation();
   const [success, setSuccess] = useState(false);
 
-  const handleCreateAlbum = async (data: CreateAlbumDto & { logoFile?: File }) => {
-
-    try {
-
-      UseCreateAlbumMutation(data,{
-      onSuccess: () => {
-        setSuccess(true); 
+  // Responder a cambios en autoOpen
+  useEffect(() => {
+    if (autoOpen && !open) {
+      setOpen(true);
+      console.log("Modal abierto automáticamente");
+      
+      // Notificar que el modal se ha abierto
+      if (onAfterOpen) {
+        onAfterOpen();
       }
-    })
-    setTimeout(() => {
-      setSuccess(false);
-      setOpen(false);
-    }, 2000);
+    }
+  }, [autoOpen, open, onAfterOpen]);
 
-    }catch(err){
+  const handleCreateAlbum = async (data: CreateAlbumDto & { logoFile?: File }) => {
+    try {
+      const albumType: AlbumType = eventId ? 'EVENT' : 'ANNUAL';
+      
+      // Crear el objeto con el tipo fuertemente tipado
+      const albumData: CreateAlbumDto & { logoFile?: File } = {
+        ...data,
+        type: albumType,
+        ...(eventId && { 
+          entity_id: eventId,
+          start_date: startDate || data.start_date,
+          end_date: endDate || data.end_date
+        })
+      };
 
+      console.log("Datos enviados al backend:", albumData);
+      
+      // Ahora TypeScript debería aceptar este objeto
+      await UseCreateAlbumMutation(albumData, {
+        onSuccess: () => {
+          setSuccess(true);
+        }
+      });
+      
+      setTimeout(() => {
+        setSuccess(false);
+        setOpen(false);
+      }, 2000);
+    } catch(err) {
+      console.error("Error al crear álbum:", err);
     }
     
   };
@@ -77,7 +116,17 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({ className 
           </div>
         ) : (
           <div className="py-2 overflow-y-auto">
-            <AlbumForm onSubmit={handleCreateAlbum} isSubmitting={isPending} />
+            <AlbumForm 
+              onSubmit={handleCreateAlbum} 
+              isSubmitting={isPending} 
+              initialData={{
+                type: eventId ? 'EVENT' : 'ANNUAL',
+                start_date: startDate,
+                end_date: endDate,
+                entity_id: eventId
+              }}
+              isEventMode={!!eventId}
+            />
           </div>
         )}
       </DialogContent>

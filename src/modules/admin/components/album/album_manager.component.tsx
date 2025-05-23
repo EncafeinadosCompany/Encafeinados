@@ -1,15 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CreateAlbumWidget } from "@/common/widgets/admin/album/create_album.widget"; 
 import { BookOpen } from "lucide-react";
 import { ListAlbumWidget } from "@/common/widgets/admin/album/list_album_admin.widget";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 
 const AlbumManager = () => {
   const [searchParams] = useSearchParams();
-  const start_time = searchParams.get("start_time")
-  const end_time = searchParams.get("end_time")
-
-  console.log(searchParams.get("event"), start_time, end_time)
+  const location = useLocation();
+  
+  // Extraer parámetros de manera más robusta
+  const getParam = (name: string) => {
+    // Primero intentar con searchParams normal
+    let param = searchParams.get(name);
+    
+    // Si no está, intentar extraerlo manualmente de la URL mal formada con ?
+    if (!param) {
+      const urlString = location.search || "";
+      // Esta regex busca tanto ?param= como &param=
+      const regex = new RegExp(`[?&]${name}=([^?&]+)`);
+      const matches = urlString.match(regex);
+      param = matches ? decodeURIComponent(matches[1]) : null;
+      
+      console.log(`Param ${name} extracted manually:`, param);
+    }
+    
+    return param;
+  };
+  
+  const eventId = getParam("event");
+  const start_time = getParam("start_time");
+  const end_time = getParam("end_time");
+  
+  // Depurar qué valores se están obteniendo
+  console.log("URL Params:", { eventId, start_time, end_time });
+  
+  // Estado para controlar la apertura automática del modal
+  const [autoOpenModal, setAutoOpenModal] = useState(false);
+  
+  // Verificar si tenemos los parámetros necesarios para abrir el modal automáticamente
+  useEffect(() => {
+    console.log("Checking params:", { eventId, start_time, end_time });
+    if (eventId && start_time && end_time) {
+      console.log("Opening modal automatically");
+      setAutoOpenModal(true);
+    }
+  }, [eventId, start_time, end_time]);
 
   return (
     <div className="w-full h-full flex flex-col bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
@@ -23,7 +58,14 @@ const AlbumManager = () => {
             Gestiona colecciones especiales de cafeterías
           </p>
         </div>
-        <CreateAlbumWidget className="sm:self-start" />
+        <CreateAlbumWidget 
+          className="sm:self-start"
+          autoOpen={autoOpenModal}
+          onAfterOpen={() => setAutoOpenModal(false)}
+          eventId={eventId ? parseInt(eventId, 10) : undefined}
+          startDate={start_time || undefined}
+          endDate={end_time || undefined}
+        />
       </header>
       
       <div className="flex-1 min-h-0 overflow-hidden">

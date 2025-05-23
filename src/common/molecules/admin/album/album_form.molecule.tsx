@@ -12,14 +12,18 @@ import { Textarea } from '@/common/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/common/ui/popover';
 import { CalendarIcon, UploadIcon, XIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
-import { CreateAlbumDto } from '@/api/types/album/album.types';
+import { CreateAlbumDto, AlbumType } from '@/api/types/album/album.types';
 
+// Modifica el schema para aceptar ambos tipos
 const albumSchema = z.object({
   title: z.string().min(3, "El título debe tener al menos 3 caracteres").max(100, "El título no puede exceder 100 caracteres"),
   introduction: z.string().min(10, "La introducción debe tener al menos 10 caracteres"),
-  type: z.literal("ANNUAL"), 
+  // Cambia el tipo para aceptar ambos valores
+  type: z.enum(["ANNUAL", "EVENT"]),
   start_date: z.date(),
   end_date: z.date(),
+  // Añade entity_id como opcional
+  entity_id: z.number().optional(),
 }).refine(data => data.end_date > data.start_date, {
   message: "La fecha de finalización debe ser posterior a la de inicio",
   path: ["end_date"]
@@ -30,21 +34,38 @@ type AlbumFormValues = z.infer<typeof albumSchema>;
 interface AlbumFormProps {
   onSubmit: (data: CreateAlbumDto & { logoFile?: File }) => void;
   isSubmitting: boolean;
+  initialData?: {
+    type?: AlbumType;
+    start_date?: string;
+    end_date?: string;
+    entity_id?: number;
+  };
+  isEventMode?: boolean;
 }
 
-const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, isSubmitting }) => {
+const AlbumForm: React.FC<AlbumFormProps> = ({ 
+  onSubmit, 
+  isSubmitting, 
+  initialData,
+  isEventMode = false 
+}) => {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoFile, setLogoFile] = useState<File | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Inicializa con valores predeterminados o con los datos iniciales
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<AlbumFormValues>({
     resolver: zodResolver(albumSchema),
     defaultValues: {
       title: '',
       introduction: '',
-      type: 'ANNUAL',
-      start_date: new Date(),
-      end_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      // Usa el tipo que viene en initialData, o el predeterminado según el modo
+      type: initialData?.type || (isEventMode ? 'EVENT' : 'ANNUAL'),
+      // Si hay fechas iniciales, conviértelas a objetos Date
+      start_date: initialData?.start_date ? new Date(initialData.start_date) : new Date(),
+      end_date: initialData?.end_date ? new Date(initialData.end_date) : new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      // Si hay entity_id, inclúyelo también
+      entity_id: initialData?.entity_id
     }
   });
 
@@ -72,7 +93,7 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, isSubmitting }) => {
 
   const clearLogo = () => {
     setLogoPreview(null);
-    setLogoFile(null);
+    setLogoFile(undefined); 
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -82,19 +103,31 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, isSubmitting }) => {
     fileInputRef.current?.click();
   };
 
+  // Procesar el formulario
   const processForm = async (data: AlbumFormValues) => {
-    if (!logoFile) {
-      toast.error('Por favor sube una imagen de logo para el álbum');
-      return;
+    // Si estamos en modo evento, mantener las fechas originales
+    if (isEventMode && initialData?.start_date && initialData?.end_date) {
+      onSubmit({
+        ...data,
+        logo: "",
+        logoFile: logoFile,
+        // Usar las fechas originales del evento
+        start_date: initialData.start_date,
+        end_date: initialData.end_date,
+        // Incluir entity_id
+        entity_id: initialData.entity_id
+      });
+    } else {
+      // Caso normal (no evento)
+      onSubmit({
+        ...data,
+        logo: "",
+        logoFile: logoFile,
+        // Formatear fechas para álbumes regulares
+        start_date: format(data.start_date, 'yyyy-MM-dd'),
+        end_date: format(data.end_date, 'yyyy-MM-dd')
+      });
     }
-    
-    onSubmit({
-      ...data,
-      logo: "", 
-      logoFile: logoFile, 
-      start_date: format(data.start_date, 'yyyy-MM-dd'),
-      end_date: format(data.end_date, 'yyyy-MM-dd')
-    });
   };
 
   return (
@@ -264,7 +297,27 @@ const AlbumForm: React.FC<AlbumFormProps> = ({ onSubmit, isSubmitting }) => {
         </div>
       </div>
 
-      <input type="hidden" {...register("type")} value="ANNUAL" />
+      {/* Reemplaza el input hidden fijo por uno dinámico */}
+      <input 
+        type="hidden" 
+        {...register("type")} 
+        value={(isEventMode ? 'EVENT' : 'ANNUAL') as AlbumType} 
+      />
+      
+      {/* Si estamos en modo evento, incluye el entity_id (aunque sea hidden) */}
+      {isEventMode && initialData?.entity_id && (
+        <input type="hidden" {...register("entity_id")} value={initialData.entity_id} />
+      )}
+      
+      {/* Mensaje explicativo en modo evento */}
+      {isEventMode && (
+        <div className="bg-amber-50 p-3 rounded-md border border-amber-200">
+          <p className="text-sm text-amber-700">
+            Este álbum estará asociado a un evento específico. 
+            Las fechas se han configurado automáticamente según el periodo del evento.
+          </p>
+        </div>
+      )}
 
       <Button 
         type="submit" 
