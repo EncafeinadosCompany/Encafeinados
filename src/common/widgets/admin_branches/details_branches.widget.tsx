@@ -132,7 +132,7 @@ export default function PrincipalBranchesPage() {
 
     return (
         <div className="container h-full max-w-full  px-5 py-5 scrollbar-subtle">
-            <div ref={scrollContainerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8  h-[90vh] md:h-[95vh] md:max-h-full  overflow-y-auto  scrollbar-subtle">
+            <div ref={scrollContainerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full  overflow-y-auto  scrollbar-subtle">
 
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
                     <ScrollIndicator className="bg-[#6F4E37]/10 hover:bg-[#6F4E37]/20" containerRef={scrollContainerRef as React.RefObject<HTMLElement>}></ScrollIndicator>

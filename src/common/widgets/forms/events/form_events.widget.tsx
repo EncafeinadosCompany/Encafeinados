@@ -91,7 +91,7 @@ export const FormRegisterEvents = () => {
                     </div>
 
                 </CardHeader>
-                <CardContent className="relative mx-auto w-full max-w-6xl h-[60vh]  min-h-[50vh] overflow-y-auto scrollbar-subtle">
+                <CardContent className="relative mx-auto w-full max-w-6xl h-[70vh]  min-h-[60vh] overflow-y-auto scrollbar-subtle">
                     <Form {...method}>
                         <form onSubmit={method.handleSubmit(onSubmit)} className="space-y-6 px-2 ">
                             <FormField
@@ -232,29 +232,6 @@ export const FormRegisterEvents = () => {
 
 
                             <div>
-
-                                <FormField
-                                    control={method.control}
-                                    name="location"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full  flex flex-col items-center justify-center">
-                                            <FormLabel>Ubicación</FormLabel>
-                                            <FormControl>
-                                                <MapSearch
-                                                    onLocationSelect={onLocationSelect}
-
-
-                                                >
-
-                                                </MapSearch>
-                                                {/* <Input placeholder="Ubicación del evento" {...field} /> */}
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-
-                                    )}
-                                />
-                                <p>aqui puedes confirmar tu dirección</p>
                                 <FormField
                                     control={method.control}
                                     name="location"

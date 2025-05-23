@@ -77,8 +77,8 @@ export default function FormEditBranch() {
     };
 
     return (
-        <div className="h-[95-vh] md:h-full w-full p-4 grid grid-cols-1 items-center">
-            <Card className=" border-none mx-auto w-full  md:w-5xl bg-white ">
+        <div className="h-full w-full p-4 grid grid-cols-1 items-center">
+            <Card className=" border-none mx-auto w-full md:w-5xl bg-white ">
                 <CardHeader className="flex flex-col items-center relative z-10">
                     <div className="flex items-center justify-center mb-2">
                         <div className="bg-[#DB8935] p-2 rounded-full mr-3">
@@ -102,7 +102,7 @@ export default function FormEditBranch() {
                     </div>
 
                 </CardHeader>
-                <CardContent className="p-6 space-y-4 overflow-y-auto max-h-[70vh] scrollbar-subtle ">
+                <CardContent className="p-6 space-y-4 overflow-y-auto max-h-[65vh] xl:max-h-[70vh] scrollbar-subtle ">
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
                         <motion.button
                             initial={{ opacity: 0.5 }}

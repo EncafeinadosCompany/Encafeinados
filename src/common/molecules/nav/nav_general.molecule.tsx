@@ -59,7 +59,7 @@ export const NavGeneral = ({
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden">
+    <div className="flex h-screen bg-gray-100 w-full overflow-hidden">
       {/* Sidebar by desktop */}
       {!isMobile && (
         <div
@@ -246,7 +246,7 @@ export const NavGeneral = ({
       )}
 
       <div className="flex-1 flex flex-col h-full mx-auto item-center justify-center min-w-0 overflow-hidden">        
-        <main className={`flex-1 w-full max-h-[96vh]  ${isMobile ? 'has-mobile-nav' : ''}`}>
+        <main className={`flex-1 w-full h-full relative  ${isMobile ? 'has-mobile-nav' : ''}`}>
         <Outlet />
       </main>
 

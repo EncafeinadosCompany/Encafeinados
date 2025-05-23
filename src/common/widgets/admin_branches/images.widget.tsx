@@ -395,7 +395,7 @@ export default function ImagesGallery() {
 
     if (!isError && (!data_images || data_images.length === 0)) {
         return (
-            <Card className="w-full h-full grid place-items-center relative overflow-hidden border-[#D4A76A]/20">
+            <Card className="w-full h-full  grid place-items-center relative overflow-hidden border-[#D4A76A]/20">
                 {renderDialog()}
                 {/* Decorative coffee-themed background elements */}
                 <div className="absolute inset-0 bg-[url('/coffee-pattern.png')] opacity-5" />
@@ -412,7 +412,7 @@ export default function ImagesGallery() {
                             <img src="/imagen.svg" className="relative h-60" alt="" />
                         </div>
                         <div className="space-y-3">
-                            <CardTitle className="text-3xl font-bold text-[#2C1810]">
+                            <CardTitle className="xl:text-3xl font-bold text-[#2C1810]">
                                 Comparte tu Pasión por el Café
                             </CardTitle>
                             <CardDescription className="text-lg text-[#6F4E37]">
@@ -424,7 +424,7 @@ export default function ImagesGallery() {
                         </div>
                         <Button
                             onClick={() => setIsModalOpen(true)}
-                            className="mt-6 bg-gradient-to-r from-[#6F4E37] to-[#8B593C] hover:from-[#5a3e2c] hover:to-[#734a32] text-white px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                            className="xl:mt-6 bg-gradient-to-r from-[#6F4E37] to-[#8B593C] hover:from-[#5a3e2c] hover:to-[#734a32] text-white px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                         >
                             <Plus className="h-5 w-5 mr-2" />
                             <span className="me-4"> Comenzar Galería</span>
