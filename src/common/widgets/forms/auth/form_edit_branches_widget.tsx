@@ -70,6 +70,9 @@ export default function FormEditBranch() {
         setValue("latitude", lat);
         setValue("longitude", lng);
         setValue("address", address);
+        console.log("Latitud:", lat);
+        console.log("Longitud:", lng);
+        console.log("Dirección:", address);
         setBaseAddress(address);
     };
 
