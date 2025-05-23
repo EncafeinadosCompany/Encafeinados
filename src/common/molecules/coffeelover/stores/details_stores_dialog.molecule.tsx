@@ -7,12 +7,11 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { ReviewsWidget } from "@/common/widgets/coffeelover/reviews/reviews_widget";
 import { Textarea } from "@/common/ui/textarea";
 import { Button } from "@/common/ui/button";
-import {  useBranchesID } from "@/api/queries/branches/branch.query";
+import { useBranchesID } from "@/api/queries/branches/branch.query";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft, MoveLeftIcon } from "lucide-react";
 
-// Rename the component to reflect it's now a card
-export default function StoreDetailsCard  ()  {
+export default function StoreDetailsCard() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const id = searchParams.get("branch")
@@ -28,7 +27,6 @@ export default function StoreDetailsCard  ()  {
 
 
   const handleRecommend = () => {
-    console.log("Recommendation submitted:", recommendation);
     setRecommendation("");
     setRecommendOpen(false);
   };
@@ -48,7 +46,7 @@ export default function StoreDetailsCard  ()  {
     );
   }
 
- 
+
 
   if (isError || !details || !details.branch) {
     return (
@@ -57,9 +55,9 @@ export default function StoreDetailsCard  ()  {
           <X className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h2 className="text-xl font-medium text-[#5F4B32] mb-2">Ocurrió un error</h2>
           <p className="text-[#8B5A2B]/70 mb-4">
-             "No se pudo cargar la información de la tienda"
+            "No se pudo cargar la información de la tienda"
           </p>
-          <Button 
+          <Button
             onClick={() => navigate(-1)}
             className="bg-[#DB8935] hover:bg-[#C07830] text-white"
           >
@@ -100,6 +98,21 @@ export default function StoreDetailsCard  ()  {
             <ArrowLeft className="h-4 w-4 text-amber-800" />
             <span className="text-amber-800 font-medium text-xs">Volver</span>
           </button>
+
+
+          <div className="absolute top-4 right-4">
+            <button
+              onClick={() => setRecommendOpen(true)}
+              
+              className="bg-white/80 border border-[#DB8935] text-[#DB8935] rounded-full 
+                  font-medium hover:bg-[#DB8935]/5 transition-all duration-300 transform hover:scale-105 
+                  shadow-md hover:shadow-lg flex items-center justify-center gap-2 py-2 px-4 h-[38px]"
+            >
+              <Star className="h-4 w-4" />
+              <span className="text-sm">Recomendar</span>
+            </button>
+          </div>
+
           <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
 
             <div className="flex items-center gap-2 mb-2">
@@ -182,31 +195,8 @@ export default function StoreDetailsCard  ()  {
               </div>
             </div>
 
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium text-[#5F4B32]">
-                Capacidad
-              </h4>
-              <p className="text-sm text-gray-600/90">
-                hasta 100 personas
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 
-          flex flex-col sm:flex-row gap-3 sm:gap-4 bg-[#FBF7F4]">
-          <div className="flex-1 grid grid-cols-2 gap-3">
-            <button
-              onClick={() => setRecommendOpen(true)}
-              className="bg-white border border-[#DB8935] text-[#DB8935] rounded-full 
-                font-medium hover:bg-[#DB8935]/5 transition-all duration-300 transform hover:scale-105 
-                shadow-md hover:shadow-lg flex items-center justify-center gap-2 py-2.5 px-4 h-[42px]"
-            >
-              <Heart className="h-5 w-5" />
-              <span>Recomendar</span>
-            </button>
-
-            <button
+            <div>
+                <button
               onClick={() => setReviewsOpen(true)}
               className="bg-white border border-[#DB8935] text-[#DB8935] rounded-full 
                 font-medium hover:bg-[#DB8935]/5 transition-all duration-300 transform hover:scale-105 
@@ -215,11 +205,16 @@ export default function StoreDetailsCard  ()  {
               <MessageSquare className="h-5 w-5" />
               <span>Ver reseñas</span>
             </button>
+            </div>
           </div>
+        </div>
 
-          <div className="flex-1">
+        <div className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 
+          flex flex-col sm:flex-row gap-3 sm:gap-4 bg-[#FBF7F4]">
+          
+          <div className="flex-1 xl:max-w-2xl mx-auto">
             <GoToButton
-              text="Ir"
+              text={`a ${details.branch.name}`}
               branchId={details.branch.id}
               mapRoute="private"
             />
@@ -244,13 +239,13 @@ export default function StoreDetailsCard  ()  {
                   <span className="font-semibold">{details.branch.name}</span>
                 </h2>
               </div>
-              <button
+              {/* <button
                 onClick={() => setReviewsOpen(false)}
                 className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full 
                   hover:bg-white transition-all duration-300 text-[#5F4B32] hover:text-[#8B5A2B]"
               >
                 <X className="h-5 w-5" />
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar p-4 sm:p-6">
@@ -275,13 +270,13 @@ export default function StoreDetailsCard  ()  {
                   <span className="font-semibold">{details.branch.name}</span>
                 </h2>
               </div>
-              <button
+              {/* <button
                 onClick={() => setRecommendOpen(false)}
                 className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full 
                   hover:bg-white transition-all duration-300 text-[#5F4B32] hover:text-[#8B5A2B]"
               >
                 <X className="h-5 w-5" />
-              </button>
+              </button> */}
             </div>
           </div>
           <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar p-4 sm:p-6">

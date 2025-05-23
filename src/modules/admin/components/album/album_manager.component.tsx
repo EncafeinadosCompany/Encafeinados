@@ -6,8 +6,10 @@ import { useSearchParams } from "react-router-dom";
 
 const AlbumManager = () => {
   const [searchParams] = useSearchParams();
+  const start_time = searchParams.get("start_time")
+  const end_time = searchParams.get("end_time")
 
-  console.log(searchParams.get("event"))
+  console.log(searchParams.get("event"), start_time, end_time)
 
   return (
     <div className="w-full h-full flex flex-col bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
