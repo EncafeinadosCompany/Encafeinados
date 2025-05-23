@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check, User, Mail, Phone, FileText, Loader } from 'lucide-react';
-import { CoffeeLoverProfile } from '@/api/types/coffelovers/coffelovers.type';
+import { CoffeeLoverProfileType } from '@/api/types/coffelovers/coffelovers.type';
 
 interface EditProfileModalProps {
-  profile: CoffeeLoverProfile;
+  profile: CoffeeLoverProfileType;
   isOpen: boolean;
   isLoading: boolean;
   onClose: () => void;

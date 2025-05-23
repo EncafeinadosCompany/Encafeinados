@@ -37,7 +37,7 @@ const PrincipalCoffeelover = () => {
   }, []);
 
   return (
-    <div className='flex flex-col max-w-full overflow-hidden h-full relative'>
+    <div className='flex flex-col max-w-full  overflow-hidden h-full relative'>
       <CoffeeBackground
         coffeeCount={10}
         circleCount={6}
@@ -57,7 +57,7 @@ const PrincipalCoffeelover = () => {
         </div>
       </div>
 
-      <div className={`flex flex-col p-4 gap-6 max-h-[90vh] xl:w-7xl mx-auto w-full overflow-auto relative z-10 ${isMobile ? 'pb-24' : ''}`}>
+      <div className={`flex flex-col p-4 gap-6 max-h-[90vh] mx-auto w-full overflow-auto relative z-10 ${isMobile ? 'pb-24' : ''}`}>
         <FeaturedStoresWidget
           globalSearchTerm={globalSearchTerm}
           setGlobalSearchTerm={setGlobalSearchTerm}

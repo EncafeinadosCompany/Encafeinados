@@ -1,9 +1,9 @@
-import { useEventAll} from "@/api/queries/events/events.query"
+import { useEventAll, useEventByStatus} from "@/api/queries/events/events.query"
 import { EventCard } from "@/common/molecules/coffeelover/events/event_card.molecule"
 
 export function EventList() {
 
-    const {data:events} = useEventAll()
+    const {data:events} = useEventByStatus()
 
   return (
     <div className="space-y-6">

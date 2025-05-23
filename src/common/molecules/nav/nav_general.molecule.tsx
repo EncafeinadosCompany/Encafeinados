@@ -111,7 +111,7 @@ export const NavGeneral = ({
               </div>
               {isExpanded && (
                 <div className="flex-grow min-w-0 overflow-hidden">
-                   <h1 className="font-medium text-[#6F4E37] leading-tight truncate max-w-[120px]">
+                  <h1 className="font-medium text-[#6F4E37] leading-tight truncate max-w-[120px]">
                     <span className="text-sm">
                       {name ? `Bienvenido, ${name.split('@')[0]}` : 'Encafeinados'}
                     </span>
@@ -245,10 +245,11 @@ export const NavGeneral = ({
         </div>
       )}
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">        <main className={`flex-1 w-full ${isMobile ? 'has-mobile-nav' : ''}`}>
-          <Outlet />   
-        </main>
-      
+      <div className="flex-1 flex flex-col h-full mx-auto item-center justify-center min-w-0 overflow-hidden">        
+        <main className={`flex-1 w-full max-h-[96vh]  ${isMobile ? 'has-mobile-nav' : ''}`}>
+        <Outlet />
+      </main>
+
         {isMobile && (
           <div className="md:hidden fixed bottom-0  left-0 right-0 bg-white z-[100]">
             {isMenuExpanded && navItems.length > 4 && (

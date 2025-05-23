@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { FeaturedCarouselStores } from "@/common/molecules/coffeelover/stores/featured_stores.molecule";
 import { useApprovedBranches } from "@/api/queries/branches/branch.query";
 
+
 interface FeaturedStoresWidgetProps {
   globalSearchTerm: string;
   setGlobalSearchTerm: React.Dispatch<React.SetStateAction<string>>;
@@ -71,7 +72,8 @@ export const FeaturedStoresWidget = ({
   }
 
   return (
-    <FeaturedCarouselStores
+    <>
+        <FeaturedCarouselStores
       searchTerm={globalSearchTerm}
       branches={branches}
       filteredBranches={filteredBranches}
@@ -80,5 +82,9 @@ export const FeaturedStoresWidget = ({
       setSearchTerm={setGlobalSearchTerm}
       handleSearchChange={(e) => setGlobalSearchTerm(e.target.value)}
     />
+    {/* <DialogDetailStores details={branches[0]} setIsOpen={()=> true}></DialogDetailStores> */}
+    </>
+
+
   )
 }

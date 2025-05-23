@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { User, Coffee, Edit, Mail, Phone } from 'lucide-react';
-import { CoffeeLoverProfile } from '@/api/types/coffelovers/coffelovers.type';
+import { Coffee, Edit, Mail, Phone } from 'lucide-react';
+import { CoffeeLoverProfileType} from '@/api/types/coffelovers/coffelovers.type';
 import EditProfileModal from './edit_profile_modal.molecule';
 
 interface ProfileInfoProps {
-  profile: CoffeeLoverProfile;
+  profile: CoffeeLoverProfileType;
   onUpdateField: (field: string, value: string) => void;
   isLoading: boolean;
 }
