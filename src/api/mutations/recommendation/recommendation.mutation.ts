@@ -10,7 +10,8 @@ const authClient = new AuthClient();
 export function useCreateRecommendationMutation() {
 
     const queryClient = useQueryClient();
-     const useErrors = useError("createPage");
+     const useErrors = useError("recommendations");
+     
 
     return useMutation<any, Error,RecommendationType>({
       mutationFn: async (data) => {
