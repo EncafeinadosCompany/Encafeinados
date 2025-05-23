@@ -2,9 +2,10 @@ import { FlameIcon as Fire } from "@/common/ui/icons";
 import { Card, CardContent } from "@/common/ui/card";
 import { Dialog } from "@/common/ui/dialog";
 import { useState } from "react";
-import { DialogDetailStores } from "./details_stores_dialog.molecule";
+
 import { ApprovedBranch} from "@/api/types/branches/branches_approval.types";
 import { Coffee } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface FeaturedCardProps {
   branches: ApprovedBranch
@@ -14,6 +15,7 @@ interface FeaturedCardProps {
 export default function FeaturedCard({ branches }: FeaturedCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const navigate = useNavigate()
   
   const getStatusConfig = (status: string) => {
     switch (status) {
@@ -44,7 +46,7 @@ export default function FeaturedCard({ branches }: FeaturedCardProps) {
     <div className="max-w-sm xl:max-w-sm  transform transition-transform duration-300 hover:scale-[1.02]">
       <Card 
         className="overflow-hidden border border-[#E6D7C3] shadow-md hover:shadow-xl transition-all duration-300 mb-2 bg-white/80 backdrop-blur-sm"
-        onClick={() => setIsOpen(true)}
+        onClick={() => navigate(`/coffeelover/prueba?branch=${branches.id}`)}
       >
         <CardContent className="p-0 relative">
           <div className="relative h-48 w-full overflow-hidden">
@@ -98,9 +100,11 @@ export default function FeaturedCard({ branches }: FeaturedCardProps) {
       </div>
 
       {/* MODALS  */}
-      <Dialog  open={isOpen} onOpenChange={setIsOpen}>
+      {/* <Dialog  open={isOpen} onOpenChange={setIsOpen}>
         <DialogDetailStores details={branches} setIsOpen={setIsOpen}></DialogDetailStores>
-       </Dialog>
+       </Dialog> */}
+
+      
     </div>
    
     </>

@@ -1,58 +1,120 @@
-import { ApprovedBranch } from "@/api/types/branches/branches_approval.types";
 import { Badge } from "@/common/ui/badge";
-import { DialogContent, DialogFooter, Dialog } from "@/common/ui/dialog";
-import { Dispatch, SetStateAction, useState } from "react";
-import { MapPin, Mail, X, Coffee, MessageSquare } from "@/common/ui/icons";
+import { Dialog, DialogContent, DialogFooter } from "@/common/ui/dialog";
+import { useState } from "react";
+import { MapPin, Mail, X, Coffee, MessageSquare, Heart, Star } from "@/common/ui/icons";
 import { GoToButton } from "@/common/atoms/map/GoToButton";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { ReviewsWidget } from "@/common/widgets/coffeelover/reviews/reviews_widget";
+import { Textarea } from "@/common/ui/textarea";
+import { Button } from "@/common/ui/button";
+import {  useBranchesID } from "@/api/queries/branches/branch.query";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { ArrowLeft, MoveLeftIcon } from "lucide-react";
 
-interface detailsProps {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  details: ApprovedBranch;
-}
+// Rename the component to reflect it's now a card
+export default function StoreDetailsCard  ()  {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const id = searchParams.get("branch")
 
-export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
+  if (!id) {
+    return null;
+  }
+  const { data: details, isLoading, isError } = useBranchesID(Number(id));
   const [imageLoaded, setImageLoaded] = useState(false);
   const [reviewsOpen, setReviewsOpen] = useState(false);
+  const [recommendOpen, setRecommendOpen] = useState(false);
+  const [recommendation, setRecommendation] = useState("");
+
+
+  const handleRecommend = () => {
+    console.log("Recommendation submitted:", recommendation);
+    setRecommendation("");
+    setRecommendOpen(false);
+  };
+
+  if (!details) return null;
+
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-[91vh] flex items-center justify-center bg-[#FBF7F4] rounded-xl">
+        <div className="text-center p-6">
+          <Coffee className="h-12 w-12 text-[#DB8935] mx-auto mb-4 animate-pulse" />
+          <h2 className="text-xl font-medium text-[#5F4B32] mb-2">Cargando información</h2>
+          <p className="text-[#8B5A2B]/70">Obteniendo detalles de la tienda...</p>
+        </div>
+      </div>
+    );
+  }
+
+ 
+
+  if (isError || !details || !details.branch) {
+    return (
+      <div className="w-full h-[91vh] flex items-center justify-center bg-[#FBF7F4] rounded-xl">
+        <div className="text-center p-6">
+          <X className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-medium text-[#5F4B32] mb-2">Ocurrió un error</h2>
+          <p className="text-[#8B5A2B]/70 mb-4">
+             "No se pudo cargar la información de la tienda"
+          </p>
+          <Button 
+            onClick={() => navigate(-1)}
+            className="bg-[#DB8935] hover:bg-[#C07830] text-white"
+          >
+            <MoveLeftIcon className="h-4 w-4 mr-2" />
+            Volver
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
-      <DialogContent
-        aria-describedby={undefined}
-        className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[55vw] 2xl:w-[45vw] 
-          h-[73vh] sm:h-[90vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden 
-          flex flex-col"
-      >
-        <DialogTitle className="hidden"></DialogTitle>
+      {/* Changed from fixed positioning to a regular card */}
+      <div className="w-full max-w-full h-[91vh] xl:h-full md:max-w-3xl lg:max-w-4xl xl:max-w-7xl 
+        bg-[#FBF7F4] shadow-xl rounded-xl md:rounded-2xl  mx-auto
+        overflow-hidden flex flex-col relative animate-in fade-in duration-300">
 
-        <button
-          onClick={() => setIsOpen(false)}
-          className="absolute right-4 top-4 z-10 bg-white/80 backdrop-blur-sm p-1.5 rounded-full 
-            hover:bg-white transition-all duration-300 text-[#5F4B32] hover:text-[#8B5A2B]"
-        >
-          <X className="h-5 w-5" />
-        </button>
-
-        <div className="relative w-full h-48 sm:h-56 md:h-60 overflow-hidden flex-shrink-0">
+        <div className="relative w-full h-56 md:min-h-72  overflow-hidden flex-shrink-0">
           <div
-            className={`absolute inset-0 bg-[#8B5A2B]/20 backdrop-blur-sm flex items-center justify-center transition-opacity duration-500 ${
-              imageLoaded ? "opacity-0" : "opacity-100"
-            }`}
+            className={`absolute inset-0 bg-[#8B5A2B]/20 backdrop-blur-sm flex items-center justify-center transition-opacity duration-500 ${imageLoaded ? "opacity-0" : "opacity-100"
+              }`}
           >
             <Coffee className="h-10 w-10 text-[#8B5A2B] animate-pulse" />
           </div>
           <img
-            src={details.store_logo || "/placeholder.svg"}
-            alt={details.name}
+            src={details.branch.store.store_logo || "/placeholder.svg"}
+            alt={details.branch.name}
             onLoad={() => setImageLoaded(true)}
             className="object-cover w-full h-full transition-transform duration-700 hover:scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/60 to-transparent"></div>
+
+          <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/70 to-transparent"></div>
+          <button
+            className="absolute top-4 left-4 bg-white/90 hover:bg-amber-100 transition-colors p-2 rounded-full flex items-center gap-1 shadow-md"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft className="h-4 w-4 text-amber-800" />
+            <span className="text-amber-800 font-medium text-xs">Volver</span>
+          </button>
           <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+
+            <div className="flex items-center gap-2 mb-2">
+              <div className="bg-amber-500/90 px-2 py-1 rounded-md flex items-center">
+                <Star className="h-4 w-4 text-white mr-1" />
+                <span className="text-white font-medium text-sm">4.95</span>
+              </div>
+              <span className="text-white/90 text-sm">22 Calificaciones</span>
+            </div>
             <h2 className="text-xl sm:text-2xl font-bold text-white drop-shadow-md">
-              {details.name}
+              {details.branch.name}
             </h2>
+            <p className="text-white/80 text-sm mt-1">
+              Disfruta de una nueva experiencia de tomar café.
+            </p>
           </div>
         </div>
 
@@ -64,7 +126,7 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
                 <span>Información de la tienda</span>
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Address */}
                 <div className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
                   <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#DB8935]/10 transition-transform duration-300 group-hover:scale-150" />
@@ -77,7 +139,7 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
                         Dirección
                       </span>
                       <p className="text-sm text-gray-600/90 leading-relaxed">
-                        {details.address}
+                        {details.branch.address}
                       </p>
                     </div>
                   </div>
@@ -95,7 +157,7 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
                         Email
                       </span>
                       <p className="text-sm text-gray-600/90 leading-relaxed break-all">
-                        {details.store_email}
+                        {details.branch.store.store_email}
                       </p>
                     </div>
                   </div>
@@ -119,15 +181,34 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
                 </Badge>
               </div>
             </div>
+
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-[#5F4B32]">
+                Capacidad
+              </h4>
+              <p className="text-sm text-gray-600/90">
+                hasta 100 personas
+              </p>
+            </div>
           </div>
         </div>
 
-        <DialogFooter className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 
+        <div className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 
           flex flex-col sm:flex-row gap-3 sm:gap-4 bg-[#FBF7F4]">
-          <div className="flex-1 order-2 sm:order-1">
+          <div className="flex-1 grid grid-cols-2 gap-3">
+            <button
+              onClick={() => setRecommendOpen(true)}
+              className="bg-white border border-[#DB8935] text-[#DB8935] rounded-full 
+                font-medium hover:bg-[#DB8935]/5 transition-all duration-300 transform hover:scale-105 
+                shadow-md hover:shadow-lg flex items-center justify-center gap-2 py-2.5 px-4 h-[42px]"
+            >
+              <Heart className="h-5 w-5" />
+              <span>Recomendar</span>
+            </button>
+
             <button
               onClick={() => setReviewsOpen(true)}
-              className="w-full bg-white border border-[#DB8935] text-[#DB8935] rounded-full 
+              className="bg-white border border-[#DB8935] text-[#DB8935] rounded-full 
                 font-medium hover:bg-[#DB8935]/5 transition-all duration-300 transform hover:scale-105 
                 shadow-md hover:shadow-lg flex items-center justify-center gap-2 py-2.5 px-4 h-[42px]"
             >
@@ -136,22 +217,22 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
             </button>
           </div>
 
-          <div className="flex-1 order-1 sm:order-2">
+          <div className="flex-1">
             <GoToButton
-              text={details.name}
-              branchId={details.id}
+              text="Ir"
+              branchId={details.branch.id}
               mapRoute="private"
-              onClick={() => setIsOpen(false)}
             />
           </div>
-        </DialogFooter>
-      </DialogContent>
+        </div>
+      </div>
 
+      {/* Keep the dialogs for reviews and recommendations */}
       <Dialog open={reviewsOpen} onOpenChange={setReviewsOpen}>
         <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[65vw] lg:w-[55vw] xl:w-[50vw] 
           max-h-[85vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden flex flex-col">
-          <DialogTitle className="sr-only">Reseñas de {details.name}</DialogTitle>
-          
+          <DialogTitle className="sr-only">Reseñas de {details.branch.name}</DialogTitle>
+
           <div className="p-4 sm:p-6 border-b border-[#E6D7C3]/50 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -160,15 +241,71 @@ export const DialogDetailStores = ({ details, setIsOpen }: detailsProps) => {
                 </div>
                 <h2 className="font-medium text-[#5F4B32] text-lg truncate">
                   Reseñas de{" "}
-                  <span className="font-semibold">{details.name}</span>
+                  <span className="font-semibold">{details.branch.name}</span>
                 </h2>
               </div>
-              
+              <button
+                onClick={() => setReviewsOpen(false)}
+                className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full 
+                  hover:bg-white transition-all duration-300 text-[#5F4B32] hover:text-[#8B5A2B]"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
-          </div>    
-          <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar p-4 sm:p-6">
-            <ReviewsWidget branchId={details.id} />
           </div>
+          <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar p-4 sm:p-6">
+            <ReviewsWidget branchId={details.branch.id} />
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={recommendOpen} onOpenChange={setRecommendOpen}>
+        <DialogContent className="w-[95vw] sm:w-[85vw] md:w-[65vw] lg:w-[55vw] xl:w-[50vw] 
+          max-h-[85vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden flex flex-col">
+          <DialogTitle className="sr-only">Recomendar {details.branch.name}</DialogTitle>
+
+          <div className="p-4 sm:p-6 border-b border-[#E6D7C3]/50 flex-shrink-0">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="bg-[#DB8935]/10 p-1.5 rounded-full">
+                  <Heart className="h-5 w-5 text-[#DB8935]" />
+                </div>
+                <h2 className="font-medium text-[#5F4B32] text-lg truncate">
+                  Recomendar{" "}
+                  <span className="font-semibold">{details.branch.name}</span>
+                </h2>
+              </div>
+              <button
+                onClick={() => setRecommendOpen(false)}
+                className="bg-white/80 backdrop-blur-sm p-1.5 rounded-full 
+                  hover:bg-white transition-all duration-300 text-[#5F4B32] hover:text-[#8B5A2B]"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar p-4 sm:p-6">
+            <div className="space-y-4">
+              <p className="text-[#5F4B32]">
+                Comparte tu experiencia y ayuda a otros a descubrir este lugar.
+              </p>
+              <Textarea
+                placeholder="¿Qué te gustó de este lugar?"
+                className="min-h-[120px] border-amber-200 focus:border-amber-400 focus:ring-amber-400/20"
+                value={recommendation}
+                onChange={(e) => setRecommendation(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter className="px-4 sm:px-6 py-4 border-t border-[#E6D7C3]/50 mt-auto flex-shrink-0 bg-[#FBF7F4]">
+            <Button
+              onClick={handleRecommend}
+              className="bg-[#DB8935] hover:bg-[#C07830] text-white w-full"
+              disabled={!recommendation.trim()}
+            >
+              Enviar recomendación
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

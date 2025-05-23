@@ -6,15 +6,16 @@ export interface UpdateProfileRequest {
   phone_number?: string;
 }
 
-export interface CoffeeLoverProfile {
+export interface CoffeeLoverProfileType {
   id: number;
   person: {
     user_id: number;
     user_email: string;
-    type_document: string;
-    number_document: string;
+    type_document?: string;
+    number_document?: string;
     full_name: string;
     phone_number: string;
   };
   coffee_coins: number;
+  is_verified?: boolean;
 }

@@ -5,6 +5,7 @@ export interface CreatePageDto {
     title: string;
     description: string;
     status: boolean;
+    type?: string
   }
   
   export interface CreatePageResponse {

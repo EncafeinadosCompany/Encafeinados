@@ -37,7 +37,7 @@ const PrincipalCoffeelover = () => {
   }, []);
 
   return (
-    <div className='flex flex-col max-w-full overflow-hidden h-full relative'>
+    <div className='flex flex-col max-w-full  overflow-hidden h-full relative'>
       <CoffeeBackground
         coffeeCount={10}
         circleCount={6}

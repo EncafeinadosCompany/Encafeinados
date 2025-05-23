@@ -8,6 +8,7 @@ import { BookOpenText, LayoutGrid, Check, X, Loader2 } from "lucide-react";
 import toast from 'react-hot-toast';
 import { Badge } from "@/common/ui/badge";
 import { useCreatePageMutation } from "@/api/mutations/album/pages.mutation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select";
 
 interface CreatePageDialogProps {
   albumId: number;
@@ -26,9 +27,18 @@ export const CreatePageDialog: React.FC<CreatePageDialogProps> = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  
+  const [pageType, setPageType] = useState("page");
   const createPageMutation = useCreatePageMutation();
   
+
+
+  const albumTypes = [
+    { value: "page", label: "Página estándar" },
+    { value: "special", label: "Página especial" },
+    { value: "event", label: "Página de evento" },
+    { value: "collection", label: "Colección" }
+  ];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -104,6 +114,28 @@ export const CreatePageDialog: React.FC<CreatePageDialogProps> = ({
                 className="border-amber-200 focus:border-amber-400 focus:ring-amber-400/20 mt-1 min-h-[120px]"
               />
             </div>
+
+              
+            {/* <div>
+              <Label htmlFor="type" className="text-sm font-medium text-[#6F4E37]">
+                Tipo de página
+              </Label>
+              <Select
+                value={pageType}
+                onValueChange={setPageType}
+              >
+                <SelectTrigger className="border-amber-200 focus:border-amber-400 focus:ring-amber-400/20 mt-1">
+                  <SelectValue placeholder="Selecciona el tipo de página" />
+                </SelectTrigger>
+                <SelectContent>
+                  {albumTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div> */}
             
             <div className="bg-amber-50/50 p-3 rounded-lg border border-amber-100 text-xs text-amber-700">
               <p className="flex items-start">

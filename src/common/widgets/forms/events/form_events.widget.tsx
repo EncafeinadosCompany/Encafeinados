@@ -9,7 +9,7 @@ import { RegisterEventSchema, RegisterEventSchemaType } from "@/common/utils/sch
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
-import { CalendarCheck, CalendarIcon, Coffee, Store } from "lucide-react"
+import { CalendarCheck, CalendarIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import MapSearch from "../../map/map_search.widget"
 
@@ -36,7 +36,8 @@ export const FormRegisterEvents = () => {
             location: '',
             start_date: start_time ? new Date(start_time) : new Date(),
             is_free: true,
-            organizer: 'Carlitos'
+            organizer: 'Carlitos',
+            branch_ids: []
         }
     })
 
@@ -52,6 +53,7 @@ export const FormRegisterEvents = () => {
             location: values.location,
             is_free: values.is_free,
             organizer: values.organizer,
+            branch_ids: values.branch_ids
         }
 
         try {
@@ -125,7 +127,6 @@ export const FormRegisterEvents = () => {
                                                 {...field}
                                             />
                                         </FormControl>
-                                        {/* <FormDescription>La descripción debe tener al menos 10 caracteres.</FormDescription> */}
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -231,45 +232,12 @@ export const FormRegisterEvents = () => {
                                             </FormItem>
                                         )}
                                     />
-                                    <FormField
-                                control={method.control}
-                                name="branch_ids"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Sucursales</FormLabel>
-                                        <FormControl>
-                                            <Select
-                                                isMulti
-                                                options={BranchesAll?.map(branch => ({
-                                                    value: branch.id,
-                                                    label: branch.name
-                                                })) || []}
-                                                className="basic-multi-select"
-                                                classNamePrefix="select"
-                                                placeholder="Buscar sucursales..."
-                                                noOptionsMessage={() => "No se encontraron sucursales"}
-                                                onChange={(selected) => {
-                                                    const selectedIds = selected.map(item => item.value);
-                                                    field.onChange(selectedIds);
-                                                }}
-                                                value={BranchesAll?.filter(branch => field.value?.includes(branch.id))
-                                                    .map(branch => ({
-                                                        value: branch.id,
-                                                        label: branch.name
-                                                    })) || []}
-                                            />
-                                        </FormControl>
-                                        <FormDescription>Selecciona las sucursales donde se realizará el evento</FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+
                                 </div>
                             </div>
 
 
                             <div>
-
 
                                 <FormField
                                     control={method.control}
@@ -320,6 +288,42 @@ export const FormRegisterEvents = () => {
                                         <FormControl>
                                             <Switch checked={field.value} onCheckedChange={field.onChange} />
                                         </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={method.control}
+                                name="branch_ids"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Sucursales</FormLabel>
+                                        <FormControl>
+                                            <Select
+                                                isMulti
+                                                options={BranchesAll?.map(branch => ({
+                                                    value: branch.id,
+                                                    label: branch.name
+                                                })) || []}
+                                                className="basic-multi-select"
+                                                classNamePrefix="select"
+                                                placeholder="Buscar sucursales..."
+                                                noOptionsMessage={() => "No se encontraron sucursales"}
+                                                closeMenuOnSelect={false}
+                                                hideSelectedOptions={false}
+                                                onChange={(selected) => {
+                                                    const selectedIds = selected.map(item => item.value);
+                                                    field.onChange(selectedIds);
+                                                }}
+                                                value={BranchesAll?.filter(branch => field.value?.includes(branch.id))
+                                                    .map(branch => ({
+                                                        value: branch.id,
+                                                        label: branch.name
+                                                    })) || []}
+                                            />
+                                        </FormControl>
+                                        <FormDescription>Selecciona las sucursales donde se realizará el evento</FormDescription>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
