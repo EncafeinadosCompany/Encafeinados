@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 import { ScrollIndicator } from "@/common/atoms/indicator";
-import BranchStatusModal from "@/common/molecules/admin_branch/details_branches/branch_status_modal";
+import BranchStatusModal from "@/common/molecules/admin_branch/branch_status_modal";
 import { LeftCardBranch } from "@/common/molecules/admin_branch/details_branches/left_card.molecule";
 import { MessageBranches } from "@/common/molecules/admin_branch/details_branches/message_branches.molecule";
 import { RightCardBranch } from "@/common/molecules/admin_branch/details_branches/right_card.molecule";

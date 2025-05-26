@@ -43,8 +43,6 @@ export default function StoreDetailsCard() {
     },
   });
 
-  console.log(attributes)
-
 
   const handleRecommend = (values: RecommendationSchemaType) => {
     console.log(values);

@@ -11,3 +11,9 @@ export interface EvenType {
     status?: string;
     branch_ids?: number[];
 }
+
+
+export interface EventClienType {
+    idEvenClient: number,
+		idEvent: number
+  }

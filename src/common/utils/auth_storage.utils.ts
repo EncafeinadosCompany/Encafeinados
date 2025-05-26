@@ -36,6 +36,11 @@ export const getAuthStorage = () => {
     };
 };
 
+export const useLocalStorage = (key: string): number | null => {
+  const item = localStorage.getItem(key);
+  return item ? Number(item) : null;
+};
+
 
 export const saveCoffeeLoverProfileToStorage = (profileData: CoffeeLoverProfileType) => {
     // Save the entire profile if needed

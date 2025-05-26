@@ -1,6 +1,6 @@
 import AuthClient from "@/api/client/axios"
-import { EvenType } from "@/api/types/events/events.types"
-import { useQuery } from "@tanstack/react-query"
+import { EventClienType, EvenType } from "@/api/types/events/events.types"
+import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 
 const authClient = new AuthClient()
 
@@ -25,3 +25,17 @@ export const useEventAll= () => {
       } 
     })
   }
+
+  export const useClientEvent = (
+    id: number,
+    options?: UseQueryOptions<EventClienType[]> 
+  ) => {
+    return useQuery<EventClienType[]>({
+      queryKey: ['clientEvent', id],
+      queryFn: async () => {
+        const response = await authClient.get<EventClienType[]>(`/event-client/${id}`);
+        return response;
+      },
+      ...options 
+    });
+  };

@@ -25,7 +25,14 @@ export const CardAlbum = ({hoveredAlbum, album, formatDate}:AlbumProps) => {
         bgColor: "bg-[#F5E4D2]",
         textColor: "text-[#A67C52]",
       };
-    } 
+    } else if (album.type === "EVENT") {
+      statusConfig = {
+        text: "Eventos",
+        dotColor: "bg-[#359BDB]",
+        bgColor: "bg-[#D2E4F5]",
+        textColor: "text-[#527CA6]",
+      }; 
+    }
     
     
     return (
@@ -33,7 +40,7 @@ export const CardAlbum = ({hoveredAlbum, album, formatDate}:AlbumProps) => {
         className={`relative rounded-xl overflow-hidden transition-all duration-500 transform ${hoveredAlbum === album.id ? "scale-[1.02]" : "scale-100"} group bg-[#f2f5f2] shadow-md hover:shadow-xl cursor-pointer`}>
         
         {/* Imagen de la cafetería */}
-        <div className="relative h-36 overflow-hidden">
+        <div className="relative h-40 overflow-hidden">
             {/* Gradiente para mejor contraste */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/10 z-10"></div>
 
@@ -66,7 +73,7 @@ export const CardAlbum = ({hoveredAlbum, album, formatDate}:AlbumProps) => {
             </div>
             
             {/* Título de la cafetería */}
-            <h2 className="text-xl font-bold text-gray-900 mb-3 relative z-10 group-hover:text-amber-800 transition-colors">
+            <h2 className="text-xl font-bold min-h-[6vh] max-h-[6vh] overflow-hidden text-ellipsis line-clamp-2 text-gray-900 mb-3 relative z-10 group-hover:text-amber-800 transition-colors">
                 {album.title}
             </h2>
 

@@ -59,6 +59,30 @@ export const useAlbumsQuery = () => {
 };
 
 
+export const useAlbumsClientQuery = () => {
+  return useQuery<AlbumResponse[], Error>({
+    queryKey: ['albums'],
+    queryFn: async () => {
+      try {
+        const response = await authClient.get<AlbumsListResponse>('/albums/client');
+        
+        const albumsData = response.albums || [];
+        
+        if (!Array.isArray(albumsData)) {
+          return [];
+        }
+        
+        return albumsData;
+      } catch (error) {
+        throw error; 
+      }
+    },
+    refetchOnWindowFocus: true,
+    retry: 1
+  });
+};
+
+
 export const usePageByAlbumQuery = (id: string | null) => {
   return useQuery<AlbumPageResponse, Error>({
     queryKey: ['albums', id],
