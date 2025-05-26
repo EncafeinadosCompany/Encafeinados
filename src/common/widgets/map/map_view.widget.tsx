@@ -279,7 +279,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     const allTags = cafes.flatMap(cafe => cafe.tags);
     return [...new Set(allTags)];
   }, [cafes]);
-
   const {
     searchTerm: filterSearchTerm,
     setSearchTerm: setFilterSearchTerm,
@@ -288,7 +287,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     resetFilters,
     sortedCafes,
     isFilterModalOpen: filterModalOpen,
-    toggleFilterModal: toggleFilterModalOriginal
+    toggleFilterModal: toggleFilterModalOriginal,
+    hasActiveFilters
   } = useSearchFilter(cafes);
 
   const toggleFilterModal = useCallback(() => {
@@ -407,29 +407,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
       return () => clearTimeout(resultTimer);
     }, 200);
 
-    return () => clearTimeout(filterTimer);
+        return () => clearTimeout(filterTimer);
   }, [debouncedSearchValue, userLocation, mapInstance, sortedCafes.length]);
-  const hasActiveFilters = useMemo(() => {
-    const hasSearchTerm = Boolean(searchTerm);
-    
-    const hasCustomFilters = Object.entries(filterOptions).some(([key, value]) => {
-      if (key === 'sortBy' && value === 'distance') return false;
-      
-      if (
-        (key === 'minRating' && value === 0) ||
-        (key === 'maxDistance' && value === 100) ||
-        (key === 'selectedTags' && (!value || value.length === 0)) ||
-        (key === 'selectedStore' && value === 0) ||
-        value === false
-      ) {
-        return false;
-      }
-      
-      return true;
-    });
-    
-    return hasSearchTerm || hasCustomFilters;
-  }, [searchTerm, filterOptions]);
 
   // ==============================
   // CALLBACKS
@@ -1009,8 +988,7 @@ return (
           </motion.button>
         )}
       </AnimatePresence>
-    </div>
-    <MapSidebar
+    </div>    <MapSidebar
       viewMode={viewMode}
       showSidebar={showSidebar}
       sortedCafes={sortedCafes}
@@ -1019,6 +997,7 @@ return (
       searchTerm={searchTerm}
       filterOptions={filterOptions} 
       totalCafeCount={cafes.length} 
+      hasActiveFilters={hasActiveFilters}
       setShowSidebar={setShowSidebar}
       setViewMode={setViewMode}
       setActiveCafe={setActiveCafe}
