@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Star, MapPin, Clock, Heart, Route } from 'lucide-react';
+import { Star, MapPin, Clock, Heart, Route, Wifi, Car, CreditCard, Coffee } from 'lucide-react';
 import { Cafe } from '@/api/types/map/map_search.types';
 import HighlightText from '@/common/atoms/HighlightText';
+import { useBranchSchedules } from '@/api/queries/schedules/schedule.query';
+import { getCurrentScheduleInfo, isBranchOpenNow } from '@/common/utils/schedules/schedule.utils';
 
 interface CafeCardProps {
   cafe: Cafe;
@@ -37,6 +39,22 @@ const CafeCard: React.FC<CafeCardProps> = ({
   onFavoriteToggle,
   onNavigate
 }) => {
+  // Obtener horarios reales de la API
+  const { data: schedulesData } = useBranchSchedules(cafe.id);
+  
+  // Calcular estado actual basado en horarios reales
+  const isCurrentlyOpen = schedulesData ? isBranchOpenNow(schedulesData) : cafe.isOpen;
+  const currentInfo = schedulesData ? getCurrentScheduleInfo(schedulesData) : null;
+  
+  // Función para obtener ícono de atributo
+  const getAttributeIcon = (attributeName: string) => {
+    const name = attributeName.toLowerCase();
+    if (name.includes('wifi') || name.includes('internet')) return <Wifi size={12} />;
+    if (name.includes('parking') || name.includes('estacionamiento')) return <Car size={12} />;
+    if (name.includes('tarjeta') || name.includes('card') || name.includes('pago')) return <CreditCard size={12} />;
+    return <Coffee size={12} />;
+  };
+
   return (
     <motion.div
       custom={index}
@@ -91,28 +109,37 @@ const CafeCard: React.FC<CafeCardProps> = ({
               Sin reseñas
             </div>
           )}
-        </div>
-
-        <div className="flex justify-between items-center mt-2">
+        </div>        <div className="flex justify-between items-center mt-2">
           <div className={`px-2 py-0.5 rounded-full text-xs font-medium
-            ${cafe.isOpen 
+            ${isCurrentlyOpen 
               ? 'bg-green-100 text-green-700' 
               : 'bg-red-100 text-red-700'
             }`}
           >
-            {cafe.isOpen ? 'Abierto' : 'Cerrado'}
+            {isCurrentlyOpen ? 'Abierto' : 'Cerrado'}
           </div>
-        </div>
-
+          
+          {/* Mostrar horario actual si está disponible */}
+          {currentInfo && currentInfo.openTime && currentInfo.closeTime && (
+            <div className="text-xs text-gray-600">
+              {currentInfo.openTime} - {currentInfo.closeTime}
+            </div>
+          )}
+        </div>        {/* Atributos de la cafetería */}
         <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
           <div className="flex items-center gap-1">
             <MapPin size={14} className="text-[#6F4E37]" />
             <span>{cafe.distance}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Clock size={14} className="text-[#6F4E37]" />
-            <span>{cafe.openTime}</span>
-          </div>
+          {/* Mostrar información adicional si está cerrado */}
+          {!isCurrentlyOpen && currentInfo?.nextOpenTime && currentInfo?.nextOpenDay && (
+            <div className="flex items-center gap-1">
+              <Clock size={14} className="text-amber-600" />
+              <span className="text-xs">
+                Abre {currentInfo.nextOpenDay} {currentInfo.nextOpenTime}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="flex gap-2 mt-3">
