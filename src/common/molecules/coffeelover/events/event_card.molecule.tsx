@@ -7,9 +7,11 @@ import { Button } from "@/common/ui/button"
 
 interface EventCardProps {
     event: EvenType
+    handleClient: (eventId: number) => void
+    status: any
 }
 
-export function EventCard({ event }: EventCardProps) {
+export function EventCard({ event, handleClient, status }: EventCardProps) {
     // Format the date to extract day and month
     const date = new Date(event.start_date)
     const day = date.getDate()
@@ -73,7 +75,8 @@ export function EventCard({ event }: EventCardProps) {
 
             <div className="bg-gray-50 px-4 py-3 border-t border-gray-100 flex justify-end mt-auto">
                 <Button
-                    onClick={() => navigate(`/coffeelover/album`)}
+                    onClick={() => handleClient(event.id as number)}
+                    disabled={status === "loading" || status === "success"}
                     className="px-3 py-1.5 xs:px-4 xs:py-2 rounded-md bg-amber-500 hover:bg-amber-600 text-white font-medium text-xs xs:text-sm transition-colors duration-200 shadow-sm"
                 >
                     Inscribirme

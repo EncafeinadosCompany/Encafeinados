@@ -25,8 +25,7 @@ export const useBranchesID = (id: number) => {
     queryFn: async () => {
       const response = await authClient.get<BrancheIDresponse>(`/branches/${id}`)
       return response
-    },
-    staleTime: 1000 * 60 * 5
+    }
   })
 }
 

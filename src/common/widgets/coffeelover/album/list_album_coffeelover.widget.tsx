@@ -1,4 +1,4 @@
-import { Albums, useAlbumsQuery} from "@/api/queries/album/album.query";
+import {  useAlbumsQuery} from "@/api/queries/album/album.query";
 import { useEffect, useState } from "react";
 import { Stamp} from "lucide-react";
 import { format } from "date-fns";
@@ -137,7 +137,7 @@ export default function ListAlbum() {
 
                 {/* Albums Display - Enhanced with better card design */}
                 {!isLoading && !error && filteredAlbums.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                         {filteredAlbums.map((album) => {
                             const randomRotation = Math.random() * 4 - 2
 
