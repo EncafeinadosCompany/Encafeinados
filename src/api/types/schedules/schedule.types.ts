@@ -1,17 +1,18 @@
 export interface BranchSchedule {
   id: number;
-  branch_id: number;
-  day_of_week: string;
+  day: string; // Cambiado de day_of_week a day
   open_time: string;
   close_time: string;
-  is_closed: boolean;
-  created_at: string;
-  updated_at: string;
+  // Campos opcionales que pueden no venir en la respuesta
+  branch_id?: number;
+  is_closed?: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface BranchSchedulesResponse {
-  message: string;
-  schedules: BranchSchedule[];
+  message?: string;
+  schedules?: BranchSchedule[];
 }
 
 export interface ScheduleByBranchResponse {

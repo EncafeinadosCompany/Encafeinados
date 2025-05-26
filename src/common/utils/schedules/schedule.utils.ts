@@ -1,6 +1,21 @@
 import { BranchSchedule, CurrentScheduleInfo, DayOfWeek, DAY_ORDER } from '@/api/types/schedules/schedule.types';
 
 /**
+ * Mapeo de nombres de días en español a inglés
+ */
+const SPANISH_TO_ENGLISH_DAYS: Record<string, DayOfWeek> = {
+  'lunes': 'monday',
+  'martes': 'tuesday', 
+  'miércoles': 'wednesday',
+  'miercoles': 'wednesday', // Sin tilde también
+  'jueves': 'thursday',
+  'viernes': 'friday',
+  'sábado': 'saturday',
+  'sabado': 'saturday', // Sin tilde también
+  'domingo': 'sunday'
+};
+
+/**
  * Convierte el día de la semana de JavaScript (0=domingo, 6=sábado) a nuestro formato
  */
 export const getJsDayToDayOfWeek = (jsDay: number): DayOfWeek => {
@@ -25,10 +40,20 @@ export const getCurrentDayOfWeek = (): DayOfWeek => {
 };
 
 /**
- * Convierte tiempo en formato HH:mm a minutos desde medianoche
+ * Normaliza el nombre del día de español a inglés
+ */
+export const normalizeDayName = (day: string): DayOfWeek => {
+  const normalizedDay = day.toLowerCase().trim();
+  return SPANISH_TO_ENGLISH_DAYS[normalizedDay] || 'monday';
+};
+
+/**
+ * Convierte tiempo en formato HH:mm:ss o HH:mm a minutos desde medianoche
  */
 export const timeToMinutes = (time: string): number => {
-  const [hours, minutes] = time.split(':').map(Number);
+  const parts = time.split(':');
+  const hours = parseInt(parts[0], 10);
+  const minutes = parseInt(parts[1], 10);
   return hours * 60 + minutes;
 };
 
@@ -45,7 +70,9 @@ export const minutesToTime = (minutes: number): string => {
  * Formatea el tiempo a formato AM/PM
  */
 export const formatTimeAmPm = (time: string): string => {
-  const [hours, minutes] = time.split(':').map(Number);
+  const parts = time.split(':');
+  const hours = parseInt(parts[0], 10);
+  const minutes = parseInt(parts[1], 10);
   const ampm = hours >= 12 ? 'PM' : 'AM';
   const displayHours = hours % 12 || 12;
   return `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
@@ -59,9 +86,10 @@ export const isBranchOpenNow = (schedules: BranchSchedule[]): boolean => {
   const currentDay = getCurrentDayOfWeek();
   const currentTime = now.getHours() * 60 + now.getMinutes();
 
-  const todaySchedule = schedules.find(schedule => 
-    schedule.day_of_week.toLowerCase() === currentDay
-  );
+  const todaySchedule = schedules.find(schedule => {
+    const normalizedDay = normalizeDayName(schedule.day);
+    return normalizedDay === currentDay;
+  });
 
   if (!todaySchedule || todaySchedule.is_closed) {
     return false;
@@ -83,12 +111,11 @@ export const isBranchOpenNow = (schedules: BranchSchedule[]): boolean => {
  */
 export const getCurrentScheduleInfo = (schedules: BranchSchedule[]): CurrentScheduleInfo => {
   const currentDay = getCurrentDayOfWeek();
-  const now = new Date();
-  const currentTime = now.getHours() * 60 + now.getMinutes();
-
-  const todaySchedule = schedules.find(schedule => 
-    schedule.day_of_week.toLowerCase() === currentDay
-  );
+  
+  const todaySchedule = schedules.find(schedule => {
+    const normalizedDay = normalizeDayName(schedule.day);
+    return normalizedDay === currentDay;
+  });
 
   if (!todaySchedule || todaySchedule.is_closed) {
     // Buscar el próximo día que esté abierto
@@ -101,8 +128,6 @@ export const getCurrentScheduleInfo = (schedules: BranchSchedule[]): CurrentSche
     };
   }
 
-  const openTime = timeToMinutes(todaySchedule.open_time);
-  const closeTime = timeToMinutes(todaySchedule.close_time);
   const isOpen = isBranchOpenNow(schedules);
 
   return {
@@ -124,9 +149,10 @@ export const getNextOpenTime = (schedules: BranchSchedule[], fromDay: DayOfWeek)
     const nextDayIndex = (currentDayIndex + i) % 7;
     const nextDay = DAY_ORDER[nextDayIndex];
     
-    const schedule = schedules.find(s => 
-      s.day_of_week.toLowerCase() === nextDay && !s.is_closed
-    );
+    const schedule = schedules.find(s => {
+      const normalizedDay = normalizeDayName(s.day);
+      return normalizedDay === nextDay && !s.is_closed;
+    });
     
     if (schedule) {
       return {
@@ -170,11 +196,14 @@ export const getWeeklyScheduleFormatted = (schedules: BranchSchedule[]): Array<{
   isClosed: boolean;
 }> => {
   return DAY_ORDER.map(day => {
-    const schedule = schedules.find(s => s.day_of_week.toLowerCase() === day);
+    const schedule = schedules.find(s => {
+      const normalizedDay = normalizeDayName(s.day);
+      return normalizedDay === day;
+    });
     
     if (!schedule || schedule.is_closed) {
       return {
-        day: day.charAt(0).toUpperCase() + day.slice(1),
+        day: day,
         openTime: '',
         closeTime: '',
         isClosed: true
@@ -182,7 +211,7 @@ export const getWeeklyScheduleFormatted = (schedules: BranchSchedule[]): Array<{
     }
     
     return {
-      day: day.charAt(0).toUpperCase() + day.slice(1),
+      day: day,
       openTime: formatTimeAmPm(schedule.open_time),
       closeTime: formatTimeAmPm(schedule.close_time),
       isClosed: false

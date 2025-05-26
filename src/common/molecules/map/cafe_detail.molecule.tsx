@@ -189,7 +189,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 }) => {
   const { data: attributesData, isLoading: attributesLoading } =
     useBranchAttributes(cafe.id);
-  const { data: schedulesData } = useBranchSchedules(cafe.id);
+  const { data: schedulesData, isLoading: schedulesLoading } = useBranchSchedules(cafe.id);
   const [showAllTags, setShowAllTags] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
