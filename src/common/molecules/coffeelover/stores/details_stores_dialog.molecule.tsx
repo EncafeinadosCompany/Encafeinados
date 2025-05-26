@@ -13,10 +13,8 @@ import { ArrowLeft, Loader2, MessageCircleDashedIcon, MoveLeftIcon } from "lucid
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/common/ui/form";
 import { useCreateRecommendationMutation } from "@/api/mutations/recommendation/recommendation.mutation";
 import { useForm } from "react-hook-form";
-import { RecommendationType } from "@/api/types/recommendation/recommendation.type";
 import { recommendationSchema, RecommendationSchemaType } from "@/common/utils/schemas/recommendation/recommendation.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { a } from "framer-motion/dist/types.d-DSjX-LJB";
 import { useBranchAttributes } from "@/api/queries/attributes/attributes.query";
 
 export default function StoreDetailsCard() {
@@ -27,6 +25,7 @@ export default function StoreDetailsCard() {
   if (!id) {
     return null;
   }
+  console.log(id);
   const { data: details, isLoading, isError } = useBranchesID(Number(id));
   const {data:attributes, isLoading: isLoading_attributes, isError: isError_attributes} =  useBranchAttributes(id);
   const verifit = localStorage.getItem("isVerified");

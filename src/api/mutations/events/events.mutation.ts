@@ -34,3 +34,31 @@ export const useEventMutation = () => {
       }
     })
   }
+
+
+  export const useClientEventMutation = () => {
+    const queryClient = useQueryClient()
+    const useErrors = useError("eventsClient")
+    const navigate = useNavigate()
+  
+    return useMutation<any, Error, number >({
+      mutationFn: async (id: number): Promise<any> => {
+  
+        try {
+          const response = await authClient.post<any>('/event-client', {event_id: id}); 
+          return response;
+    
+        } catch (error: any) {
+          throw handleApiError(error)
+        }
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['events'] })
+        navigate(`/coffeelover/album`)
+        toast.success("Registro exitoso");
+      },
+      onError: (error: any) => {
+        useErrors(error);
+      }
+    })
+  }

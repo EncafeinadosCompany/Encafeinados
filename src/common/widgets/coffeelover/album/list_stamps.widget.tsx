@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import { useMockStampsByPageQuery, useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stamps.query";
+import { useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stamps.query";
 import { getAuthStorage } from "@/common/utils/auth_storage.utils";
 import { Stamps } from "@/api/types/album/stamps.types";
-import { CardStamp } from "@/common/molecules/coffeelover/stamps/card_stamp.molecule";
 import { CardEmpy } from "@/common/molecules/coffeelover/stamps/card_empy.molecule";
 import { CardStampsError } from "@/common/molecules/coffeelover/stamps/card_error.molecule";
 import { CardStampSkeleton } from "@/common/molecules/coffeelover/stamps/card_skeleton.molecule";
 import { CardStampsDetails } from "@/common/molecules/coffeelover/stamps/dialog_details.molecule";
-import { StampsByClientResponse } from "@/api/types/album/stamps.types";
 import { Badge } from "@/common/ui/badge";
 import { Card, CardContent } from "@/common/ui/card";
 import { motion } from "framer-motion";
-import { Calendar, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 interface PruebaProps {
     id_page: number;
