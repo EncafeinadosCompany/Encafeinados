@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/common/ui/form"
-import { BranchesImagen, image } from "@/api/types/branches/branches.types"
+import {  image } from "@/api/types/branches/branches.types"
 import { deleteImagenBrandMutation, useUpdateImagenBrandMutation } from "@/api/mutations/branches/branch_states.mutation"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/common/ui/card"
 import toast from "react-hot-toast"
@@ -79,13 +79,11 @@ export default function ImagesGallery() {
     useEffect(() => {
         if (data_images) {
             setCafes(data_images)
-            console.log('data_images', cafes)
         }
-        console.log('no esta')
+
     }, [data_images, cafes])
 
 
-    console.log('hola', cafes)
 
 
 

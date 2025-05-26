@@ -7,6 +7,7 @@ import RoleRoute from "./RouleRoute";
 import { RouteLoadingIndicator } from "./route_loading_indicador.router";
 import { FormRegisterEvents } from "@/common/widgets/forms/events/form_events.widget";
 import { EventList } from "@/common/widgets/admin/events/event.widget";
+import { Prueba_album } from "@/common/widgets/prueba_album";
 const  StoreDetailsCard = lazy(()=> import("@/common/molecules/coffeelover/stores/details_stores_dialog.molecule"));
 
 
@@ -79,7 +80,7 @@ const AuthRoutes = () => {
 
             {/* PRUEBAS */}
 
-            <Route path="/prueba" element={< StoreDetailsCard />} />
+            <Route path="/prueba" element={<Prueba_album />} />
 
             {/* PUBLIC ROUTES */}
             <Route path="/" element={<HomePage />} />
@@ -111,6 +112,7 @@ const AuthRoutes = () => {
                     <Route path="Profile" element={<ProfileView />} />
                     <Route path="map-coffelover" element={<MapView />} />
                     <Route path="prueba" element={< StoreDetailsCard />} />
+                    <Route path="pruebas" element={<Prueba_album />} />
                     <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
                 </Route>     
               </Route>
