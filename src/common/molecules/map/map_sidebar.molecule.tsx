@@ -17,6 +17,7 @@ interface MapSidebarProps {
   searchTerm: string;
   filterOptions: FilterOptions; 
   totalCafeCount: number; 
+  hasActiveFilters: boolean;
   setShowSidebar: (show: boolean) => void;
   setViewMode: (mode: 'map' | 'list') => void;
   setActiveCafe: (id: number | null) => void;
@@ -34,13 +35,14 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   searchTerm,
   filterOptions, 
   totalCafeCount, 
+  hasActiveFilters,
   setShowSidebar,
   setViewMode,
   setActiveCafe,
   toggleFavorite,
   navigateToCafe,
   resetFilters
-}) => {  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+}) => {const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { isMobile } = useAppData();
 
   useEffect(() => {
@@ -49,12 +51,7 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
     };
     
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-  
-  }, [filterOptions, searchTerm]);
+    return () => window.removeEventListener('resize', handleResize);  }, []);
 
   return (
     <AnimatePresence>
@@ -114,13 +111,10 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                 overscrollBehavior: 'contain',
                 height: 'calc(100% - 80px)' 
               }}
-            >
-              {sortedCafes.length > 0 ? (
+            >              {sortedCafes.length > 0 ? (
                 <div className="space-y-4 ">
-                  {searchTerm.trim() !== "" || 
-                   filterOptions.minRating > 0 || 
-                   filterOptions.tags.length > 0 || 
-                   filterOptions.onlyOpen === true ? (                    <div className="text-xs text-gray-500 text-center mt-1 mb-3">
+                  {hasActiveFilters ? (
+                    <div className="text-xs text-gray-500 text-center mt-1 mb-3">
                       Mostrando <SafeNumericDisplay value={sortedCafes.length} defaultValue="..." /> de <SafeNumericDisplay value={totalCafeCount} defaultValue="..." /> cafeterías
                       {searchTerm.trim() !== "" && (
                         <span className="ml-1">para "<strong>{searchTerm}</strong>"</span>

@@ -24,28 +24,29 @@ export const useMapData = (
     branches.filter((branch) => branch.status === "APPROVED"),
   [branches]);
 
-
   const cafes: Cafe[] = useMemo(() => {
     if (!branchesData?.branches?.branches) return [];
    
-    return filteredBranches
-      .map((branch: Branch) => {
+    return filteredBranches      .map((branch: Branch) => {
         if (!branch.latitude || !branch.longitude) return null;
        
         const storeLogo = branch.store?.store_logo ||
           "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
+        // Por ahora usamos horarios por defecto hasta que tengamos el endpoint de todos los horarios
+        const defaultOpenTime = "7:00 AM - 6:00 PM";
+        const isCurrentlyOpen = branch.is_open;
 
         const baseData = {
           id: branch.id,
           name: branch.name,
           rating: branch.average_rating ? parseFloat(branch.average_rating) : null,
-          openTime: "7:00 AM - 6:00 PM",
+          openTime: defaultOpenTime,
           image: storeLogo,
           tags: ["Coffee", "Specialty"], // Mantener como fallback
           latitude: branch.latitude,
           longitude: branch.longitude,
-          isOpen: branch.is_open !== undefined ? branch.is_open : true,
+          isOpen: isCurrentlyOpen !== undefined ? isCurrentlyOpen : true,
           status: branch.status,
           phone: branch.phone_number,
           address: branch.address,
@@ -67,8 +68,7 @@ export const useMapData = (
             distanceValue: parseFloat(distanceKm),
           };
         }
-        
-        return {
+          return {
           ...baseData,
           distance: "Unknown distance",
           distanceValue: 999, 

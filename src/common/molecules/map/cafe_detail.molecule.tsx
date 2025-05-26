@@ -9,7 +9,8 @@ import {
   ChevronUp,
   MessageSquare,
   X,
-  Tag
+  Tag,
+  Clock
 } from "lucide-react";
 import { Cafe } from "@/api/types/map/map_search.types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
@@ -18,6 +19,8 @@ import {
   SocialNetworkType,
 } from "@/common/utils/social_networks.utils";
 import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
+import WeeklySchedule from "@/common/molecules/schedules/weekly_schedule.molecule";
+import { useBranchSchedules } from "@/api/queries/schedules/schedule.query";
 import toast from "react-hot-toast";
 
 import SafeNumericDisplay from "@/common/atoms/SafeNumericDisplay";
@@ -186,6 +189,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 }) => {
   const { data: attributesData, isLoading: attributesLoading } =
     useBranchAttributes(cafe.id);
+  const { data: schedulesData, isLoading: schedulesLoading } = useBranchSchedules(cafe.id);
   const [showAllTags, setShowAllTags] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
@@ -522,6 +526,24 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   )}
 
                   {renderTags()}
+                </div>
+              </div>
+
+              {/* Horario de atención */}
+              <div className="mt-6">
+                <h4 className="font-medium text-[#2C1810] mb-2 flex items-center gap-1.5">
+                  <Clock size={14} className="text-[#6F4E37]" />
+                  <span>Horario de atención</span>
+                </h4>
+
+                <div className="bg-[#F5E4D2] bg-opacity-10 p-4 rounded-lg">
+                  {schedulesData && schedulesData.length > 0 ? (
+                    <WeeklySchedule schedules={schedulesData} />
+                  ) : (
+                    <p className="text-gray-500 text-sm">
+                      Horario no disponible
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

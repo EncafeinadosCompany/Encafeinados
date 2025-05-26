@@ -71,16 +71,34 @@ export const useSearchFilter = (cafes: Cafe[]) => {
       
       return meetsRating && isOpenFilter && hasMatchingTags;
     });
-  }, [cafes, searchTerm, filterOptions]);
-  
+  }, [cafes, searchTerm, filterOptions]);    // Calcular si hay filtros activos usando la lógica correcta
+  const hasActiveFiltersCalculated = useMemo(() => {
+    const hasSearchTerm = Boolean(searchTerm.trim());
+    
+    const hasCustomFilters = Object.entries(filterOptions).some(([key, value]) => {
+      if (key === 'sortBy' && value === 'distance') return false;
+      
+      if (
+        (key === 'minRating' && value === 0) ||
+        (key === 'onlyOpen' && value === false) ||
+        (key === 'tags' && (!value || value.length === 0))
+      ) {
+        return false;
+      }
+      
+      return true;
+    });
+      const result = hasSearchTerm || hasCustomFilters;
+    
+    return result;
+  }, [searchTerm, filterOptions]);
+
   // Ordenar cafés según el criterio seleccionado
   const sortedCafes = useMemo(() => {
     let filtered = [...cafes];
-    let filtersActive = false;
     
     // Aplicar filtro de texto
     if (searchTerm.trim()) {
-      filtersActive = true;
       filtered = filtered.filter(cafe => 
         cafe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         cafe.storeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -89,11 +107,10 @@ export const useSearchFilter = (cafes: Cafe[]) => {
     }
     
     if (filterOptions.minRating > 0) {
-      filtersActive = true;
       filtered = filtered.filter(cafe => cafe.rating >= filterOptions.minRating);
     }
     
-    setHasActiveFilters(filtersActive);
+    setHasActiveFilters(hasActiveFiltersCalculated);
     
     const sorted = [...filtered];
     
