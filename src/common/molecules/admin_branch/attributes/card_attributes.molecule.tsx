@@ -40,7 +40,7 @@ export const CardAttributes = ({ containerRef, canvasRef, badges, selectedBadges
             )}
 
             <div className="absolute inset-0 p-4">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-min">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min">
                     {badges.map((badge) => (
                         <motion.div
                             key={badge.id}

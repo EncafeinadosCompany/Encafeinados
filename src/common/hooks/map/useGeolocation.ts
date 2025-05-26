@@ -51,7 +51,7 @@ export const useGeolocation = (mapInstance: L.Map | null) => {
       // 2do intento: alta precisión, más tiempo de espera
       const options = {
         enableHighAccuracy: attempt > 0,
-        timeout: attempt === 0 ? 3000 : 10000,
+        timeout: attempt === 0 ? 7000 : 10000,
         maximumAge: attempt === 0 ? 60000 : 0 // En el primer intento permitimos cache
       };
       

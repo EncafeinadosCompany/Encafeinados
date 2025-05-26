@@ -1,22 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft,
   Star,
-  Heart,
-  Clock,
   MapPin,
   Navigation,
-  Share2,
-  Copy,
   Phone,
-  ExternalLink,
   ChevronDown,
   ChevronUp,
   MessageSquare,
   X,
-  Tag,
-  Loader,
+  Tag
 } from "lucide-react";
 import { Cafe } from "@/api/types/map/map_search.types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
@@ -26,8 +19,9 @@ import {
 } from "@/common/utils/social_networks.utils";
 import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
 import toast from "react-hot-toast";
-import { useBranchAttributes } from "@/api/queries/branches/branch_attributes.query";
+
 import SafeNumericDisplay from "@/common/atoms/SafeNumericDisplay";
+import { useBranchAttributes } from "@/api/queries/branches/branch.query";
 
 const determineNetworkType = (
   social: any

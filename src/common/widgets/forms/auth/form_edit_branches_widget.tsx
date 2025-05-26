@@ -1,5 +1,3 @@
-import { Input } from "@/common/ui/input";
-
 import { Store, Phone, Coffee, ChevronDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -52,8 +50,6 @@ export default function FormEditBranch() {
             setValue('longitude', useBranches.branch.longitude)
             setBaseAddress(useBranches.branch.address)
         }
-
-        console.log("useBranches:", useBranches);
     }, [useBranches]);
 
 
@@ -69,10 +65,6 @@ export default function FormEditBranch() {
     const onLocationSelect = (lat: number, lng: number, address: string) => {
         setValue("latitude", lat);
         setValue("longitude", lng);
-        // setValue("address", address);
-        console.log("Latitud:", lat);
-        console.log("Longitud:", lng);
-        console.log("Dirección:", address);
         setBaseAddress(address);
     };
 

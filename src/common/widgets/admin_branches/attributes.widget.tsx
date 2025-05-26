@@ -21,7 +21,7 @@ import { useCreateAttributeMutation, useUpdateAttributeMutation } from "@/api/mu
 import { getAuthStorage } from "@/common/utils/auth_storage.utils"
 import { ChevronDown, Coffee } from "lucide-react"
 import { ScrollIndicator } from "@/common/atoms/indicator"
-import DateTimePickerOpenTo from "@/common/ui/dataTimePickerOpenTo"
+
 
 export default function AttributesDashboard() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)

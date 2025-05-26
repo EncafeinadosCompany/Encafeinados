@@ -185,6 +185,7 @@ export const useUpdateImagenBrandMutation = () => {
       toast.success('¡La imagen se ha subido con éxito!', { id: loadingToast });
 
       queryClient.invalidateQueries({ queryKey: ['branches'] });
+      queryClient.invalidateQueries({ queryKey: ['branches_imagen'] });
       queryClient.invalidateQueries({queryKey:['branch-approvals']})
 
     },
@@ -204,9 +205,6 @@ export const deleteImagenBrandMutation =  () => {
   return useMutation<number, Error,any>({
     mutationFn: async (id:number): Promise<any> => {
       try {
-
-        console.log("Id", id)
-
         const response = await authClient.delete(`/images/${id}`)
         return response
 
