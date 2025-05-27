@@ -1,10 +1,10 @@
 .hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; 
+  scrollbar-width: none;  
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none;  
 }
 
 .snap-x {
@@ -19,16 +19,14 @@
   scroll-snap-stop: always;
 }
 
-/* Mobile navigation utilities */
 .mobile-nav-spacing {
-  padding-bottom: 64px; /* Height of the mobile navigation bar */
+  padding-bottom: 64px; 
 }
 
 .mobile-screen-height {
-  height: calc(100vh - 64px); /* Adjust screen height for mobile navigation */
+  height: calc(100vh - 64px); 
 }
 
-/* Fix for content elements being shown under navigation */
 @media (max-width: 767px) {
   .has-mobile-nav {
     padding-bottom: 64px;
@@ -48,4 +46,69 @@
   .mb-safe {
     margin-bottom: env(safe-area-inset-bottom);
   }
+}
+
+.has-mobile-nav {
+  padding-bottom: 64px; 
+}
+
+@media (max-width: 767px) {
+  .has-mobile-nav {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+:root {
+  --z-navbar-mobile: 40;
+  --z-modal-backdrop: 50;
+  --z-modal-content: 51;
+  --z-popover: 52;
+  --z-tooltip: 53;
+  --z-toast: 60;
+}
+
+[data-radix-dialog-overlay],
+[data-radix-alert-dialog-overlay] {
+  z-index: var(--z-modal-backdrop) !important;
+}
+
+[data-radix-dialog-content],
+[data-radix-alert-dialog-content] {
+  z-index: var(--z-modal-content) !important;
+}
+
+[data-radix-popover-content] {
+  z-index: var(--z-popover) !important;
+}
+
+.mobile-navbar {
+  z-index: var(--z-navbar-mobile);
+}
+
+.toast-container {
+  z-index: 60 !important;
+}
+
+.mobile-navbar {
+  z-index: 40;
+}
+
+.modal-backdrop {
+  z-index: 50;
+}
+
+.modal-dialog {
+  z-index: 51;
+}
+
+.popover {
+  z-index: 52;
+}
+
+.tooltip {
+  z-index: 53;
+}
+
+.toast {
+  z-index: 60;
 }

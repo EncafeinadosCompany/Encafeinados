@@ -60,7 +60,6 @@ export const NavGeneral = ({
 
   return (
     <div className="flex h-screen bg-gray-100 w-full overflow-hidden">
-      {/* Sidebar by desktop */}
       {!isMobile && (
         <div
           className={cn(
@@ -138,7 +137,6 @@ export const NavGeneral = ({
               )}
             </div>
 
-            {/* Expand button */}
             {!isExpanded && (
               <Button
                 variant="ghost"
@@ -151,11 +149,9 @@ export const NavGeneral = ({
               </Button>
             )}
 
-            {/* Separator decoration */}
             <div className="mt-3 mx-3 h-[1px] bg-gradient-to-r from-transparent via-amber-200 to-transparent"></div>
           </div>
 
-          {/* Main navigation - Enhanced */}
           <nav className="flex flex-col gap-1 p-2 mt-1 flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200">
             {navItems.map((item) => (
               <Link
@@ -188,7 +184,6 @@ export const NavGeneral = ({
                   {item.title}
                 </span>
 
-                {/* Visual indicator for active item */}
                 {isRouteActive(item.href) && !isExpanded && (
                   <div className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full"></div>
                 )}
@@ -196,7 +191,6 @@ export const NavGeneral = ({
             ))}
           </nav>
 
-          {/* Logout button - With enhanced design */}
           <div className="mt-auto border-t border-gray-100">
             <div className="px-2 py-3">
               {role === ROLES.COFFEE_LOVER && (
@@ -251,7 +245,7 @@ export const NavGeneral = ({
       </main>
 
         {isMobile && (
-          <div className="md:hidden fixed bottom-0  left-0 right-0 bg-white z-[100]">
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white mobile-navbar shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">
             {isMenuExpanded && navItems.length > 4 && (
               <div className="absolute bottom-full w-full bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] rounded-t-2xl border-t border-gray-100 transition-all duration-300">
                 <nav className="grid grid-cols-4 gap-2 p-4">
@@ -295,9 +289,7 @@ export const NavGeneral = ({
               </div>
             )}
 
-            {/* Main bottom navigation */}
             <nav className="flex justify-around items-center h-16 px-2 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">
-              {/* CoffeeCoins Link */}
               {role === ROLES.COFFEE_LOVER && (
                 <Link
                   to="/coffeelover"
@@ -315,7 +307,6 @@ export const NavGeneral = ({
 
 
 
-              {/* First 4 navigation items */}
               {navItems.slice(0, 4).map((item) => (
                 <Link
                   key={item.href}
@@ -339,7 +330,6 @@ export const NavGeneral = ({
                 </Link>
               ))}
 
-              {/* More button when there are more than 5 items */}
               {navItems.length > 5 ? (
                 <button
                   onClick={() => setIsMenuExpanded(!isMenuExpanded)}
