@@ -162,7 +162,7 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
       
       <DialogContent 
         className="w-[95vw] sm:w-[90vw] md:w-[80vw] lg:w-[75vw] xl:w-[65vw] 2xl:w-[60vw]
-          max-h-[95vh] h-auto
+       
           bg-[#FBF7F4] rounded-2xl border-none shadow-xl p-0 overflow-hidden"
         onPointerDownOutside={(e) => {
           if (showCloseWarning || (eventId && formStarted.current && !success)) {
@@ -250,7 +250,7 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
             <div className="h-px bg-gradient-to-r from-transparent via-[#E6D7C3]/50 to-transparent"></div>
             
             {/* Contenido con scroll */}
-            <div className="overflow-y-auto max-h-[calc(95vh-130px)] custom-scrollbar">
+            <div className="overflow-y-auto  max-h-[calc(80vh-130px)]  xl:max-h-[calc(95vh-130px)] custom-scrollbar">
               {success ? (
                 <div className="p-8 text-center">
                   <div className="mx-auto bg-[#DB8935]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">

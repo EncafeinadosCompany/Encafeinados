@@ -135,7 +135,7 @@ export const EventList = () => {
     }
 
     return (
-        <div className="container h-[98vh] mx-auto p-4 overflow-hidden">
+        <div className="container h-full mx-auto p-4 overflow-hidden">
             <div className="bg-white rounded-xl h-full shadow-md border border-[#D4A76A]/20 overflow-hidden">
                 {/* Header with month navigation and search */}
                 <div className="bg-white p-6">
