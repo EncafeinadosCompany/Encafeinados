@@ -41,7 +41,6 @@ const FormRegisterStores = () => {
     })
 
 
-
     useEffect(() => {
        console.log(status) 
     },[status])
@@ -55,7 +54,6 @@ const FormRegisterStores = () => {
             }
         });
     };
-
 
 
     const prepareFormData = async (data: RegisterStoreDto): Promise<RegisterStoreDto> => {

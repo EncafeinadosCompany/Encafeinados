@@ -49,8 +49,6 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
 
         const finalData = {...formData,...data };
         
-        // const cleanPhoneNumber = finalData.phone_number.replace(/\s+/g, '');
-
         const register : RegisterAdminStores = {
             storeData:{
                 id: Number(ref),
