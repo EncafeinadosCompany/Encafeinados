@@ -1,7 +1,5 @@
-import { Page, usePageByAlbumQuery } from "@/api/queries/album/album.query";
+import {usePageByAlbumQuery } from "@/api/queries/album/album.query";
 import HTMLFlipBook from 'react-pageflip';
-
-
 
 import { useRef, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -10,6 +8,7 @@ import ListStamps from "./stamps.widget";
 import { FrontCover } from "../../../molecules/coffeelover/album/front_cover.molecule";
 import { BackCover } from "@/common/molecules/coffeelover/album/back_cover.molecule";
 import { TipsModal } from "@/common/molecules/coffeelover/album/tips_modal.molecule";
+import { Page } from "@/api/types/album/page.types";
 
 
 export default function PageAlbum() {
