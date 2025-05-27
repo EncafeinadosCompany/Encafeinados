@@ -5,7 +5,7 @@ export const RegisterStoreBrancheSchema = [
     name: z.string()
       .nonempty({ message: 'Queremos conocerte, ¿cúal es el nombre de la sucursal?' })
       .min(3, { message: 'El nombre de la sucursal debe tener al menos 3 letras' })
-      .regex(/^[a-záéíóúüñ\s,\-]*$/i, { message: 'El nombre solo puede contener letras, espacios, comas, guiones y tildes' }),
+      .regex(/^[a-záéíóúüñ0-9\s,\-]*$/i, { message: 'El nombre solo puede contener letras, números, espacios, comas, guiones y tildes' }),
     phone_number: z.string()
       .nonempty({ message: "El número de teléfono es clave" })
       .min(7, { message: "Tu número debe tener al menos 7 dígitos, como los pasos para hacer un buen pour-over" })

@@ -1,7 +1,5 @@
 import { Stamps } from "./stamps.types";
 
-
-
 export interface Albums {
     id: number; 
     title: string;
@@ -12,7 +10,6 @@ export interface Albums {
     start_date: string;
     end_date: string;  
 }
-
 export interface CreatePageDto {
     album_id: number;
     title: string;
@@ -38,14 +35,11 @@ export interface PageStampsResponse {
     stamps: Stamps[];
   }
 
-
   export interface Page {
     id: number; 
     title: string;
     description: string;
 } 
-
-
   export interface AlbumPageResponse {
     albumId:number;
     albumTitle:string;
