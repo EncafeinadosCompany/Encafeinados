@@ -130,9 +130,7 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
           setSuccess(true);
           
           if (eventId) {
-            setTimeout(() => {
-              navigate('/admin/album', { replace: true });
-            }, 1500);
+            handleOpenChange(false);
           }
         }
       });
