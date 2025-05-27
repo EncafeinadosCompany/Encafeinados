@@ -15,15 +15,12 @@ import { toast } from 'react-toastify';
 import { CreateAlbumDto, AlbumType } from '@/api/types/album/album.types';
 import { Image, Edit2, BookmarkIcon, AlignLeft, CalendarCheck, InfoIcon, BookPlus, AlertCircle } from 'lucide-react';
 
-// Modifica el schema para aceptar ambos tipos
 const albumSchema = z.object({
   title: z.string().min(3, "El título debe tener al menos 3 caracteres").max(100, "El título no puede exceder 100 caracteres"),
   introduction: z.string().min(10, "La introducción debe tener al menos 10 caracteres"),
-  // Cambia el tipo para aceptar ambos valores
   type: z.enum(["ANNUAL", "EVENT"]),
   start_date: z.date(),
   end_date: z.date(),
-  // Añade entity_id como opcional
   entity_id: z.number().optional(),
 }).refine(data => data.end_date > data.start_date, {
   message: "La fecha de finalización debe ser posterior a la de inicio",
@@ -42,7 +39,7 @@ interface AlbumFormProps {
     entity_id?: number;
   };
   isEventMode?: boolean;
-  onFormInteraction?: () => void; // Nueva prop para registrar interacción
+  onFormInteraction?: () => void;
 }
 
 const AlbumForm: React.FC<AlbumFormProps> = ({ 
@@ -56,18 +53,14 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
   const [logoFile, setLogoFile] = useState<File | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Inicializa con valores predeterminados o con los datos iniciales
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<AlbumFormValues>({
+  const { register, handleSubmit, watch, setValue, formState: { errors }, clearErrors } = useForm<AlbumFormValues>({
     resolver: zodResolver(albumSchema),
     defaultValues: {
       title: '',
       introduction: '',
-      // Usa el tipo que viene en initialData, o el predeterminado según el modo
       type: initialData?.type || (isEventMode ? 'EVENT' : 'ANNUAL'),
-      // Si hay fechas iniciales, conviértelas a objetos Date
       start_date: initialData?.start_date ? new Date(initialData.start_date) : new Date(),
       end_date: initialData?.end_date ? new Date(initialData.end_date) : new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-      // Si hay entity_id, inclúyelo también
       entity_id: initialData?.entity_id
     }
   });
@@ -80,7 +73,7 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
         alert('Por favor sube una imagen en formato JPG, PNG, GIF o WEBP');
         return;
       }
-            if (file.size > 2 * 1024 * 1024) {
+      if (file.size > 2 * 1024 * 1024) {
         alert('La imagen no puede superar los 2MB');
         return;
       }
@@ -106,38 +99,45 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
     fileInputRef.current?.click();
   };
 
-  // Procesar el formulario
   const processForm = async (data: AlbumFormValues) => {
-    // Si estamos en modo evento, mantener las fechas originales
     if (isEventMode && initialData?.start_date && initialData?.end_date) {
       onSubmit({
         ...data,
         logo: "",
         logoFile: logoFile,
-        // Usar las fechas originales del evento
         start_date: initialData.start_date,
         end_date: initialData.end_date,
-        // Incluir entity_id
         entity_id: initialData.entity_id
       });
     } else {
-      // Caso normal (no evento)
       onSubmit({
         ...data,
         logo: "",
         logoFile: logoFile,
-        // Formatear fechas para álbumes regulares
         start_date: format(data.start_date, 'yyyy-MM-dd'),
         end_date: format(data.end_date, 'yyyy-MM-dd')
       });
     }
   };
 
-  // Detectar cualquier interacción con el formulario
   const handleInteraction = () => {
     if (onFormInteraction) {
       onFormInteraction();
     }
+  };
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const disablePastDates = (date: Date) => {
+    return date < today;
+  };
+
+  const disableInvalidEndDates = (date: Date) => {
+    const startDate = watch("start_date");
+    if (date < today) return true;
+    if (startDate && date < startDate) return true;
+    return false;
   };
 
   return (
@@ -147,7 +147,6 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
       onClick={handleInteraction}
       onChange={handleInteraction} 
     >
-      {/* Sección de logo mejorada */}
       <div className="mb-8 relative">
         <Label htmlFor="logo" className="text-[#5F4B32] font-medium mb-2 flex items-center gap-1.5">
           <div className="bg-[#DB8935]/10 p-1 rounded-full">
@@ -209,7 +208,6 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
         />
       </div>
 
-      {/* Título del álbum */}
       <div className="space-y-2">
         <Label htmlFor="title" className="text-[#5F4B32] font-medium flex items-center gap-1.5">
           <div className="bg-[#DB8935]/10 p-1 rounded-full">
@@ -231,7 +229,6 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
         )}
       </div>
 
-      {/* Introducción */}
       <div className="space-y-2">
         <Label htmlFor="introduction" className="text-[#5F4B32] font-medium flex items-center gap-1.5">
           <div className="bg-[#DB8935]/10 p-1 rounded-full">
@@ -253,7 +250,6 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
         )}
       </div>
 
-      {/* Fechas */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label className="text-[#5F4B32] font-medium flex items-center gap-1.5">
@@ -265,31 +261,44 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
           <Popover>
             <PopoverTrigger asChild>
               <Button
-                id="start_date"
                 variant="outline"
-                className="w-full justify-start text-left font-normal bg-white/70 hover:bg-white border-[#E6D7C3]/50 hover:border-[#E6D7C3] text-[#5F4B32] rounded-lg"
-                disabled={isEventMode} // Deshabilitado en modo evento
+                className="w-full justify-start text-left font-normal bg-white/70 hover:bg-white border-[#E6D7C3]/50 focus-visible:ring-[#DB8935] rounded-lg px-3 py-2 transition-all duration-300 hover:border-[#DB8935]/50"
+                disabled={isEventMode}
               >
                 <CalendarIcon className="mr-2 h-4 w-4 text-[#DB8935]" />
                 {watch("start_date") ? (
-                  format(watch("start_date"), 'PP', { locale: es })
+                  format(watch("start_date"), 'PPP', { locale: es })
                 ) : (
-                  <span>Selecciona una fecha</span>
+                  <span>Seleccionar fecha</span>
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-white rounded-xl shadow-lg border border-[#E6D7C3]/50">
+            <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
                 selected={watch("start_date")}
-                onSelect={(date: Date | null) => setValue("start_date", date || new Date())}
-                classNames={{
-                  day_selected: "bg-[#DB8935] text-white hover:bg-[#C87A30]",
-                  day_today: "bg-[#FBF7F4] text-[#DB8935] font-bold",
+                onSelect={(date) => {
+                  if (date && !disablePastDates(date)) {
+                    setValue("start_date", date);
+                    clearErrors("start_date");
+                    if (onFormInteraction) onFormInteraction();
+                  }
                 }}
+                disabled={disablePastDates}
               />
             </PopoverContent>
           </Popover>
+          {errors.start_date && (
+            <p className="text-red-600 text-xs flex items-center gap-1">
+              <AlertCircle size={12} />
+              {errors.start_date.message}
+            </p>
+          )}
+          {isEventMode && (
+            <p className="text-xs text-[#5F4B32]/60">
+              La fecha está vinculada al evento y no se puede modificar
+            </p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -302,35 +311,47 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
           <Popover>
             <PopoverTrigger asChild>
               <Button
-                id="end_date"
                 variant="outline"
-                className="w-full justify-start text-left font-normal bg-white/70 hover:bg-white border-[#E6D7C3]/50 hover:border-[#E6D7C3] text-[#5F4B32] rounded-lg"
-                disabled={isEventMode} // Deshabilitado en modo evento
+                className="w-full justify-start text-left font-normal bg-white/70 hover:bg-white border-[#E6D7C3]/50 focus-visible:ring-[#DB8935] rounded-lg px-3 py-2 transition-all duration-300 hover:border-[#DB8935]/50"
+                disabled={isEventMode}
               >
                 <CalendarCheck className="mr-2 h-4 w-4 text-[#DB8935]" />
                 {watch("end_date") ? (
-                  format(watch("end_date"), 'PP', { locale: es })
+                  format(watch("end_date"), 'PPP', { locale: es })
                 ) : (
-                  <span>Selecciona una fecha</span>
+                  <span>Seleccionar fecha</span>
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-white rounded-xl shadow-lg border border-[#E6D7C3]/50">
+            <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
                 selected={watch("end_date")}
-                onSelect={(date: Date | null) => setValue("end_date", date || new Date())}
-                classNames={{
-                  day_selected: "bg-[#DB8935] text-white hover:bg-[#C87A30]",
-                  day_today: "bg-[#FBF7F4] text-[#DB8935] font-bold",
+                onSelect={(date) => {
+                  if (date && !disableInvalidEndDates(date)) {
+                    setValue("end_date", date);
+                    clearErrors("end_date");
+                    if (onFormInteraction) onFormInteraction();
+                  }
                 }}
+                disabled={disableInvalidEndDates}
               />
             </PopoverContent>
           </Popover>
+          {errors.end_date && (
+            <p className="text-red-600 text-xs flex items-center gap-1">
+              <AlertCircle size={12} />
+              {errors.end_date.message}
+            </p>
+          )}
+          {isEventMode && (
+            <p className="text-xs text-[#5F4B32]/60">
+              La fecha está vinculada al evento y no se puede modificar
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Inputs ocultos */}
       <input 
         type="hidden" 
         {...register("type")} 
@@ -341,7 +362,6 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
         <input type="hidden" {...register("entity_id")} value={initialData.entity_id} />
       )}
       
-      {/* Mensaje informativo para modo evento */}
       {isEventMode && (
         <div className="bg-[#FBF7F4] border border-[#E6D7C3]/70 rounded-xl p-4 flex items-start gap-3">
           <div className="bg-[#DB8935]/10 p-2 rounded-full flex-shrink-0 mt-0.5">
@@ -356,7 +376,6 @@ const AlbumForm: React.FC<AlbumFormProps> = ({
         </div>
       )}
 
-      {/* Botón de envío mejorado */}
       <div className="pt-4">
         <Button 
           type="submit" 
