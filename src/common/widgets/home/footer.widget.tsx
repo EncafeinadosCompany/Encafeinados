@@ -274,20 +274,7 @@ export const Footer = ({ sections }: FooterProps) => {
             © {new Date().getFullYear()} Encafeinados. Todos los derechos reservados.
           </motion.p>
 
-          <motion.div
-            variants={itemVariants}
-            className="flex items-center space-x-4 mt-4 sm:mt-0"
-          >
-            <span>Hecho con ☕ en Medellín</span>
-            <motion.button
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={scrollToTop}
-              className="bg-[#D4A76A] p-2 rounded-full shadow-lg hover:bg-[#A67C52] transition-colors"
-            >
-              <ArrowUp size={16} />
-            </motion.button>
-          </motion.div>
+          
         </div>
       </div>
 

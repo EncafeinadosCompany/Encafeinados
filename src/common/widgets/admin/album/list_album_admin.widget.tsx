@@ -60,11 +60,9 @@ export const ListAlbumWidget = () => {
         setIsDetailOpen(true);
     };
     
-    // Stats
     const totalAlbums = listAlbum?.length || 0;
     const activeAlbums = listAlbum?.filter(album => album.status).length || 0;
 
-    // Función para renderizar el estado de carga con esqueletos
     const renderSkeletons = () => (
         <div className="bg-gradient-to-b from-[#FAF3E0]/30 to-white/80 p-3 md:p-4 rounded-xl h-full">
             <div className="flex items-center justify-between mb-5">
@@ -404,7 +402,6 @@ export const ListAlbumWidget = () => {
                                         </div>
                                     )}
                                     
-                                    {/* Mueve la paginación aquí dentro, como parte del contenido scrollable */}
                                     {totalPages > 1 && (
                                         <div className="mt-5 flex justify-center">
                                             <AlbumPagination

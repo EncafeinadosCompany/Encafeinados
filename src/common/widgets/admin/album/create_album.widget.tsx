@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogTrigger, DialogClose } from '@/common/ui/dialog';
 import { Button } from '@/common/ui/button';
-import { BookPlus, Coffee, Sparkles, AlertTriangle, X } from 'lucide-react';
+import { BookPlus, Coffee, Sparkles, AlertTriangle, X, Calendar } from 'lucide-react';
 import { CreateAlbumDto, AlbumType } from '@/api/types/album/album.types';
 import { cn } from '@/lib/utils';
 import { useCreateAlbumMutation } from '@/api/mutations/album/album.mutation';
@@ -31,9 +31,12 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
   const { mutateAsync: UseCreateAlbumMutation, isPending } = useCreateAlbumMutation();
   const [success, setSuccess] = useState(false);
   const [showCloseWarning, setShowCloseWarning] = useState(false);
+  const [showConflictError, setShowConflictError] = useState(false);
+  const [showDateError, setShowDateError] = useState(false);
+  const [conflictMessage, setConflictMessage] = useState('');
+  const [dateErrorMessage, setDateErrorMessage] = useState('');
   const [countdownSeconds, setCountdownSeconds] = useState(10);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  // Cambiamos esto para que por defecto sea true cuando es un evento
   const formStarted = useRef(!!eventId);
 
   useEffect(() => {
@@ -55,14 +58,61 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
     }
   }, [autoOpen, open, onAfterOpen]);
 
-  // Modificamos esta función para asegurar que capture todos los intentos de cierre
+  // Función para validar fechas
+  const validateDates = (data: CreateAlbumDto): { isValid: boolean; errorMessage?: string } => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Resetear horas para comparar solo fechas
+
+    if (data.start_date) {
+      const startDate = new Date(data.start_date);
+      startDate.setHours(0, 0, 0, 0);
+      
+      if (startDate < today) {
+        return {
+          isValid: false,
+          errorMessage: `La fecha de inicio (${new Date(data.start_date).toLocaleDateString('es-ES')}) no puede ser anterior a hoy (${today.toLocaleDateString('es-ES')})`
+        };
+      }
+    }
+
+    if (data.end_date) {
+      const endDate = new Date(data.end_date);
+      endDate.setHours(0, 0, 0, 0);
+      
+      if (endDate < today) {
+        return {
+          isValid: false,
+          errorMessage: `La fecha de fin (${new Date(data.end_date).toLocaleDateString('es-ES')}) no puede ser anterior a hoy (${today.toLocaleDateString('es-ES')})`
+        };
+      }
+    }
+
+    if (data.start_date && data.end_date) {
+      const startDate = new Date(data.start_date);
+      const endDate = new Date(data.end_date);
+      
+      if (startDate > endDate) {
+        return {
+          isValid: false,
+          errorMessage: 'La fecha de inicio no puede ser posterior a la fecha de fin'
+        };
+      }
+    }
+
+    return { isValid: true };
+  };
+
   const handleOpenChange = (newOpen: boolean) => {
     console.log("handleOpenChange llamado con:", { newOpen, eventId, formStarted: formStarted.current, success });
     
     if (!newOpen) {
-      // Para álbumes de evento, siempre mostrar la alerta a menos que ya haya tenido éxito
+      // No mostrar advertencia si estamos en estado de error o éxito
+      if (showConflictError || showDateError || success) {
+        setOpen(false);
+        return;
+      }
+
       if (eventId && !success) {
-        console.log("Mostrando alerta de confirmación");
         setShowCloseWarning(true);
         
         setCountdownSeconds(10);
@@ -109,6 +159,17 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
     formStarted.current = true;
   };
 
+  const handleConflictClose = () => {
+    setShowConflictError(false);
+    setConflictMessage('');
+    setOpen(false);
+  };
+
+  const handleDateErrorClose = () => {
+    setShowDateError(false);
+    setDateErrorMessage('');
+  };
+
   const handleCreateAlbum = async (data: CreateAlbumDto & { logoFile?: File }) => {
     try {
       const albumType: AlbumType = eventId ? 'EVENT' : 'ANNUAL';
@@ -123,25 +184,38 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
         })
       };
 
+      // Validar fechas antes de enviar
+      const dateValidation = validateDates(albumData);
+      if (!dateValidation.isValid) {
+        setDateErrorMessage(dateValidation.errorMessage || 'Error en las fechas');
+        setShowDateError(true);
+        return;
+      }
+
       console.log("Datos enviados al backend:", albumData);
       
-      await UseCreateAlbumMutation(albumData, {
-        onSuccess: () => {
-          setSuccess(true);
-          
-          if (eventId) {
-            handleOpenChange(false);
-          }
-        }
-      });
+      await UseCreateAlbumMutation(albumData);
+      
+      setSuccess(true);
+      
+      if (eventId) {
+        setTimeout(() => {
+          navigate('/admin/albums', { replace: true });
+        }, 1500);
+      }
       
       setTimeout(() => {
         setSuccess(false);
         setOpen(false);
       }, 2000);
       
-    } catch(err) {
-      console.error("Error al crear álbum:", err);
+    } catch(error: any) {
+      console.error("Error al crear álbum:", error);
+      
+      if (error?.statusCode === 409 || error?.status === 409) {
+        setConflictMessage(error.message || 'Ya existe un álbum para este período');
+        setShowConflictError(true);
+      }
     }
   };
 
@@ -165,17 +239,157 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
        
           bg-[#FBF7F4] rounded-2xl border-none shadow-xl p-0 overflow-hidden"
         onPointerDownOutside={(e) => {
-          if (showCloseWarning || (eventId && formStarted.current && !success)) {
+          if (showCloseWarning || showDateError || (eventId && formStarted.current && !success && !showConflictError)) {
             e.preventDefault();
           }
         }}
         onEscapeKeyDown={(e) => {
-          if (showCloseWarning || (eventId && formStarted.current && !success)) {
+          if (showCloseWarning || showDateError || (eventId && formStarted.current && !success && !showConflictError)) {
             e.preventDefault();
           }
         }}
       >
-        {showCloseWarning ? (
+        {showDateError ? (
+          // Dialog de error de fechas inválidas
+          <div className="p-6 flex flex-col space-y-6">
+            <div className="text-center space-y-4">
+              <div className="mx-auto bg-red-100 w-16 h-16 rounded-full flex items-center justify-center">
+                <Calendar className="h-8 w-8 text-red-600" />
+              </div>
+              
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold text-[#2C1810]">
+                  Fechas Inválidas
+                </h3>
+                <p className="text-[#5F4B32]/80 text-sm">
+                  Las fechas seleccionadas no son válidas para crear el álbum
+                </p>
+              </div>
+            </div>
+
+            <Alert className="border-red-200 bg-red-50">
+              <AlertTriangle className="h-5 w-5 text-red-600" />
+              <AlertTitle className="text-red-800 font-medium mb-2">
+                Error en las fechas
+              </AlertTitle>
+              <AlertDescription className="text-red-700">
+                <p className="leading-relaxed">
+                  {dateErrorMessage}
+                </p>
+              </AlertDescription>
+            </Alert>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <div className="bg-blue-100 p-1.5 rounded-full mt-0.5">
+                  <Coffee className="h-4 w-4 text-blue-600" />
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-medium text-blue-900 text-sm">
+                    Requisitos para las fechas:
+                  </h4>
+                  <ul className="text-blue-800 text-sm space-y-1">
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+                      <span>Las fechas no pueden ser anteriores a hoy</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+                      <span>La fecha de inicio debe ser anterior o igual a la fecha de fin</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+                      <span>Ambas fechas son obligatorias para crear el álbum</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <Button 
+                variant="outline" 
+                className="flex-1 border-[#E6D7C3] text-[#5F4B32] hover:bg-[#F5E4D2]/30"
+                onClick={handleDateErrorClose}
+              >
+                Corregir fechas
+              </Button>
+              <Button 
+                className="flex-1 bg-[#6F4E37] hover:bg-[#5D3D26] text-white"
+                onClick={handleDateErrorClose}
+              >
+                Entendido
+              </Button>
+            </div>
+          </div>
+        ) : showConflictError ? (
+          // Dialog de error de conflicto (álbum duplicado)
+          <div className="p-6 flex flex-col space-y-6">
+            <div className="text-center space-y-4">
+              <div className="mx-auto bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center">
+                <AlertTriangle className="h-8 w-8 text-amber-600" />
+              </div>
+              
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold text-[#2C1810]">
+                  Álbum Anual Ya Existente
+                </h3>
+                <p className="text-[#5F4B32]/80 text-sm">
+                  No se puede crear el álbum porque ya existe uno para este período
+                </p>
+              </div>
+            </div>
+
+            <Alert className="border-amber-200 bg-amber-50">
+              <Calendar className="h-5 w-5 text-amber-600" />
+              <AlertTitle className="text-amber-800 font-medium mb-2">
+                Detalles del conflicto
+              </AlertTitle>
+              <AlertDescription className="text-amber-700">
+                <p className="leading-relaxed">
+                  {conflictMessage}
+                </p>
+              </AlertDescription>
+            </Alert>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <div className="bg-blue-100 p-1.5 rounded-full mt-0.5">
+                  <Coffee className="h-4 w-4 text-blue-600" />
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-medium text-blue-900 text-sm">
+                    ¿Qué puedes hacer?
+                  </h4>
+                  <ul className="text-blue-800 text-sm space-y-1">
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+                      <span>Revisa el álbum existente en la galería de álbumes</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+                      <span>Espera al próximo año para crear un nuevo álbum anual</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0"></span>
+                      <span>Considera crear un álbum de evento específico en su lugar</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <Button 
+                className="flex-1 bg-[#6F4E37] hover:bg-[#5D3D26] text-white"
+                onClick={handleConflictClose}
+              >
+                Entendido
+              </Button>
+            </div>
+          </div>
+        ) : showCloseWarning ? (
+          // Dialog de advertencia de cierre (álbumes de evento)
           <div className="p-6 flex flex-col space-y-6">
             <Alert variant="destructive" className="border-amber-500 bg-amber-50">
               <AlertTriangle className="h-5 w-5 text-amber-500" />
@@ -210,6 +424,7 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
             </Alert>
           </div>
         ) : (
+          // Contenido normal del formulario
           <>
             <div className="sticky top-0 z-10 bg-[#FBF7F4] border-b border-[#E6D7C3]/50">
               <div className="absolute right-4 top-4 z-10">
@@ -246,11 +461,9 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
               </DialogHeader>
             </div>
             
-            {/* Línea divisoria sutil */}
             <div className="h-px bg-gradient-to-r from-transparent via-[#E6D7C3]/50 to-transparent"></div>
             
-            {/* Contenido con scroll */}
-            <div className="overflow-y-auto  max-h-[calc(80vh-130px)]  xl:max-h-[calc(95vh-130px)] custom-scrollbar">
+            <div className="overflow-y-auto max-h-[calc(95vh-130px)] custom-scrollbar">
               {success ? (
                 <div className="p-8 text-center">
                   <div className="mx-auto bg-[#DB8935]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
