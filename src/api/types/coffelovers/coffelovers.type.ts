@@ -1,6 +1,6 @@
 export interface UpdateProfileRequest {
   user_id?: number;
-  user_email?: string;
+  email?: string;
   type_document?: string;
   full_name?: string;
   phone_number?: string;
