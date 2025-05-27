@@ -25,7 +25,7 @@ export default function StoreDetailsCard() {
   if (!id) {
     return null;
   }
-  console.log(id);
+ 
   const { data: details, isLoading, isError } = useBranchesID(Number(id));
   const {data:attributes, isLoading: isLoading_attributes, isError: isError_attributes} =  useBranchAttributes(id);
   const verifit = localStorage.getItem("isVerified");

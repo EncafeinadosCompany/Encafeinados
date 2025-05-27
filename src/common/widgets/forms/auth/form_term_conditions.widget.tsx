@@ -11,7 +11,7 @@ interface TermConditionsProps {
   control: any;
 }
 
-export function TermConditions({ register, errors, control }: TermConditionsProps) {
+export function TermConditions({ errors, control }: TermConditionsProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
