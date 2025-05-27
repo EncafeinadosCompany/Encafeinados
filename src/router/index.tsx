@@ -5,6 +5,10 @@ import PrivateRoute from "./PrivateRouter";
 import RoleRoute from "./RouleRoute";
 
 import { RouteLoadingIndicator } from "./route_loading_indicador.router";
+import { FormRegisterEvents } from "@/common/widgets/forms/events/form_events.widget";
+import { EventList } from "@/common/widgets/admin/events/event.widget";
+import { Prueba_album } from "@/common/widgets/prueba_album";
+const  StoreDetailsCard = lazy(()=> import("@/common/molecules/coffeelover/stores/details_stores_dialog.molecule"));
 
 
 // LAYOUTS
@@ -21,12 +25,16 @@ const RegisterStorePage = lazy(() => import("@/modules/home/views/Login/register
 const RegisterStoreBranches = lazy(() => import("@/common/widgets/forms/auth/form_register_stores_branches.widget"));
 const FinishAdminRegistration = lazy(() => import("@/modules/admin/views/finish_admin_registration_page"));
 
+
+//ADMIN
+const HomeAdmin = lazy(() => import("@/modules/admin/views/home_admin_nav"));
+
+
 // STORES
 const HomeStores = lazy(() => import("@/modules/admin_stores/views/home_stores_nav"));
 const BranchManagement = lazy(() => import("@/common/widgets/admin_stores/branches/branch_management.widget"));
 
 // ADMIN STORES
-const HomeAdminStores = lazy(() => import("@/modules/admin/views/home_admin_stores_nav"));
 const PendingBranchesView = lazy(() => import("@/modules/admin/components/branches/pending_branches_list.component"));
 const AlbumManager = lazy(() => import("@/modules/admin/components/album/album_manager.component"));
 const ImagesGallery = lazy(() => import("@/common/widgets/admin_branches/images.widget"));
@@ -72,7 +80,7 @@ const AuthRoutes = () => {
 
             {/* PRUEBAS */}
 
-            {/* <Route path="/prueba" element={<CanvasDashboard />} /> */}
+            <Route path="/prueba" element={<Prueba_album />} />
 
             {/* PUBLIC ROUTES */}
             <Route path="/" element={<HomePage />} />
@@ -103,6 +111,8 @@ const AuthRoutes = () => {
                     <Route path="review" element={<ReviewView />} />
                     <Route path="Profile" element={<ProfileView />} />
                     <Route path="map-coffelover" element={<MapView />} />
+                    <Route path="prueba" element={< StoreDetailsCard />} />
+                    <Route path="pruebas" element={<Prueba_album />} />
                     <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
                 </Route>     
               </Route>
@@ -124,9 +134,12 @@ const AuthRoutes = () => {
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
-                <Route path="/admin" element={<HomeAdminStores />}>
+                <Route path="/admin" element={<HomeAdmin />}>
                   <Route index element={<PendingBranchesView />} />
-                  <Route path="albums" element={<AlbumManager />}></Route>
+                  <Route path="albums" element={<AlbumManager />}/>
+                  <Route path="event" element={<EventList/>} />
+                  <Route path="form" element={<FormRegisterEvents/>} />
+
                 </Route>
               </Route>
             </Route>

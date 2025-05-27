@@ -36,7 +36,7 @@ export const FeaturedCarouselStores = ({
  
       {/* Content Section */}
       <div className='w-full'>
-        <h2 className="text-xl font-bold mb-4">Destacados</h2>
+        <h2 className="text-lg font-bold mb-4">Destacados</h2>
         
         {/* No Results State */}
         {filteredBranches.length === 0 ? (

@@ -9,7 +9,7 @@ interface SearchProps extends React.ComponentProps<"input"> {
 
 const SearchCoffee = ({className, ...props}:SearchProps) => {
     return (
-        <div className={`relative w-full flex items-center max-w-md ${className}`}>
+        <div className={`relative w-full flex items-center max-w-md  md:max-w-5xl ${className}`}>
         <Search className="absolute left-3 text-gray-500 z-10" size={20} />
         <Input
           data-testid="custom-input-search"  

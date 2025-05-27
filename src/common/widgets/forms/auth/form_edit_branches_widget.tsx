@@ -1,5 +1,3 @@
-import { Input } from "@/common/ui/input";
-
 import { Store, Phone, Coffee, ChevronDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,9 +21,6 @@ export default function FormEditBranch() {
     const { mutateAsync: useUpdateBranches } = useUpdateBranchMutation()
 
     const [baseAddress, setBaseAddress] = useState("");
-
-
-
 
     const { register, setValue, reset, handleSubmit, watch, control, formState: { errors } } = useForm<EditBrancheType>({
         resolver: zodResolver(EditBranchesSchemas),
@@ -52,8 +47,6 @@ export default function FormEditBranch() {
             setValue('longitude', useBranches.branch.longitude)
             setBaseAddress(useBranches.branch.address)
         }
-
-        console.log("useBranches:", useBranches);
     }, [useBranches]);
 
 
@@ -69,13 +62,12 @@ export default function FormEditBranch() {
     const onLocationSelect = (lat: number, lng: number, address: string) => {
         setValue("latitude", lat);
         setValue("longitude", lng);
-        setValue("address", address);
         setBaseAddress(address);
     };
 
     return (
-        <div className="h-[95-vh] md:h-full w-full p-4 grid grid-cols-1 items-center">
-            <Card className=" border-none mx-auto w-full  md:w-5xl bg-white ">
+        <div className="h-full w-full p-4 grid grid-cols-1 items-center">
+            <Card className=" border-none mx-auto w-full md:w-5xl bg-white ">
                 <CardHeader className="flex flex-col items-center relative z-10">
                     <div className="flex items-center justify-center mb-2">
                         <div className="bg-[#DB8935] p-2 rounded-full mr-3">
@@ -99,7 +91,7 @@ export default function FormEditBranch() {
                     </div>
 
                 </CardHeader>
-                <CardContent className="p-6 space-y-4 overflow-y-auto max-h-[70vh] scrollbar-subtle ">
+                <CardContent className="p-6 space-y-4 overflow-y-auto max-h-[65vh] xl:max-h-[70vh] scrollbar-subtle ">
                     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
                         <motion.button
                             initial={{ opacity: 0.5 }}
@@ -154,6 +146,7 @@ export default function FormEditBranch() {
                                     initialLat={watch("latitude")}
                                     initialLng={watch("longitude")}
                                     onLocationSelect={onLocationSelect}
+                                    
                                 />
                             ) : null}
                             <div className="flex justify-center">

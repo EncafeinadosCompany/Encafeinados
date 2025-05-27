@@ -2,9 +2,10 @@ import { FlameIcon as Fire } from "@/common/ui/icons";
 import { Card, CardContent } from "@/common/ui/card";
 import { Dialog } from "@/common/ui/dialog";
 import { useState } from "react";
-import { DialogDetailStores } from "./details_stores_dialog.molecule";
+
 import { ApprovedBranch} from "@/api/types/branches/branches_approval.types";
 import { Coffee } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface FeaturedCardProps {
   branches: ApprovedBranch
@@ -14,37 +15,38 @@ interface FeaturedCardProps {
 export default function FeaturedCard({ branches }: FeaturedCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const navigate = useNavigate()
   
-  // const getStatusConfig = (status: string) => {
-  //   switch (status) {
-  //     case 'APPROVED':
-  //       return {
-  //         color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  //         icon: <Clock className="h-4 w-4" />,
-  //         text: 'Abierto'
-  //       };
-  //     case 'PENDING':
-  //       return {
-  //         color: 'bg-amber-100 text-amber-700 border-amber-200',
-  //         icon: <Clock className="h-4 w-4" />,
-  //         text: 'Próximamente'
-  //       };
-  //     default:
-  //       return {
-  //         color: 'bg-rose-100 text-rose-700 border-rose-200',
-  //         icon: <Clock className="h-4 w-4" />,
-  //         text: 'Cerrado'
-  //       };
-  //   }
-  // };
+  const getStatusConfig = (status: string) => {
+    switch (status) {
+      case 'APPROVED':
+        return {
+          color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+          // icon: <Clock className="h-4 w-4" />,
+          text: 'Destadado'
+        };
+      case 'PENDING':
+        return {
+          color: 'bg-amber-100 text-amber-700 border-amber-200',
+          // icon: <Clock className="h-4 w-4" />,
+          text: 'Próximamente'
+        };
+      default:
+        return {
+          color: 'bg-rose-100 text-rose-700 border-rose-200',
+          // icon: <Clock className="h-4 w-4" />,
+          text: 'Cerrado'
+        };
+    }
+  };
 
-  // const statusConfig = getStatusConfig(branches.status);
+  const statusConfig = getStatusConfig(branches.status);
   return (
     <>
     <div className="max-w-sm xl:max-w-sm  transform transition-transform duration-300 hover:scale-[1.02]">
       <Card 
         className="overflow-hidden border border-[#E6D7C3] shadow-md hover:shadow-xl transition-all duration-300 mb-2 bg-white/80 backdrop-blur-sm"
-        onClick={() => setIsOpen(true)}
+        onClick={() => navigate(`/coffeelover/prueba?branch=${branches.id}`)}
       >
         <CardContent className="p-0 relative">
           <div className="relative h-48 w-full overflow-hidden">
@@ -61,7 +63,7 @@ export default function FeaturedCard({ branches }: FeaturedCardProps) {
           <div className="absolute bottom-3 left-3">
             <div className="bg-[#F5E4D2] text-[#5F4B32] text-sm px-3 py-1 rounded-full flex items-center gap-1 shadow-sm hover:shadow transition-all duration-300">
               <Fire className="h-4 w-4" />
-              <span>{branches.status}</span>
+              <span>{statusConfig ? statusConfig.text: 'Aprovado'}</span>
             </div>
           </div>
         </CardContent>
@@ -98,9 +100,11 @@ export default function FeaturedCard({ branches }: FeaturedCardProps) {
       </div>
 
       {/* MODALS  */}
-      <Dialog  open={isOpen} onOpenChange={setIsOpen}>
+      {/* <Dialog  open={isOpen} onOpenChange={setIsOpen}>
         <DialogDetailStores details={branches} setIsOpen={setIsOpen}></DialogDetailStores>
-       </Dialog>
+       </Dialog> */}
+
+      
     </div>
    
     </>

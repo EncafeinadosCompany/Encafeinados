@@ -18,6 +18,7 @@ interface NavGeneralProps {
   coffeecoins?: number;
   isLoading?: boolean;
   role?: string | null;
+  name?: string | null;
   children?: React.ReactNode;
 }
 
@@ -32,7 +33,7 @@ export const NavGeneral = ({
   setIsExpanded,
   coffeecoins,
   role,
-
+  name,
   logoPath = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
@@ -58,8 +59,7 @@ export const NavGeneral = ({
   };
 
   return (
-    <div className="flex min-h-screen w-full overflow-hidden">
-      {/* Sidebar by desktop */}
+    <div className="flex h-screen bg-gray-100 w-full overflow-hidden">
       {!isMobile && (
         <div
           className={cn(
@@ -89,26 +89,38 @@ export const NavGeneral = ({
                 <div className="absolute inset-0"></div>
 
                 <div className="absolute inset-0 p-0.5">
-                  {logoPath ? (
+                  {logoPath && !name ? (
                     <img
                       src={logoPath}
                       alt="Encafeinados"
-                      className="h-full w-full object-cover rounded "
+                      className="h-full w-full object-cover rounded"
                     />
                   ) : (
-                    <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-amber-500 to-amber-700 rounded shadow-sm">
-                      <Coffee className="h-4 w-4 text-white" />
+                    <div className="flex items-center justify-center h-full w-full bg-[#6F4E37] rounded-full shadow-sm">
+                      {name ? (
+                        <span className="text-[#F5E6C9] font-medium text-sm">
+                          {name.charAt(0).toUpperCase()}
+                        </span>
+                      ) : (
+                        <Coffee className="h-4 w-4 text-[#F5E6C9]" />
+                      )}
                     </div>
                   )}
                 </div>
               </div>
               {isExpanded && (
                 <div className="flex-grow min-w-0 overflow-hidden">
-                  <h1 className="font-bold text-gray-800 leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
-                    <span className="md:text-xs lg:text-sm xl:text-base">
-                      <span className="text-amber-700">ENCA</span>FEINADOS
+                  <h1 className="font-medium text-[#6F4E37] leading-tight truncate max-w-[120px]">
+                    <span className="text-sm">
+                      {name ? `Bienvenido, ${name.split('@')[0]}` : 'Encafeinados'}
                     </span>
                   </h1>
+                  {role === ROLES.COFFEE_LOVER && coffeecoins !== undefined && (
+                    <div className="flex items-center mt-1 text-[#8B593C]">
+                      <img className="w-4 h-4 mr-1 opacity-80" src="/coins.png" alt="Coffee Coins" />
+                      <span className="text-xs">{coffeecoins} granos</span>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -125,7 +137,6 @@ export const NavGeneral = ({
               )}
             </div>
 
-            {/* Expand button */}
             {!isExpanded && (
               <Button
                 variant="ghost"
@@ -138,11 +149,9 @@ export const NavGeneral = ({
               </Button>
             )}
 
-            {/* Separator decoration */}
             <div className="mt-3 mx-3 h-[1px] bg-gradient-to-r from-transparent via-amber-200 to-transparent"></div>
           </div>
 
-          {/* Main navigation - Enhanced */}
           <nav className="flex flex-col gap-1 p-2 mt-1 flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200">
             {navItems.map((item) => (
               <Link
@@ -175,7 +184,6 @@ export const NavGeneral = ({
                   {item.title}
                 </span>
 
-                {/* Visual indicator for active item */}
                 {isRouteActive(item.href) && !isExpanded && (
                   <div className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full"></div>
                 )}
@@ -183,7 +191,6 @@ export const NavGeneral = ({
             ))}
           </nav>
 
-          {/* Logout button - With enhanced design */}
           <div className="mt-auto border-t border-gray-100">
             <div className="px-2 py-3">
               {role === ROLES.COFFEE_LOVER && (
@@ -232,13 +239,13 @@ export const NavGeneral = ({
         </div>
       )}
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <main className={`flex-1 w-full ${isMobile ?  ''  : ''}`}>
-          <Outlet />   
-        </main>
-      
+      <div className="flex-1 flex flex-col h-full mx-auto item-center justify-center min-w-0 overflow-hidden">        
+        <main className={`flex-1 w-full h-full relative  ${isMobile ? 'has-mobile-nav' : ''}`}>
+        <Outlet />
+      </main>
+
         {isMobile && (
-          <div className="md:hidden fixed bottom-0  left-0 right-0 bg-white z-[100]">
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white mobile-navbar shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">
             {isMenuExpanded && navItems.length > 4 && (
               <div className="absolute bottom-full w-full bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] rounded-t-2xl border-t border-gray-100 transition-all duration-300">
                 <nav className="grid grid-cols-4 gap-2 p-4">
@@ -282,9 +289,7 @@ export const NavGeneral = ({
               </div>
             )}
 
-            {/* Main bottom navigation */}
             <nav className="flex justify-around items-center h-16 px-2 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">
-              {/* CoffeeCoins Link */}
               {role === ROLES.COFFEE_LOVER && (
                 <Link
                   to="/coffeelover"
@@ -302,7 +307,6 @@ export const NavGeneral = ({
 
 
 
-              {/* First 4 navigation items */}
               {navItems.slice(0, 4).map((item) => (
                 <Link
                   key={item.href}
@@ -326,7 +330,6 @@ export const NavGeneral = ({
                 </Link>
               ))}
 
-              {/* More button when there are more than 5 items */}
               {navItems.length > 5 ? (
                 <button
                   onClick={() => setIsMenuExpanded(!isMenuExpanded)}

@@ -63,8 +63,8 @@ export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogOverlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
-      <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-[650px] max-h-[90vh] border-0 shadow-lg bg-white rounded-lg overflow-hidden z-50">
-        <div className="relative z-10 flex flex-col max-h-[90vh]">
+      <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-[650px] border-0 shadow-lg bg-white rounded-lg overflow-hidden z-50">
+        <div className="relative max-h-[75vh]  flex flex-col">
           <DialogHeader className="bg-gradient-to-r from-[#F3D19E]/20 to-[#D4A76A]/10 p-4 border-b border-amber-100">
             <DialogTitle className="text-[#6F4E37] flex items-center gap-2">
               <Coffee className="h-5 w-5 text-amber-600" />
@@ -76,7 +76,7 @@ export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="overflow-y-auto p-4 flex-1 scrollbar-coffee bg-white">
+          <div className=" max-h-[60vh] overflow-y-auto p-4 flex-1 scrollbar-coffee bg-white">
             {isLoading ? (
               <div className="py-10 text-center flex flex-col items-center">
                 <div className="h-16 w-16 rounded-full bg-amber-50 flex items-center justify-center mb-3">
@@ -182,14 +182,14 @@ export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({
               
               {data?.status === 'PENDING' && !isLoading && !error && (
                 <>
-                  <Button 
+                  {/* <Button 
                     variant="destructive"
                     onClick={() => branchId && onReject(branchId)}
                     className="flex-1"
                   >
                     <XCircle className="h-4 w-4 mr-1.5" />
                     Rechazar
-                  </Button>
+                  </Button> */}
                   <Button 
                     variant="default"
                     onClick={() => branchId && onApprove(branchId)}

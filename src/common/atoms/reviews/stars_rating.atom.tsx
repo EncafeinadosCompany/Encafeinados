@@ -1,5 +1,6 @@
 import React from "react";
 import { Star } from "lucide-react";
+import { useSafeNumericValue } from "@/common/hooks/useSafeNumericValue";
 
 interface StarsRatingProps {
   value: number;
@@ -16,6 +17,8 @@ export const StarsRating = ({
   size = "md",
   readOnly = false,
 }: StarsRatingProps) => {
+  const { safeValue } = useSafeNumericValue(value);
+
   const starSizes = {
     xs: "w-3 h-3",
     sm: "w-4 h-4",
@@ -40,7 +43,7 @@ export const StarsRating = ({
           >
             <Star
               className={`${starSizes[size]} transition-colors ${
-                starValue <= value
+                starValue <= (safeValue as number)
                   ? "text-amber-400 fill-amber-400"
                   : "text-gray-300"
               }`}

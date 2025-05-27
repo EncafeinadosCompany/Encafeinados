@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { User, Coffee, Edit, Mail, Phone } from 'lucide-react';
-import { CoffeeLoverProfile } from '@/api/types/coffelovers/coffelovers.type';
+import { Coffee, Edit, Mail, Phone } from 'lucide-react';
+import { CoffeeLoverProfileType} from '@/api/types/coffelovers/coffelovers.type';
 import EditProfileModal from './edit_profile_modal.molecule';
 
 interface ProfileInfoProps {
-  profile: CoffeeLoverProfile;
+  profile: CoffeeLoverProfileType;
   onUpdateField: (field: string, value: string) => void;
   isLoading: boolean;
 }
@@ -16,15 +16,25 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const handleSave = (formData: { full_name: string; user_email: string; phone_number: string }) => {
+  const handleSave = (formData: { full_name: string; email: string; phone_number: string }) => {
+    const updateData: any = {};
+    
     if (formData.full_name !== profile.person.full_name) {
-      onUpdateField('full_name', formData.full_name);
+      updateData.full_name = formData.full_name;
     }
-    if (formData.user_email !== profile.person.user_email) {
-      onUpdateField('user_email', formData.user_email);
+    if (formData.email !== profile.person.user_email) {
+      updateData.email = formData.email; 
     }
     if (formData.phone_number !== profile.person.phone_number) {
-      onUpdateField('phone_number', formData.phone_number);
+      updateData.phone_number = formData.phone_number;
+    }
+    
+    if (Object.keys(updateData).length > 0) {
+      console.log('Datos a enviar:', updateData);
+      
+      Object.entries(updateData).forEach(([field, value]) => {
+        onUpdateField(field, value as string);
+      });
     }
     
     setIsEditMode(false);
@@ -41,7 +51,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
           <Edit className="w-4 h-4 text-[#DB8935]" />
 
             
-            {/* Coffee coins badge */}
             <div className="absolute -top-1 -right-1 bg-[#DB8935] text-white text-xs font-medium px-1.5 py-0.5 rounded-full shadow-sm flex items-center gap-0.5">
               <Coffee className="h-2.5 w-2.5" />
               <span>{profile.coffee_coins}</span>
@@ -66,7 +75,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
         </div>
       </div>
 
-      {/* Modal de edición separado */}
       <EditProfileModal
         profile={profile}
         isOpen={isEditMode}

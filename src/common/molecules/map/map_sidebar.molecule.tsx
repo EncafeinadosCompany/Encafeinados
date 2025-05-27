@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Coffee, ArrowLeft } from 'lucide-react';
 import { Cafe } from '@/api/types/map/map_search.types';
 import { FilterOptions } from '@/common/hooks/map/useSearchFilter'; 
 import HighlightText from '@/common/atoms/HighlightText';
 import CafeCard from '@/common/molecules/map/cafe_card.molecule';
+import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
+import { useAppData } from '@/common/context/AppDataContext';
 
 interface MapSidebarProps {
   viewMode: 'map' | 'list';
@@ -15,6 +17,7 @@ interface MapSidebarProps {
   searchTerm: string;
   filterOptions: FilterOptions; 
   totalCafeCount: number; 
+  hasActiveFilters: boolean;
   setShowSidebar: (show: boolean) => void;
   setViewMode: (mode: 'map' | 'list') => void;
   setActiveCafe: (id: number | null) => void;
@@ -32,16 +35,23 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   searchTerm,
   filterOptions, 
   totalCafeCount, 
+  hasActiveFilters,
   setShowSidebar,
   setViewMode,
   setActiveCafe,
   toggleFavorite,
   navigateToCafe,
   resetFilters
-}) => {
+}) => {const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const { isMobile } = useAppData();
+
   useEffect(() => {
-  
-  }, [filterOptions, searchTerm]);
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);  }, []);
 
   return (
     <AnimatePresence>
@@ -64,9 +74,8 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
               <h2 className="text-xl font-bold text-[#2C1810] flex items-center gap-2">
                 <Coffee size={20} className="text-[#6F4E37]" />
                 <span>Cafeterías cercanas</span>
-                {totalCafeCount > 0 && (
-                  <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
-                    {totalCafeCount}
+                {sortedCafes.length > 0 && (                  <span className="ml-2 bg-gray-100 text-[#6F4E37] text-xs rounded-full px-2 py-1">
+                    <SafeNumericDisplay value={sortedCafes.length} defaultValue="..." />
                   </span>
                 )}
               </h2>
@@ -102,17 +111,11 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                 overscrollBehavior: 'contain',
                 height: 'calc(100% - 80px)' 
               }}
-            >
-              {sortedCafes.length > 0 ? (
+            >              {sortedCafes.length > 0 ? (
                 <div className="space-y-4 ">
-                  {searchTerm.trim() !== "" || 
-                   filterOptions.minRating > 0 || 
-                   filterOptions.tags.length > 0 || 
-                   filterOptions.onlyOpen === true ? (
+                  {hasActiveFilters ? (
                     <div className="text-xs text-gray-500 text-center mt-1 mb-3">
-                      Mostrando{" "}
-                      {sortedCafes.length > 0 ? sortedCafes.length : totalCafeCount}{" "}
-                      de {totalCafeCount} cafeterías
+                      Mostrando <SafeNumericDisplay value={sortedCafes.length} defaultValue="..." /> de <SafeNumericDisplay value={totalCafeCount} defaultValue="..." /> cafeterías
                       {searchTerm.trim() !== "" && (
                         <span className="ml-1">para "<strong>{searchTerm}</strong>"</span>
                       )}

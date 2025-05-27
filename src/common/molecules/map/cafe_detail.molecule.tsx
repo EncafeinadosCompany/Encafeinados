@@ -1,22 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft,
   Star,
-  Heart,
-  Clock,
   MapPin,
   Navigation,
-  Share2,
-  Copy,
   Phone,
-  ExternalLink,
   ChevronDown,
   ChevronUp,
   MessageSquare,
   X,
   Tag,
-  Loader,
+  Clock
 } from "lucide-react";
 import { Cafe } from "@/api/types/map/map_search.types";
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
@@ -25,8 +19,12 @@ import {
   SocialNetworkType,
 } from "@/common/utils/social_networks.utils";
 import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
+import WeeklySchedule from "@/common/molecules/schedules/weekly_schedule.molecule";
+import { useBranchSchedules } from "@/api/queries/schedules/schedule.query";
 import toast from "react-hot-toast";
-import { useBranchAttributes } from "@/api/queries/branches/branch_attributes.query";
+
+import SafeNumericDisplay from "@/common/atoms/SafeNumericDisplay";
+import { useBranchAttributes } from "@/api/queries/branches/branch.query";
 
 const determineNetworkType = (
   social: any
@@ -191,6 +189,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 }) => {
   const { data: attributesData, isLoading: attributesLoading } =
     useBranchAttributes(cafe.id);
+  const { data: schedulesData, isLoading: schedulesLoading } = useBranchSchedules(cafe.id);
   const [showAllTags, setShowAllTags] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
@@ -255,7 +254,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 href={normalizedNetwork.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center gap-1.5 bg-gray-50 hover:bg-gray-100 text-[#6F4E37] ${
+                className={`flex items-center gap-1.5 bg-white/80 hover:bg-white text-[#6F4E37] ${
                   hasManyNetworks
                     ? "px-3 py-2 rounded-md"
                     : "px-3 py-1.5 rounded-full"
@@ -277,14 +276,13 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
     );
   };
 
-  // Función para renderizar las etiquetas/atributos
   const renderTags = () => {
     if (attributesLoading) {
       return (
         <div className="py-3 border-t md:border-t-0 border-gray-100">
           <h4 className="font-medium text-[#2C1810] mb-2 flex items-center gap-1.5">
             <Tag size={14} className="text-[#6F4E37]" />
-            <span>Características</span>
+            <span>Especialidades</span>
           </h4>
           <div className="flex flex-wrap gap-2">
             {[1, 2, 3].map((i) => (
@@ -309,7 +307,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
           <h4 className="font-medium text-[#2C1810] mb-2 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <Tag size={14} className="text-[#6F4E37]" />
-              <span>Características</span>
+              <span>Especialidades</span>
             </div>
             {hasManyAttributes && (
               <span className="text-xs text-[#6F4E37]/70">
@@ -323,7 +321,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
               {displayAttributes.map((attr, idx) => (
                 <div key={idx} className="group">
                   <span
-                    className="inline-block px-2.5 py-1 bg-[#F3D19E]/20 text-[#6F4E37] text-xs rounded-full truncate max-w-[180px]"
+                    className="inline-block px-2.5 py-1 bg-[#F5E4D2] text-[#8B5A2B] hover:bg-[#EAD7C1] transition-colors text-xs rounded-full truncate max-w-[180px]"
                     title={attr.attributeName}
                   >
                     {attr.attributeName}
@@ -346,7 +344,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
               <div className="flex justify-center">
                 <button
                   onClick={() => setShowAllTags(!showAllTags)}
-                  className="bg-[#F3D19E]/30 hover:bg-[#F3D19E]/40 text-[#6F4E37] text-xs font-medium px-3 py-1 rounded-full transition-colors flex items-center gap-1"
+                  className="bg-[#F5E4D2] hover:bg-[#EAD7C1] text-[#8B5A2B] text-xs font-medium px-3 py-1 rounded-full transition-colors flex items-center gap-1"
                 >
                   <span>{showAllTags ? "Ver menos" : "Ver todos"}</span>
                   {showAllTags ? (
@@ -392,33 +390,37 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 
   return (
     <>
-      <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden">
-        <div className="relative h-32 sm:h-40 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3 flex-shrink-0">
+      <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden bg-[#FBF7F4] rounded-t-3xl md:rounded-3xl">
+        <div className="relative h-48 sm:h-56 md:h-auto md:w-[40%] lg:w-[40%] xl:w-1/3 flex-shrink-0">
           <img
             src={cafe.image}
             alt={cafe.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover md:rounded-l-3xl"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent md:rounded-l-3xl"></div>
 
           <button
             onClick={onClose}
             aria-label="Close details"
-            className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-colors z-10"
+            className="absolute right-4 top-4 z-10 bg-white/80 backdrop-blur-sm p-1.5 rounded-full 
+    hover:bg-white transition-all duration-300 text-[#5F4B32] hover:text-[#8B5A2B] hover:scale-110"
           >
-            <X size={20} className="text-[#6F4E37]" />
+            <X size={20} />
           </button>
           <div className="absolute bottom-0 left-0 p-4 w-full">
             <h3 className="font-bold text-2xl md:text-3xl lg:text-3xl text-white line-clamp-2">
               {cafe.name}
-            </h3>
+            </h3>{" "}
             <div className="flex items-center justify-between mt-2">
               <div className="flex items-center gap-1 text-amber-500">
                 {cafe.rating ? (
                   <>
                     <Star size={16} className="fill-amber-500" />
                     <span className="font-medium text-white">
-                      {cafe.rating}
+                      <SafeNumericDisplay
+                        value={cafe.rating}
+                        format={(val) => val.toFixed(1)}
+                      />
                     </span>
                     <button
                       onClick={() => setIsReviewsOpen(true)}
@@ -457,11 +459,17 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 )}
               </h2>
               <div className="flex items-center justify-between mt-2">
+                {" "}
                 <div className="flex items-center gap-1 text-amber-500">
                   {cafe.rating ? (
                     <>
                       <Star size={16} className="fill-amber-500" />
-                      <span className="font-medium">{cafe.rating}</span>
+                      <span className="font-medium">
+                        <SafeNumericDisplay
+                          value={cafe.rating}
+                          format={(val) => val.toFixed(1)}
+                        />
+                      </span>
                       <span className="text-sm text-gray-500">
                         (Reseñas disponibles)
                       </span>
@@ -486,7 +494,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                     </p>
                   </div>
 
-                  <div className="bg-white rounded-lg">
+                  <div className="bg-[#FBF7F4] rounded-lg">
                     {renderSocialNetworks()}
                   </div>
                 </div>
@@ -520,6 +528,24 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   {renderTags()}
                 </div>
               </div>
+
+              {/* Horario de atención */}
+              <div className="mt-6">
+                <h4 className="font-medium text-[#2C1810] mb-2 flex items-center gap-1.5">
+                  <Clock size={14} className="text-[#6F4E37]" />
+                  <span>Horario de atención</span>
+                </h4>
+
+                <div className="bg-[#F5E4D2] bg-opacity-10 p-4 rounded-lg">
+                  {schedulesData && schedulesData.length > 0 ? (
+                    <WeeklySchedule schedules={schedulesData} />
+                  ) : (
+                    <p className="text-gray-500 text-sm">
+                      Horario no disponible
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -532,7 +558,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="bg-white/80 backdrop-blur-sm shadow-md rounded-full py-1.5 px-3 flex items-center gap-1.5 border border-gray-100">
+                <div className="bg-white/90 backdrop-blur-sm shadow-md rounded-full py-1.5 px-3 flex items-center gap-1.5 border border-[#E6D7C3]/50">
                   <span className="text-xs text-[#6F4E37]/90 font-medium">
                     Más información
                   </span>
@@ -547,15 +573,17 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
             )}
           </AnimatePresence>
 
-          <div className="absolute md:relative bottom-0 left-0 right-0 py-4 md:py-5 px-4 md:px-6 bg-white/95 md:bg-white backdrop-blur-sm md:backdrop-filter-none border-t border-gray-100 z-10">
+          <div className="absolute md:relative bottom-0 left-0 right-0 py-4 md:py-5 px-4 md:px-6 bg-[#FBF7F4]/95 md:bg-[#FBF7F4] backdrop-blur-sm md:backdrop-filter-none border-t border-[#E6D7C3]/50 z-10">
             <div className="flex items-center gap-3">
               <div className="flex-1 flex gap-2">
                 <motion.button
-                  className={`flex-1 py-3 md:py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-1.5 ${
-                    cafe.isOpen
-                      ? "bg-[#6F4E37] text-white hover:bg-[#5d4230]"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }`}
+                  className={`flex-1 py-3 md:py-2.5 rounded-full font-medium transition-all duration-300 
+    transform hover:scale-[1.02] shadow-md hover:shadow-lg 
+    flex items-center justify-center gap-1.5 ${
+      cafe.isOpen
+        ? "bg-[#6F4E37] text-white hover:bg-[#5d4230]"
+        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+    }`}
                   whileHover={cafe.isOpen ? { scale: 1.02 } : {}}
                   whileTap={cafe.isOpen ? { scale: 0.98 } : {}}
                   onClick={() => {
@@ -583,12 +611,15 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 </motion.button>
 
                 <motion.button
-                  className="flex-1 md:max-w-[200px] bg-white border border-[#6F4E37] text-[#6F4E37] py-3 md:py-2.5 rounded-xl font-medium hover:bg-[#6F4E37]/5 transition-colors flex items-center justify-center gap-1.5"
+                  className="flex-1 md:max-w-[200px] bg-white border border-[#DB8935] text-[#DB8935] 
+    py-3 md:py-2.5 rounded-full font-medium hover:bg-[#DB8935]/5 transition-all 
+    duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-lg 
+    flex items-center justify-center gap-1.5"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setIsReviewsOpen(true)}
                 >
-                  <MessageSquare size={16} className="hidden sm:inline" />
+                  <MessageSquare size={16} className="h-5 w-5" />
                   <span>
                     {cafe.rating
                       ? window.innerWidth <= 380
@@ -601,7 +632,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                 </motion.button>
               </div>
 
-              <div className="relative">
+              {/* <div className="relative">
                 <Popover>
                   <PopoverTrigger asChild>
                     <motion.button
@@ -613,45 +644,57 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                     </motion.button>
                   </PopoverTrigger>
                   <PopoverContent
-                    className="w-64 md:w-72 z-[500] p-0 bg-white shadow-xl border border-gray-200 rounded-xl"
+                    className="w-64 md:w-72 z-[500] p-0 bg-white shadow-xl border-none rounded-2xl"
                     align="end"
                     side={window.innerWidth < 768 ? "top" : "right"}
                     sideOffset={16}
                     avoidCollisions={true}
                   >
-                    <div className="p-4">
-                      <h3 className="font-medium text-gray-900 mb-3">
-                        Compartir cafetería
+                    <div className="p-4 sm:p-5 border-b border-[#E6D7C3]/50">
+                      <h3 className="font-medium text-[#5F4B32] text-base sm:text-lg flex items-center justify-between gap-2 border-b border-[#E6D7C3] pb-2 mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="bg-[#DB8935]/10 p-1.5 rounded-full">
+                            <Share2 size={14} className="text-[#DB8935]" />
+                          </div>
+                          <span>Compartir cafetería</span>
+                        </div>
                       </h3>
-                      <div className="flex flex-col gap-3">
-                        <button
-                          className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors w-full text-left"
-                          onClick={() =>
-                            copyToClipboard(
-                              `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`
-                            )
-                          }
-                        >
-                          <Copy size={16} className="text-[#6F4E37]" />
-                          <span className="flex-1">
-                            {copied ? "Link copiado! ✓" : "Copiar enlace"}
-                          </span>
-                        </button>
+                    </div>
 
-                        <a
-                          className="flex items-center gap-2 p-2.5 rounded-lg hover:bg-gray-50 transition-colors"
-                          href={`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <ExternalLink size={16} className="text-[#6F4E37]" />
-                          <span>Abrir en Google Maps</span>
-                        </a>
-                      </div>
+                    <div className="p-4 sm:p-5 space-y-3">
+                      <button
+                        className="group relative overflow-hidden rounded-xl bg-white/80 hover:bg-white hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 w-full p-3 flex items-center gap-3"
+                        onClick={() =>
+                          copyToClipboard(
+                            `https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`
+                          )
+                        }
+                      >
+                        <div className="rounded-full bg-[#DB8935]/10 p-2">
+                          <Copy size={16} className="text-[#DB8935]" />
+                        </div>
+                        <span className="flex-1 text-[#5F4B32] text-sm font-medium">
+                          {copied ? "Link copiado! ✓" : "Copiar enlace"}
+                        </span>
+                      </button>
+
+                      <a
+                        className="group relative overflow-hidden rounded-xl bg-white/80 hover:bg-white hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 w-full p-3 flex items-center gap-3"
+                        href={`https://maps.google.com/maps?q=${cafe.latitude},${cafe.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className="rounded-full bg-[#DB8935]/10 p-2">
+                          <ExternalLink size={16} className="text-[#DB8935]" />
+                        </div>
+                        <span className="flex-1 text-[#5F4B32] text-sm font-medium">
+                          Abrir en Google Maps
+                        </span>
+                      </a>
                     </div>
                   </PopoverContent>
                 </Popover>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

@@ -21,7 +21,7 @@ import { useCreateAttributeMutation, useUpdateAttributeMutation } from "@/api/mu
 import { getAuthStorage } from "@/common/utils/auth_storage.utils"
 import { ChevronDown, Coffee } from "lucide-react"
 import { ScrollIndicator } from "@/common/atoms/indicator"
-import DateTimePickerOpenTo from "@/common/ui/dataTimePickerOpenTo"
+
 
 export default function AttributesDashboard() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -165,8 +165,8 @@ export default function AttributesDashboard() {
 
 
     return (
-        <div className="container h-[95vh] mx-auto p-4 max-w-6xl ">
-            <div ref={scrollContainerRef} className="bg-white rounded-2xl shadow-sm border border-[#E5E7EB] h-full min-h-[95vh] max-h-[70vh] overflow-y-auto scrollbar-subtle p-6">
+        <div className="container h-full flex flex-col  justify-center  px-2 mx-auto  max-w-6xl ">
+            <div ref={scrollContainerRef} className="bg-white rounded-2xl shadow-sm border border-[#E5E7EB] h-full min-h-[90vh] max-h-[70vh] overflow-y-auto scrollbar-subtle p-6">
                 <div className="mb-8 mt-4 text-center">
                     <div className="inline-flex items-center justify-center mb-2">
                         <div className="bg-[#6F4E37] p-2 rounded-full mr-3">

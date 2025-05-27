@@ -39,8 +39,8 @@ export default function RegisterStoreBranches() {
     const navigate = useNavigate();
     const { data: socialNetworks } = useSocialNetworksQuery();
     const { data: criteria } = useCriteria();
-    const [invalid , setInvalid] = useState(false)
-    const {mutateAsync:useBranchesMutation, status} = useRegisterBrandMutation();
+    const [invalid, setInvalid] = useState(false)
+    const { mutateAsync: useBranchesMutation, status } = useRegisterBrandMutation();
 
 
     const methods = useForm<RegisterStoreBrancheSchemaType>({
@@ -74,14 +74,12 @@ export default function RegisterStoreBranches() {
         const finalData = { ...formData, ...data };
 
         const social = finalData.social_networks || [];
-  
-            if (!social.length) {
-                toast.error("Debes agregar al menos una red social.");
-                return;
-            }
-        
 
-            console.log("data", finalData)
+        if (!social.length) {
+            toast.error("Debes agregar al menos una red social.");
+            return;
+        }
+
         try {
             storeId ? storeId : toast.error('no cuenta con el id')
             const data = {
@@ -98,14 +96,14 @@ export default function RegisterStoreBranches() {
             const name = localStorage.getItem("nameStore");
             showSuccessToast(name)
             navigate("/")
-        } catch (err ) {
+        } catch (err) {
             setStep(0)
             setInvalid(true)
             if ((err as { statusCode?: number })?.statusCode === 404) {
                 return methods.reset()
             }
-            
-            
+
+
         }
 
     }
@@ -114,7 +112,6 @@ export default function RegisterStoreBranches() {
         methods.trigger().then((isValid) => {
             if (isValid) {
                 setFormData(prev => ({ ...prev, ...methods.getValues() }));
-
                 if (step === 1) {
                     const error = validateImageRequirements(Array.isArray(criteria) ? criteria : [], methods.getValues("criteria"));
                     if (error) {
@@ -124,7 +121,6 @@ export default function RegisterStoreBranches() {
                         return;
                     }
                 }
-
                 setStep((prev) => prev + 1)
             }
         })
@@ -151,7 +147,7 @@ export default function RegisterStoreBranches() {
             >
                 <CardHeader className="mb-1 text-center" >
                     <TitleForm
-                        title={step != 4 ? "Formulario de registro de sucursal": ""}
+                        title={step != 4 ? "Formulario de registro de sucursal" : ""}
                         subtitle={(() => {
                             switch (step) {
                                 case 0:
@@ -199,7 +195,7 @@ export default function RegisterStoreBranches() {
                                             initialLng={methods.watch("longitude")}
                                             onLocationSelect={onLocationSelect}>
                                         </MapSearch>
-                                        
+
                                     </div>
                                 )}
 
@@ -241,7 +237,7 @@ export default function RegisterStoreBranches() {
 
                                     ) : (
                                         <Button
-                                            disabled={!methods.formState.isValid || !methods.getValues("social_networks")?.length || status === "pending" }
+                                            disabled={!methods.formState.isValid || !methods.getValues("social_networks")?.length || status === "pending"}
                                             type="submit" className="ml-auto bg-black text-white">{status === "pending" ? "Cargando..." : "Guardar"}</Button>
                                     )}
                                 </div>

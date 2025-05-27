@@ -118,7 +118,12 @@ export const isCafeOpen = (openTime: string, closeTime: string): boolean => {
  * @param rating Numerical rating (e.g., 4.5)
  * @returns String describing the rating (e.g., "Excelente")
  */
-export const getRatingText = (rating: number): string => {
+export const getRatingText = (rating: number | null | undefined): string => {
+  // Handle invalid or missing ratings
+  if (rating === null || rating === undefined || isNaN(rating)) {
+    return "Sin clasificación";
+  }
+  
   if (rating >= 4.5) return "Excelente";
   if (rating >= 4.0) return "Muy bueno";
   if (rating >= 3.5) return "Bueno";
@@ -137,11 +142,19 @@ export const sortCafes = (cafes: any[], criterion: 'distance' | 'rating' | 'name
   
   switch (criterion) {
     case 'distance':
-      return sortedCafes.sort((a, b) => a.distanceValue - b.distanceValue);
+      return sortedCafes.sort((a, b) => {
+        const aValue = a.distanceValue || 999;
+        const bValue = b.distanceValue || 999;
+        return aValue - bValue;
+      });
     case 'rating':
-      return sortedCafes.sort((a, b) => b.rating - a.rating);
+      return sortedCafes.sort((a, b) => {
+        const aRating = a.rating || 0;
+        const bRating = b.rating || 0;
+        return bRating - aRating;
+      });
     case 'name':
-      return sortedCafes.sort((a, b) => a.name.localeCompare(b.name));
+      return sortedCafes.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
     default:
       return sortedCafes;
   }

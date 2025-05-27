@@ -4,6 +4,7 @@ import { formatAddress } from "@/common/utils/map/format_address.utils";
 const MapSettings = {
   getCurrentLocation: async({onLocationSelect, setCurrentAddress, setIsLocating, setCurrentPosition, setSelectedPosition , setSearchQuery}:getCurrentLocationProps) => {
     setIsLocating(true);
+    
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         const lat = pos.coords.latitude;

@@ -2,7 +2,6 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { FormProvider, useForm, UseFormRegister } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight } from "@/common/ui/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/common/ui/button";
@@ -30,7 +29,6 @@ const FormRegisterCoffeelover = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [formData, setFormData] = useState({});
     const useRegisterCoffeelover = useRegisterCoffeloverMutation()
-    const navigate = useNavigate();
 
 
     const methods = useForm<CurrentCoffeeLoverSchema>({
@@ -74,7 +72,7 @@ const FormRegisterCoffeelover = () => {
         }
     }
 
-    const onSubmit = async(data: any) => {
+    const onSubmit = async (data: any) => {
 
         const finalData = { ...formData, ...data };
         const dataCoffeelover = {
@@ -93,14 +91,13 @@ const FormRegisterCoffeelover = () => {
         try {
             await useRegisterCoffeelover.mutateAsync(dataCoffeelover)
             useRegisterCoffeelover.reset();
-            
+
         } catch (error) {
             console.log(error);
-        }finally{
-            toast.remove();     
+        } finally {
+            toast.remove();
         }
     };
-
 
     return (
         <div className="w-full flex flex-col items-center rounded-md max-w-3xl overflow-x-hidden mx-auto h-full max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent relative p-4 sm:p-6 border-none shadow-2xl bg-white/90">
@@ -154,13 +151,13 @@ const FormRegisterCoffeelover = () => {
                                 )}
                                 {
                                     step === 3 && (
-                                       <div className="flex flex-col justify-center items-center h-[20vh]">
-                                         <TermConditions
+                                        <div className="flex flex-col justify-center items-center h-[20vh]">
+                                            <TermConditions
                                                 register={methods.register}
                                                 control={methods.control}
                                                 errors={methods.formState.errors}>
-                                        </TermConditions>
-                                       </div>
+                                            </TermConditions>
+                                        </div>
                                     )
                                 }
                             </AnimatePresence>

@@ -1,4 +1,4 @@
-import { Albums, useAlbumsQuery} from "@/api/queries/album/album.query";
+import {  useAlbumsClientQuery} from "@/api/queries/album/album.query";
 import { useEffect, useState } from "react";
 import { Stamp} from "lucide-react";
 import { format } from "date-fns";
@@ -28,7 +28,7 @@ const SkeletonCard = () => (
 );
 
 export default function ListAlbum() {
-    const { data, error, isLoading } = useAlbumsQuery();
+    const { data, error, isLoading } = useAlbumsClientQuery();
     const [albums, setAlbums] = useState<AlbumResponse[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredAlbums, setFilteredAlbums] = useState<AlbumResponse[]>([]);
@@ -82,23 +82,52 @@ export default function ListAlbum() {
     };
 
     return (
-        <div className="bg-white to-amber-50 min-h-screen p-4 sm:p-6 md:p-8">
-            <div className="max-w-7xl mx-auto">
-                {/* Header with enhanced styling */}
-                <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+        <div className="bg-gray-100 to-amber-50 h-full  p-4 sm:p-6 md:p-5 ">
+            <div className="max-w-7xl mx-auto shadow-2xl rounded-md bg-white p-4 xl:p-6 h-full ">
+            <div className="flex flex-col items-center justify-center pt-4">
                     {/* Title with coffee bean pattern backdrop */}
-                    <div className="flex items-center justify-center mb-8 md:mb-12">
-                    <div className="relative inline-flex items-center px-6 py-3">
-                        <div className="absolute inset-0 bg-orange-100 rounded-full opacity-20"></div>
-                        <Stamp className="h-7 w-7 text-orange-800 mr-3" />
-                        <h2 className="text-2xl md:text-3xl font-serif text-orange-900 tracking-tight">Álbumes</h2>
+                    <div className="mb-4 text-center relative">
+                        {/* Coffee bean background pattern */}
+                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMiIgZmlsbD0icmdiYSgxNDYsIDY0LCAzMiwgMC4xKSIvPjwvc3ZnPg==')] opacity-20 -z-10"></div>
+                        
+                        {/* Logo with coffee-themed styling */}
+                        <div className="relative inline-block">
+                            {/* Subtle coffee stain effect */}
+                            <div className="absolute -inset-4 bg-amber-50 rounded-full opacity-30 blur-xl"></div>
+                            
+                            <h1 className="text-4xl font-serif font-bold bg-gradient-to-br from-amber-900 via-amber-700 to-amber-800 bg-clip-text text-transparent drop-shadow-sm">
+                                Encafeinados
+                            </h1>
+                            
+                            {/* Coffee bean divider */}
+                            <div className="flex items-center justify-center mt-3 mb-2">
+                                <div className="h-px w-12 bg-amber-800/30"></div>
+                                <div className="mx-2 w-4 h-6 bg-amber-800 rounded-full transform rotate-45 relative">
+                                    <div className="absolute inset-0 border-2 border-amber-700 rounded-full transform scale-90"></div>
+                                </div>
+                                <div className="h-px w-12 bg-amber-800/30"></div>
+                            </div>
+                         
+                            {/* Quality indicator */}
+                            <div className="mt-2 flex items-center justify-center">
+                                <div className="px-3 py-1 bg-amber-100 rounded-full text-xs font-medium text-amber-800 flex items-center">
+                                    <span className="mr-1 inline-block w-2 h-2 bg-amber-500 rounded-full"></span>
+                                    Álbumes de Especialidad
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                    {/* Enhanced Search Bar */}
-                   <InputSearch
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}/>
+                    {/* Enhanced Search Bar with Google-like styling */}
+                    <div className="w-full max-w-2xl mx-auto relative group">
+                        <div className="absolute inset-0 bg-white rounded-full shadow-md transition-all duration-300 group-hover:shadow-lg"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-amber-50 via-white to-amber-50 rounded-full opacity-50"></div>
+                        <InputSearch
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
+                        />
+                        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/3 h-0.5 bg-gradient-to-r from-amber-300 via-orange-400 to-amber-300 rounded-full"></div>
+                    </div>
                 </div>
 
                 {/* Type filter buttons */}
@@ -114,7 +143,7 @@ export default function ListAlbum() {
 
                 {/* Loading State */}
                 {isLoading && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
                         {skeletonArray.map((_, index) => (
                             <SkeletonCard key={index} />
                         ))}
@@ -137,7 +166,10 @@ export default function ListAlbum() {
 
                 {/* Albums Display - Enhanced with better card design */}
                 {!isLoading && !error && filteredAlbums.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="h-full max-h-[55vh]  xl:h-[56vh]  xl:max-h-[50vh] overflow-x-hidden overflow-y-auto  xl:flex xl:flex-col  xl:justify-center px-2">
+
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ">
                         {filteredAlbums.map((album) => {
                             const randomRotation = Math.random() * 4 - 2
 
@@ -169,6 +201,7 @@ export default function ListAlbum() {
                             )
                         }
                         )}
+                    </div>
                     </div>
                 )}
             </div>

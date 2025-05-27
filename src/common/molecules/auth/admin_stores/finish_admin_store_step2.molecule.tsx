@@ -1,5 +1,6 @@
 import { InputForm } from "@/common/atoms/auth/input_form.atom"
 import SelectTypeDocument from "@/common/atoms/auth/select_type_document.atom"
+import { TextError } from "@/common/atoms/textError"
 import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 import { Label } from "@radix-ui/react-label"
 import { FileText, Hash, Phone, User } from "lucide-react"
@@ -54,26 +55,24 @@ export const FinistAdminStore2 = ({ register, control, errors }: registerAdminPr
                         </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
+                    <div className="space-y-2">
+                        <Label className={`m-1 flex items-center text-xs transition-colors ${focusedField === "type_document" ? "text-[#DB8935]" : "text-gray-600"}`}>Tipo de documento</Label>
+                        <Controller
+                            control={control}
+                            name="type_document"
+                            render={({ field }) => (
+                                <div className="relative">
+                                    <FileText className="absolute top-3 left-4 text-gray-400" size={16}/>
+                                    <SelectTypeDocument
+                                        className="rounded-full pl-10"
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                    />
+                                    {errors?.type_document && <TextError>{errors.type_document.message}</TextError>}
+                                </div>
+                            )} />
 
-                            <Controller
-                                control={control}
-                                name="type_document"
-                                render={({ field }) => (
-                                    <div className="relative">
-                                        <Label className={`flex items-center m-2 text-xs transition-colors ${focusedField === "type_document" ? "text-[#DB8935]" : "text-gray-600"}`}>Tipo de documento</Label>
-
-                                        <FileText className="absolute top-8 left-3 text-gray-400" size={20} />
-
-                                        <SelectTypeDocument
-                                            className="w-full pl-10 rounded-full border  border-gray-400"
-                                            onValueChange={field.onChange}
-                                            value={field.value}
-                                        />
-                                    </div>
-                                )} />
-                            {errors?.type_document && <p className="text-red-700 text-xs m-2">{errors.type_document.message}</p>}
-                        </div>
+                    </div>
 
                         <div className="relative">
                             <Label className={`flex items-center m-2 text-xs transition-colors ${focusedField === "number_document" ? "text-[#DB8935]" : "text-gray-600"}`}>Número de documento</Label>

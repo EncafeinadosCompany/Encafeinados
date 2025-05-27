@@ -3,6 +3,7 @@ import { BrancheIDresponse, BranchesImagen, BranchesResponse, image } from '../.
 import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse } from '../../types/branches/branches_approval.types'
 
 import AuthClient from '@/api/client/axios'
+import { BranchAttributesResponse } from '@/api/types/branches/branch_attributes.types'
 
 const authClient = new AuthClient()
 
@@ -13,6 +14,7 @@ export const useBranches = () => {
       const response = await authClient.get<BranchesResponseList>('/branches')
       return response
     },
+    staleTime: 1000 * 60 * 5
   })
 }
 
@@ -23,7 +25,7 @@ export const useBranchesID = (id: number) => {
     queryFn: async () => {
       const response = await authClient.get<BrancheIDresponse>(`/branches/${id}`)
       return response
-    },
+    }
   })
 }
 
@@ -33,10 +35,9 @@ export const useImagenBranch = (id:number) => {
     queryKey: ['branches_imagen'],
     queryFn: async (): Promise<image[]> => {
       const response = await authClient.get<BranchesImagen>(`/images/branch/${id}`);
-      console.log("Imagenes", response)
-      
       return response.images ?? [];
     },
+    staleTime: 1000 * 60 * 5
   });
 }
 
@@ -96,6 +97,18 @@ export const useApprovedBranches = () => {
     refetchOnWindowFocus: false
   })
 }
+
+export const useBranchAttributes = (branchId: number | undefined) => {
+  return useQuery<BranchAttributesResponse>({
+    queryKey: ['branchAttributes', branchId],
+    queryFn: async () => {
+      const response = await authClient.get<BranchAttributesResponse>(`/branch-attributes/${branchId}`);
+      return response;
+    },
+    enabled: !!branchId,
+    staleTime: 5 * 60 * 1000, 
+  });
+};
 
 export const useValidateVisit = (coordinates: any, shopId: any) => {
 

@@ -332,8 +332,6 @@ export const PendingBranchesWidget = () => {
         <div className="flex-grow flex flex-col min-h-0 w-full overflow-hidden">
           {renderContent()}
         </div>
-      </Card>
-      
       <BranchApprovalDialog
         branchId={selectedBranch?.id || null}
         isOpen={detailsDialogOpen}
@@ -359,6 +357,8 @@ export const PendingBranchesWidget = () => {
         branchName={getBranchName(selectedBranchForAction)}
         isSubmitting={isSubmitting}
       />
+      </Card>
+      
     </>
   );
 };

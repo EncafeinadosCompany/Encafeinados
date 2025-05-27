@@ -4,6 +4,7 @@ import { Button } from '@/common/ui/button';
 import { Card, CardContent, CardFooter } from '@/common/ui/card';
 import { Navigation, Clock, Phone, Coffee, Star, X, MapPin } from '@/common/ui/icons';
 import { motion } from 'framer-motion';
+import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
 
 interface CafeInfoCardProps {
   id: string;
@@ -51,10 +52,15 @@ export const CafeInfoCard: React.FC<CafeInfoCardProps> = ({
             className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100 transition-colors"
           >
             <X size={20} className="text-gray-600" />
-          </button>
-          <div className="absolute top-2 left-2 bg-white rounded-full px-2 py-1 shadow-md flex items-center">
+          </button>          <div className="absolute top-2 left-2 bg-white rounded-full px-2 py-1 shadow-md flex items-center">
             <Star size={16} className="text-amber-500 mr-1" />
-            <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+            <span className="text-sm font-medium">
+              <SafeNumericDisplay 
+                value={rating} 
+                format={(val) => val.toFixed(1)}
+                defaultValue="..."
+              />
+            </span>
           </div>
         </div>
         

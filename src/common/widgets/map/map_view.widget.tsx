@@ -44,6 +44,7 @@ import MapSidebar from '@/common/molecules/map/map_sidebar.molecule';
 import { containerVariants, cardVariants, pulseVariants } from './map_animations.widget';
 import { useBranches } from '@/api/queries/branches/branch.query';
 import LoadingSpinner from '@/common/atoms/LoadingSpinner';
+import { useAppData } from '@/common/context/AppDataContext';
 // import 'leaflet.markercluster/dist/leaflet.markercluster.css';
 import '@/common/styles/leaflet-markercluster.css';
 
@@ -189,6 +190,7 @@ export interface MapViewProps {
 }
 
 const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
+  const { isMobile } = useAppData();
   const [searchParams] = useSearchParams();
   
   // ==============================
@@ -277,7 +279,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     const allTags = cafes.flatMap(cafe => cafe.tags);
     return [...new Set(allTags)];
   }, [cafes]);
-
   const {
     searchTerm: filterSearchTerm,
     setSearchTerm: setFilterSearchTerm,
@@ -286,7 +287,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     resetFilters,
     sortedCafes,
     isFilterModalOpen: filterModalOpen,
-    toggleFilterModal: toggleFilterModalOriginal
+    toggleFilterModal: toggleFilterModalOriginal,
+    hasActiveFilters
   } = useSearchFilter(cafes);
 
   const toggleFilterModal = useCallback(() => {
@@ -405,29 +407,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
       return () => clearTimeout(resultTimer);
     }, 200);
 
-    return () => clearTimeout(filterTimer);
+        return () => clearTimeout(filterTimer);
   }, [debouncedSearchValue, userLocation, mapInstance, sortedCafes.length]);
-  const hasActiveFilters = useMemo(() => {
-    const hasSearchTerm = Boolean(searchTerm);
-    
-    const hasCustomFilters = Object.entries(filterOptions).some(([key, value]) => {
-      if (key === 'sortBy' && value === 'distance') return false;
-      
-      if (
-        (key === 'minRating' && value === 0) ||
-        (key === 'maxDistance' && value === 100) ||
-        (key === 'selectedTags' && (!value || value.length === 0)) ||
-        (key === 'selectedStore' && value === 0) ||
-        value === false
-      ) {
-        return false;
-      }
-      
-      return true;
-    });
-    
-    return hasSearchTerm || hasCustomFilters;
-  }, [searchTerm, filterOptions]);
 
   // ==============================
   // CALLBACKS
@@ -730,7 +711,7 @@ useEffect(() => {
 
 return (
   <motion.div
-    className={`h-screen w-full relative bg-gray-50 font-sans ${
+    className={`${isMobile ? 'h-[calc(100vh-64px)]' : 'h-screen'} w-full relative bg-gray-50 font-sans ${
       viewMode === 'list' && window.innerWidth >= 768 ? 'md:grid md:grid-cols-[1fr_390px]' : ''
     }`}
     variants={containerVariants}
@@ -1007,8 +988,7 @@ return (
           </motion.button>
         )}
       </AnimatePresence>
-    </div>
-    <MapSidebar
+    </div>    <MapSidebar
       viewMode={viewMode}
       showSidebar={showSidebar}
       sortedCafes={sortedCafes}
@@ -1017,6 +997,7 @@ return (
       searchTerm={searchTerm}
       filterOptions={filterOptions} 
       totalCafeCount={cafes.length} 
+      hasActiveFilters={hasActiveFilters}
       setShowSidebar={setShowSidebar}
       setViewMode={setViewMode}
       setActiveCafe={setActiveCafe}
@@ -1085,7 +1066,7 @@ return (
               </div>
               
               {/* Wrapper para scroll */}
-              <div className="flex-1 overflow-hidden">
+<div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden bg-[#FBF7F4] rounded-t-3xl md:rounded-3xl">
                 {activeCafeData && (
                   <CafeDetail
                     cafe={activeCafeData}

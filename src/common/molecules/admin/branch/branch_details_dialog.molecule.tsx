@@ -18,8 +18,8 @@ export const BranchDetailsDialog = ({ branch, onClose }: BranchDetailsDialogProp
   return (
     <Dialog open={!!branch} onOpenChange={(open) => !open && onClose()}>
       <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" />
-      <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-md border-0 shadow-lg bg-white rounded-lg overflow-hidden z-50">
-        <div className="relative z-10">
+      <DialogContent className="fixed top-1/2  left-1/2 transform -translate-x-1/2 -translate-y-1/2 sm:max-w-md border-0 shadow-lg bg-white rounded-lg overflow-hidden z-50">
+        <div className="relative ">
           <DialogHeader className="bg-gradient-to-r from-green-50/80 to-emerald-50/60 px-4 py-3 border-b border-green-100">
             <DialogTitle className="text-[#2E7D32] flex items-center gap-2">
               <Coffee className="h-4 w-4" />

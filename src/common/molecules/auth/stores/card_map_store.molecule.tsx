@@ -48,7 +48,7 @@ export const CardMapStore = ({
   handleSelectAddress,
 }: SearchProps) => {
   return (
-    <div className="w-full max-w-6xl bg-[#FFFFFF] rounded-xl space-y-4 [container-type:inline-size]">
+    <div className="w-full max-w-8xl bg-[#FFFFFF] rounded-xl space-y-4 [container-type:inline-size]">
       <div className="map-grid">
 
         {/* Search input */}
@@ -149,20 +149,23 @@ export const CardMapStore = ({
 
         <div>
           {/* Responsive map */}
-          <div className="h-[250px] md:h-[250px] w-full rounded-lg overflow-hidden shadow-sm border border-[#D4D4D4]">
+          <div className="h-[250px] md:h-[250px] w-full rounded-lg overflow-hidden shadow-sm border border-[#D4D4D4] relative">
             <MapContainer
               center={selectedPosition || currentPosition || [4.6097, -74.0817]}
               zoom={selectedPosition || currentPosition ? 17 : 12}
               style={{ height: "100%", width: "100%" }}
               zoomControl={false}
               ref={mapRef}
+              className="z-0" // Ensure map container has lowest z-index
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 maxZoom={30}
               />
-              <ZoomControl position="bottomright" />
+              <div className="z-[400]"> {/* Wrapper to ensure controls appear above other elements */}
+                <ZoomControl position="bottomright" />
+              </div>
 
               {selectedPosition && (
                 <Marker

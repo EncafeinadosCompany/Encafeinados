@@ -1,4 +1,5 @@
 import React, { useId } from "react";
+import SafeNumericDisplay from './SafeNumericDisplay';
 
 interface LoadingSpinnerProps {
   message?: string;
@@ -241,16 +242,21 @@ const LoadingSpinner = ({
         <p className={`${textSize} text-amber-800 font-medium ${msgMargin}`}>
           {message}
         </p>
-      )}
-
-      <p className={`${textSize} text-gray-500 font-mono`}>
-        {Math.round(loadingProgress)}%
-      </p>
-
-      <span className="sr-only" aria-live="polite">
+      )}      <p className={`${textSize} text-gray-500 font-mono`}>
+        <SafeNumericDisplay 
+          value={Math.round(loadingProgress)} 
+          suffix="%" 
+        />
+      </p>      <span className="sr-only" aria-live="polite">
         {isComplete
           ? "Carga completa"
-          : `Cargando, ${Math.round(loadingProgress)}% completado`}
+          : <SafeNumericDisplay 
+              value={Math.round(loadingProgress)} 
+              prefix="Cargando, " 
+              suffix="% completado" 
+              defaultValue="Cargando..." 
+            />
+        }
       </span>
     </div>
   );
