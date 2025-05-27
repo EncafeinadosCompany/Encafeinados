@@ -108,6 +108,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
             onClose();
         }
         catch (error) {
+             methods.reset();
             toast.error("Error al registrar la sucursal");
         }
     };

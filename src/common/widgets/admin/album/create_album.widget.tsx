@@ -236,7 +236,7 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
       
       <DialogContent 
         className="w-[95vw] sm:w-[90vw] md:w-[80vw] lg:w-[75vw] xl:w-[65vw] 2xl:w-[60vw]
-          max-h-[95vh] h-auto
+       
           bg-[#FBF7F4] rounded-2xl border-none shadow-xl p-0 overflow-hidden"
         onPointerDownOutside={(e) => {
           if (showCloseWarning || showDateError || (eventId && formStarted.current && !success && !showConflictError)) {
