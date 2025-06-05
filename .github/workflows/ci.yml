@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18]
-        
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -27,22 +27,28 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Change to APP directory
-        run: cd APP
-        shell: bash
-
       - name: Install dependencies
-        working-directory: ./APP
         run: npm ci
 
       - name: Build frontend
-        working-directory: ./APP
         run: npm run build
 
       - name: Start frontend
-        working-directory: ./APP
         run: npm run preview &
+        env:
+          NODE_ENV: test
 
       - name: Wait for frontend to be ready
-        working-directory: ./APP
         run: npx wait-on http://localhost:5173
+
+      - name: Run Cypress E2E tests
+        run: npm run cy:run
+
+      - name: Verify E2E Coverage
+        run: npm run cy:verify-coverage
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-e2e-coverage
+          path: coverage
