@@ -19,11 +19,12 @@ import { BranchApprovalDetails } from '@/api/types/branches/branches_approval.ty
 import { useQueryClient } from "@tanstack/react-query";
 import toast from 'react-hot-toast';
 import { useApproveBranchMutation, useRejectBranchMutation } from "@/api/mutations/branches/branch_states.mutation";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 
 export const PendingBranchesWidget = () => {
   const checkUserAuth = () => {
-    const userId = localStorage.getItem('userId');
+    const userId =  getEncryptedItem('userId');
     if (!userId) {
       toast.error('No se detecta una sesión activa. Por favor, inicia sesión nuevamente.');
       return false;

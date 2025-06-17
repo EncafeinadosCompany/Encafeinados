@@ -7,9 +7,10 @@ import UserReviews from '@/common/molecules/coffeelover/profile/user_reviews.mol
 import { Loader, User, Coffee, Star } from 'lucide-react';
 import { useWindowSize } from '@/common/hooks/useWindowSize';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/ui/tabs';
+import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 
 export const ProfileWidget: React.FC = () => {
-  const id = localStorage.getItem('userId');
+  const id = getEncryptedItem('userId');
   const { data: profile, isLoading, error } = useCoffeeLoverProfile(Number(id));
   const updateProfile = useUpdateProfileMutation();
   const { height } = useWindowSize();

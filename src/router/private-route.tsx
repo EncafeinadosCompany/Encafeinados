@@ -5,6 +5,8 @@ import { Navigate, Outlet } from "react-router-dom";
 const PrivateRoute = () => {
     const { token } = getAuthStorage();
 
+    console.log("Token from storage:", token);
+
     useAutoLogout()
 
     if (!token) {

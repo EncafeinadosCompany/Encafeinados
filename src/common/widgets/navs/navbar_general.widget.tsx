@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { NavItemType } from "@/api/types/nav/nav.types";
 import { NavGeneral } from "@/common/molecules/nav/nav_general.molecule";
-import { getAuthStorage } from "@/common/utils/security/auth_storage.utils";
 import { useLocation } from "react-router-dom";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
+import { UserData } from "@/api/types/auth/auth.types";
 
 export type NavItem = {
   navItems: NavItemType[]
@@ -11,7 +12,7 @@ export type NavItem = {
 export default function NavbarGeneral({ navItems }: NavItem) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  const { user } = getAuthStorage();
+  const user = getEncryptedItem("user") as UserData| null;
   const location = useLocation();
 
 
@@ -54,7 +55,7 @@ export default function NavbarGeneral({ navItems }: NavItem) {
       setIsExpanded={setIsExpanded}
       isMobile={isMobile}
       navItems={navItems}
-      role={user.role || null}
+      role={user?.role || null}
     />
   );
 }
