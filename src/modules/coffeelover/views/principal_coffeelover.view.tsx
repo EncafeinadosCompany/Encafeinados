@@ -7,7 +7,7 @@ import QRScannerDialog from '@/common/molecules/coffeelover/stores/QR_scanner_di
 import { Button } from '@/common/ui/button';
 import { EventList } from '@/common/widgets/coffeelover/events/event_list.widget';
 
-const PrincipalCoffeelover = () => {
+export default function PrincipalCoffeelover () {
   const [globalSearchTerm, setGlobalSearchTerm] = useState("");
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -62,7 +62,7 @@ const PrincipalCoffeelover = () => {
           globalSearchTerm={globalSearchTerm}
           setGlobalSearchTerm={setGlobalSearchTerm}
         />
-        <EventList>         
+        <EventList>
         </EventList>
       </div>
 
@@ -85,4 +85,3 @@ const PrincipalCoffeelover = () => {
   )
 }
 
-export default PrincipalCoffeelover

@@ -26,6 +26,17 @@ export interface PersonData {
   phone_number: string
 }
 
+
+export interface Register_admin_stores {
+  storeData: {
+    id: number
+  },
+  userData: User_Data,
+  personData: PersonData
+}
+
+
+
 export interface RegisterCoffelover {
     userData: User_Data,
     personData: PersonData

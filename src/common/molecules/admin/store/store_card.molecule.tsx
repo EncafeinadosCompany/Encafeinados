@@ -1,5 +1,5 @@
 import React from 'react';
-import { Store } from "@/api/types/stores/stores.type";
+import { StoreDto } from "@/api/types/stores/stores.type";
 import { Card, CardContent } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
@@ -8,9 +8,9 @@ import { Eye, CheckCircle2, XCircle } from "lucide-react";
 import { StoreAvatar } from "@/common/atoms/StoreAvatar";
 
 interface StoreCardProps {
-  store: Store;
+  store: StoreDto;
   index: number;
-  onView: (store: Store) => void;
+  onView: (store: StoreDto) => void;
   onApprove: (id: number) => void;
   onReject: (id: number) => void;
   type?: 'pending' | 'approved' | 'rejected';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Store } from "@/api/types/stores/stores.type";
+import { StoreDto } from "@/api/types/stores/stores.type";
 import { 
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay 
 } from "@/common/ui/dialog";
@@ -8,7 +8,7 @@ import { Badge } from "@/common/ui/badge";
 import { StoreAvatar } from "@/common/atoms/StoreAvatar";
 
 interface StoreDetailsDialogProps {
-  store: Store | null;
+  store: StoreDto | null;
   onClose: () => void;
   onApprove: (id: number) => void;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Store } from "@/api/types/stores/stores.type";
+import { StoreDto } from "@/api/types/stores/stores.type";
 import { 
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay 
 } from "@/common/ui/dialog";
@@ -9,7 +9,7 @@ import { CheckCircle } from "lucide-react";
 import { StoreAvatar } from "@/common/atoms/StoreAvatar";
 
 interface ApprovedStoreDetailsDialogProps {
-  store: Store | null;
+  store: StoreDto | null;
   onClose: () => void;
 }
 

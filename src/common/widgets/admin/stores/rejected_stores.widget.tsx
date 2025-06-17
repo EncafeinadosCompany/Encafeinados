@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Store } from "@/api/types/stores/stores.type";
+import { StoreDto } from "@/api/types/stores/stores.type";
 import { 
   Card, CardContent, CardHeader, CardTitle, CardFooter 
 } from "@/common/ui/card";
@@ -29,7 +29,7 @@ export const RejectedStoresWidget = () => {
   const { data, isLoading, error } = useRejectedStores();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+  const [selectedStore, setSelectedStore] = useState<StoreDto | null>(null);
   const [refreshAnimation, setRefreshAnimation] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,7 +41,7 @@ export const RejectedStoresWidget = () => {
     if (!searchTerm) return rejectedStores;
     
     const term = searchTerm.toLowerCase();
-    return rejectedStores.filter((store: Store) => 
+    return rejectedStores.filter((store: StoreDto) => 
       store.name?.toLowerCase().includes(term) || 
       store.email?.toLowerCase().includes(term)
     );
@@ -70,7 +70,7 @@ export const RejectedStoresWidget = () => {
     setCurrentPage(1);
   }, [searchTerm, itemsPerPage]);
   
-  const handleViewDetails = (store: Store) => {
+  const handleViewDetails = (store: StoreDto) => {
     setSelectedStore(store);
   };
 
@@ -129,7 +129,7 @@ export const RejectedStoresWidget = () => {
 
     return (
       <AnimatePresence mode="popLayout">
-        {paginatedStores.map((store: Store, index:any) => (
+        {paginatedStores.map((store: StoreDto, index:any) => (
           <motion.div
             key={store.id}
             initial={{ opacity: 0, y: 10 }}

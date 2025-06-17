@@ -3,7 +3,7 @@ import { PendingBranchesWidget } from '@/common/widgets/admin/branches/pending_b
 import { ApprovedBranchesWidget } from '@/common/widgets/admin/branches/approved_branches.widget';
 
 
-const PendingBranchesList = () => {
+const BranchManagement = () => {
     return (
       <div className="w-full h-full flex flex-col p-4">
         <div className="flex-grow overflow-hidden rounded-xl shadow-sm bg-white border border-gray-100">
@@ -20,4 +20,4 @@ const PendingBranchesList = () => {
     );
   };
 
-export default PendingBranchesList;
+export default BranchManagement;

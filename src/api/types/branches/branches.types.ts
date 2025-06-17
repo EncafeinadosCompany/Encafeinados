@@ -6,16 +6,6 @@ export interface SocialBranch {
   url?: string;                  
 }
 
-export interface Store {
-  id: number;
-  name: string;
-  type_document: string;
-  number_document: string;
-  logo: string;
-  email: string;
-  phone_number: string;
-  status: string;
-}
   
 export interface Branch {
   id: number;

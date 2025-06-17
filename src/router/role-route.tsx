@@ -15,6 +15,8 @@ const RoleRoute = ({ allowedRoles }: RouteProps) => {
 
     const userRole = (user as { role: string }).role;
 
+    console.log("User role:", userRole);
+
     if (!allowedRoles.includes(userRole) && userRole === ROLES.COFFEE_LOVER) {
         toast.error("Te invitamos a iniciar sesión :)",{icon: "🔒", duration: 5000})
         localStorage.removeItem("user")

@@ -1,11 +1,9 @@
 import React from 'react';
 import ProfileWidget from '@/common/widgets/coffeelover/profile/profile.widget';
-import { useWindowSize } from '@/common/hooks/useWindowSize';
 import { CoffeeBackground } from '@/common/widgets/coffee_background.widget';
 import { useAppData } from '@/common/context/AppDataContext';
 
 const ProfileView: React.FC = () => {
-  const { height } = useWindowSize();
   const { isMobile } = useAppData();
   
   return (

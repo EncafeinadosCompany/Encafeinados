@@ -4,6 +4,7 @@ import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "../auth/authMutations";
+import { Register_admin_stores } from "@/api/types/auth/auth.types";
 
 const authClient = new AuthClient();
 
@@ -12,8 +13,8 @@ export const useAdminStoreMutation = () => {
     const useLonginMutation = useLoginMutation()
     const useErrors = useError("registerAdminStores")
   
-    return useMutation<any, Error, RegisterAdminStores>({
-      mutationFn: async (formData: RegisterAdminStores): Promise<any> => {
+    return useMutation<any, Error, Register_admin_stores>({
+      mutationFn: async (formData: Register_admin_stores): Promise<any> => {
   
         try {
           const response = await authClient.post<any>('/admin/store-admin', formData); 
