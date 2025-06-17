@@ -49,7 +49,7 @@ export const useLoginMutation = () => {
 
       if(data.user.id){
         // localStorage.setItem('userId', data.user.id)
-         saveEncryptedItem('user', data.user.id);
+         saveEncryptedItem('userId', data.user.id);
       }
 
       if (data.user.role === ROLES.COFFEE_LOVER) {
@@ -60,24 +60,22 @@ export const useLoginMutation = () => {
           saveCoffeeLoverProfileToStorage(profileData as CoffeeLoverProfileType);
           
           // Continue with other operations
-          setAuthStorage(data.accessToken, data.user);
+          setAuthStorage(data.accessToken);
           
         })
         .catch(error => {
           console.error("Error fetching coffee lover profile:", error);
-          setAuthStorage(data.accessToken, data.user);
+          setAuthStorage(data.accessToken);
         });
       }
 
-      setAuthStorage(data.accessToken, data.user);
+      setAuthStorage(data.accessToken);
 
-       saveEncryptedItem('userData', data.user);
+       saveEncryptedItem('user', data.user);
 
        pagesPermissions(data.user.role, navigate)
 
-       const m = getEncryptedItem('userData');
-
-       console.log(m)
+      
 
        toast.success("Inicio de sesión exitoso, ¡Bienvenido!");
 

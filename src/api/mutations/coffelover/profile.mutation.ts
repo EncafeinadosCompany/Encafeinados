@@ -5,12 +5,14 @@ import { getAuthStorage } from '@/common/utils/security/auth_storage.utils';
 import toast from 'react-hot-toast';
 import { useError } from '@/common/hooks/auth/useErrors';
 import { handleApiError } from '@/common/utils/errors/handle_api_error.utils';
+import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
+import { UserData } from '@/api/types/auth/auth.types';
 
 const authClient = new AuthClient();
 
 export const useUpdateProfileMutation = () => {
   const queryClient = useQueryClient();
-  const { user } = getAuthStorage();
+  const user = getEncryptedItem("user") as UserData| null;
   const userId = user?.id;
   const useErrors = useError('updateProfile');
 

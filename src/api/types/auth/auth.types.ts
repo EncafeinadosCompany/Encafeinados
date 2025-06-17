@@ -3,13 +3,15 @@ export interface User {
   password: string,
 }
 
-export interface LoginResponse {
-  accessToken: string;
-  user: {
-    id?: 0
+export interface UserData {
+      id?: 0
     email: string;
     role: string;
-  },
+}
+
+export interface LoginResponse {
+  accessToken: string;
+  user: UserData
   storeId?: number
   branchId?: number,
   storeOrBranchId?:number

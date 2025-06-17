@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react"
 import { NavItemType } from "@/api/types/nav/nav.types"
 import { NavGeneral } from "@/common/molecules/nav/nav_general.molecule"
-import { getAuthStorage } from "@/common/utils/security/auth_storage.utils"
+
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
+import {  UserData } from "@/api/types/auth/auth.types"
 
 
 export type NavItem = {
@@ -13,7 +15,7 @@ export type NavItem = {
 export default function NavbarGeneral({ navItems, coffeecoins, isloading}: NavItem) {
   const [isExpanded, setIsExpanded] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
-  const {user} =  getAuthStorage();
+  const user = getEncryptedItem("user") as UserData| null;
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -40,8 +42,8 @@ export default function NavbarGeneral({ navItems, coffeecoins, isloading}: NavIt
         navItems={navItems}
         coffeecoins={coffeecoins ? coffeecoins : 0}
         isLoading={isloading? isloading : false}
-        role={user.role || null}
-        name={user.email || null}
+        role={user?.role || null}
+        name={user?.email || null}
         >
       </NavGeneral>
    
