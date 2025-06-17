@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { ROLES } from '@/common/utils/lists/roles.utils'
 import { CoffeeLoverProfileType } from '@/api/types/coffelovers/coffelovers.type'
-import { saveEncryptedItem } from '@/common/utils/security/storage_encrypted.utils'
+import { getEncryptedItem, saveEncryptedItem } from '@/common/utils/security/storage_encrypted.utils'
 
  
 
@@ -48,7 +48,7 @@ export const useLoginMutation = () => {
 
 
       if(data.user.id){
-        localStorage.setItem('userId', data.user.id)
+        // localStorage.setItem('userId', data.user.id)
          saveEncryptedItem('user', data.user.id);
       }
 
@@ -61,6 +61,7 @@ export const useLoginMutation = () => {
           
           // Continue with other operations
           setAuthStorage(data.accessToken, data.user);
+          
         })
         .catch(error => {
           console.error("Error fetching coffee lover profile:", error);
@@ -70,8 +71,13 @@ export const useLoginMutation = () => {
 
       setAuthStorage(data.accessToken, data.user);
 
+       saveEncryptedItem('userData', data.user);
+
        pagesPermissions(data.user.role, navigate)
 
+       const m = getEncryptedItem('userData');
+
+       console.log(m)
 
        toast.success("Inicio de sesión exitoso, ¡Bienvenido!");
 
