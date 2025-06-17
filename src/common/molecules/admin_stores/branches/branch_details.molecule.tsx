@@ -1,6 +1,7 @@
 import { Branch } from "@/api/types/branches/branches.types"
 import { DialogHeader, Dialog, DialogContent, DialogTitle } from "@/common/ui/dialog"
 import { Mail, MapPin, X, Phone, Star, Store, Globe } from "@/common/ui/icons"
+import { useState } from "react"
 
 interface DetailsBranchModalProps {
   isOpen: boolean
@@ -9,6 +10,7 @@ interface DetailsBranchModalProps {
 }
 
 export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalProps) {
+  const [isMapLoading, setIsMapLoading] = useState(true)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -112,7 +114,21 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
                         </div>
                         <div className="space-y-1.5">
                           <span className="block font-medium text-[#5F4B32]">Calificación</span>
-                          <p className="text-sm text-gray-600/90 leading-relaxed">{branch.average_rating}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm text-gray-600/90">{branch.average_rating}</p>
+                            <div className="flex">
+                              {[...Array(5)].map((_, i) => (
+                                <Star 
+                                  key={i} 
+                                  className={`h-3 w-3 ${
+                                    i < Math.floor(parseFloat(branch.average_rating || '0')) 
+                                      ? 'text-yellow-400 fill-current' 
+                                      : 'text-gray-300'
+                                  }`} 
+                                />
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -156,7 +172,8 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
                               <Globe className="h-5 w-5 text-[#DB8935]" />
                             </div>
                             <div className="space-y-1.5">
-                              <span className="block font-medium text-[#5F4B32] capitalize">{social.description ? social.description : "Red Social"}</span>
+                              <span className="block font-medium text-[#5F4B32] capitalize">{social.description || "Red Social"}</span>
+                              <p className="text-xs text-gray-500 truncate">{social.value}</p>
                             </div>
                           </div>
                         </a>
@@ -172,8 +189,14 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
                       <span>Ubicación</span>
                     </h3>
 
-                    <div className="aspect-square lg:aspect-video w-full rounded-xl overflow-hidden shadow-md">
+                    <div className="relative aspect-square lg:aspect-video w-full rounded-xl overflow-hidden shadow-md">
+                      {isMapLoading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-[#F8F4F0]">
+                          <div className="w-8 h-8 border-4 border-[#DB8935]/30 border-t-[#DB8935] rounded-full animate-spin"></div>
+                        </div>
+                      )}
                       <iframe
+                        onLoad={() => setIsMapLoading(false)}
                         title="Branch Location"
                         width="100%"
                         height="100%"
@@ -181,6 +204,15 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
                         allowFullScreen
                       ></iframe>
                     </div>
+
+                    <a 
+                      href={`https://www.google.com/maps/search/?api=1&query=${branch.latitude},${branch.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 flex items-center justify-center gap-2 w-full py-2 px-3 rounded-lg text-sm bg-[#DB8935]/10 text-[#DB8935] hover:bg-[#DB8935]/20 transition-colors"
+                    >
+                      <MapPin className="h-4 w-4" /> Ver en Google Maps
+                    </a>
                   </div>
                 )}
               </div>
