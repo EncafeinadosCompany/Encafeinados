@@ -1,5 +1,5 @@
-import { StoresResponse } from '../../../../src/api/types/storesTypes';
-import { BranchesResponse } from '../../../../src/api/types/branchesTypes';
+import { StoresResponse } from '../../../../src/api/types/stores/stores.type';
+import { BranchesResponse } from '../../../../src/api/types/branches/branches.types';
 
 export const mockStores: StoresResponse = {
   message: "Stores retrieved successfully",
