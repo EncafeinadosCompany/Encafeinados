@@ -45,7 +45,7 @@ export const RegisterAdminStoreSchema = [
 
     }).refine((data) => data.password === data.confirmPassword, {
         message: "Las contraseñas no coinciden",
-        path: ["confirmPassword"], // Muestra el error en este campo
+        path: ["confirmPassword"], 
     }),
 
     z.object({

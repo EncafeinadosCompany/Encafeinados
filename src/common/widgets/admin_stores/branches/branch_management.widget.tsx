@@ -18,6 +18,7 @@ import { SearchBranches } from "@/common/molecules/admin_stores/branches/search_
 import { CardFooterBranches } from "@/common/molecules/admin_stores/branches/card_footer_branches.molecule";
 import { CardHeaderBranches } from "@/common/molecules/admin_stores/branches/card_header_branches.molecule";
 import { QRCodeBranchModal } from "@/common/molecules/admin_stores/branches/qr_code_branches_modal.molecule";
+import { AssignBranchAdminModal } from "@/common/molecules/admin_stores/branches/assign_branch_admin_modal.molecule";
 
 const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
 
@@ -27,13 +28,14 @@ export default function BranchManagement() {
   const storeId = localStorage.getItem("storeOrBranchId");
 
   const { data: branchesList } = useBranchByStore(Number(storeId));
-
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isQrCodeModalOpen, setIsQrCodeModalOpen] = useState(false);
+  const [isAssignAdminModalOpen, setIsAssignAdminModalOpen] = useState(false);
 
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const [selectedQrCodeBranch, setSelectedQrCodeBranch] =
     useState<Branch | null>(null);
+  const [selectedAdminBranch, setSelectedAdminBranch] = useState<Branch | null>(null);
 
   const [isEditing, setIsEditing] = useState(false);
   const [BranchEdit, setBranchEdit] = useState<Branch | null>(null);
@@ -88,10 +90,14 @@ export default function BranchManagement() {
     setBranchEdit(card);
     setIsAddModalOpen(true);
   };
-
   const handleQrCodeClick = (branch: Branch) => {
     setSelectedQrCodeBranch(branch);
     setIsQrCodeModalOpen(true);
+  };
+
+  const handleAssignAdminClick = (branch: Branch) => {
+    setSelectedAdminBranch(branch);
+    setIsAssignAdminModalOpen(true);
   };
 
   return (
@@ -148,8 +154,7 @@ export default function BranchManagement() {
         ) : currentBranches.length === 0 ? (
           renderEmptyState({ searchQuery, setSearchQuery, setIsAddModalOpen })
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            <AnimatePresence mode="popLayout">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">            <AnimatePresence mode="popLayout">
               {currentBranches.map((branch, index) => (
                 <BranchCard
                   key={branch.id}
@@ -157,6 +162,7 @@ export default function BranchManagement() {
                   onViewDetails={() => viewBranchDetails(branch)}
                   onEdit={() => handleEditClick(branch)}
                   onGenerateQrCode={() => handleQrCodeClick(branch)}
+                  onAssignAdmin={() => handleAssignAdminClick(branch)}
                   index={index}
                 />
               ))}
@@ -193,11 +199,19 @@ export default function BranchManagement() {
         isOpen={!!selectedBranch}
         onClose={closeDetails}
         />
-      )}
-      <QRCodeBranchModal
+      )}      <QRCodeBranchModal
         isOpen={isQrCodeModalOpen}
         onClose={() => setIsQrCodeModalOpen(false)}
         qrCodeUrl={`${EXPOSED_URL}/coffeelover/register-branch-visit?branch_id=${selectedQrCodeBranch?.id}`}
+      />
+
+      <AssignBranchAdminModal
+        isOpen={isAssignAdminModalOpen}
+        onClose={() => {
+          setIsAssignAdminModalOpen(false);
+          setSelectedAdminBranch(null);
+        }}
+        branch={selectedAdminBranch}
       />
     </Card>
   );

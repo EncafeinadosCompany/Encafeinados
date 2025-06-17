@@ -1,5 +1,5 @@
 import AuthClient from "@/api/client/axios";
-import { RegisterAdminStores } from "@/api/types/admin_stores/admin_stores.type";
+import { RegisterAdminStores, CreateBranchAdminData } from "@/api/types/admin_stores/admin_stores.type";
 import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -35,3 +35,27 @@ export const useAdminStoreMutation = () => {
       }
     })
   }
+
+export const useCreateBranchAdminMutation = () => {
+  const queryClient = useQueryClient()
+  const useErrors = useError("createBranchAdmin")
+
+  return useMutation<any, Error, CreateBranchAdminData>({
+    mutationFn: async (formData: CreateBranchAdminData): Promise<any> => {
+      try {
+        const response = await authClient.post<any>('/admin/store-admin', formData); 
+        return response.data;
+  
+      } catch (error: any) {
+        throw handleApiError(error)
+      }
+    },
+    onSuccess: (data, variable) => {
+      queryClient.invalidateQueries({ queryKey: ['branches'] });
+      queryClient.invalidateQueries({ queryKey: ['branchByStore'] });
+    },
+    onError: (error: any) => {
+      useErrors(error);
+    }
+  })
+}
