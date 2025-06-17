@@ -68,7 +68,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                   >
                     Distancia
                   </button>
-                  <button 
+                  {/* <button 
                     className={`px-4 py-2 rounded-full text-sm font-medium ${
                       filterOptions.sortBy === 'rating' 
                         ? 'bg-[#6F4E37] text-white' 
@@ -77,7 +77,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                     onClick={() => updateFilterOptions({ sortBy: 'rating' })}
                   >
                     Calificación
-                  </button>
+                  </button> */}
                   <button 
                     className={`px-4 py-2 rounded-full text-sm font-medium ${
                       filterOptions.sortBy === 'name' 
