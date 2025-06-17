@@ -7,6 +7,7 @@ import {
   Edit,
   Globe,
   QrCodeIcon,
+  UserPlus,
 } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/common/ui/card";
 import { motion } from "framer-motion";
@@ -19,6 +20,7 @@ interface BranchCardProps {
   onViewDetails?: () => void;
   onEdit?: () => void;
   onGenerateQrCode?: () => void;
+  onAssignAdmin?: () => void;
   index?: number;
 }
 
@@ -27,6 +29,7 @@ export function BranchCard({
   onViewDetails,
   onEdit,
   onGenerateQrCode,
+  onAssignAdmin,
   index = 0,
 }: BranchCardProps) {
   // Status styling with warmer colors
@@ -144,19 +147,20 @@ export function BranchCard({
               </div>
             </div>
           )}
-        </CardContent>
-
-        {/* Footer with buttons */}
+        </CardContent>        {/* Footer with buttons */}
         <CardFooter className="p-3 border-t border-[#F5E4D2] bg-white flex gap-2">
-          {/* <Button
-            onClick={onEdit}
-            variant="outline"
-            className="flex-1 border-[#DB8935] text-[#DB8935] hover:bg-[#F5E4D2]/50 transition-all text-xs py-2 h-auto rounded-full"
-            size="sm"
-          >
-            <Edit className="mr-1.5 h-3.5 w-3.5" />
-            Editar
-          </Button> */}
+          {/* Solo mostrar botón de asignar admin si la sucursal está aprobada */}
+          {branch.status === "APPROVED" && (
+            <Button
+              onClick={onAssignAdmin}
+              variant="outline"
+              className="border-blue-500 text-blue-600 hover:bg-blue-50 transition-all text-xs py-2 h-auto rounded-full"
+              size="sm"
+            >
+              <UserPlus className="mr-1.5 h-3.5 w-3.5" />
+              Admin
+            </Button>
+          )}
 
           <Button
             onClick={onViewDetails}
