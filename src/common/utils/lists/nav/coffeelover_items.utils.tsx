@@ -20,7 +20,7 @@ export const CoffeloverItems: NavItemType[] = [
       icon: <Map className="h-4 w-4" />
     },
     {
-      title: "Yo",
+      title: "Perfil",
       href: "/coffeelover/Profile",
       icon: <User className="h-4 w-4" />
     },
