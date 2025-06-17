@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { UserPlus, Mail, Lock, User, Phone, IdCard, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import {
@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/common/ui/dialog';
 import { Button } from '@/common/ui/button';
 import { Input } from '@/common/ui/input';
@@ -60,36 +61,51 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
     }
   }, [branch, setValue]);
 
-  const onSubmit = async (data: BranchAdminFormData) => {
+  const onSubmit = useCallback(async (data: BranchAdminFormData) => {
     if (!branch) return;
 
     try {
       const payload = transformToBranchAdminPayload(data);
+      
+      console.log('Form Data:', data);
+      console.log('Payload enviado al API:', payload);
+      
       await createBranchAdminMutation.mutateAsync(payload);
-      setShowSuccess(true);
-      reset();
-
-      setTimeout(() => {
-        setShowSuccess(false);
-        onClose();
-      }, 2000);
+      
+      requestAnimationFrame(() => {
+        setShowSuccess(true);
+        reset();
+        
+        const timer = setTimeout(() => {
+          setShowSuccess(false);
+          onClose();
+        }, 1500);
+        
+        return () => clearTimeout(timer);
+      });
     } catch (error) {
       console.error('Error creating branch admin:', error);
     }
-  };
+  }, [branch, createBranchAdminMutation, reset, onClose]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (!createBranchAdminMutation.isPending) {
       onClose();
       setShowSuccess(false);
       reset();
     }
-  };
+  }, [createBranchAdminMutation.isPending, onClose, reset]);
 
   if (showSuccess) {
     return (
       <Dialog open={isOpen} onOpenChange={handleClose}>
-        <DialogContent className="bg-[#FBF7F4] border border-[#E6D7C3] shadow-xl rounded-2xl max-w-md">
+        <DialogContent 
+          className="bg-[#FBF7F4] border border-[#E6D7C3] shadow-xl rounded-2xl max-w-md"
+          aria-describedby="success-dialog-description"
+        >
+          <DialogDescription id="success-dialog-description" className="sr-only">
+            Confirmación de creación exitosa de administrador de sucursal
+          </DialogDescription>
           <div className="text-center p-8 bg-[#FBF7F4] rounded-2xl">
             <motion.div
               initial={{ scale: 0 }}
@@ -125,8 +141,14 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-[#FBF7F4] border border-[#E6D7C3] shadow-xl rounded-2xl max-w-4xl max-h-[95vh] overflow-hidden p-0">
-        {/* Header */}
+      <DialogContent 
+        className="bg-[#FBF7F4] border border-[#E6D7C3] shadow-xl rounded-2xl max-w-4xl max-h-[95vh] overflow-hidden p-0"
+        aria-describedby="admin-form-description"
+      >
+        <DialogDescription id="admin-form-description" className="sr-only">
+          Formulario para asignar un administrador a la sucursal {branch?.name}
+        </DialogDescription>
+        
         <div className="bg-gradient-to-r from-[#DB8935] to-[#C87000] p-6 rounded-t-xl">
           <DialogHeader>
             <div className="flex items-center gap-3">
@@ -171,6 +193,7 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
                         {...register('email')}
                         className={`pl-10 bg-white/70 border-[#E6D7C3]/50 focus:border-[#DB8935] focus:ring-[#DB8935]/30 rounded-lg ${errors.email ? 'border-red-500' : ''}`}
                         placeholder="admin@cafeteria.com"
+                        autoComplete="email"
                       />
                     </div>
                     {errors.email && (
@@ -193,10 +216,11 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
                             e.target.value = value;
                           }
                         })}
-                        className={`pl-10 pr-12 bg-white/70 border-[#E6D7C3]/50 focus:border-[#DB8935] focus:ring-[#DB8935]/30 rounded-lg  tracking-widest ${errors.password ? 'border-red-500' : ''}`}
+                        className={`pl-10 pr-12 bg-white/70 border-[#E6D7C3]/50 focus:border-[#DB8935] focus:ring-[#DB8935]/30 rounded-lg tracking-widest ${errors.password ? 'border-red-500' : ''}`}
                         placeholder="1234"
                         inputMode="numeric"
                         maxLength={4}
+                        autoComplete="new-password"
                       />
                       <button
                         type="button"
@@ -241,11 +265,13 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
                     <li>Gestionar información básica de la sucursal</li>
                     <li>Administrar horarios de atención</li>
                     <li>Gestionar fotos</li>
+                    
                   </ul>
                 </div>
               </div>
             </div>
             
+            {/* Columna derecha - Información Personal */}
             <div className="p-6">
               <div className="space-y-6">
                 <div className="flex items-center gap-2 mb-4">
@@ -269,6 +295,7 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
                         {...register('full_name')}
                         className={`pl-10 bg-white/70 border-[#E6D7C3]/50 focus:border-[#DB8935] focus:ring-[#DB8935]/30 rounded-lg ${errors.full_name ? 'border-red-500' : ''}`}
                         placeholder="Juan Pérez González"
+                        autoComplete="name"
                       />
                     </div>
                     {errors.full_name && (
@@ -316,6 +343,7 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
                         })}
                         className={`pl-10 bg-white/70 border-[#E6D7C3]/50 focus:border-[#DB8935] focus:ring-[#DB8935]/30 rounded-lg ${errors.number_document ? 'border-red-500' : ''}`}
                         placeholder="123456789-0"
+                        autoComplete="off"
                       />
                     </div>
                     {errors.number_document && (
@@ -342,6 +370,7 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
                         })}
                         className={`pl-10 bg-white/70 border-[#E6D7C3]/50 focus:border-[#DB8935] focus:ring-[#DB8935]/30 rounded-lg ${errors.phone_number ? 'border-red-500' : ''}`}
                         placeholder="3001234567"
+                        autoComplete="tel"
                       />
                     </div>
                     {errors.phone_number && (
@@ -355,7 +384,7 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
                   <ul className="text-xs text-[#A67C52] space-y-1.5">
                     <li className="flex items-start">
                       <span className="text-[#DB8935] mr-2">•</span> 
-                      <span>Asegurate que la información proporcionada sea correcta antes de enviar la solicitud.</span>
+                      <span>Asegúrate que la información proporcionada sea correcta antes de enviar la solicitud.</span>
                     </li>
                    
                     <li className="flex items-start">

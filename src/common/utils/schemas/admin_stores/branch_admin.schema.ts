@@ -13,7 +13,6 @@ export const BranchAdminSchema = z.object({
     .length(4, { message: "El PIN debe tener exactamente 4 dígitos" })
     .regex(/^\d{4}$/, { message: "El PIN solo debe contener números" }),
   
-  // Información personal
   full_name: z
     .string()
     .nonempty({ message: "El nombre completo es obligatorio" })
