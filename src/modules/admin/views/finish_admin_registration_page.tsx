@@ -1,4 +1,4 @@
-import { FormFinishRegisteAdmin } from "@/common/widgets/forms/auth/form_finish_register_admin.widget"
+import { FormFinishRegisteAdmin } from "@/common/widgets/forms/auth/form_register_admin_stores.widget"
 import { useSearchParams } from "react-router-dom";
 
 const FinishAdminRegistration = () => {

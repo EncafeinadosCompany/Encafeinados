@@ -18,7 +18,7 @@ import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.t
 import { useAttributes, useBranchAttributes } from "@/api/queries/attributes/attributes.query"
 import { AttributeFormType, RegisterAttributeSchema } from "@/common/utils/schemas/attributes/create_attributes.schema"
 import { useCreateAttributeMutation, useUpdateAttributeMutation } from "@/api/mutations/attributes/attributes.mutation"
-import { getAuthStorage } from "@/common/utils/auth_storage.utils"
+import { getAuthStorage } from "@/common/utils/security/auth_storage.utils"
 import { ChevronDown, Coffee } from "lucide-react"
 import { ScrollIndicator } from "@/common/atoms/indicator"
 

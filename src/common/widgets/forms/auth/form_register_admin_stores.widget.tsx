@@ -20,10 +20,10 @@ export const FormFinishRegisteAdmin = ({ ref }: any) => {
 
     const [direction, setDirection] = useState(0);
     const [formData, setFormData] = useState({})
+    const [step, setStep] = useState(0)
     const useRegisterAdminStore = useAdminStoreMutation();
     const navigate = useNavigate();
 
-    const [step, setStep] = useState(0)
     const methods = useForm<CurrentAdminSchema>({
         resolver: zodResolver(RegisterAdminStoreSchema[step] as any),
         defaultValues: {
@@ -126,8 +126,8 @@ export const FormFinishRegisteAdmin = ({ ref }: any) => {
                                                 control={methods.control}
                                                 errors={methods.formState.errors}
 
-                                            >
-                                            </TermConditions>
+                                            />
+                                        
                                         </div>
                                     )
                                 }

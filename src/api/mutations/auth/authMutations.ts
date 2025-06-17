@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {LoginResponse, User_Data } from '../../types/auth/auth.types'
 import { useError } from '@/common/hooks/auth/useErrors'
-import { clearAuthStorage, saveCoffeeLoverProfileToStorage, setAuthStorage } from '@/common/utils/auth_storage.utils'
+import { clearAuthStorage, saveCoffeeLoverProfileToStorage, setAuthStorage } from '@/common/utils/security/auth_storage.utils'
 import AuthClient from '../../client/axios'
 import { handleApiError } from '@/common/utils/errors/handle_api_error.utils'
 import { useAuth } from '@/common/hooks/auth/useAuth'
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { ROLES } from '@/common/utils/lists/roles.utils'
 import { CoffeeLoverProfileType } from '@/api/types/coffelovers/coffelovers.type'
+import { getEncryptedItem, saveEncryptedItem } from '@/common/utils/security/storage_encrypted.utils'
 
  
 
@@ -41,12 +42,14 @@ export const useLoginMutation = () => {
 
       if(data.storeOrBranchId) {
         queryClient.setQueryData(['storeOrBranchId'], data.storeOrBranchId);
-        localStorage.setItem('storeOrBranchId', data.storeOrBranchId);
+        localStorage.setItem('storeOrBranchId', data.storeOrBranchId.toString());
+        saveEncryptedItem('hello', data.storeOrBranchId);
       }
 
 
       if(data.user.id){
-        localStorage.setItem('userId', data.user.id)
+        // localStorage.setItem('userId', data.user.id)
+         saveEncryptedItem('user', data.user.id);
       }
 
       if (data.user.role === ROLES.COFFEE_LOVER) {
@@ -58,6 +61,7 @@ export const useLoginMutation = () => {
           
           // Continue with other operations
           setAuthStorage(data.accessToken, data.user);
+          
         })
         .catch(error => {
           console.error("Error fetching coffee lover profile:", error);
@@ -67,8 +71,13 @@ export const useLoginMutation = () => {
 
       setAuthStorage(data.accessToken, data.user);
 
+       saveEncryptedItem('userData', data.user);
+
        pagesPermissions(data.user.role, navigate)
 
+       const m = getEncryptedItem('userData');
+
+       console.log(m)
 
        toast.success("Inicio de sesión exitoso, ¡Bienvenido!");
 

@@ -6,7 +6,7 @@ export const RegisterAdminStoreSchema = [
             .nonempty({ message: 'Queremos conocerte, ¿cómo te llamas?' })
             .min(3, { message: 'Tu nombre debe tener al menos 3 letras, como un buen café debe tener su esencia' })
             .max(30, { message: 'Wow, tu nombre es más largo que una charla con un barista sobre granos de especialidad' })
-            .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, { message: "Tu nombre no puede contener números ni caracteres especiales, solo letras y espacios" }),   
+            .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, { message: "Tu nombre no puede contener números ni caracteres especiales, solo letras y espacios" }),
         last_name: z.string()
             .nonempty({ message: '¿Y tu apellido?' })
             .min(3, { message: 'Tu apellido debe tener al menos 3 letras, como un buen café debe tener su esencia' })
@@ -44,8 +44,8 @@ export const RegisterAdminStoreSchema = [
 
 
     }).refine((data) => data.password === data.confirmPassword, {
-        message: "Las contraseñas no coinciden",
-        path: ["confirmPassword"], 
+        message: "Las claves no coinciden",
+        path: ["confirmPassword"]
     }),
 
     z.object({

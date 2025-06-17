@@ -5,7 +5,7 @@ import { useWindowSize } from '@/common/hooks/useWindowSize';
 import { useClientReviews } from '@/api/queries/reviews/reviews.query';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { getAuthStorage } from '@/common/utils/auth_storage.utils';
+import { getAuthStorage } from '@/common/utils/security/auth_storage.utils';
 import ReviewImages from '@/common/atoms/reviews/review_images.atom';
 import StarsRating from '@/common/atoms/reviews/stars_rating.atom';
 

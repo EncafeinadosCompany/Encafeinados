@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import AuthClient from '@/api/client/axios';
 import { UpdateProfileRequest } from '@/api/types/coffelovers/coffelovers.type';
-import { getAuthStorage } from '@/common/utils/auth_storage.utils';
+import { getAuthStorage } from '@/common/utils/security/auth_storage.utils';
 import toast from 'react-hot-toast';
 import { useError } from '@/common/hooks/auth/useErrors';
 import { handleApiError } from '@/common/utils/errors/handle_api_error.utils';

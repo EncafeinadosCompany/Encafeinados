@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuthStorage, clearAuthStorage } from "@/common/utils/auth_storage.utils";
+import { getAuthStorage, clearAuthStorage } from "@/common/utils/security/auth_storage.utils";
 import toast from "react-hot-toast";
 
 interface JWTPayload {
