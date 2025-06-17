@@ -1,7 +1,7 @@
 import { useClientEventMutation } from "@/api/mutations/events/events.mutation"
 import { useClientEvent, useEventAll } from "@/api/queries/events/events.query"
 import { EventCard } from "@/common/molecules/coffeelover/events/event_card.molecule"
-import { useLocalStorage } from "@/common/utils/auth_storage.utils";
+import { useLocalStorage } from "@/common/utils/security/auth_storage.utils";
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";

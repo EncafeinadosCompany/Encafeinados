@@ -1,5 +1,5 @@
-import { getAuthStorage} from "@/common/utils/auth_storage.utils";
-import { useAutoLogout } from "@/common/utils/token.utils";
+import { getAuthStorage} from "@/common/utils/security/auth_storage.utils";
+import { useAutoLogout } from "@/common/utils/security/token.utils";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRoute = () => {

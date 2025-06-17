@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stamps.query";
-import { getAuthStorage } from "@/common/utils/auth_storage.utils";
+import { getAuthStorage } from "@/common/utils/security/auth_storage.utils";
 import { Stamps } from "@/api/types/album/stamps.types";
 import { CardStamp } from "@/common/molecules/coffeelover/stamps/card_stamp.molecule";
 import { CardEmpy } from "@/common/molecules/coffeelover/stamps/card_empy.molecule";

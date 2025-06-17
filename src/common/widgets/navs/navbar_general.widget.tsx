@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavItemType } from "@/api/types/nav/nav.types";
 import { NavGeneral } from "@/common/molecules/nav/nav_general.molecule";
-import { getAuthStorage } from "@/common/utils/auth_storage.utils";
+import { getAuthStorage } from "@/common/utils/security/auth_storage.utils";
 import { useLocation } from "react-router-dom";
 
 export type NavItem = {
