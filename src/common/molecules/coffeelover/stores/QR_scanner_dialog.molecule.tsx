@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/common/ui/dialog';
 import { Button } from '@/common/ui/button';
-import { X, RefreshCw, Scan, Camera, ZoomIn } from 'lucide-react';
+import { X, RefreshCw, Camera } from 'lucide-react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { useNavigate } from 'react-router-dom';
 

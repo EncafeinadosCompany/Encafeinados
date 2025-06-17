@@ -11,11 +11,12 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { FinistAdminStore2 } from "@/common/molecules/auth/admin_stores/finish_admin_store_step2.molecule";
 import ProgressIndicator from "@/common/atoms/auth/progress_indicator.atom";
 import { useAdminStoreMutation } from "@/api/mutations/admin_stores/admin_stores.mutation";
-import { RegisterAdminStores } from "@/api/types/admin_stores/admin_stores.type";
+
 import { useNavigate } from "react-router-dom";
 import { TermConditions } from "./form_term_conditions.widget";
+import { Register_admin_stores } from "@/api/types/auth/auth.types";
 
-export const FormFinishRegisteAdmin = ({ref}:any) => {
+export const FormFinishRegisteAdmin = ({ ref }: any) => {
 
     const [direction, setDirection] = useState(0);
     const [formData, setFormData] = useState({})
@@ -40,24 +41,24 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
             if (isValid) {
                 setStep(step + 1)
                 setDirection(1)
-                setFormData({ ...formData, ...methods.getValues()})
+                setFormData({ ...formData, ...methods.getValues() })
             };
         });
 
     };
     const onSubmit = async (data: any) => {
 
-        const finalData = {...formData,...data };
-        
-        const register : RegisterAdminStores = {
-            storeData:{
+        const finalData = { ...formData, ...data };
+
+        const register: Register_admin_stores = {
+            storeData: {
                 id: Number(ref),
             },
             userData: {
                 email: finalData.email,
-                password: finalData.password, 
+                password: finalData.password,
             },
-            personData:{
+            personData: {
                 full_name: finalData.name,
                 type_document: finalData.type_document,
                 number_document: finalData.number_document,
@@ -93,7 +94,7 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
                     </div>
                     {/* Progress indicator */}
                     <ProgressIndicator className="ml-16 md:ml-36" step={step + 1} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator>
-                    
+
                 </div>
                 <FormProvider {...methods}>
                     <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4  relative overflow-hidden">
@@ -101,33 +102,33 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
                             <AnimatePresence initial={false} custom={direction} mode="wait">
                                 {step === 0 && (
                                     <FinistAdminStore2
-                                    register={methods.register}
-                                    control={methods.control}
-                                    errors={methods.formState.errors}
-                                ></FinistAdminStore2>
-                                  
-                                )},
-                                {
-                                    step === 1 && (
-                                    <FinishAdminStore
-                                        direction={direction}
                                         register={methods.register}
                                         control={methods.control}
                                         errors={methods.formState.errors}
-                                    ></FinishAdminStore>
+                                    ></FinistAdminStore2>
+
+                                )},
+                                {
+                                    step === 1 && (
+                                        <FinishAdminStore
+                                            direction={direction}
+                                            register={methods.register}
+                                            control={methods.control}
+                                            errors={methods.formState.errors}
+                                        ></FinishAdminStore>
                                     )},
 
                                 {
                                     step === 2 && (
                                         <div className="flex flex-col justify-center items-center h-[20vh]">
-                                        <TermConditions
-                                               register={methods.register}
-                                               control={methods.control}
-                                               errors={methods.formState.errors}
+                                            <TermConditions
+                                                register={methods.register}
+                                                control={methods.control}
+                                                errors={methods.formState.errors}
 
-                                           >
-                                       </TermConditions>
-                                      </div>
+                                            >
+                                            </TermConditions>
+                                        </div>
                                     )
                                 }
                             </AnimatePresence>
@@ -158,7 +159,7 @@ export const FormFinishRegisteAdmin = ({ref}:any) => {
                                     </motion.div>
                                 ) : (
                                     <motion.div>
-                                         <Button
+                                        <Button
                                             type="submit"
                                             disabled={!methods.formState.isValid}
                                             className={`rounded-lg px-6 py-2 ${!methods.formState.isValid

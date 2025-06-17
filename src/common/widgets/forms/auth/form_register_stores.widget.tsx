@@ -25,7 +25,7 @@ const FormRegisterStores = () => {
     const [direction, setDirection] = useState(0);
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
-    const {mutateAsync:useRegiterStore, isIdle, isPending, status} = useRegisterStoreMutation();
+    const { mutateAsync: useRegiterStore, isIdle, isPending, status } = useRegisterStoreMutation();
     const navigate = useNavigate();
 
     const methods = useForm<CurrentSchema>({
@@ -42,8 +42,8 @@ const FormRegisterStores = () => {
 
 
     useEffect(() => {
-       console.log(status) 
-    },[status])
+        console.log(status)
+    }, [status])
 
     const onNext = () => {
         methods.trigger().then((isValid) => {
@@ -59,13 +59,13 @@ const FormRegisterStores = () => {
     const prepareFormData = async (data: RegisterStoreDto): Promise<RegisterStoreDto> => {
         const preparedData = { ...data };
         if (preparedData.logo && preparedData.logo instanceof File) {
-          preparedData.logo = await uploadImage(preparedData.logo);
+            preparedData.logo = await uploadImage(preparedData.logo);
         } else {
-          preparedData.logo = "https://res.cloudinary.com/...default-image.png";
+            preparedData.logo = "https://res.cloudinary.com/...default-image.png";
         }
-      
+
         return preparedData;
-      };
+    };
 
 
     const onSubmit = async (data: any) => {
@@ -76,13 +76,13 @@ const FormRegisterStores = () => {
             const response = await useRegiterStore(preparedData);
             methods.reset();
             navigate(`/stores-registration/branches/${response.store.id}`)
-        }catch (error){
+        } catch (error) {
 
         }
     };
 
     return (
-        <Card className="w-full max-w-3xl overflow-x-hidden mx-auto h-full max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent relative p-4 sm:p-6 border-none shadow-2xl bg-white/90">
+        <Card className="w-full max-w-5xl overflow-x-hidden mx-auto h-full max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent relative sm:p-6 border-none shadow-2xs bg-[#fff]">
             <FormProvider {...methods}>
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -103,13 +103,13 @@ const FormRegisterStores = () => {
                                 }
                             })()}
                         />
-                        <div className="mt-2 ml-8 sm:ml-20  md:ml-48 grid grid-cols-1  justify-between">
-                            <ProgressIndicator step={step + 1} totalSteps={RegisterStoreSchema.length} />
+                        <div className="mt-2 flex justify-center w-full">
+                            <ProgressIndicator step={step + 1} totalSteps={RegisterStoreSchema.length} className="w-full max-w-md self-center" />
                         </div>
 
                     </CardHeader>
                     <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-2">
-                        <CardContent className="grid gap-4 min-h-[310px]">
+                        <CardContent className="grid gap-2 min-h-[310px]">
                             <AnimatePresence initial={false} custom={direction} mode="wait">
                                 {step === 0 && (
                                     <RegisterStoreStep1

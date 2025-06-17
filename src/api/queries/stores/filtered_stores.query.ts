@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { useStores } from './stores.query';
-import { Store, StoresResponse } from '@/api/types/stores/stores.type';
+import { StoreDto, StoresResponse } from '@/api/types/stores/stores.type';
 
 export const useFilteredStores = () => {
   const { data: storesResponse, isLoading, error } = useStores();
 
-  const approvedStores = useMemo((): Store[] => {
+  const approvedStores = useMemo((): StoreDto[] => {
 
     const allStores =
       storesResponse && storesResponse.stores && storesResponse.stores.stores

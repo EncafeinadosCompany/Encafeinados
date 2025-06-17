@@ -2,16 +2,16 @@ import React from "react";
 import { Button } from "@/common/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/common/ui/avatar";
 import { Check, X, Eye, Clock } from "@/common/ui/icons";
-import { Store } from "@/api/types/stores/stores.type";
+import { StoreDto } from "@/api/types/stores/stores.type";
 import { Badge } from "@/common/ui/badge";
 import { motion } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 
 interface PendingStoreItemProps {
-  store: Store;
+  store: StoreDto;
   onApprove: (id: number) => void;
   onReject: (id: number) => void;
-  onViewDetails: (store: Store) => void;
+  onViewDetails: (store: StoreDto) => void;
 }
 
 export const PendingStoreItem = ({

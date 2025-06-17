@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CreateAlbumWidget } from "@/common/widgets/admin/album/create_album.widget"; 
+import { CreateAlbumWidget } from "@/common/widgets/admin/album/create_album.widget";
 import { BookOpen } from "lucide-react";
 import { ListAlbumWidget } from "@/common/widgets/admin/album/list_album_admin.widget";
 import { useSearchParams, useLocation } from "react-router-dom";
@@ -7,30 +7,28 @@ import { useSearchParams, useLocation } from "react-router-dom";
 const AlbumManager = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  
+
   const getParam = (name: string) => {
     let param = searchParams.get(name);
-    
+
     if (!param) {
       const urlString = location.search || "";
       const regex = new RegExp(`[?&]${name}=([^?&]+)`);
       const matches = urlString.match(regex);
       param = matches ? decodeURIComponent(matches[1]) : null;
-      
+
       console.log(`Param ${name} extracted manually:`, param);
     }
-    
+
     return param;
   };
-  
+
   const eventId = getParam("event");
   const start_time = getParam("start_time");
   const end_time = getParam("end_time");
-  
-  console.log("URL Params:", { eventId, start_time, end_time });
-  
+
   const [autoOpenModal, setAutoOpenModal] = useState(false);
-  
+
   useEffect(() => {
     console.log("Checking params:", { eventId, start_time, end_time });
     if (eventId && start_time && end_time) {
@@ -51,7 +49,7 @@ const AlbumManager = () => {
             Gestiona colecciones especiales de cafeterías
           </p>
         </div>
-        <CreateAlbumWidget 
+        <CreateAlbumWidget
           className="sm:self-start"
           autoOpen={autoOpenModal}
           onAfterOpen={() => setAutoOpenModal(false)}
@@ -60,7 +58,7 @@ const AlbumManager = () => {
           endDate={end_time || undefined}
         />
       </header>
-      
+
       <div className="flex-1 min-h-0 overflow-hidden">
         <ListAlbumWidget />
       </div>

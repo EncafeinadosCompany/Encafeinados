@@ -1,4 +1,4 @@
-import { EvenType } from "@/api/types/events/events.types"
+import { EventDto} from "@/api/types/events/events.types"
 import { MapPin, Clock, Coffee } from "lucide-react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
@@ -7,7 +7,7 @@ import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog"
 
 interface EventCardProps {
-    event: EvenType
+    event: EventDto
     event_client: number[]
     handleClient: (eventId: number) => void
     status: any

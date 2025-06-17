@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { Store } from "@/api/types/stores/stores.type";
+import { StoreDto } from "@/api/types/stores/stores.type";
 import { useApprovedStores } from "@/api/queries/stores/stores.query";
 
 export const useApprovedStoresWidget = () => {
@@ -11,7 +11,7 @@ export const useApprovedStoresWidget = () => {
   
   // UI state
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+  const [selectedStore, setSelectedStore] = useState<StoreDto | null>(null);
   const [refreshAnimation, setRefreshAnimation] = useState(false);
   
   // Pagination state
@@ -27,7 +27,7 @@ export const useApprovedStoresWidget = () => {
     if (!searchTerm) return originalStores;
     
     const term = searchTerm.toLowerCase();
-    return originalStores.filter((store: Store) => 
+    return originalStores.filter((store: StoreDto) => 
       store.name?.toLowerCase().includes(term) || 
       store.email?.toLowerCase().includes(term)
     );
@@ -58,7 +58,7 @@ export const useApprovedStoresWidget = () => {
     }
   };
   
-  const handleViewDetails = (store: Store) => {
+  const handleViewDetails = (store: StoreDto) => {
     setSelectedStore(store);
   };
 
