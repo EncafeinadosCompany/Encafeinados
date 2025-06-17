@@ -13,11 +13,10 @@ import { Label } from '@/common/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/ui/select';
 import { Branch } from '@/api/types/branches/branches.types';
 import { useCreateBranchAdminMutation } from '@/api/mutations/admin_stores/admin_stores.mutation';
-import { CreateBranchAdminData } from '@/api/types/admin_stores/admin_stores.type';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BranchAdminSchema, transformToBranchAdminPayload } from '@/common/utils/schemas/branch/admin/register_branch_admin.schema';
-import type { BranchAdminFormData } from '@/common/utils/schemas/branch/admin/register_branch_admin.schema';
+import { BranchAdminSchema, transformToBranchAdminPayload } from '@/common/utils/schemas/admin_stores/branch_admin.schema';
+import type { BranchAdminFormData } from '@/common/utils/schemas/admin_stores/branch_admin.schema';
 
 interface AssignBranchAdminModalProps {
   isOpen: boolean;
