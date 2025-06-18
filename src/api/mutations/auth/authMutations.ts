@@ -42,8 +42,9 @@ export const useLoginMutation = () => {
 
       if(data.storeOrBranchId) {
         queryClient.setQueryData(['storeOrBranchId'], data.storeOrBranchId);
-        localStorage.setItem('storeOrBranchId', data.storeOrBranchId.toString());
-        saveEncryptedItem('hello', data.storeOrBranchId);
+        localStorage.setItem('storeOrBranchId', data.storeOrBranchId.toString())
+        saveEncryptedItem('branchId', data.storeOrBranchId.toString());
+        saveEncryptedItem('storeId', data.storeOrBranchId.toString());
       }
 
 

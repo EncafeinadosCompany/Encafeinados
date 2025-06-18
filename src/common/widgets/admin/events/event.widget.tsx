@@ -135,7 +135,7 @@ export default function EventList() {
                         >
                             {filteredEvents.map((event: EventDto) => {
                                 return (
-                                    <EventCard event={event} />
+                                    <EventCard key={event.id} event={event}/>
                                 )
                             })}
                         </div>

@@ -4,7 +4,7 @@ import { InputPassword } from "@/common/atoms/auth/input_passwork"
 import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 
 import { Label } from "@radix-ui/react-label"
-import { Mail } from "lucide-react"
+import { Lock, Mail } from "lucide-react"
 import { UseFormRegister } from "react-hook-form"
 
 
@@ -35,9 +35,9 @@ export const FinishAdminStore = ({ register, errors }: registerAdminProps) => {
                 {errors.email && <p className="text-xs m-2 text-red-700">{errors.email.message}</p>}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className=" flex flex-col space-y-2">
+                <div className=" relative flex flex-col space-y-2">
                     <Label className={`flex items-center text-xs transition-colors ${focusedField === "password" ? "text-[#DB8935]" : "text-gray-600"}`}>Crea tu PIN</Label>
-                    
+                    <Lock className="absolute top-9 left-4 text-gray-400" size={18} />
                     <InputPassword
                         {...register('password')}
                         {...registerWithFocus('password')}
@@ -48,9 +48,9 @@ export const FinishAdminStore = ({ register, errors }: registerAdminProps) => {
                     {errors.password && <p className="text-xs m-2 text-red-700">{errors.password.message}</p>}
                 </div>
 
-                <div className="flex flex-col space-y-2">
+                <div className="relative flex flex-col space-y-2">
                     <Label className={`flex items-center text-xs transition-colors ${focusedField === "confirmPassword" ? "text-[#DB8935]" : "text-gray-600"}`}>Confirmar tu clave</Label>
-
+                    <Lock className="absolute top-9 left-4 text-gray-400" size={18} />
                     <InputPassword
                         id="lastName"
                         {...register('confirmPassword')}

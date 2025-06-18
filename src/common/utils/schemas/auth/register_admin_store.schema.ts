@@ -49,6 +49,11 @@ export const RegisterAdminStoreSchema = [
     }),
 
     z.object({
+        hasMultipleBranch: z.boolean().nullable()
+            .refine((value) => value === true || value === false, {
+                message: "Debes aceptar o rechazar las condiciones para continuar"
+            }),
+
         conditions: z.boolean().nullable()
             .refine((value) => value === true, {
                 message: "Debes aceptar las condiciones para continuar",

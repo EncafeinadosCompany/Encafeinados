@@ -39,7 +39,7 @@ const StoreDetailsCard = lazy(() => import("@/common/molecules/coffeelover/store
 
 // ADMIN STORES
 const ImagesGallery = lazy(() => import("@/common/widgets/admin_branches/images.widget"));
-const FormEditBranch = lazy(() => import("@/common/widgets/forms/auth/form_edit_branches_widget"));
+const Form_edit_branch = lazy(() => import("@/common/widgets/forms/branch/form_edit_branches_widget"));
 
 //BRANCHES
 const Menubar_branch = lazy(() => import("@/modules/admin_branches/views/menubar_branch"));
@@ -127,7 +127,7 @@ const AuthRoutes = () => {
                 <Route path="/sucursal" element={<Menubar_branch/>}>
                   <Route index element={<DetailsBranches />} />
                   <Route path="images" element={<ImagesGallery />} />
-                  <Route path="perfil" element={<FormEditBranch />} />
+                  <Route path="perfil" element={<Form_edit_branch/>} />
                   <Route path="attributes" element={<AttributesDashboard />} />
                 </Route>
               </Route>

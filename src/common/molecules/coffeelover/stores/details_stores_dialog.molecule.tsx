@@ -64,7 +64,7 @@ export default function StoreDetailsCard() {
 
   if (isLoading) {
     return (
-      <div className="w-full h-[91vh] flex items-center justify-center bg-[#FBF7F4] rounded-xl">
+      <div className="w-full max-h-[91vh] flex items-center justify-center bg-[#FBF7F4] rounded-xl">
         <div className="text-center p-6">
           <Coffee className="h-12 w-12 text-[#DB8935] mx-auto mb-4 animate-pulse" />
           <h2 className="text-xl font-medium text-[#5F4B32] mb-2">Cargando información</h2>
@@ -118,9 +118,9 @@ export default function StoreDetailsCard() {
   }
 
   return (
-    <>
+    <div className="w-full h-full flex items-center justify-center p-4">
       {/* Changed from fixed positioning to a regular card */}
-      <div className="w-full max-w-full h-[91vh] xl:h-full md:max-w-3xl lg:max-w-4xl xl:max-w-7xl 
+      <div className="w-full max-w-full h-[91vh] xl:h-[90vh] md:max-w-3xl lg:max-w-4xl xl:max-w-7xl 
         bg-[#FBF7F4] shadow-xl rounded-xl md:rounded-2xl  mx-auto
         overflow-hidden flex flex-col relative animate-in fade-in duration-300">
 
@@ -403,6 +403,6 @@ export default function StoreDetailsCard() {
           </Form>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };

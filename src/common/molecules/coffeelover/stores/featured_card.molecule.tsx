@@ -98,13 +98,6 @@ export default function FeaturedCard({ branches }: FeaturedCardProps) {
           </p>
         </div>
       </div>
-
-      {/* MODALS  */}
-      {/* <Dialog  open={isOpen} onOpenChange={setIsOpen}>
-        <DialogDetailStores details={branches} setIsOpen={setIsOpen}></DialogDetailStores>
-       </Dialog> */}
-
-      
     </div>
    
     </>

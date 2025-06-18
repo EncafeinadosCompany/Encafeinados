@@ -5,7 +5,7 @@ import { Card } from "@/common/ui/card"
 import { CurrentAdminSchema, RegisterAdminStoreSchema } from "@/common/utils/schemas/auth/register_admin_store.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { FinistAdminStore2 } from "@/common/molecules/auth/admin_stores/finish_admin_store_step2.molecule";
@@ -15,8 +15,18 @@ import { useAdminStoreMutation } from "@/api/mutations/admin_stores/admin_stores
 import { useNavigate } from "react-router-dom";
 import { TermConditions } from "./form_term_conditions.widget";
 import { Register_admin_stores } from "@/api/types/auth/auth.types";
+import { FormControl, FormField, FormItem, FormLabel } from "@/common/ui/form";
+import { Switch } from "@/common/ui/switch";
 
-export const FormFinishRegisteAdmin = ({ ref }: any) => {
+
+interface RegisteAdminProps {
+    storeId: number | 0;
+    branchId: number | 0;
+    ref?: string;
+}
+
+
+export const FormFinishRegisteAdmin = ({ ref, storeId, branchId }: RegisteAdminProps) => {
 
     const [direction, setDirection] = useState(0);
     const [formData, setFormData] = useState({})
@@ -24,6 +34,8 @@ export const FormFinishRegisteAdmin = ({ ref }: any) => {
     const useRegisterAdminStore = useAdminStoreMutation();
     const navigate = useNavigate();
 
+
+    console.log("Dtos importante", ref, storeId, branchId);
     const methods = useForm<CurrentAdminSchema>({
         resolver: zodResolver(RegisterAdminStoreSchema[step] as any),
         defaultValues: {
@@ -31,7 +43,8 @@ export const FormFinishRegisteAdmin = ({ ref }: any) => {
             email: "",
             type_document: "",
             number_document: "",
-            phone_number: ""
+            phone_number: "",
+            hasMultipleBranch: false
         },
         mode: "onChange"
     })
@@ -50,6 +63,7 @@ export const FormFinishRegisteAdmin = ({ ref }: any) => {
 
         const finalData = { ...formData, ...data };
 
+        console.log("Final Data:", finalData);
         const register: Register_admin_stores = {
             storeData: {
                 id: Number(ref),
@@ -85,19 +99,19 @@ export const FormFinishRegisteAdmin = ({ ref }: any) => {
                 transition={{ duration: 0.5 }}
             >
                 <div className="flex flex-col justify-center">
-                    <div className="mt-8 mb-2 text-center ">
+                    <div className="w-full flex flex-col  justify-center content-center text-center ">
                         <TitleForm
                             title="¡Finalicemos tu registro!"
                             subtitle="Completa los siguientes campos para finalizar tu registro como administrador"
                         >
                         </TitleForm>
-                    </div>
                     {/* Progress indicator */}
-                    <ProgressIndicator className="ml-16 md:ml-36" step={step + 1} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator>
+                    <ProgressIndicator className="mt-2" step={step + 1} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator>
+                    </div>
 
                 </div>
                 <FormProvider {...methods}>
-                    <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-4  relative overflow-hidden">
+                    <form className="space-y-4  relative overflow-hidden">
                         <div className="relative" style={{ minHeight: "250px" }}>
                             <AnimatePresence initial={false} custom={direction} mode="wait">
                                 {step === 0 && (
@@ -127,7 +141,24 @@ export const FormFinishRegisteAdmin = ({ ref }: any) => {
                                                 errors={methods.formState.errors}
 
                                             />
-                                        
+                                            <FormField
+                                                control={methods.control}
+                                                name="hasMultipleBranch"
+                                                render={({ field }) => (
+                                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                                                        <div className="space-y-0.5">
+                                                            <FormLabel>Múltiples Sucursales</FormLabel>
+                                                        </div>
+                                                        <FormControl>
+                                                            <Switch
+                                                                checked={field.value}
+                                                                onCheckedChange={field.onChange}
+                                                            />
+                                                        </FormControl>
+                                                    </FormItem>
+                                                )}
+                                            />
+
                                         </div>
                                     )
                                 }
@@ -160,7 +191,8 @@ export const FormFinishRegisteAdmin = ({ ref }: any) => {
                                 ) : (
                                     <motion.div>
                                         <Button
-                                            type="submit"
+                                            type="button"
+                                             onClick={methods.handleSubmit(onSubmit)}
                                             disabled={!methods.formState.isValid}
                                             className={`rounded-lg px-6 py-2 ${!methods.formState.isValid
                                                 ? "bg-gray-400 text-gray-200 cursor-not-allowed"
