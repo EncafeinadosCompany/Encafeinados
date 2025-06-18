@@ -15,7 +15,7 @@ const RoleRoute = ({ allowedRoles }: RouteProps) => {
     return <Navigate to="/login" replace />;
   }
 
-  const userRole = (user as { role: string[] }).role;
+  const userRole = (user as { roles: string[] }).roles;
 
   console.log("User role from storage:", userRole,'holaa',  allowedRoles.includes(ROLES.COFFEE_LOVER));
   

@@ -6,7 +6,7 @@ export interface User {
 export interface UserData {
       id?: 0
     email: string;
-    role:string[];
+    roles:string[];
 }
 
 export interface LoginResponse {

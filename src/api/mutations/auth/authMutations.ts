@@ -43,7 +43,7 @@ export const useLoginMutation = () => {
       saveEncryptedItem('user', data.user);
 
 
-      console.log("roles enviados:", data.storeId, data.branchId,);
+      console.log("roles enviados:", data.storeId, data.branchId);
 
       data.branchId && saveEncryptedItem('branchId', data.branchId.toString());
 
@@ -54,7 +54,7 @@ export const useLoginMutation = () => {
 
       setAuthStorage(data.accessToken);
 
-      if (data.user.role.includes(ROLES.COFFEE_LOVER)) {
+      if (data.user.roles.includes(ROLES.COFFEE_LOVER)) {
 
         authClient.get(`/clients/user/${data.user.id}`)
           .then(profileData => {
@@ -79,7 +79,7 @@ export const useLoginMutation = () => {
         navigate(redirectPath);
       } else {
         // Si no hay ruta guardada, usar el comportamiento predeterminado
-        pagesPermissions(data.user.role, navigate);
+        pagesPermissions(data.user.roles, navigate);
       }
 
 
