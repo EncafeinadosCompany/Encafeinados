@@ -8,6 +8,7 @@ import {
   Globe,
   QrCodeIcon,
   UserPlus,
+  Clock
 } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/common/ui/card";
 import { motion } from "framer-motion";
@@ -21,6 +22,7 @@ interface BranchCardProps {
   onEdit?: () => void;
   onGenerateQrCode?: () => void;
   onAssignAdmin?: () => void;
+  onManageSchedule?: () => void;
   index?: number;
 }
 
@@ -30,9 +32,9 @@ export function BranchCard({
   onEdit,
   onGenerateQrCode,
   onAssignAdmin,
+  onManageSchedule,
   index = 0,
 }: BranchCardProps) {
-  // Status styling with warmer colors
   let statusConfig;
 
   if (branch.status === "PENDING") {
@@ -107,7 +109,6 @@ export function BranchCard({
             </div>
           )}
 
-          {/* Address */}
           {branch.address && (
             <div className="flex items-start gap-2 text-[#A67C52] mt-1">
               <MapPin className="h-4 w-4 text-[#DB8935] flex-shrink-0 mt-0.5" />
@@ -161,6 +162,7 @@ export function BranchCard({
               Admin
             </Button>
           )}
+
 
           <Button
             onClick={onViewDetails}
