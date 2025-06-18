@@ -17,7 +17,7 @@ interface RightCardProps {
 export const RightCardBranch = ({branches, branchStatus, handleStatusClick, EXPOSED_URL, onManageSchedule}:RightCardProps) =>{
 return (
     <Card className="p-6 bg-white h-full shadow-lg rounded-xl border-none">
-    <div className="flex flex-col h-full">        {/* Schedule Management Section */}
+    <div className="flex flex-col h-full">       
         <div className="mb-8">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Gestión de Horarios</h3>
             <div className="p-4 bg-gray-50 rounded-lg">
@@ -40,7 +40,6 @@ return (
             </div>
         </div>
 
-        {/* Memory Section */}
         <div className="mb-8 h-full">
             <h3 className="text-xl font-semibold text-gray-900 mb-8">Gestión de QR</h3>
             <div className="p-4 bg-gray-50 rounded-lg h-[50vh] flex flex-col justify-center">
@@ -48,7 +47,6 @@ return (
             </div>
         </div>
 
-        {/* Branch Status Section */}
         <div className="mt-auto pt-6 border-t border-gray-200">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Estado de Sucursal</h3>
             <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">

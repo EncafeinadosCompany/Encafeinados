@@ -19,7 +19,6 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
-  // Debug para ver qué datos están llegando
   console.log("Schedules data received:", schedules);
 
   const dayNames: { [key: string]: string } = {

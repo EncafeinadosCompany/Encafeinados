@@ -136,7 +136,6 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
     );
   }
 
-  // Versión expandida para uso en otros lugares
   return (
     <div className="bg-white border border-[#E6D7C3] rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
