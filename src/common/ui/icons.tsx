@@ -58,7 +58,9 @@ export {
      ChevronDown,
      Building,
      Album,
-     MessageSquare
+     MessageSquare,
+     CalendarDays,
+     Calendar
      
 
 
