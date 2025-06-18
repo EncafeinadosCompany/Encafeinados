@@ -1,4 +1,5 @@
-import { RegisterAdminData } from "@/api/types/admin/admin_stores.type";
+
+import { RegisterAdminData } from "@/api/types/admin_stores/admin_stores.type";
 import { z } from "zod";
 
 
