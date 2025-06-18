@@ -55,7 +55,7 @@ export default function NavbarGeneral({ navItems }: NavItem) {
       setIsExpanded={setIsExpanded}
       isMobile={isMobile}
       navItems={navItems}
-      role={user?.role || null}
+      role={user?.roles || null}
     />
   );
 }

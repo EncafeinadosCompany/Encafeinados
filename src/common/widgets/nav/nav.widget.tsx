@@ -42,7 +42,7 @@ export default function NavbarGeneral({ navItems, coffeecoins, isloading}: NavIt
         navItems={navItems}
         coffeecoins={coffeecoins ? coffeecoins : 0}
         isLoading={isloading? isloading : false}
-        role={user?.role || null}
+        role={user?.roles || null}
         name={user?.email || null}
         >
       </NavGeneral>
