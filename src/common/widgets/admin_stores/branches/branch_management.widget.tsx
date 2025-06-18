@@ -16,6 +16,7 @@ import { CardFooterBranches } from "@/common/molecules/admin_stores/branches/car
 import { CardHeaderBranches } from "@/common/molecules/admin_stores/branches/card_header_branches.molecule";
 import { QRCodeBranchModal } from "@/common/molecules/admin_stores/branches/qr_code_branches_modal.molecule";
 import { AssignBranchAdminModal } from "@/common/molecules/admin_stores/branches/assign_branch_admin_modal.molecule";
+
 import { Badge } from "@/common/ui/badge";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
@@ -26,10 +27,8 @@ export default function BranchManagement() {
   const [refreshAnimation, setRefreshAnimation] = useState(false);
   const storeId = getEncryptedItem("storeId") as string | null;
 
-  const { data: branchesList, refetch, isRefetching } = useBranchByStore(Number(storeId));
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isQrCodeModalOpen, setIsQrCodeModalOpen] = useState(false);
-  const [isAssignAdminModalOpen, setIsAssignAdminModalOpen] = useState(false);
+  const { data: branchesList, refetch, isRefetching } = useBranchByStore(Number(storeId));  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isQrCodeModalOpen, setIsQrCodeModalOpen] = useState(false);  const [isAssignAdminModalOpen, setIsAssignAdminModalOpen] = useState(false);
 
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
   const [selectedQrCodeBranch, setSelectedQrCodeBranch] = useState<Branch | null>(null);
@@ -95,9 +94,7 @@ export default function BranchManagement() {
   const handleQrCodeClick = (branch: Branch) => {
     setSelectedQrCodeBranch(branch);
     setIsQrCodeModalOpen(true);
-  };
-
-  const handleAssignAdminClick = (branch: Branch) => {
+  };  const handleAssignAdminClick = (branch: Branch) => {
     setSelectedAdminBranch(branch);
     setIsAssignAdminModalOpen(true);
   };
@@ -216,8 +213,7 @@ export default function BranchManagement() {
                   exit={{ opacity: 0, y: -10 }}
                   onHoverStart={() => setHoveredCardId(branch.id)}
                   onHoverEnd={() => setHoveredCardId(null)}
-                >
-                  <BranchCard
+                >                  <BranchCard
                     branch={branch}
                     onViewDetails={() => viewBranchDetails(branch)}
                     onEdit={() => handleEditClick(branch)}
@@ -274,9 +270,7 @@ export default function BranchManagement() {
         isOpen={isQrCodeModalOpen}
         onClose={() => setIsQrCodeModalOpen(false)}
         qrCodeUrl={`${EXPOSED_URL}/coffeelover/register-branch-visit?branch_id=${selectedQrCodeBranch?.id}`}
-      />
-
-      <AssignBranchAdminModal
+      />      <AssignBranchAdminModal
         isOpen={isAssignAdminModalOpen}
         onClose={() => {
           setIsAssignAdminModalOpen(false);
