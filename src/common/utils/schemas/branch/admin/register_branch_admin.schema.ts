@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { CreateBranchAdminData } from "@/api/types/admin_stores/admin_stores.type";
 
 export const BranchAdminSchema = z.object({
   email: z

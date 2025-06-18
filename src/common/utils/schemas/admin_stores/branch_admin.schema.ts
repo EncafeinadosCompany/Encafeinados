@@ -1,5 +1,6 @@
+import { RegisterAdminData } from "@/api/types/admin/admin_stores.type";
 import { z } from "zod";
-import { CreateBranchAdminData } from "@/api/types/admin_stores/admin_stores.type";
+
 
 export const BranchAdminSchema = z.object({
   // Información de cuenta
@@ -47,7 +48,7 @@ export const BranchAdminSchema = z.object({
 export type BranchAdminFormData = z.infer<typeof BranchAdminSchema>;
 
 // Función para transformar los datos del formulario al formato requerido por la API
-export const transformToBranchAdminPayload = (formData: BranchAdminFormData): CreateBranchAdminData => {
+export const transformToBranchAdminPayload = (formData: BranchAdminFormData): RegisterAdminData => {
   return {
     userData: {
       email: formData.email,
@@ -60,7 +61,7 @@ export const transformToBranchAdminPayload = (formData: BranchAdminFormData): Cr
       full_name: formData.full_name,
       phone_number: formData.phone_number
     },
-    dataEntity: {
+    entityData: {
       branchId: formData.branch_id
     }
   };

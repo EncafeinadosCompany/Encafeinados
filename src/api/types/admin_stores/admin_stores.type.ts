@@ -8,7 +8,7 @@ export interface RegisterAdminStores {
   personData: PersonData
 }
 
-export interface CreateBranchAdminData {
+export interface RegisterAdminData {
   userData: {
     email: string,
     password: string,
@@ -20,7 +20,9 @@ export interface CreateBranchAdminData {
     full_name: string,
     phone_number: string
   },
-  dataEntity: {
-    branchId: number
+  entityData?: {
+    branchId?: number
+    storeId?: number
+
   }
 }

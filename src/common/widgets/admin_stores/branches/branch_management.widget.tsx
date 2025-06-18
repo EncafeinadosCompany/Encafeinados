@@ -17,13 +17,14 @@ import { CardHeaderBranches } from "@/common/molecules/admin_stores/branches/car
 import { QRCodeBranchModal } from "@/common/molecules/admin_stores/branches/qr_code_branches_modal.molecule";
 import { AssignBranchAdminModal } from "@/common/molecules/admin_stores/branches/assign_branch_admin_modal.molecule";
 import { Badge } from "@/common/ui/badge";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
 
 export default function BranchManagement() {
   const [loading, setLoading] = useState(true);
   const [refreshAnimation, setRefreshAnimation] = useState(false);
-  const storeId = localStorage.getItem("storeOrBranchId");
+  const storeId = getEncryptedItem("storeId") as string | null;
 
   const { data: branchesList, refetch, isRefetching } = useBranchByStore(Number(storeId));
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

@@ -17,7 +17,7 @@ interface NavGeneralProps {
   logoPath?: string;
   coffeecoins?: number;
   isLoading?: boolean;
-  role?: string | null;
+  role?: string[] | null;
   name?: string | null;
   children?: React.ReactNode;
 }
@@ -115,7 +115,7 @@ export const NavGeneral = ({
                       {name ? `Bienvenido, ${name.split('@')[0]}` : 'Encafeinados'}
                     </span>
                   </h1>
-                  {role === ROLES.COFFEE_LOVER && coffeecoins !== undefined && (
+                  {role?.includes(ROLES.COFFEE_LOVER) && coffeecoins !== undefined && (
                     <div className="flex items-center mt-1 text-[#8B593C]">
                       <img className="w-4 h-4 mr-1 opacity-80" src="/coins.png" alt="Coffee Coins" />
                       <span className="text-xs">{coffeecoins} granos</span>
@@ -193,7 +193,7 @@ export const NavGeneral = ({
 
           <div className="mt-auto border-t border-gray-100">
             <div className="px-2 py-3">
-              {role === ROLES.COFFEE_LOVER && (
+              {role?.includes(ROLES.COFFEE_LOVER) && (
                 <Link
                   to="/coffeelover"
                   className={cn(
@@ -290,7 +290,7 @@ export const NavGeneral = ({
             )}
 
             <nav className="flex justify-around items-center h-16 px-2 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">
-              {role === ROLES.COFFEE_LOVER && (
+              {role?.includes(ROLES.COFFEE_LOVER) && (
                 <Link
                   to="/coffeelover"
                   className="flex flex-col items-center justify-center px-2 py-1 rounded-xl transition-all duration-300 text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"

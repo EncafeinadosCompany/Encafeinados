@@ -19,6 +19,7 @@ import toast from "react-hot-toast"
 import { Badge } from "@/common/ui/badge"
 
 import { ChevronDown, ChevronUp } from "lucide-react"; // Add to imports
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
 
 
 const tipo_imagen = [
@@ -49,7 +50,7 @@ export const formSchemaBranches = z.object({
 
 export default function ImagesGallery() {
 
-    const BranchId = localStorage.getItem('storeOrBranchId')
+    const BranchId = getEncryptedItem("branchId") as string | null;
     if (!BranchId) {
         return toast.error('No se encontro el id de la sucursal')
     }

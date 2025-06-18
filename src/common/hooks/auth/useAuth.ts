@@ -1,25 +1,29 @@
 import { ROLES } from '@/common/utils/lists/roles.utils';
+import { getEncryptedItem, removeEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 
 export const useAuth = () => {
 
-  const pagesPermissions = (rol: string, navigate: (path: string) => void) => {
+  const pagesPermissions = (roles: string[], navigate: (path: string) => void) => {
+    const redirectPath = getEncryptedItem("redirectAfterLogin");
 
-    if (rol === ROLES.COFFEE_LOVER) {
-      return navigate("/coffeelover");
-      
-    } else if (rol === ROLES.STORE) {
+    if (redirectPath && typeof redirectPath === "string") {
+      removeEncryptedItem("redirectAfterLogin");
+      return navigate(redirectPath);
+    }
+
+    if (roles.includes(ROLES.STORE)) {
       return navigate("/stores");
-
-    }else if (rol === ROLES.ADMIN) {
-      return navigate("/admin");
-    }
-    else if (rol === ROLES.ADMIN_SUCURSAL) {
+    } else if (roles.includes(ROLES.ADMIN_SUCURSAL)) {
       return navigate("/sucursal");
-    }
-    else {
+    } else if (roles.includes(ROLES.ADMIN)) {
+      return navigate("/admin");
+    } else if (roles.includes(ROLES.COFFEE_LOVER)) {
+      return navigate("/coffeelover");
+    } else {
       navigate("/");
     }
-  }
+  };
+
   return {
     pagesPermissions
   };

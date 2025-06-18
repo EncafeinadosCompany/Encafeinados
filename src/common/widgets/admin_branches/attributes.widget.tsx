@@ -18,9 +18,9 @@ import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.t
 import { useAttributes, useBranchAttributes } from "@/api/queries/attributes/attributes.query"
 import { AttributeFormType, RegisterAttributeSchema } from "@/common/utils/schemas/attributes/create_attributes.schema"
 import { useCreateAttributeMutation, useUpdateAttributeMutation } from "@/api/mutations/attributes/attributes.mutation"
-import { getAuthStorage } from "@/common/utils/security/auth_storage.utils"
 import { ChevronDown, Coffee } from "lucide-react"
 import { ScrollIndicator } from "@/common/atoms/indicator"
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
 
 
 export default function AttributesDashboard() {
@@ -30,12 +30,13 @@ export default function AttributesDashboard() {
     const [isMultiSelectOpen, setIsMultiSelectOpen] = useState(false)
     const [selectedOptions, setSelectedOptions] = useState<Attribute[]>([])
     const [badges, setBadges] = useState<RegisterAttibute[]>([])
-    const { storeOrBranch } = getAuthStorage()
+    
     const [attributes, setAttributes] = useState<Attribute[]>([])
     const [selectedAttributes, setSelectedAttributes] = useState<RegisterAttibute[]>([])
     
-    if (!storeOrBranch) return null
-    const { data: attributesByID } = useBranchAttributes(storeOrBranch)
+    const idBranch = getEncryptedItem("branchId") as string | null;
+    if (!idBranch) return null
+    const { data: attributesByID } = useBranchAttributes(idBranch)
     const { data: attribute } = useAttributes()
     
     const { mutateAsync: useAttribute } = useCreateAttributeMutation()

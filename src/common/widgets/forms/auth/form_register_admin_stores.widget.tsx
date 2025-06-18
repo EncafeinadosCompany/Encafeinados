@@ -10,13 +10,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { FinistAdminStore2 } from "@/common/molecules/auth/admin_stores/finish_admin_store_step2.molecule";
 import ProgressIndicator from "@/common/atoms/auth/progress_indicator.atom";
-import { useAdminStoreMutation } from "@/api/mutations/admin_stores/admin_stores.mutation";
+import { useRegisterAdminMutation } from "@/api/mutations/admin/admin_stores.mutation";
 
 import { useNavigate } from "react-router-dom";
 import { TermConditions } from "./form_term_conditions.widget";
 import { Register_admin_stores } from "@/api/types/auth/auth.types";
 import { FormControl, FormField, FormItem, FormLabel } from "@/common/ui/form";
 import { Switch } from "@/common/ui/switch";
+
+import { ROLES } from "@/common/utils/lists/roles.utils";
+import { RegisterAdminData } from "@/api/types/admin_stores/admin_stores.type";
 
 
 interface RegisteAdminProps {
@@ -31,7 +34,7 @@ export const FormFinishRegisteAdmin = ({ ref, storeId, branchId }: RegisteAdminP
     const [direction, setDirection] = useState(0);
     const [formData, setFormData] = useState({})
     const [step, setStep] = useState(0)
-    const useRegisterAdminStore = useAdminStoreMutation();
+    const useRegisterAdminMutations = useRegisterAdminMutation();
     const navigate = useNavigate();
 
 
@@ -41,7 +44,7 @@ export const FormFinishRegisteAdmin = ({ ref, storeId, branchId }: RegisteAdminP
         defaultValues: {
             name: "",
             email: "",
-            type_document: "",
+            type_document: "CC",
             number_document: "",
             phone_number: "",
             hasMultipleBranch: false
@@ -64,25 +67,29 @@ export const FormFinishRegisteAdmin = ({ ref, storeId, branchId }: RegisteAdminP
         const finalData = { ...formData, ...data };
 
         console.log("Final Data:", finalData);
-        const register: Register_admin_stores = {
-            storeData: {
-                id: Number(ref),
-            },
+        const register: RegisterAdminData= {
             userData: {
                 email: finalData.email,
                 password: finalData.password,
+                roles: finalData.hasMultipleBranch? [ROLES.STORE, ROLES.ADMIN_SUCURSAL] : [ROLES.STORE]
             },
             personData: {
                 full_name: finalData.name,
                 type_document: finalData.type_document,
                 number_document: finalData.number_document,
                 phone_number: finalData.phone_number,
-            }
+            },
+            entityData: {
+                storeId: Number(storeId),
+                ...(finalData.hasMultipleBranch ? { branchId: Number(branchId) } : {})
+            },
+
         }
 
         try {
+            console.log("Register Data prueba:", register);
 
-            await useRegisterAdminStore.mutateAsync(register);
+            await useRegisterAdminMutations.mutateAsync(register);
             navigate("/login");
         } catch (error) {
             console.error("Registration error:", error);
@@ -90,10 +97,10 @@ export const FormFinishRegisteAdmin = ({ ref, storeId, branchId }: RegisteAdminP
     };
 
     return (
-        <Card className="border-none bg-white/80 p-10 shadow-2xl">
+        <Card className="border-none  bg-white/60 p-10 shadow-lg">
 
             <motion.div
-                className="max-w-2xlw-full"
+                className="max-w-2xl w-full"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}

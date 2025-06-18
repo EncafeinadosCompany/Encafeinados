@@ -34,7 +34,7 @@ export const FinistAdminStore2 = ({ register, control, errors }: registerAdminPr
                                 {...register('name')}
                                 {...registerWithFocus('name')}
                                 placeholder="Ingresa tu nombre"
-                                className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+                                className=" bg-white/20 pl-10 text-gray-600  border-gray-300  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
                             />
                             {errors.name && <p className="text-red-700 text-xs">{errors.name.message}</p>}
                         </div>
@@ -48,7 +48,7 @@ export const FinistAdminStore2 = ({ register, control, errors }: registerAdminPr
                                 {...register('last_name')}
                                 {...registerWithFocus('last_name')}
                                 placeholder="Ingresa tus apellídos"
-                                className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+                                className=" bg-white/20 pl-10 text-gray-600  border-gray-300 focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
 
                             />
                             {errors.last_name && <p className="text-red-700 text-xs">{errors.last_name.message}</p>}
@@ -64,7 +64,7 @@ export const FinistAdminStore2 = ({ register, control, errors }: registerAdminPr
                                 <div className="relative">
                                     <FileText className="absolute top-3 left-4 text-gray-400" size={16}/>
                                     <SelectTypeDocument
-                                        className="rounded-full pl-10"
+                                        className="bg-white/20 pl-10 text-gray-600 focus:ring-[0.5px] focus:ring-[#DB8935]   border-gray-300 rounded-full "
                                         onValueChange={field.onChange}
                                         value={field.value}
                                     />
@@ -84,7 +84,7 @@ export const FinistAdminStore2 = ({ register, control, errors }: registerAdminPr
                                 {...register("number_document")}
                                 {...registerWithFocus("number_document")}
                                 placeholder="Ingresa tu número de documento"
-                                className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+                                className="bg-white/20 pl-10 text-gray-600  border-gray-300 focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
                             />
                             {errors?.number_document && <p className="text-red-700 text-xs m-2">{errors.number_document.message}</p>}
                         </div>
@@ -98,7 +98,7 @@ export const FinistAdminStore2 = ({ register, control, errors }: registerAdminPr
                                 {...register("phone_number")}
                                 {...registerWithFocus("phone_number")}
                                 placeholder="Número de teléfono"
-                                className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
+                                className="bg-white/20 pl-10 text-gray-600  border-gray-300  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
 
                             />
                             {errors?.phone_number && <p className="text-red-700 text-xs m-2">{errors.phone_number.message}</p>}

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import {LoginResponse, User_Data } from '../../types/auth/auth.types'
+import { LoginResponse, User_Data } from '../../types/auth/auth.types'
 import { useError } from '@/common/hooks/auth/useErrors'
 import { clearAuthStorage, saveCoffeeLoverProfileToStorage, setAuthStorage } from '@/common/utils/security/auth_storage.utils'
 import AuthClient from '../../client/axios'
@@ -9,16 +9,16 @@ import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { ROLES } from '@/common/utils/lists/roles.utils'
 import { CoffeeLoverProfileType } from '@/api/types/coffelovers/coffelovers.type'
-import { getEncryptedItem, saveEncryptedItem } from '@/common/utils/security/storage_encrypted.utils'
+import { getEncryptedItem, removeEncryptedItem, saveEncryptedItem } from '@/common/utils/security/storage_encrypted.utils'
 
- 
+
 
 const authClient = new AuthClient()
 
 export const useLoginMutation = () => {
   const queryClient = useQueryClient()
   const { pagesPermissions } = useAuth()
-  
+
 
 
   const useErros = useError('login')
@@ -26,59 +26,64 @@ export const useLoginMutation = () => {
 
   return useMutation<LoginResponse, Error, User_Data>({
     mutationFn: async (formData: User_Data) => {
-      
+
       try {
         const response = await authClient.post<LoginResponse>('/auth/login', formData);
         return response as LoginResponse;
-  
+
       } catch (error: any) {
         throw handleApiError(error)
-      }    
+      }
     },
     onSuccess: (data) => {
       queryClient.setQueryData(['user'], data.user);
-      
+
       queryClient.setQueryData(['authToken'], data.accessToken);
 
-      if(data.storeOrBranchId) {
-        queryClient.setQueryData(['storeOrBranchId'], data.storeOrBranchId);
-        localStorage.setItem('storeOrBranchId', data.storeOrBranchId.toString())
-        saveEncryptedItem('branchId', data.storeOrBranchId.toString());
-        saveEncryptedItem('storeId', data.storeOrBranchId.toString());
-      }
+      saveEncryptedItem('user', data.user);
 
 
-      if(data.user.id){
-        // localStorage.setItem('userId', data.user.id)
-         saveEncryptedItem('userId', data.user.id);
-      }
+      console.log("roles enviados:", data.storeId, data.branchId,);
 
-      if (data.user.role === ROLES.COFFEE_LOVER) {
+      data.branchId && saveEncryptedItem('branchId', data.branchId.toString());
 
-        authClient.get(`/clients/user/${data.user.id}`)
-        .then(profileData => {
-          // Save profile data using the utility function
-          saveCoffeeLoverProfileToStorage(profileData as CoffeeLoverProfileType);
-          
-          // Continue with other operations
-          setAuthStorage(data.accessToken);
-          
-        })
-        .catch(error => {
-          console.error("Error fetching coffee lover profile:", error);
-          setAuthStorage(data.accessToken);
-        });
-      }
+      data.storeId && saveEncryptedItem('storeId', data.storeId.toString());
+
+      data.user.id && saveEncryptedItem('userId', data.user.id);
+
 
       setAuthStorage(data.accessToken);
 
-       saveEncryptedItem('user', data.user);
+      if (data.user.role.includes(ROLES.COFFEE_LOVER)) {
 
-       pagesPermissions(data.user.role, navigate)
+        authClient.get(`/clients/user/${data.user.id}`)
+          .then(profileData => {
+            saveCoffeeLoverProfileToStorage(profileData as CoffeeLoverProfileType);
+          })
+          .catch(error => {
+            console.error("Error fetching coffee lover profile:", error);
+          });
+      }
 
-      
+      console.log("User data saved to encrypted storage:", data.user);
 
-       toast.success("Inicio de sesión exitoso, ¡Bienvenido!");
+
+      const redirectPath = getEncryptedItem("redirectAfterLogin");
+
+      if (redirectPath) {
+        // Eliminar la ruta guardada
+        removeEncryptedItem("redirectAfterLogin");
+        // Redirigir a la ruta anterior
+
+        console.log("Redirigiendo a la ruta guardada:", redirectPath);
+        navigate(redirectPath);
+      } else {
+        // Si no hay ruta guardada, usar el comportamiento predeterminado
+        pagesPermissions(data.user.role, navigate);
+      }
+
+
+      toast.success("Inicio de sesión exitoso, ¡Bienvenido!");
 
 
       queryClient.invalidateQueries({ queryKey: ['user'] });
@@ -104,7 +109,7 @@ export const useLogoutMutation = () => {
 
   return useMutation({
     mutationFn: async () => {
-       clearAuthStorage()
+      clearAuthStorage()
     },
     onSuccess: () => {
       queryClient.clear();

@@ -41,7 +41,7 @@ export const FinishAdminStore = ({ register, errors }: registerAdminProps) => {
                     <InputPassword
                         {...register('password')}
                         {...registerWithFocus('password')}
-                        id="firstName" placeholder="Ingresa tu contraseña"
+                        id="firstName" placeholder="Ingresa tu PIN"
                         className="rounded-full pl-10 text-gray-400 border border-gray-400  focus:ring-2 focus:ring-[#DB8935] focus:border-transparent transition-all"
 
                     />
@@ -49,7 +49,7 @@ export const FinishAdminStore = ({ register, errors }: registerAdminProps) => {
                 </div>
 
                 <div className="relative flex flex-col space-y-2">
-                    <Label className={`flex items-center text-xs transition-colors ${focusedField === "confirmPassword" ? "text-[#DB8935]" : "text-gray-600"}`}>Confirmar tu clave</Label>
+                    <Label className={`flex items-center text-xs transition-colors ${focusedField === "confirmPassword" ? "text-[#DB8935]" : "text-gray-600"}`}>Confirmar tu PIN</Label>
                     <Lock className="absolute top-9 left-4 text-gray-400" size={18} />
                     <InputPassword
                         id="lastName"

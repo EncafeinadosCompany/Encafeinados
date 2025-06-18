@@ -13,7 +13,7 @@ import { Input } from '@/common/ui/input';
 import { Label } from '@/common/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/ui/select';
 import { Branch } from '@/api/types/branches/branches.types';
-import { useCreateBranchAdminMutation } from '@/api/mutations/admin_stores/admin_stores.mutation';
+import {  useRegisterAdminMutation } from '@/api/mutations/admin/admin_stores.mutation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BranchAdminSchema, transformToBranchAdminPayload } from '@/common/utils/schemas/admin_stores/branch_admin.schema';
@@ -33,7 +33,7 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const createBranchAdminMutation = useCreateBranchAdminMutation();
+  const createBranchAdminMutation = useRegisterAdminMutation();
   
   const { 
     register, 

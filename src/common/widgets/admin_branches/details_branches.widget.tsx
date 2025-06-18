@@ -9,11 +9,12 @@ import { RightCardBranch } from "@/common/molecules/admin_branch/details_branche
 
 import { useStatesIsOpen } from "@/api/mutations/branches/branch_states.mutation";
 import { useBranchesID, useImagenBranch } from "@/api/queries/branches/branch.query";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 
 export default function PrincipalBranchesPage() {
 
-    const BranchId = localStorage.getItem('storeOrBranchId')
+    const BranchId = getEncryptedItem("branchId") as string | null;
     if (!BranchId) {
         return toast.error('No se encontro el id de la sucursal')
     }
