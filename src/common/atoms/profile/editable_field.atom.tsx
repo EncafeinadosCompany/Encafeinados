@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, Pencil, X } from 'lucide-react';
+import { Check, Pencil, X } from'@/common/ui/icons';
 
 interface EditableFieldProps {
   label: string;

@@ -1,5 +1,5 @@
 import {motion} from "framer-motion"
-import { Coffee, Star } from "lucide-react"
+import { Coffee, Star } from'@/common/ui/icons'
 import { Button } from "@/common/ui/button"
 import { RegisterAttibute } from "@/api/types/attributes/attributes.type"
 

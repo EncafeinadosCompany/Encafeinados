@@ -16,6 +16,7 @@ export interface Branch {
   latitude: number;
   longitude: number;
   address?: string;
+  details?: string;
   store_name?: string; 
   store?: {
     store_id: number;
@@ -34,6 +35,7 @@ export interface BranchPost {
   latitude: number;
   longitude: number;
   address: string;
+  details?: string;
   social_branches?: SocialBranch[];
   criteria?: any;
 }
@@ -74,6 +76,7 @@ export interface BrancheIDresponse {
     latitude: number;
     longitude: number;
     address: string;
+    details?: string;
     is_open: boolean;
     store: {
       store_id: number;

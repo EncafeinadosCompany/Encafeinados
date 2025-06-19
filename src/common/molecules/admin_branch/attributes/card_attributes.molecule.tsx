@@ -1,5 +1,5 @@
 import { Card } from "@/common/ui/card"
-import { AlertCircle, Star, X } from "lucide-react"
+import { AlertCircle, Star} from'@/common/ui/icons'
 import { motion } from "framer-motion"
 import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.type"
 

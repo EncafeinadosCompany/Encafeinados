@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Calendar, Save, RotateCcw, AlertCircle } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/common/ui/dialog';
+import { Clock, Calendar, Save, RotateCcw, AlertCircle } from'@/common/ui/icons'
+import {DialogContent,Dialog,DialogHeader,DialogTitle,DialogDescription} from '@/common/ui/dialog';
 import { Button } from '@/common/ui/button';
 import { Input } from '@/common/ui/input';
 import { Label } from '@/common/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/common/ui/card';
 import { Branch } from '@/api/types/branches/branches.types';
-import { BranchSchedule } from '@/api/types/schedules/schedule.types';
+
 import { useBranchSchedules } from '@/api/queries/schedules/schedule.query';
 import { useUpdateBranchScheduleMutation, useBulkUpdateBranchSchedulesMutation } from '@/api/mutations/schedules/schedule.mutation';
 import { DAYS_OF_WEEK, DEFAULT_SCHEDULE_DATA, validateDaySchedule } from '@/common/utils/schemas/schedules/schedule.schema';

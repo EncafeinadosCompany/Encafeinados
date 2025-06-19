@@ -1,9 +1,9 @@
 
 import { motion } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
-import es from 'date-fns/locale/es';
+import {es} from 'date-fns/locale/es';
 import { EventDto} from '@/api/types/events/events.types';
-import { Clock, MapPin, User } from 'lucide-react';
+import { Clock, MapPin, User }from'@/common/ui/icons';
 import { Badge } from '@/common/ui/badge';
 
 

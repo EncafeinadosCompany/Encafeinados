@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Badge } from "@/common/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/common/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { BookOpen, CalendarIcon, Coffee, Loader2, Stamp as StampIcon, PlusCircle, RefreshCw } from "lucide-react";
+import { BookOpen, CalendarIcon, Coffee, Loader2, Stamp as StampIcon, PlusCircle} from'@/common/ui/icons';
 import { PageStampsDialog } from "../stamps/page_stamps_dialog.molecule";
 import { CreatePageDialog } from "../page/create_page_dialog.molecule";
 import { AddStampsDialog } from "../stamps/add_stamps_dialog.molecule";

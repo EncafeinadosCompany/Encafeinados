@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw } from'@/common/ui/icons';
 
 interface StoreConfirmDialogProps {
   isOpen: boolean;

@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 import { motion } from "framer-motion";
-import { Eye, CheckCircle2, XCircle } from "lucide-react";
+import { Eye, CheckCircle2, XCircle } from'@/common/ui/icons';
 import { StoreAvatar } from "@/common/atoms/StoreAvatar";
 
 interface StoreCardProps {

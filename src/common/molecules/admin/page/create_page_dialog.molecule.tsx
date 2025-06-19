@@ -4,11 +4,11 @@ import { Button } from "@/common/ui/button";
 import { Input } from "@/common/ui/input";
 import { Textarea } from "@/common/ui/textarea";
 import { Label } from "@/common/ui/label";
-import { BookOpenText, LayoutGrid, Check, X, Loader2 } from "lucide-react";
+import { BookOpenText, LayoutGrid, Check, X, Loader2 } from'@/common/ui/icons';
 import toast from 'react-hot-toast';
 import { Badge } from "@/common/ui/badge";
 import { useCreatePageMutation } from "@/api/mutations/album/pages.mutation";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select";
+
 
 interface CreatePageDialogProps {
   albumId: number;

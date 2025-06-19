@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/common/ui/card";
 import { motion } from "framer-motion";
 import { Badge } from "@/common/ui/badge";
 import { Button } from "@/common/ui/button";
-import { Calendar, Eye, Clock, Album } from "lucide-react";
+import { Calendar, Eye, Clock, Album } from'@/common/ui/icons';
 import { AlbumResponse } from "@/api/types/album/album.types";
 
 interface AlbumCardProps {

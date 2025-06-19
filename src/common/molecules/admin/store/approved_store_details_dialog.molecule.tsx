@@ -5,7 +5,7 @@ import {
 } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
 import { Badge } from "@/common/ui/badge";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle } from'@/common/ui/icons';
 import { StoreAvatar } from "@/common/atoms/StoreAvatar";
 
 interface ApprovedStoreDetailsDialogProps {

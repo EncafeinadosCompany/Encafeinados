@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { StoreDto } from "@/api/types/stores/stores.type";
-import { CheckCircle2, XCircle, AlertTriangle } from "lucide-react"; 
+import { CheckCircle2, XCircle, AlertTriangle } from'@/common/ui/icons'; 
 import toast from "react-hot-toast";
 import { usePendingStores } from "@/api/queries/stores/stores.query";
 import { useChangeStoreStatus } from "@/api/mutations/stores/change_stores_status.mutation";

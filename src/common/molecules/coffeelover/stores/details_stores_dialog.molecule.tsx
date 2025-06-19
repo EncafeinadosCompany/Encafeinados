@@ -9,7 +9,7 @@ import { Textarea } from "@/common/ui/textarea";
 import { Button } from "@/common/ui/button";
 import { useBranchesID } from "@/api/queries/branches/branch.query";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Loader2, MessageCircleDashedIcon, MoveLeftIcon } from "lucide-react";
+import { ArrowLeft, Loader2, MessageCircleDashedIcon, MoveLeftIcon } from "@/common/ui/icons";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/common/ui/form";
 import { useCreateRecommendationMutation } from "@/api/mutations/recommendation/recommendation.mutation";
 import { useForm } from "react-hook-form";

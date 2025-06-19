@@ -1,8 +1,11 @@
 import L from "leaflet";
 
-export const currentLocationIcon = new L.Icon({
-    iconUrl: "https://res.cloudinary.com/dtnnyqa0g/image/upload/v1745524417/images-coffee/2-removebg-preview%20%281%29.png.png",
-    iconSize: [50, 50],
-    iconAnchor: [30, 50],
-    popupAnchor: [0, -32],
-  });
+
+export const  currentLocationIcon= L.icon({
+  iconUrl: "/pin.png", // Puedes personalizarlo si descargas otro
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
+  shadowSize: [41, 41],
+});

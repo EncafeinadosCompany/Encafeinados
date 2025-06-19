@@ -1,8 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { 
-  ArrowLeft, Search, Filter, Coffee, Star, Clock, MapPin, Heart, 
-  Share2, Navigation, Route, ExternalLink, Copy, Map as MapIcon, X
-} from 'lucide-react';
+import { ArrowLeft, Search, Filter, Coffee, Navigation, Map as MapIcon, X} from "@/common/ui/icons";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';

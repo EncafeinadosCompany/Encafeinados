@@ -1,4 +1,4 @@
-import { Coffee } from "lucide-react";
+import { Coffee }  from'@/common/ui/icons'
 import React from "react";
 
 

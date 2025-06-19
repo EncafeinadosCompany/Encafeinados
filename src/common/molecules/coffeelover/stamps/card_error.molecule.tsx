@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/common/ui/card"
-import { AlertCircle, Coffee } from "lucide-react"
+import { AlertCircle, Coffee } from'@/common/ui/icons'
 
 export const CardStampsError = () => {
     return (

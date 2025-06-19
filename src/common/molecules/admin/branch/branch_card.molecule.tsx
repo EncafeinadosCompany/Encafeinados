@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from "@/common/ui/tooltip";
 import { motion } from "framer-motion";
-import { Eye, CheckCircle2, XCircle, MapPin } from "lucide-react";
+import { Eye, MapPin } from'@/common/ui/icons';
 
 interface BranchCardProps {
   branch: {

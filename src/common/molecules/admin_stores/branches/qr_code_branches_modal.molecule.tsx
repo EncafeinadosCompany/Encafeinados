@@ -1,15 +1,8 @@
 import { QRCode } from "@/common/atoms/QRCode";
-import { CardContent } from "@/common/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/common/ui/dialog";
+import {Dialog,DialogContent,DialogHeader,DialogTitle} from "@/common/ui/dialog";
 import { Description } from "@radix-ui/react-dialog";
 import { toPng } from "html-to-image";
-import { DownloadIcon, InfoIcon, QrCodeIcon } from "lucide-react";
-import { useRef } from "react";
+import { DownloadIcon, InfoIcon, QrCodeIcon } from'@/common/ui/icons';
 
 export const QRCodeBranchModal = ({
   isOpen,

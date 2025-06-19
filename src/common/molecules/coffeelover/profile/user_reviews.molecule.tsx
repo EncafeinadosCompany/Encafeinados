@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { MessageSquare, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MessageSquare, Calendar, ChevronLeft, ChevronRight } from'@/common/ui/icons';
 import { useWindowSize } from '@/common/hooks/useWindowSize';
 import { useClientReviews } from '@/api/queries/reviews/reviews.query';
 import { format } from 'date-fns';

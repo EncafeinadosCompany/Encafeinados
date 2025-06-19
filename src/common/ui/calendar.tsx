@@ -1,6 +1,5 @@
 import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useMonth, useDay} from "@datepicker-react/hooks"
+import { ChevronLeft, ChevronRight } from "@/common/ui/icons";
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 

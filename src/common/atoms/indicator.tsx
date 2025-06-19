@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown } from'@/common/ui/icons';
 
 interface ScrollIndicatorProps {
     containerRef: React.RefObject<HTMLElement>;

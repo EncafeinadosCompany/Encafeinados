@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogTrigger, DialogClose } from '@/common/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogTrigger} from '@/common/ui/dialog';
 import { Button } from '@/common/ui/button';
-import { BookPlus, Coffee, Sparkles, AlertTriangle, X, Calendar } from 'lucide-react';
+import { BookPlus, Coffee, Sparkles, AlertTriangle, X, Calendar } from "@/common/ui/icons";
 import { CreateAlbumDto, AlbumType } from '@/api/types/album/album.types';
 import { cn } from '@/lib/utils';
 import { useCreateAlbumMutation } from '@/api/mutations/album/album.mutation';

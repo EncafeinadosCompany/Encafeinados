@@ -1,5 +1,5 @@
-import { icon } from "leaflet";
-import { LinkIcon, Mail, Phone, User } from "lucide-react";
+
+import { LinkIcon, Mail, Phone, User } from'@/common/ui/icons';
 
 export const UseNetworkInputConfig = (networkName: string) => {
     const lowerName = networkName?.toLowerCase() || '';

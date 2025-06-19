@@ -2,24 +2,26 @@ import { getCurrentLocationProps, handleSearchProps, recentSearchesProps } from 
 import { formatAddress } from "@/common/utils/map/format_address.utils";
 
 const MapSettings = {
-  getCurrentLocation: async({onLocationSelect, setCurrentAddress, setIsLocating, setCurrentPosition, setSelectedPosition , setSearchQuery}:getCurrentLocationProps) => {
+  getCurrentLocation: async ({
+    onLocationSelect,
+    setCurrentAddress,
+    setIsLocating,
+    setCurrentPosition,
+    setSelectedPosition,
+    setSearchQuery
+  }: getCurrentLocationProps) => {
     setIsLocating(true);
-    
+
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
         setCurrentPosition([lat, lng]);
-        setSelectedPosition([lat, lng]);       
+        setSelectedPosition([lat, lng]);
+
         try {
           const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&namedetails=1&accept-language=es`,
-            {
-              headers: {
-                'User-Agent': 'EncafeinadosApp/1.0',
-                'Accept-Language': 'es'
-              }
-            }
+            `https://us1.locationiq.com/v1/reverse?key=${import.meta.env.VITE_LOCATIONIQ_API_KEY}&lat=${lat}&lon=${lng}&format=json`
           );
           const data = await response.json();
           const formattedAddress = formatAddress(data);
@@ -29,134 +31,64 @@ const MapSettings = {
         } catch (error) {
           console.error("Error fetching current address:", error);
         }
-        
+
         setIsLocating(false);
       },
       (err) => {
         console.error("Error obteniendo ubicación actual:", err);
         setIsLocating(false);
       },
-      { 
-        enableHighAccuracy: true, 
+      {
+        enableHighAccuracy: true,
         timeout: 15000,
-        maximumAge: 0 // Siempre obtener posición fresca
+        maximumAge: 0
       }
     );
   },
 
-  saveRecentSearch: (search: { display_name: string; lat: string; lon: string },{recentSearches,setRecentSearches}:recentSearchesProps) => {
+  saveRecentSearch: (search: { display_name: string; lat: string; lon: string }, { recentSearches, setRecentSearches }: recentSearchesProps) => {
     const updatedSearches = [
       search,
       ...(recentSearches as { display_name: string; lat: string; lon: string }[]).filter(item => item.display_name !== search.display_name)
     ].slice(0, 5);
-    
+
     setRecentSearches(updatedSearches);
     localStorage.setItem('recentMapSearches', JSON.stringify(updatedSearches));
   },
 
-  handleSearch: async (query: string, {setSearchQuery, setShowSuggestions, setSuggestions,setIsSearching, searchTimeoutRef}:handleSearchProps) => {
+  handleSearch: async (query: string, { setSearchQuery, setShowSuggestions, setSuggestions, setIsSearching, searchTimeoutRef }: handleSearchProps) => {
     setSearchQuery(query);
     setShowSuggestions(true);
-    
+
     if (query.length < 2) {
       setSuggestions([]);
       return;
     }
 
-    // Clear previous timeout
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
 
-    // Set new timeout for debounce
     searchTimeoutRef.current = setTimeout(async () => {
       setIsSearching(true);
       try {
-        // Prepare query for Colombian addresses
-        let enhancedQuery = query;
-        
-        // Detectar formato de dirección colombiana (Cra, Calle, Av, etc.)
-        const colombianAddressPattern = /^(cra\.?|carrera|calle|cl\.?|av\.?|avenida|diag\.?|diagonal|trans\.?|transversal)\s*\d+\s*[a-z]?\s*#?\s*\d+\s*[a-z]?(-|\s)\d+/i;
-        
-        if (colombianAddressPattern.test(query)) {
-          // If it's a Colombian address, add Medellín, Colombia to improve results
-          enhancedQuery = `${query}, Medellín, Colombia`;
-        } else {
-          // For general searches, add Colombia context
-          enhancedQuery = `${query}, Colombia`;
-        }
-        
-        // Primera búsqueda con contexto específico de Medellín
-        let response = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(enhancedQuery)}&addressdetails=1&limit=5&countrycodes=co&namedetails=1&accept-language=es`,
-          {
-            headers: {
-              'User-Agent': 'EncafeinadosApp/1.0',
-              'Accept-Language': 'es'
-            }
-          }
+        const apiKey = import.meta.env.VITE_LOCATIONIQ_API_KEY;
+        const response = await fetch(
+          `https://us1.locationiq.com/v1/autocomplete?key=${apiKey}&q=${encodeURIComponent(query)}&limit=5&countrycodes=co&normalizecity=1&accept-language=es`
         );
-        let data = await response.json();
-        
-        // Si no hay resultados, intentar con la consulta original sin modificar
-        if (data.length === 0) {
-          response = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=5&countrycodes=co&namedetails=1&accept-language=es`,
-            {
-              headers: {
-                'User-Agent': 'EncafeinadosApp/1.0',
-                'Accept-Language': 'es'
-              }
-            }
-          );
-          data = await response.json();
-        }
-        
-        // If there are still no results, try structured search for Colombian addresses
-        if (data.length === 0 && colombianAddressPattern.test(query)) {
-          // Extraer componentes de la dirección colombiana
-          const addressParts = query.match(colombianAddressPattern);
-          if (addressParts) {
-            const structuredQuery = {
-              street: query,
-              city: "Medellín",
-              country: "Colombia"
-            };
-            
-            response = await fetch(
-              `https://nominatim.openstreetmap.org/search?format=json&street=${encodeURIComponent(structuredQuery.street)}&city=${encodeURIComponent(structuredQuery.city)}&country=${encodeURIComponent(structuredQuery.country)}&addressdetails=1&limit=5&namedetails=1&accept-language=es`,
-              {
-                headers: {
-                  'User-Agent': 'EncafeinadosApp/1.0',
-                  'Accept-Language': 'es'
-                }
-              }
-            );
-            data = await response.json();
-          }
-        }
-        
-        // Process and format the suggestions
+        const data = await response.json();
+
         const formattedSuggestions = data.map((item: any) => ({
           ...item,
           display_name: formatAddress(item)
         }));
-        
+
         setSuggestions(formattedSuggestions);
       } catch (error) {
         console.error("Error searching for address:", error);
       } finally {
         setIsSearching(false);
       }
-    }, 300); // Reduced debounce time for more responsive feel
+    }, 300);
   }
-
-} 
+};
 
 export default MapSettings;
-
-
-
-
-
-

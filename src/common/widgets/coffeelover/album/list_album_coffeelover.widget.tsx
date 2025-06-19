@@ -1,6 +1,5 @@
 import {  useAlbumsClientQuery} from "@/api/queries/album/album.query";
 import { useEffect, useState } from "react";
-import { Stamp} from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { CardError } from "@/common/molecules/coffeelover/album/card_error.molecule";

@@ -1,4 +1,4 @@
-import { Coffee, X } from "lucide-react"
+import { Coffee, X } from'@/common/ui/icons'
 
 
 interface Tips {

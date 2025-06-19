@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Coffee, CheckCircle, AlertCircle, Loader2, Store, MapIcon, ArrowUpRight, RefreshCcw, Sparkles, MessageCircle } from "lucide-react";
+import { MapPin, Coffee, CheckCircle, AlertCircle, Loader2, Store, MapIcon, ArrowUpRight, RefreshCcw, Sparkles, MessageCircle } from "@/common/ui/icons"
 import { Button } from "@/common/ui/button";
 import { CoffeeBackground } from "@/common/widgets/coffee_background.widget";
 

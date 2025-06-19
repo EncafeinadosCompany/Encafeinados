@@ -2,7 +2,7 @@ import { Stamps, StampsByClientResponse } from "@/api/types/album/stamps.types";
 import { Badge } from "@/common/ui/badge";
 import { Card, CardContent } from "@/common/ui/card";
 import {motion} from "framer-motion";
-import { Calendar, Search } from "lucide-react";
+import { Calendar, Search } from'@/common/ui/icons'
 interface CardStampProps {
   stamps: Stamps[];
   users:StampsByClientResponse | null;

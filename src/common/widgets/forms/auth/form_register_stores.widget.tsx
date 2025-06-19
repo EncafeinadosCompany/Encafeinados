@@ -25,7 +25,7 @@ const FormRegisterStores = () => {
     const [direction, setDirection] = useState(0);
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
-    const { mutateAsync: useRegiterStore, isIdle, isPending, status } = useRegisterStoreMutation();
+    const { mutateAsync: useRegiterStore,status } = useRegisterStoreMutation();
     const navigate = useNavigate();
 
     const methods = useForm<CurrentSchema>({
@@ -40,10 +40,6 @@ const FormRegisterStores = () => {
         mode: "onChange"
     })
 
-
-    useEffect(() => {
-        console.log(status)
-    }, [status])
 
     const onNext = () => {
         methods.trigger().then((isValid) => {

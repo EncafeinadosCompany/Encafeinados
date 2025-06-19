@@ -1,9 +1,8 @@
 import { Attribute } from "@/api/types/attributes/attributes.type"
 import { Button } from "@/common/ui/button"
-import { Checkbox } from "@/common/ui/checkbox"
 import { Label } from "@/common/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover"
-import { AlertCircle, Check, ChevronDown } from "lucide-react"
+import { AlertCircle, Check, ChevronDown } from'@/common/ui/icons'
 
 
 

@@ -24,18 +24,6 @@ export const CardSuccessToast = ({ t, name }: { t: any; name: string | null }) =
           </div>
         </div>
       </div>
-      <div className="flex border-l border-gray-200">
-        <a
-          href="/"
-          onClick={() => {
-            toast.dismiss(t.id)
-            // navigate("/")
-          }}
-          className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-amber-900 hover:text-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-50"
-        >
-          Volver al inicio
-        </a>
-      </div>
     </div>
   )
 }

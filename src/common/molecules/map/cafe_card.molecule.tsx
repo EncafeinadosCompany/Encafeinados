@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Star, MapPin, Clock, Heart, Route, Wifi, Car, CreditCard, Coffee } from 'lucide-react';
+import { Star, MapPin, Clock, Heart, Route}  from "@/common/ui/icons";
 import { Cafe } from '@/api/types/map/map_search.types';
 import HighlightText from '@/common/atoms/HighlightText';
 import { useBranchSchedules } from '@/api/queries/schedules/schedule.query';

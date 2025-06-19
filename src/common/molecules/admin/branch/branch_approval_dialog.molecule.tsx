@@ -5,10 +5,8 @@ import {
 } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
 import { Badge } from "@/common/ui/badge";
-import { 
-  MapPin, Phone, CalendarClock, CheckCircle2, XCircle, 
-  Loader2, AlertCircle, Coffee 
-} from "lucide-react";
+import { Loader2, AlertCircle, Coffee,MapPin, Phone, CalendarClock, CheckCircle2, 
+} from'@/common/ui/icons';
 import { CriteriaItem } from './criteria_item.molecule';
 import { useBranchApprovalDetails } from '@/api/queries/branches/branch.query';
 

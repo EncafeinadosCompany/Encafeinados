@@ -1,4 +1,4 @@
-import { Store, Phone, Coffee, ChevronDown } from "lucide-react";
+import { Store, Phone, Coffee, ChevronDown } from "@/common/ui/icons"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 

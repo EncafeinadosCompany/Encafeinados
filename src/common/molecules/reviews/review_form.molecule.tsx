@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { MessageCircle, Coffee, Send, Image as ImageIcon } from "lucide-react";
+import { MessageCircle, Coffee, Send, Image as ImageIcon } from "@/common/ui/icons";
 
 import { Button } from "@/common/ui/button";
 import { Textarea } from "@/common/ui/textarea";

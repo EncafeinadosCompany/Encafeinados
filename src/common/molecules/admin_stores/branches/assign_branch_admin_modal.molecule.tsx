@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { UserPlus, Mail, Lock, User, Phone, IdCard, CheckCircle, Eye, EyeOff } from 'lucide-react';
+import { UserPlus, Mail, Lock, User, Phone, IdCard, CheckCircle, Eye, EyeOff } from'@/common/ui/icons';
 import {
   Dialog,
   DialogContent,

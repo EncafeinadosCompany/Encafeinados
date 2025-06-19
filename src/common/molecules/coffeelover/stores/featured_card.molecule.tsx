@@ -1,10 +1,8 @@
-import { FlameIcon as Fire } from "@/common/ui/icons";
+import { FlameIcon as Fire, Coffee } from "@/common/ui/icons";
 import { Card, CardContent } from "@/common/ui/card";
-import { Dialog } from "@/common/ui/dialog";
 import { useState } from "react";
 
 import { ApprovedBranch} from "@/api/types/branches/branches_approval.types";
-import { Coffee } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface FeaturedCardProps {

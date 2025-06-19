@@ -1,28 +1,17 @@
 import React, { useState } from "react";
 
 import { StoreDto } from "@/api/types/stores/stores.type";
-import { 
-  Card, CardContent, CardHeader, CardTitle, CardFooter 
-} from "@/common/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter} from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
 import { Badge } from "@/common/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay } from "@/common/ui/dialog";
 import { Input } from "@/common/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  XCircle, RefreshCw, Search, Eye, AlertTriangle, ChevronLeft, ChevronRight, ShieldX
-} from "lucide-react";
+import { RefreshCw, Search, Eye, AlertTriangle, ChevronLeft, ChevronRight, ShieldX}  from "@/common/ui/icons";
 import { useQueryClient } from "@tanstack/react-query";
-import { 
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
-} from "@/common/ui/select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/common/ui/tooltip";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/common/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/common/ui/tooltip";
 import { useRejectedStores } from "@/api/queries/stores/stores.query";
 
 export const RejectedStoresWidget = () => {

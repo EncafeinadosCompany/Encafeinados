@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PlusCircle, RefreshCw } from "lucide-react";
+import { PlusCircle, RefreshCw }  from "@/common/ui/icons"
 import { Button } from "@/common/ui/button";
 import { Card, CardContent } from "@/common/ui/card";
 import { BranchCard } from "@/common/molecules/admin_stores/branches/branch_card.molecule";

@@ -1,4 +1,4 @@
-import {ChevronRight } from "lucide-react"
+import {ChevronRight } from'@/common/ui/icons'
 import { SetStateAction } from "react"
 import { AlbumResponse } from "@/api/types/album/album.types"
 
@@ -9,10 +9,6 @@ interface AlbumProps {
     setHoveredAlbum: React.Dispatch<SetStateAction<number | null>>
     formatDate: (date: string) => string
 }
-
-
-
-
 
 export const CardAlbum = ({hoveredAlbum, album, formatDate}:AlbumProps) => {
 

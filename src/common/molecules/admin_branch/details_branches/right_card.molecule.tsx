@@ -4,7 +4,7 @@ import { Card } from "@/common/ui/card"
 import { Label } from "@/common/ui/label"
 import { Switch } from "@/common/ui/switch"
 import { Button } from "@/common/ui/button"
-import { Clock, Settings } from "lucide-react"
+import { Clock, Settings } from'@/common/ui/icons'
 
 
 interface RightCardProps {

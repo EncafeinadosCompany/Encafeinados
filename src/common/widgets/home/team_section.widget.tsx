@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Coffee, Users, Handshake } from 'lucide-react';
+import { Coffee,  Handshake } from "@/common/ui/icons"
 import { TeamCard } from '@/common/molecules/home/team_card.molecule';
 import { teamMembers, partners } from '@/common/utils/lists/team_members.utils';
 

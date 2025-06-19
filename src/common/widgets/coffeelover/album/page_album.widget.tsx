@@ -1,9 +1,9 @@
-import {usePageByAlbumQuery } from "@/api/queries/album/album.query";
+import { usePageByAlbumQuery } from "@/api/queries/album/album.query";
 import HTMLFlipBook from 'react-pageflip';
 
 import { useRef, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Loader2,AlertCircle, Info, Stamp } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, AlertCircle, Info, Stamp } from "@/common/ui/icons"
 import ListStamps from "./stamps.widget";
 import { FrontCover } from "../../../molecules/coffeelover/album/front_cover.molecule";
 import { BackCover } from "@/common/molecules/coffeelover/album/back_cover.molecule";
@@ -58,7 +58,7 @@ export default function PageAlbum() {
                 // Width-constrained - use full width
                 newWidth = availableWidth;
                 newHeight = newWidth / idealAspectRatio;
-            
+
             } else {
                 // Height-constrained - use full height
                 newHeight = availableHeight;
@@ -186,7 +186,7 @@ export default function PageAlbum() {
                         disableFlipByClick={false}
                         swipeDistance={30}
                         clickEventForward={true}
-                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', maxHeight: '90vh'}}
+                        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', maxHeight: '90vh' }}
                         minWidth={200}
                         maxWidth={1000}
                         minHeight={100}
@@ -194,7 +194,7 @@ export default function PageAlbum() {
                     >
                         {/* Cover Page with enhanced styling */}
                         <div className=" bg-gradient-to-br from-[#F8F6F1] to-[#E8E0D5] flex flex-col justify-center items-center h-full rounded-l-lg relative overflow-hidden">
-                            <FrontCover data={data} goNext={goNext}/>
+                            <FrontCover data={data} goNext={goNext} />
                         </div>
 
                         {/* Add content pages here from page.pages with integrated navigation */}
@@ -278,7 +278,7 @@ export default function PageAlbum() {
 
                         {/* Back cover with navigation */}
                         <div className="bg-gradient-to-br from-[#403025] to-[#2C1F17] flex flex-col justify-center items-center h-full  rounded-r-lg relative overflow-hidden">
-                           <BackCover goPrev={goPrev} />
+                            <BackCover goPrev={goPrev} />
                         </div>
                     </HTMLFlipBook>
                 </div>

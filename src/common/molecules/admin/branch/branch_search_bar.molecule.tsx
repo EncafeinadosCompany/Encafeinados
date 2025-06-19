@@ -1,6 +1,6 @@
 import React from 'react'
 import { Input } from '@/common/ui/input'
-import { Search, X } from 'lucide-react'
+import { Search, X } from'@/common/ui/icons'
 
 interface BranchSearchBarProps {
   value: string

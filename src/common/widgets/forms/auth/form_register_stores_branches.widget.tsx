@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import { Suspense, lazy } from "react"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight } from "@/common/ui/icons"
 import { useNavigate, useParams } from "react-router-dom"
 import { FormProvider, useForm } from "react-hook-form"
 import { motion } from "framer-motion"
@@ -82,6 +82,15 @@ export default function RegisterStoreBranches() {
 
         try {
             storeId ? storeId : toast.error('no cuenta con el id')
+
+            const detailsParts = [];
+
+            if (finalData.addressDetails) detailsParts.push(`Detalles: ${finalData.addressDetails}`);
+            if (finalData.nearbyReference) detailsParts.push(`Referencia cercana: ${finalData.nearbyReference}`);
+            if (finalData.additionalNotes) detailsParts.push(`Notas adicionales: ${finalData.additionalNotes}`);
+            const details = detailsParts.join(" | ");
+
+
             const data = {
                 store_id: Number(storeId),
                 name: finalData.name,
@@ -90,7 +99,8 @@ export default function RegisterStoreBranches() {
                 longitude: finalData.longitude,
                 address: finalData.address,
                 social_branches: finalData.social_networks,
-                criteria: finalData.criteria
+                criteria: finalData.criteria,
+                details,
             }
             await useBranchesMutation(data)
             const name = localStorage.getItem("nameStore");
@@ -166,7 +176,7 @@ export default function RegisterStoreBranches() {
                 </CardHeader>
                 <FormProvider {...methods}>
                     <Suspense fallback={<div className="text-center">Cargando...</div>}>
-                        <form className="space-y-9 md:space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent  sm:px-6 " onSubmit={methods.handleSubmit(handleSubmit)}>
+                        <form className="space-y-9 md:space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent  sm:px-6 ">
                             <CardContent className="flex-1 max-h[10vh] ">
                                 {step === 0 && (
                                     <RegisterStoreBrancheStep1
@@ -237,8 +247,10 @@ export default function RegisterStoreBranches() {
 
                                     ) : (
                                         <Button
+                                            type="button"
+                                            onClick={methods.handleSubmit(handleSubmit)}
                                             disabled={!methods.formState.isValid || !methods.getValues("social_networks")?.length || status === "pending"}
-                                            type="submit" className="ml-auto bg-black text-white">{status === "pending" ? "Cargando..." : "Guardar"}</Button>
+                                            className="ml-auto bg-black text-white">{status === "pending" ? "Cargando..." : "Guardar"}</Button>
                                     )}
                                 </div>
                             </CardFooter>

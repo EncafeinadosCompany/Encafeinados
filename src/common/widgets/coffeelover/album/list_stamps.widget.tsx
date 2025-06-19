@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stamps.query";
-import { getAuthStorage } from "@/common/utils/security/auth_storage.utils";
+
 import { Stamps } from "@/api/types/album/stamps.types";
 import { CardEmpy } from "@/common/molecules/coffeelover/stamps/card_empy.molecule";
 import { CardStampsError } from "@/common/molecules/coffeelover/stamps/card_error.molecule";
@@ -9,7 +9,7 @@ import { CardStampsDetails } from "@/common/molecules/coffeelover/stamps/dialog_
 import { Badge } from "@/common/ui/badge";
 import { Card, CardContent } from "@/common/ui/card";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { Search }  from "@/common/ui/icons"
 import { UserData } from "@/api/types/auth/auth.types";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 

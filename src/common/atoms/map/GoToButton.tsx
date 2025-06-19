@@ -1,5 +1,5 @@
 import { Button } from "@/common/ui/button"
-import { MapPinIcon } from "lucide-react"
+import { MapPinIcon } from '@/common/ui/icons'
 import { useNavigate } from "react-router-dom"
 
 interface GoToButtonProps extends Omit<React.ComponentProps<typeof Button>, 'onClick'> {

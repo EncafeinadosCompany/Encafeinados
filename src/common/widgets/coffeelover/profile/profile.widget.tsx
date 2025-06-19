@@ -4,7 +4,7 @@ import { useUpdateProfileMutation } from '@/api/mutations/coffelover/profile.mut
 import ProfileInfo from '@/common/molecules/coffeelover/profile/profile_info.molecule';
 import FavoriteCafes from '@/common/molecules/coffeelover/profile/favorite_cafes.molecule';
 import UserReviews from '@/common/molecules/coffeelover/profile/user_reviews.molecule';
-import { Loader, User, Coffee, Star } from 'lucide-react';
+import { Loader, User, Coffee, Star }  from "@/common/ui/icons"
 import { useWindowSize } from '@/common/hooks/useWindowSize';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/ui/tabs';
 import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';

@@ -1,7 +1,7 @@
 import { Button } from "@/common/ui/button";
 import { Input } from "@/common/ui/input";
 import { format } from "date-fns";
-import { Calendar, ChevronLeft, ChevronRight, Coffee, Plus, Search, User } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Coffee, Plus, Search, User } from'@/common/ui/icons';
 import { es } from "date-fns/locale";
 
 interface HeaderEventMonthProps {

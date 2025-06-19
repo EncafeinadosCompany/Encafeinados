@@ -1,5 +1,5 @@
 import MapView from "@/common/widgets/map/map_view.widget";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from'@/common/ui/icons'
 import { Link } from "react-router-dom";
 
 export function MapViewCard  ()  {

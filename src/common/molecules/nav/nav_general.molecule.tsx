@@ -3,7 +3,7 @@ import { ChevronRight, ChevronLeft } from "@/common/ui/icons";
 import { Button } from "@/common/ui/button";
 import { NavItemType } from "@/api/types/nav/nav.types";
 import { clearAuthStorage } from "@/common/utils/security/auth_storage.utils";
-import { LogOutIcon, Coffee, ChevronDown, ChevronUp } from "lucide-react";
+import { LogOutIcon, Coffee, ChevronDown, ChevronUp } from "@/common/ui/icons";
 import logoImage from "@/assets/images/logonav.jpg";
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import { useState } from "react";
@@ -35,7 +35,7 @@ export const NavGeneral = ({
   coffeecoins,
   role,
   name,
-  logoPath = logoImage,
+ logoPath  = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);

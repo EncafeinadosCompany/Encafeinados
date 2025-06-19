@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import { Prueba_album } from "@/common/widgets/prueba_album";
+
 
 
 // ROUTES
@@ -52,6 +52,7 @@ const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/prin
 const RegisterStoreVisit = lazy(() => import("@/modules/coffeelover/components/stores/register_store_visit.component"));
 const ReviewView = lazy(() => import('@/modules/coffeelover/components/review/review.view'));
 const ProfileView = lazy(() => import('@/modules/coffeelover/components/profile/profile.view'));
+const Prueba_album= lazy(() => import("@/common/widgets/prueba_album") );
 
 // ALBUMS COFFELOVER
 const ListAlbum = lazy(() => import("@/common/widgets/coffeelover/album/list_album_coffeelover.widget"));
@@ -92,7 +93,6 @@ const AuthRoutes = () => {
             <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches />} />
             <Route path="/completar-perfil" element={<CompleteProfile />} />
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
-            {/* <Route path="/hora" element={<ScheduleModule branchId={1} />} /> */}
             <Route path="/404" element={<NotFound />} />
 
 
@@ -109,7 +109,7 @@ const AuthRoutes = () => {
                     <Route path="Profile" element={<ProfileView />} />
                     <Route path="map-coffelover" element={<MapView />} />
                     <Route path="prueba" element={<StoreDetailsCard />} />
-                    <Route path="pruebas" element={<Prueba_album />} />
+                    <Route path="pruebas-album" element={<Prueba_album />} />
                     <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
                 </Route>
                 <Route path="/open-album" element={<PageAlbum />} />

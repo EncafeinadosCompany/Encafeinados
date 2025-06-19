@@ -7,7 +7,7 @@ import SelectTypeDocument from "@/common/atoms/auth/select_type_document.atom"
 import { CurrentSchema } from "@/common/utils/schemas/auth/register_store_shema"
 import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 import { TextError } from "@/common/atoms/textError"
-import { FileText, Hash, Mail, Phone, Store } from "lucide-react"
+import { FileText, Hash, Mail, Phone, Store } from'@/common/ui/icons'
 
 
 interface registerStoreProps {

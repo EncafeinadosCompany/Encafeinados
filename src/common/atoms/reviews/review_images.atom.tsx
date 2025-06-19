@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { Image, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from'@/common/ui/icons';
 
 interface ReviewImagesProps {
   images: string[];

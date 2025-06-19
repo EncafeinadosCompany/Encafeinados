@@ -1,11 +1,9 @@
 import React from 'react';
 import { ApprovedBranch } from "@/api/types/branches/branches_approval.types";
-import { 
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay 
-} from "@/common/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
 import { Badge } from "@/common/ui/badge";
-import { MapPin, Mail, Coffee } from "lucide-react";
+import { MapPin, Mail, Coffee } from'@/common/ui/icons';
 
 interface BranchDetailsDialogProps {
   branch: ApprovedBranch | null;

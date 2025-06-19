@@ -1,6 +1,6 @@
 import React from 'react';
 import { SingleReview } from '@/api/types/reviews/review.type';
-import { User, Calendar } from 'lucide-react';
+import { User, Calendar } from'@/common/ui/icons'
 import ReviewStars from '@/common/atoms/reviews/review_stars.atom';
 import ReviewImages from '@/common/atoms/reviews/review_images.atom';
 

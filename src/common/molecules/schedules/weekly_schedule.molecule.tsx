@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import { Clock, ChevronDown, ChevronUp } from "lucide-react";
+import { Clock, ChevronDown, ChevronUp } from "@/common/ui/icons";
 import { BranchSchedule } from "@/api/types/schedules/schedule.types";
-import { 
-  getWeeklyScheduleFormatted, 
-  isBranchOpenNow,
-  getCurrentScheduleInfo,
-  getCurrentDayOfWeek
-} from "@/common/utils/schedules/schedule.utils";
+import { getWeeklyScheduleFormatted, isBranchOpenNow,getCurrentScheduleInfo,getCurrentDayOfWeek} from "@/common/utils/schedules/schedule.utils";
 
 interface WeeklyScheduleProps {
   schedules: BranchSchedule[];

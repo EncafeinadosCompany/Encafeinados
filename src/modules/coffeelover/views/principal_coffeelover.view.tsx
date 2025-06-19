@@ -1,7 +1,7 @@
 import { FeaturedStoresWidget } from '@/common/widgets/coffeelover/stores/feature_stores.widget'
 import SearchCoffee from '@/common/atoms/search';
 import { useState, useCallback, useEffect } from 'react';
-import { QrCode } from 'lucide-react';
+import { QrCode } from "@/common/ui/icons";
 import { CoffeeBackground } from '@/common/widgets/coffee_background.widget';
 import QRScannerDialog from '@/common/molecules/coffeelover/stores/QR_scanner_dialog.molecule';
 import { Button } from '@/common/ui/button';

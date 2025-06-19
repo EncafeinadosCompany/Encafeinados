@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Clock } from "lucide-react"
+import { Clock }  from "@/common/ui/icons"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select"
 import { Button } from "@/common/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover"

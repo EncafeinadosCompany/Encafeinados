@@ -1,6 +1,6 @@
 import { Button } from "@/common/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/common/ui/card";
-import { Ghost, Loader2, Plus, RefreshCw, X } from "lucide-react";
+import { Ghost, Loader2, Plus, RefreshCw, X } from'@/common/ui/icons';
 import { format } from "date-fns";
 
 import { es } from "date-fns/locale";

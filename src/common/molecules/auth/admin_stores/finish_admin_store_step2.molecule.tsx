@@ -4,7 +4,7 @@ import { InputPassword } from "@/common/atoms/auth/input_passwork"
 import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 
 import { Label } from "@radix-ui/react-label"
-import { Lock, Mail } from "lucide-react"
+import { Lock, Mail } from'@/common/ui/icons'
 import { UseFormRegister } from "react-hook-form"
 
 

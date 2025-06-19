@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
-import {  RefreshCw, Search, AlertTriangle, Coffee } from "lucide-react";
+import {  RefreshCw, Search, AlertTriangle, Coffee }  from "@/common/ui/icons";
 import {  AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 import { ApprovedBranch } from '@/api/types/branches/branches_approval.types';

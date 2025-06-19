@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CreateAlbumWidget } from "@/common/widgets/admin/album/create_album.widget";
-import { BookOpen } from "lucide-react";
+import { BookOpen } from "@/common/ui/icons"
 import { ListAlbumWidget } from "@/common/widgets/admin/album/list_album_admin.widget";
 import { useSearchParams, useLocation } from "react-router-dom";
 

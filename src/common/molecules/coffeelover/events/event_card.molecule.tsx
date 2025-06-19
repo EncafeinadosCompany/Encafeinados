@@ -1,5 +1,5 @@
 import { EventDto} from "@/api/types/events/events.types"
-import { MapPin, Clock, Coffee } from "lucide-react"
+import { MapPin, Clock, Coffee } from'@/common/ui/icons'
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { Button } from "@/common/ui/button"

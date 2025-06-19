@@ -9,7 +9,7 @@ import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/common/ui/input-otp"
 import { TextError } from "@/common/atoms/textError"
 import { useState } from "react"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff }  from'@/common/ui/icons'
 import { User } from "@/api/types/auth/auth.types"
 import { InputEmail } from "@/common/atoms/auth/Input_email.atom"
 

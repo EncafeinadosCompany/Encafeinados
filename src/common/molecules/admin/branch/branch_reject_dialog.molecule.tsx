@@ -5,7 +5,7 @@ import {
 import { Button } from "@/common/ui/button";
 import { Textarea } from "@/common/ui/textarea";
 import { Label } from "@/common/ui/label";
-import { XCircle, RefreshCw } from "lucide-react";
+import { XCircle, RefreshCw } from'@/common/ui/icons'
 
 interface BranchRejectDialogProps {
   isOpen: boolean;

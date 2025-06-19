@@ -159,9 +159,8 @@ export const CardMapStore = ({
               className="z-0" // Ensure map container has lowest z-index
             >
               <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                maxZoom={30}
+                attribution='&copy; <a href="https://locationiq.com/">LocationIQ</a>'
+               url={`https://tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=${import.meta.env.VITE_LOCATIONIQ_API_KEY}`}
               />
               <div className="z-[400]"> {/* Wrapper to ensure controls appear above other elements */}
                 <ZoomControl position="bottomright" />
@@ -180,7 +179,7 @@ export const CardMapStore = ({
                       setSelectedPosition(newPos);
                       try {
                         const response = await fetch(
-                          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}&zoom=18&addressdetails=1&namedetails=1`
+                          `https://us1.locationiq.com/v1/reverse?key=${import.meta.env.VITE_LOCATIONIQ_API_KEY}&lat=${position.lat}&lon=${position.lng}&format=json`
                         );
                         const data = await response.json();
                         const formattedAddress = formatAddress(data);
