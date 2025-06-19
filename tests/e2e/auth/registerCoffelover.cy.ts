@@ -10,7 +10,7 @@ describe("Coffee Lover Registration", () => {
       {
         email: "coffelover@gmail.com",
         name: "Coffelover",
-        role: "Cliente"
+        roles: ["Cliente"]
       }
      )
     cy.visit("/coffee-lover-registration");

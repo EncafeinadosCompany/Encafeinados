@@ -7,6 +7,7 @@ import { LogOutIcon, Coffee, ChevronDown, ChevronUp } from "lucide-react";
 import logoImage from "@/assets/images/logonav.jpg";
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import { useState } from "react";
+import { AdminBranchesItems } from "@/common/utils/lists/nav/admin_branches.utils";
 
 
 interface NavGeneralProps {
@@ -189,6 +190,46 @@ export const NavGeneral = ({
                 )}
               </Link>
             ))}
+
+
+            {role?.includes(ROLES.ADMIN_SUCURSAL) && role.includes(ROLES.STORE) && (
+              AdminBranchesItems.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 relative",
+                    isRouteActive(item.href)
+                      ? "bg-gradient-to-r from-amber-50 to-amber-100/70 text-amber-800 font-medium"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                    isExpanded ? "" : "justify-center"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "flex-shrink-0",
+                      isRouteActive(item.href)
+                        ? "text-amber-600"
+                        : "text-gray-500"
+                    )}
+                  >
+                    {item.icon}
+                  </div>
+                  <span
+                    className={cn(
+                      "font-medium whitespace-nowrap transition-opacity duration-300",
+                      isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+                    )}
+                  >
+                    {item.title}
+                  </span>
+
+                  {isRouteActive(item.href) && !isExpanded && (
+                    <div className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full"></div>
+                  )}
+                </Link>
+              ))
+            )}
           </nav>
 
           <div className="mt-auto border-t border-gray-100">
@@ -239,10 +280,10 @@ export const NavGeneral = ({
         </div>
       )}
 
-      <div className="flex-1 flex flex-col h-full mx-auto item-center justify-center min-w-0 overflow-hidden">        
+      <div className="flex-1 flex flex-col h-full mx-auto item-center justify-center min-w-0 overflow-hidden">
         <main className={`flex-1 w-full h-full relative  ${isMobile ? 'has-mobile-nav' : ''}`}>
-        <Outlet />
-      </main>
+          <Outlet />
+        </main>
 
         {isMobile && (
           <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white mobile-navbar shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">

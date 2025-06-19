@@ -22,6 +22,5 @@ export const AdminBranchesItems: NavItemType[] = [
     title: "Perfil",
     href: "/sucursal/perfil",
     icon: <Store className="h-4 w-4" />,
-  },
-  
+  }
 ]

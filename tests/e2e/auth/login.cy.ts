@@ -16,7 +16,7 @@ describe("Login", () => {
     doLogin({
       email: "admin@example.com",
       password: "1234",
-      role: "Super Administrador",
+      roles: ["Super Administrador"],
       name: "Anita",
     });
     cy.url().should("include", "/admin");
@@ -27,7 +27,7 @@ describe("Login", () => {
     doLogin({
       email: "coffeelover@example.com",
       password: "1234",
-      role: "Cliente",
+      roles: ["Cliente"],
       name: "Coffeelover"
     });
 
@@ -39,7 +39,7 @@ describe("Login", () => {
     doLogin({
       email: "tienda@example.com",
       password: "1234",
-      role: "Administrador de Tienda",
+      roles: ["Administrador de Tienda"],
       name: "Tienda"
     })
     cy.url().should("include", "/store");
