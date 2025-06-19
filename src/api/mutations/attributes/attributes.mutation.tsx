@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import toast from "react-hot-toast";
 import { RegisterAttibute } from "@/api/types/attributes/attributes.type";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 const authClient = new AuthClient();
 
@@ -26,11 +27,11 @@ export const useCreateAttributeMutation = () => {
         mutationFn: async (data: RegisterAttibute[]): Promise<CreateAttributes> => {
             try {
 
-                const id_branch = localStorage.getItem("storeOrBranchId");
+                const id_branch = getEncryptedItem("branchId");
                 if(!id_branch) throw new Error("No se encontró el id de la sucursal");
 
                 const lis_data = {
-                    branchId: parseInt(id_branch),
+                    branchId: Number(id_branch),
                     attributes: data.map((item) => {
                         return {
                             attributeId: item.attributeId,
@@ -71,7 +72,7 @@ export const useUpdateAttributeMutation = () => {
         mutationFn: async ({data}) :Promise<any> => {
             try {
 
-                const id_branch = localStorage.getItem("storeOrBranchId");
+                const id_branch = getEncryptedItem("branchId");
                 if(!id_branch) throw new Error("No se encontró el id de la sucursal");
                 const response: AxiosResponse = await authClient.patch(`/branch-attributes/branch/${id_branch}/attribute/${data.attributeId}`, {value:data.value});
                 return response.data;

@@ -1,5 +1,4 @@
 import { ROLES } from '@/common/utils/lists/roles.utils';
-import { getEncryptedItem, removeEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 
 export const useAuth = () => {
 
