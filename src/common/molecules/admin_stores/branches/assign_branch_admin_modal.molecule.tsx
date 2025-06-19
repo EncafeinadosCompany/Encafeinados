@@ -13,7 +13,7 @@ import { Input } from '@/common/ui/input';
 import { Label } from '@/common/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/ui/select';
 import { Branch } from '@/api/types/branches/branches.types';
-import {  useRegisterAdminMutation } from '@/api/mutations/admin/admin_stores.mutation';
+import {  useRegisterAdminMutation, useCreateBranchAdminMutation } from '@/api/mutations/admin/admin_stores.mutation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BranchAdminSchema, transformToBranchAdminPayload } from '@/common/utils/schemas/admin_stores/branch_admin.schema';
@@ -33,7 +33,7 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const createBranchAdminMutation = useRegisterAdminMutation();
+  const createBranchAdminMutation = useCreateBranchAdminMutation();
   
   const { 
     register, 
@@ -66,9 +66,6 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
 
     try {
       const payload = transformToBranchAdminPayload(data);
-      
-      console.log('Form Data:', data);
-      console.log('Payload enviado al API:', payload);
       
       await createBranchAdminMutation.mutateAsync(payload);
       
@@ -271,7 +268,6 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
               </div>
             </div>
             
-            {/* Columna derecha - Información Personal */}
             <div className="p-6">
               <div className="space-y-6">
                 <div className="flex items-center gap-2 mb-4">
@@ -317,7 +313,6 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
                       <SelectContent className="bg-white border border-[#E6D7C3] shadow-lg">
                         <SelectItem value="CC">Cédula de Ciudadanía</SelectItem>
                         <SelectItem value="CE">Cédula de Extranjería</SelectItem>
-                        <SelectItem value="PA">Pasaporte</SelectItem>
                         <SelectItem value="NIT">NIT</SelectItem>
                       </SelectContent>
                     </Select>
@@ -336,7 +331,6 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
                         id="number_document"
                         {...register('number_document', {
                           onChange: (e) => {
-                            // Permite dígitos y guiones, elimina otros caracteres
                             const value = e.target.value.replace(/[^\d-]/g, '');
                             e.target.value = value;
                           }

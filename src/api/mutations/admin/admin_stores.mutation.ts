@@ -42,3 +42,26 @@ export const useRegisterAdminMutation = () => {
     })
   }
 
+export const useCreateBranchAdminMutation = () => {
+  const queryClient = useQueryClient()
+  const useErrors = useError("createBranchAdmin")
+
+  return useMutation<any, Error, RegisterAdminData>({
+    mutationFn: async (formData: RegisterAdminData): Promise<any> => {
+      try {
+        const response = await authClient.post<any>('/admin', formData); 
+        return response.data;
+  
+      } catch (error: any) {
+        throw handleApiError(error)
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['branches'] });
+      queryClient.invalidateQueries({ queryKey: ['branchByStore'] });
+    },
+    onError: (error: any) => {
+      useErrors(error);
+    }
+  })
+}
