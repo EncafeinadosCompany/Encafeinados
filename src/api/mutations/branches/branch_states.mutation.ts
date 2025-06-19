@@ -126,6 +126,8 @@ export const useStatesIsOpen = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branches"] });
+      queryClient.invalidateQueries({ queryKey:['branches', 'APPROVED'] });
+      queryClient.invalidateQueries({ queryKey: ['branch-approvals'] });
       
     }
   });

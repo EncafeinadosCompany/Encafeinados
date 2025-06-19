@@ -22,13 +22,13 @@ export default function PrincipalBranchesPage() {
 
     const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
     const { data: branches, error: branchError, isPending: isBranchLoading } = useBranchesID(Number(BranchId));
-    const { data: imagen, error: imageError, isPending: isImageLoading } = useImagenBranch(Number(BranchId));    const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
+    const { data: imagen, error: imageError, isPending: isImageLoading } = useImagenBranch(Number(BranchId)); const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
     const [branchStatus, setBranchStatus] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const {ErrorMessageBranch, NoDataMessageBranch, LoadingMessageBranch} = MessageBranches
-   
+    const { ErrorMessageBranch, NoDataMessageBranch, LoadingMessageBranch } = MessageBranches
+
     useEffect(() => {
         if (branches?.branch.is_open !== undefined) {
             setBranchStatus(branches.branch.is_open);
@@ -61,16 +61,16 @@ export default function PrincipalBranchesPage() {
 
     if (branchError || imageError || statusError) {
         return (
-            <ErrorMessageBranch 
-            branchError={branchError} 
-            imageError={imageError} 
-            statusError={statusError}/>
+            <ErrorMessageBranch
+                branchError={branchError}
+                imageError={imageError}
+                statusError={statusError} />
         );
     }
 
     if (!branches?.branch) {
         return (
-           <NoDataMessageBranch />
+            <NoDataMessageBranch />
         );
     }
 

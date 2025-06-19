@@ -4,8 +4,8 @@ import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "../auth/authMutations";
-import { Register_admin_stores } from "@/api/types/auth/auth.types";
 import { RegisterAdminData } from "@/api/types/admin_stores/admin_stores.type";
+import { ROLES } from "@/common/utils/lists/roles.utils";
 
 const authClient = new AuthClient();
 
@@ -25,12 +25,16 @@ export const useRegisterAdminMutation = () => {
           throw handleApiError(error)
         }
       },
-      onSuccess: (data, variable) => {
+      onSuccess: (_data, variable) => {
         queryClient.invalidateQueries({ queryKey: ['admin'] });
-        useLonginMutation.mutate({
-          email: variable.userData.email,
-          password: variable.userData.password
-        })
+
+        if(variable.userData.roles.includes(ROLES.STORE)){
+          useLonginMutation.mutate({
+            email: variable.userData.email,
+            password: variable.userData.password
+          })
+        }
+
       },
       onError: (error: any) => {
         useErrors(error);
@@ -38,26 +42,3 @@ export const useRegisterAdminMutation = () => {
     })
   }
 
-// export const useCreateBranchAdminMutation = () => {
-//   const queryClient = useQueryClient()
-//   const useErrors = useError("createBranchAdmin")
-
-//   return useMutation<any, Error, CreateBranchAdminData>({
-//     mutationFn: async (formData: CreateBranchAdminData): Promise<any> => {
-//       try {
-//         const response = await authClient.post<any>('/admin/store-admin', formData); 
-//         return response.data;
-  
-//       } catch (error: any) {
-//         throw handleApiError(error)
-//       }
-//     },
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['branches'] });
-//       queryClient.invalidateQueries({ queryKey: ['branchByStore'] });
-//     },
-//     onError: (error: any) => {
-//       useErrors(error);
-//     }
-//   })
-// }
