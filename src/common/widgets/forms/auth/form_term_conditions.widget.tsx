@@ -29,7 +29,7 @@ export function TermConditions({ errors, control }: TermConditionsProps) {
                 data-testid="conditions-checkbox"
                 checked={!!value}
                 onCheckedChange={onChange}
-                className="border-[#D4A76A] text-[#6F4E37] mt-0.5"
+                className="border-[#D4A76A] text-[#6F4E37] mt-0.5 cursor-pointer"
               />
               <span className="text-xs sm:text-sm  text-gray-700 leading-tight">
                 He leído y acepto los{" "}

@@ -4,7 +4,7 @@ import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoginMutation } from "../auth/authMutations";
 import { RegisterAdminData } from "@/api/types/admin_stores/admin_stores.type";
-import { ROLES } from "@/common/utils/lists/roles.utils";
+
 
 const authClient = new AuthClient();
 
@@ -27,12 +27,12 @@ export const useRegisterAdminMutation = () => {
       onSuccess: (_data, variable) => {
         queryClient.invalidateQueries({ queryKey: ['admin'] });
 
-        if(variable.userData.roles.includes(ROLES.STORE)){
+  
           useLonginMutation.mutate({
             email: variable.userData.email,
             password: variable.userData.password
           })
-        }
+        
 
       },
       onError: (error: any) => {

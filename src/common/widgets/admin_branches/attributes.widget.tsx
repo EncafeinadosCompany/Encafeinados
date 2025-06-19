@@ -86,6 +86,8 @@ export default function AttributesDashboard() {
 
     const onSubmit = async (data: AttributeFormType) => {
         try {
+
+            console.log('Submitting attributes:', data.values);
             const existingAttr = attributesByID?.attributes.find(
                 attr => attr.attributeId === data.values[0].attributeId
             );

@@ -95,7 +95,6 @@ export default function ImagesGallery() {
             type: values.image_type,
         };
         setImages([...images, newImageData]);
-
         try {
             useImagen(values)
             useUpdateImagenBrandMutation
@@ -108,11 +107,8 @@ export default function ImagesGallery() {
 
 
     const handleAddClick = () => {
-        // setModalMode('add');
         setIsModalOpen(true);
         form.reset();
-
-        console.log("Modal abierto", isModalOpen)
     };
 
 
