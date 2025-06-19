@@ -42,6 +42,6 @@ describe("Login", () => {
       roles: ["Administrador de Tienda"],
       name: "Tienda"
     })
-    cy.url().should("include", "/store");
+    cy.url().should("include", "/stores");
   })
 });

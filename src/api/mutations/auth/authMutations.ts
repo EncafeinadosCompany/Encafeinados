@@ -61,7 +61,7 @@ function saveUserData(data: LoginResponse) {
   
   data.user && saveEncryptedItem('user', data.user);
 
-  data.branchId || data.storeOrBranchId && saveEncryptedItem('branchId', data.branchId || data.storeOrBranchId.toString());
+  data.branchId && saveEncryptedItem('branchId', data.branchId?.toString());
 
   data.storeId && saveEncryptedItem('storeId', data.storeId.toString());
 
