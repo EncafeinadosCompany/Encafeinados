@@ -16,7 +16,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Branch } from '@/api/types/branches/branches.types';
 import { BranchSchedule } from '@/api/types/schedules/schedule.types';
 import { useBranchSchedules } from '@/api/queries/schedules/schedule.query';
-import { useUpdateBranchScheduleMutation, useBulkUpdateBranchSchedulesMutation } from '@/api/mutations/schedules/schedule.mutation';
+import {
+  useUpdateBranchScheduleMutation,
+  useBulkUpdateBranchSchedulesMutation,
+  useCreateBranchScheduleMutation,
+  useUpdateSingleBranchScheduleMutation
+} from '@/api/mutations/schedules/schedule.mutation';
 import { DAYS_OF_WEEK, DEFAULT_SCHEDULE_DATA, validateDaySchedule } from '@/common/utils/schemas/schedules/schedule.schema';
 import LoadingSpinner from '@/common/atoms/LoadingSpinner';
 
@@ -47,10 +52,10 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
     data: currentSchedules, 
     isLoading: isLoadingSchedules,
     refetch: refetchSchedules
-  } = useBranchSchedules(branch?.id);
-
-  const updateScheduleMutation = useUpdateBranchScheduleMutation();
-  const bulkUpdateMutation = useBulkUpdateBranchSchedulesMutation();
+  } = useBranchSchedules(branch?.id);  const updateSingleScheduleMutation = useUpdateSingleBranchScheduleMutation();
+  const bulkUpdateScheduleMutation = useUpdateBranchScheduleMutation();
+  const bulkCreateMutation = useBulkUpdateBranchSchedulesMutation();
+  const createScheduleMutation = useCreateBranchScheduleMutation();
 
   useEffect(() => {
     if (branch && isOpen) {
@@ -93,43 +98,79 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
       }));
     }
   };
-
   const handleSaveSingleDay = async (day: string) => {
     if (!branch || validationErrors[day]) return;
 
     const dayData = scheduleData[day];
-    
-    try {
-      await updateScheduleMutation.mutateAsync({
-        branch_id: branch.id,
-        day: dayData.day,
-        open_time: dayData.open_time,
-        close_time: dayData.close_time
-      });
+    const existingSchedule = currentSchedules?.find(s => s.day === day);
+
+    try {      if (existingSchedule) {
+        await updateSingleScheduleMutation.mutateAsync({
+          id: existingSchedule.id,
+          data: {
+            day: dayData.day,
+            open_time: dayData.open_time,
+            close_time: dayData.close_time
+          }
+        });
+      } else {
+        await createScheduleMutation.mutateAsync({
+          branch_id: branch.id,
+          day: dayData.day,
+          open_time: dayData.open_time,
+          close_time: dayData.close_time
+        });
+      }
       
       await refetchSchedules();
     } catch (error) {
       console.error('Error updating schedule:', error);
     }
   };
-
   const handleSaveAllSchedules = async () => {
     if (!branch) return;
 
-    const schedulesToUpdate = DAYS_OF_WEEK
-      .filter(day => !validationErrors[day])
-      .map(day => ({
-        branch_id: branch.id,
-        day: scheduleData[day].day,
-        open_time: scheduleData[day].open_time,
-        close_time: scheduleData[day].close_time
-      }));
+    const schedulesToCreate = [];
+    const schedulesToUpdate = [];
 
-    try {
-      await bulkUpdateMutation.mutateAsync({
-        branchId: branch.id,
-        schedules: schedulesToUpdate
-      });
+    for (const day of DAYS_OF_WEEK) {
+      if (validationErrors[day]) continue;
+
+      const dayData = scheduleData[day];
+      const existingSchedule = currentSchedules?.find(s => s.day === day);
+
+      if (existingSchedule) {
+        schedulesToUpdate.push({
+          id: existingSchedule.id,
+          data: {
+            day: dayData.day,
+            open_time: dayData.open_time,
+            close_time: dayData.close_time
+          }
+        });
+      } else {
+        schedulesToCreate.push({
+          branch_id: branch.id,
+          day: dayData.day,
+          open_time: dayData.open_time,
+          close_time: dayData.close_time
+        });
+      }
+    }
+
+    try {    
+      if (schedulesToCreate.length > 0) {
+        await bulkCreateMutation.mutateAsync({
+          branchId: branch.id,
+          schedules: schedulesToCreate
+        });
+      }
+
+      if (schedulesToUpdate.length > 0) {
+        await bulkUpdateScheduleMutation.mutateAsync({
+          updates: schedulesToUpdate
+        });
+      }
       
       setHasChanges(false);
       await refetchSchedules();
@@ -161,7 +202,8 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
 
   const currentDayData = scheduleData[activeDay];
   const hasValidationError = validationErrors[activeDay];
-  const isUpdating = updateScheduleMutation.isPending || bulkUpdateMutation.isPending;
+  const isUpdating = updateSingleScheduleMutation.isPending || bulkUpdateScheduleMutation.isPending || 
+                     bulkCreateMutation.isPending || createScheduleMutation.isPending;
 
   if (!branch) return null;
 
@@ -220,7 +262,7 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
                         <TabsTrigger 
                           key={day} 
                           value={day} 
-                          className="min-w-[4rem] text-[10px] xs:text-xs sm:text-sm data-[state=active]:bg-[#DB8935] data-[state=active]:text-white"
+                          className="min-w-[4rem] text-[10px] xs:text-xs sm:text-sm data-[state=active]:bg-[#DB8935] data-[state=active]:text-white cursor-pointer"
                         >
                           {day.substring(0, 3)}
                         </TabsTrigger>
@@ -240,7 +282,7 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
                             type="time"
                             value={currentDayData?.open_time || ''}
                             onChange={(e) => handleTimeChange(day, 'open_time', e.target.value)}
-                            className="border-[#E6D7C3] focus:border-[#DB8935] focus:ring-[#DB8935] h-10 sm:h-11"
+                            className="border-[#E6D7C3] focus:border-[#DB8935] focus:ring-[#DB8935] h-10 sm:h-11 cursor-pointer"
                           />
                         </div>
 
@@ -253,7 +295,7 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
                             type="time"
                             value={currentDayData?.close_time || ''}
                             onChange={(e) => handleTimeChange(day, 'close_time', e.target.value)}
-                            className="border-[#E6D7C3] focus:border-[#DB8935] focus:ring-[#DB8935] h-10 sm:h-11"
+                            className="border-[#E6D7C3] focus:border-[#DB8935] focus:ring-[#DB8935] h-10 sm:h-11 cursor-pointer"
                           />
                         </div>
                       </div>
@@ -283,7 +325,7 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
                           disabled={isUpdating || !!hasValidationError}
                           variant="outline"
                           size="sm"
-                          className="border-[#DB8935] text-[#DB8935] hover:bg-[#DB8935] hover:text-white text-xs sm:text-sm h-9"
+                          className="border-[#DB8935] text-[#DB8935] hover:bg-[#DB8935] hover:text-white text-xs sm:text-sm h-9 cursor-pointer"
                         >
                           <Save className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                           <span className="truncate">Guardar {day}</span>
@@ -303,7 +345,7 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
             variant="outline"
             onClick={handleReset}
             disabled={!hasChanges || isUpdating}
-            className="border-[#A67C52] text-[#A67C52] hover:bg-[#A67C52] hover:text-white text-xs sm:text-sm mt-3 sm:mt-0"
+            className="border-[#A67C52] text-[#A67C52] hover:bg-[#A67C52] hover:text-white text-xs sm:text-sm mt-3 sm:mt-0 cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0" />
             <span className="truncate">Restablecer</span>
@@ -315,25 +357,25 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
               variant="outline"
               onClick={onClose}
               disabled={isUpdating}
-              className="border-[#E6D7C3] text-[#A67C52] hover:bg-[#F5E4D2]/30 text-xs sm:text-sm flex-1 sm:flex-none"
+              className="border-[#E6D7C3] text-[#A67C52] hover:bg-[#F5E4D2]/30 text-xs sm:text-sm flex-1 sm:flex-none cursor-pointer"
             >
               <span className="truncate">Cancelar</span>
             </Button>
             <Button
               onClick={handleSaveAllSchedules}
               disabled={!hasChanges || isUpdating || Object.values(validationErrors).some(error => error)}
-              className="bg-gradient-to-r from-[#DB8935] to-[#C87000] hover:from-[#C87000] hover:to-[#A65C00] text-white shadow-lg text-xs sm:text-sm flex-1 sm:flex-none"
+              className="bg-gradient-to-r from-[#DB8935] to-[#C87000] hover:from-[#C87000] hover:to-[#A65C00] text-white shadow-lg text-xs sm:text-sm flex-1 sm:flex-none cursor-pointer"
             >
               {isUpdating ? (
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0"
-                >
-                  <LoadingSpinner size="sm" />
-                </motion.div>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0"
+              >
+                <LoadingSpinner size="sm" />
+              </motion.div>
               ) : (
-                <Save className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0" />
+              <Save className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 flex-shrink-0" />
               )}
               <span className="truncate">Guardar Todos los Horarios</span>
             </Button>
