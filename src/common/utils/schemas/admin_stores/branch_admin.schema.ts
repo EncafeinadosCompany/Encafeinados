@@ -48,13 +48,12 @@ export const BranchAdminSchema = z.object({
 
 export type BranchAdminFormData = z.infer<typeof BranchAdminSchema>;
 
-// Función para transformar los datos del formulario al formato requerido por la API
 export const transformToBranchAdminPayload = (formData: BranchAdminFormData): RegisterAdminData => {
   return {
     userData: {
       email: formData.email,
       password: formData.password,
-      roles: ["ADMIN_BRANCH"]
+      roles: ["Administrador de Sucursal"]
     },
     personData: {
       type_document: formData.type_document,

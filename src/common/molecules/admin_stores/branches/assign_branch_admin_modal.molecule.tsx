@@ -317,7 +317,6 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
                       <SelectContent className="bg-white border border-[#E6D7C3] shadow-lg">
                         <SelectItem value="CC">Cédula de Ciudadanía</SelectItem>
                         <SelectItem value="CE">Cédula de Extranjería</SelectItem>
-                        <SelectItem value="PA">Pasaporte</SelectItem>
                         <SelectItem value="NIT">NIT</SelectItem>
                       </SelectContent>
                     </Select>

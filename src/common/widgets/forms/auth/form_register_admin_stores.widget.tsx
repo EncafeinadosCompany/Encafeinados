@@ -112,7 +112,6 @@ export const FormFinishRegisteAdmin = ({ ref, storeId, branchId }: RegisteAdminP
                             subtitle="Completa los siguientes campos para finalizar tu registro como administrador"
                         >
                         </TitleForm>
-                    {/* Progress indicator */}
                     <ProgressIndicator className="mt-2" step={step + 1} totalSteps={RegisterAdminStoreSchema.length}></ProgressIndicator>
                     </div>
 
