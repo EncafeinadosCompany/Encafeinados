@@ -1,5 +1,4 @@
 import AuthClient from "@/api/client/axios";
-
 import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
