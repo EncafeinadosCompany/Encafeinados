@@ -70,9 +70,9 @@ const FormRegisterStores = () => {
         try {
             const preparedData = await prepareFormData(finalData);
             console.log("Final Data to submit:", preparedData);
-            // const response = await useRegiterStore(preparedData);
-            // methods.reset();
-            // navigate(`/stores-registration/branches/${response.store.id}`)
+            const response = await useRegiterStore(preparedData);
+            methods.reset();
+            navigate(`/stores-registration/branches/${response.store.id}`)
         } catch (error) {
             // Error handling
         }
@@ -238,6 +238,7 @@ const FormRegisterStores = () => {
                                         >
                                             <Button
                                                 type="button"
+
                                                 onClick={methods.handleSubmit(onSubmit)}
                                                 disabled={!methods.formState.isValid || status === "pending"}
                                                 data-testid="submit-button"
