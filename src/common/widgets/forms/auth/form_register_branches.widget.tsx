@@ -33,9 +33,6 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
     const{mutateAsync: useBranchesMutation, status} = useRegisterBrandMutation();
     const { data: criteria } = useCriteria();
     const { data: socialNetworks } = useSocialNetworksQuery();
-
-
-
     const storeId = getEncryptedItem("storeId");
 
 
@@ -61,7 +58,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                     image_url: undefined,
                 };
                 return acc;
-            }, {} as Record<string, { response_text: string; image_url?: string; other_text?: string }>));
+            }, {} as Record<string,{ response_text: string; image_url?: string; other_text?: string }>));
         }
     }, [criteria, methods]);
 
