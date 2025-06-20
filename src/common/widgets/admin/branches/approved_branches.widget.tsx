@@ -10,7 +10,7 @@ import { StatusBadge } from "@/common/atoms/StatusBadge";
 import { BranchSearchBar } from "@/common/molecules/admin/branch/branch_search_bar.molecule";
 import { BranchPagination } from "@/common/molecules/admin/branch/branch_pagination.molecule";
 import { BranchCard } from "@/common/molecules/admin/branch/branch_card.molecule";
-import { BranchDetailsDialog } from "@/common/molecules/admin/branch/branch_details_dialog.molecule";
+import { BranchDetailsModal } from "@/common/molecules/admin/branch/branch_details_enhanced_modal.molecule";
 import { BranchRejectDialog } from "@/common/molecules/admin/branch/branch_reject_dialog.molecule";
 import { useApprovedBranchesWidget } from "@/common/hooks/branches/useApprovedBranchesWidget";
 import { useReRejectBranchMutation } from "@/api/mutations/branches/branch_states.mutation";
@@ -287,10 +287,9 @@ export const ApprovedBranchesWidget = () => {
           {renderContent()}
         </div>
       </Card>
-      
-      <BranchDetailsDialog 
-        branch={selectedBranch} 
-        onClose={() => setSelectedBranch(null)} 
+        <BranchDetailsModal 
+        branch={selectedBranch}
+        onClose={() => setSelectedBranch(null)}
       />
         <BranchRejectDialog
         isOpen={isRejectDialogOpen}
