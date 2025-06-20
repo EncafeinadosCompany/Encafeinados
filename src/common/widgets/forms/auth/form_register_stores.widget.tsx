@@ -69,9 +69,10 @@ const FormRegisterStores = () => {
 
         try {
             const preparedData = await prepareFormData(finalData);
-            const response = await useRegiterStore(preparedData);
-            methods.reset();
-            navigate(`/stores-registration/branches/${response.store.id}`)
+            console.log("Final Data to submit:", preparedData);
+            // const response = await useRegiterStore(preparedData);
+            // methods.reset();
+            // navigate(`/stores-registration/branches/${response.store.id}`)
         } catch (error) {
             // Error handling
         }

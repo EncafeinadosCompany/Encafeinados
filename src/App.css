@@ -137,8 +137,6 @@ html.is-mobile main {
 
 
 
-
-
 .stf__parent {
   position: relative;
   display: block;
@@ -228,4 +226,18 @@ html.is-mobile main {
 .nav-scroll-container button[data-state="active"]::after {
   width: 80%;
   left: 10%;
+}
+
+
+
+/* Añade esto al final del archivo */
+[data-slot="carousel-content"] {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+[data-slot="carousel-content"] > div {
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
 }
