@@ -31,10 +31,10 @@ export const useApproveBranchMutation = () => {
         status: true,
         approvedById: Number(userId),
       });
-    },
-    onSuccess: () => {
+    },    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branches", "pending"] });
       queryClient.invalidateQueries({ queryKey: ["branches", "PENDING"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "APPROVED"] });
       queryClient.invalidateQueries({ queryKey: ["branches"] });
     },
   });
@@ -52,7 +52,7 @@ export const useRejectBranchMutation = () => {
       approvalId: number;
       reason: string;
     }) => {
-      const userId = localStorage.getItem("userId");
+      const userId = getEncryptedItem("userId");
 
       if (!userId) {
         throw new Error(
@@ -62,13 +62,14 @@ export const useRejectBranchMutation = () => {
 
       return await authClient.patch(`/branch-approvals/${approvalId}`, {
         status: false,
-        approvedById: parseInt(userId),
+        approvedById: Number(userId),
         comments: reason,
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branches", "pending"] });
       queryClient.invalidateQueries({ queryKey: ["branches", "PENDING"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "REJECTED"] });
       queryClient.invalidateQueries({ queryKey: ["branches"] });
     },
   });

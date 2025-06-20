@@ -127,3 +127,29 @@ export interface ValidateVisitInput {
 }
 
 export type ApprovedBranchesResponse = ApprovedBranch[];
+
+export interface RejectedBranch {
+  id: number;
+  name: string;
+  address: string;
+  status: string;
+  store_logo: string;
+  store_email: string;
+  phone_number?: string;
+  latitude?: number;
+  longitude?: number;
+  average_rating?: string;
+  store_name?: string;
+  store?: {
+    store_id: number;
+    store_name: string;
+    store_logo: string;
+    store_email: string;
+  };
+  rejection_reason?: string;
+  rejected_at?: string;
+  rejected_by?: string;
+  social_branches?: SocialBranch[];
+}
+
+export type RejectedBranchesResponse = RejectedBranch[];

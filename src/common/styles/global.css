@@ -112,3 +112,55 @@
 .toast {
   z-index: 60;
 }
+
+/* Scroll areas for branch widgets */
+.pending-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pending-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pending-scroll-area::-webkit-scrollbar-thumb {
+  background: #F3D19E;
+  border-radius: 2px;
+}
+
+.pending-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: #E6C085;
+}
+
+.approved-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+
+.approved-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.approved-scroll-area::-webkit-scrollbar-thumb {
+  background: #86EFAC;
+  border-radius: 2px;
+}
+
+.approved-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: #6EE7B7;
+}
+
+.rejected-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+
+.rejected-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rejected-scroll-area::-webkit-scrollbar-thumb {
+  background: #FCA5A5;
+  border-radius: 2px;
+}
+
+.rejected-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: #F87171;
+}
