@@ -100,7 +100,7 @@ const AuthRoutes = () => {
             {/* PRIVATE ROUTES  */}
             <Route element={<PrivateRoute />}>
 
-              {/* <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}> */}
+              <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
 
                 <Route path="/coffeelover" element={<Menubar_Coffelover/>}>
                     <Route index element={<PrincipalCoffeelover />} />
@@ -114,7 +114,7 @@ const AuthRoutes = () => {
                 </Route>
                 <Route path="/open-album" element={<PageAlbum />} />
 
-              {/* </Route> */}
+              </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
                 <Route path="/stores" element={<Menubar_store/>}>
