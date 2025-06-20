@@ -143,8 +143,7 @@ export const RejectedBranchesWidget = () => {
               renderEmptyState()
             ) : (
               <AnimatePresence mode="popLayout">
-                {paginatedBranches.map((branch: RejectedBranch, index: number) => (
-                  <BranchCard
+                {paginatedBranches.map((branch: RejectedBranch, index: number) => (                  <BranchCard
                     key={branch.id}
                     branch={branch}
                     index={index}
@@ -212,8 +211,7 @@ export const RejectedBranchesWidget = () => {
           {renderContent()}
         </div>
       </Card>
-      
-      <BranchDetailsDialog 
+        <BranchDetailsDialog 
         branch={selectedBranch} 
         onClose={() => setSelectedBranch(null)} 
       />

@@ -26,8 +26,8 @@ interface BranchCardProps {
   };
   index: number;
   onView: (branch: any) => void;
-  onApprove?: (branch: any) => void;
-  onReject?: (branch: any) => void;
+  onApprove?: (branchId: number) => void;
+  onReject?: (branchId: number) => void;
   type: "pending" | "approved" | "rejected";
 }
 export const BranchCard = ({
@@ -45,13 +45,12 @@ export const BranchCard = ({
 
   const COFFEE_FALLBACK =
     "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%236F4E37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 8h1a4 4 0 0 1 0 8h-1'%3E%3C/path%3E%3Cpath d='M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z'%3E%3C/path%3E%3Cline x1='6' y1='1' x2='6' y2='4'%3E%3C/line%3E%3Cline x1='10' y1='1' x2='10' y2='4'%3E%3C/line%3E%3Cline x1='14' y1='1' x2='14' y2='4'%3E%3C/line%3E%3C/svg%3E";
-
   const handleApprove = () => {
-    if (onApprove) onApprove(branch);
+    if (onApprove) onApprove(branch.id);
   };
 
   const handleReject = () => {
-    if (onReject) onReject(branch);
+    if (onReject) onReject(branch.id);
   };
 
   return (
@@ -116,9 +115,7 @@ export const BranchCard = ({
                     Ver detalles
                   </TooltipContent>
                 </Tooltip>
-              </TooltipProvider>
-
-              {/* Botones para sucursales pendientes */}
+              </TooltipProvider>              {/* Botones para sucursales pendientes */}
               {type === "pending" && (
                 <>
                   {/* Botón Aprobar */}
@@ -165,6 +162,28 @@ export const BranchCard = ({
                     </Tooltip>
                   </TooltipProvider>
                 </>
+              )}              {/* Botón para rechazar sucursales aprobadas */}
+              {type === "approved" && onReject && (
+                <TooltipProvider delayDuration={300}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleReject}
+                        className="h-7 w-7 text-red-600 hover:bg-red-50/50 hover:text-red-700 cursor-pointer"
+                      >
+                        <XCircle className="h-3.5 w-3.5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="bottom"
+                      className="text-xs font-medium bg-red-50 text-red-700 border-red-200 no-arrow"
+                    >
+                      Rechazar sucursal
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
             </div>
           </div>
