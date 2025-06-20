@@ -17,6 +17,7 @@ import { validateImageRequirements } from "@/common/hooks/useCriteria"
 import { useRegisterBrandMutation } from "@/api/mutations/branches/branches.mutation"
 import { useCriteria } from "@/api/queries/criteria/criteria.query"
 import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query"
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
 
 
 
@@ -35,7 +36,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
 
 
 
-    const storeId = localStorage.getItem("storeOrBranchId");
+    const storeId = getEncryptedItem("storeId");
 
 
     const methods = useForm<RegisterStoreBrancheSchemaType>({
