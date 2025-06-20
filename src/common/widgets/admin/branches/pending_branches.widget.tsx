@@ -55,8 +55,6 @@ export const PendingBranchesWidget = () => {
     setSelectedBranch,
     setItemsPerPage,
     handlePageChange,
-    handleApprove,
-    handleReject,
     handleViewDetails,
     handleRefresh,
   } = usePendingBranchesWidget();
