@@ -234,3 +234,70 @@ export const deleteImagenBrandMutation =  () => {
     }
   });
 }
+
+export const useReApproveBranchMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (approvalId: number) => {
+      const userId = getEncryptedItem("userId");
+
+      if (!userId) {
+        throw new Error(
+          "No se encontró ID de usuario en el sistema. Por favor, inicia sesión nuevamente."
+        );
+      }
+
+      console.log("Re-aprobando sucursal con ID:", userId, approvalId);
+
+      return await authClient.patch(`/branch-approvals/${approvalId}`, {
+        status: true,
+        approvedById: Number(userId),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branches", "pending"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "PENDING"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "APPROVED"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "REJECTED"] });
+      queryClient.invalidateQueries({ queryKey: ["branches"] });
+    },
+  });
+};
+
+export const useReRejectBranchMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      approvalId,
+      reason,
+    }: {
+      approvalId: number;
+      reason?: string;
+    }) => {
+      const userId = getEncryptedItem("userId");
+
+      if (!userId) {
+        throw new Error(
+          "No se encontró ID de usuario en el sistema. Por favor, inicia sesión nuevamente."
+        );
+      }
+
+      console.log("Re-rechazando sucursal con ID:", userId, approvalId);
+
+      return await authClient.patch(`/branch-approvals/${approvalId}`, {
+        status: false,
+        approvedById: Number(userId),
+        ...(reason && { comments: reason }),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branches", "pending"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "PENDING"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "APPROVED"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "REJECTED"] });
+      queryClient.invalidateQueries({ queryKey: ["branches"] });
+    },
+  });
+};

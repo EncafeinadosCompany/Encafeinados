@@ -135,5 +135,6 @@ export {
     MapIcon,
     ArrowUpRight,
     RefreshCcw,
-    QrCode
+    QrCode,
+    Building2
 } from "lucide-react";
