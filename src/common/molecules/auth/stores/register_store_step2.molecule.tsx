@@ -15,7 +15,7 @@ interface registerStoreProps {
 const RegisterStoreStep2 = ({register, errors, direction, control}:registerStoreProps) =>{
     return ( 
         <motion.div
-        key="step1"
+        key="step2"
         custom={direction}
         variants={pageVariants}
         initial="enter"
@@ -24,7 +24,7 @@ const RegisterStoreStep2 = ({register, errors, direction, control}:registerStore
         className="w-full"
         style={{ perspective: "1000px" }}>
         <div className=" m-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className="grid grid-cols-1  gap-10">
                 <div className="space-y-2">
                   <Imagen
                   register={register}
@@ -33,14 +33,14 @@ const RegisterStoreStep2 = ({register, errors, direction, control}:registerStore
                   control={control}    
                   ></Imagen>
                 </div>
-                <div className="space-y-2  flex flex-col text-center">
+                {/* <div className="space-y-2  flex flex-col text-center">
                     <TitleForm
                     title="Es momento de subir tu logo"
                     subtitle="Es importante para nosotros darte a conocer comó tienda que ofrece café de especialidad"
                     >         
                     </TitleForm>
 
-                </div>
+                </div> */}
             </div>
         </div>
     </motion.div>

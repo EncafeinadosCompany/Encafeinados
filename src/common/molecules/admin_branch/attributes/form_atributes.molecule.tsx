@@ -2,12 +2,12 @@ import { Button } from "@/common/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/common/ui/form"
 import { Input } from "@/common/ui/input"
 import { AttributeFormType } from "@/common/utils/schemas/attributes/create_attributes.schema"
-import { AlertCircle, Coffee }  from'@/common/ui/icons'
+import { AlertCircle, Coffee } from '@/common/ui/icons'
 import { useForm } from "react-hook-form"
 import { motion } from "framer-motion"
 import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.type"
 import { DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog"
-
+import { NumericFormat } from "react-number-format"
 
 
 interface form_atributes_props {
@@ -24,7 +24,7 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
 
 
     return (
-        <DialogContent className="bg-white/95  border-none shadow-xl rounded-2xl">
+        <DialogContent className=" w-full max-w-5xl bg-white/95  border-none shadow-xl rounded-2xl">
             <div className="w-full flex flex-col items-center">
                 <div className="flex justify-between items-center mb-6">
                     <DialogHeader>
@@ -83,35 +83,42 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
                                                     {currentAttribute?.requires_response && (
                                                         currentAttribute.name === "Rango de Precio" ? (
                                                             <div className="flex gap-2 items-center">
-                                                                <Input
-                                                                    {...field}
-                                                                    type="number"
-                                                                    min="1000"
-                                                                    step="1000"
-                                                                    placeholder="Precio mínimo"
-                                                                    className="border border-gray-200 focus:border-[#6F4E37] focus:ring-[#6F4E37]/10 rounded-lg"
-                                                                    onChange={(e) => {
-                                                                        const min = new Intl.NumberFormat('es-CO').format(Number(e.target.value));
+                                                             <div className="flex flex-col w-full">
+                                                                <p>Precio Minimo</p>
+                                                                   <NumericFormat
+                                                                    prefix="$"
+                                                                    thousandSeparator="."
+                                                                    decimalSeparator=","
+                                                                    allowNegative={false}
+                                                                    placeholder="$0"
+                                                                    className="pl-3 w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-[#DB8935] focus:border-[#DB8935] transition placeholder-slate-400 sm:text-sm"
+                                                                    onValueChange={({ value }) => {
+                                                                        const min = `$${new Intl.NumberFormat('es-CO').format(Number(value))}`;
                                                                         const max = field.value?.split('-')[1] || '';
-                                                                        field.onChange(`$${min}-${max}`);
+                                                                        field.onChange(`${min}-${max}`);
                                                                     }}
-
                                                                     value={field.value?.split('-')[0]?.replace(/\D/g, '') || ''}
                                                                 />
+                                                             </div>
                                                                 <span className="text-gray-500">-</span>
-                                                                <Input
-                                                                    type="number"
-                                                                    min="1000"
-                                                                    step="1000"
-                                                                    placeholder="Precio máximo"
-                                                                    className="border border-gray-200 focus:border-[#6F4E37] focus:ring-[#6F4E37]/10 rounded-lg"
-                                                                    onChange={(e) => {
+
+                                                               <div className="w-full">
+                                                                <p>Precio Máximo</p>
+                                                                 <NumericFormat
+                                                                    prefix="$"
+                                                                    thousandSeparator="."
+                                                                    decimalSeparator=","
+                                                                    allowNegative={false}
+                                                                    placeholder="$0"
+                                                                    className="pl-3 w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-[#DB8935] focus:border-[#DB8935] transition placeholder-slate-400 sm:text-sm"
+                                                                    onValueChange={({ value }) => {
                                                                         const min = field.value?.split('-')[0] || '';
-                                                                        const max = new Intl.NumberFormat('es-CO').format(Number(e.target.value));
-                                                                        field.onChange(`${min}-$${max}`);
+                                                                        const max = `$${new Intl.NumberFormat('es-CO').format(Number(value))}`;
+                                                                        field.onChange(`${min}-${max}`);
                                                                     }}
                                                                     value={field.value?.split('-')[1]?.replace(/\D/g, '') || ''}
                                                                 />
+                                                               </div>
                                                             </div>
                                                         ) : (
                                                             <Input

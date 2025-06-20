@@ -25,9 +25,15 @@ const MapSettings = {
           );
           const data = await response.json();
           const formattedAddress = formatAddress(data);
-          setCurrentAddress(formattedAddress);
-          setSearchQuery(formattedAddress);
-          onLocationSelect(lat, lng, formattedAddress);
+
+          const landmarkName = data.name; // Ej: "Éxito de Robledo"
+
+          const finalDisplayName = landmarkName
+            ? `${landmarkName}, ${formattedAddress}`
+            : formattedAddress;
+          setCurrentAddress(finalDisplayName);
+          setSearchQuery(finalDisplayName);
+          onLocationSelect(lat, lng, finalDisplayName);
         } catch (error) {
           console.error("Error fetching current address:", error);
         }
@@ -76,10 +82,14 @@ const MapSettings = {
         );
         const data = await response.json();
 
-        const formattedSuggestions = data.map((item: any) => ({
-          ...item,
-          display_name: formatAddress(item)
-        }));
+        const formattedSuggestions = data.map((item: any) => {
+          const base = formatAddress(item);
+
+          return {
+            ...item,
+            display_name: item.name ? `${item.name}, ${base}` : base
+          }
+        });
 
         setSuggestions(formattedSuggestions);
       } catch (error) {

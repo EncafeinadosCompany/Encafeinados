@@ -17,7 +17,7 @@ export const useApproveBranchMutation = () => {
 
   return useMutation({
     mutationFn: async (approvalId: number) => {
-      const userId = localStorage.getItem("userId");
+      const userId = getEncryptedItem("userId");
 
       if (!userId) {
         throw new Error(
@@ -25,9 +25,11 @@ export const useApproveBranchMutation = () => {
         );
       }
 
+      console.log("Aprobando sucursal con ID:", userId, approvalId);
+
       return await authClient.patch(`/branch-approvals/${approvalId}`, {
         status: true,
-        approvedById: parseInt(userId),
+        approvedById: Number(userId),
       });
     },
     onSuccess: () => {

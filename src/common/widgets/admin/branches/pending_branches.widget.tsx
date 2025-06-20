@@ -96,6 +96,8 @@ export const PendingBranchesWidget = () => {
       setIsApproveDialogOpen(false);
       return;
     }
+
+    console.log("Aprobando sucursal con ID:", branchDetails.approvalId);
     
     approveBranchMutation.mutate(branchDetails.approvalId, {
       onSuccess: () => {

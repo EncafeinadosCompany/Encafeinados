@@ -1,5 +1,5 @@
 import { Card } from "@/common/ui/card"
-import { AlertCircle, Star} from'@/common/ui/icons'
+import { AlertCircle, Star } from '@/common/ui/icons'
 import { motion } from "framer-motion"
 import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.type"
 
@@ -44,27 +44,19 @@ export const CardAttributes = ({ containerRef, canvasRef, badges, selectedBadges
                     {badges.map((badge) => (
                         <motion.div
                             key={badge.id}
-                            className={`relative p-4 rounded-xl transition-all duration-300 min-h-[70px] ${selectedBadges.includes(badge.id)
+                            className={`relative p-4 rounded-xl transition-all duration-300 h-full  min-h-[10vh] ${selectedBadges.includes(badge.id)
                                 ? "bg-[#FAF3E0] ring-2 ring-[#D4A76A]"
                                 : "bg-white hover:bg-[#FAF3E0]/50"
-                                } shadow-lg hover:shadow-xl cursor-pointer transform hover:-translate-y-1`}
+                                } shadow-lg hover:shadow-xl cursor-pointer transform hover:-translate-y-1 flex flex-col`}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.3 }}
                             onDoubleClick={() => handleBadgeDoubleClick(badge)}
-                            // onMouseDown={(e) => handleDragStart(e, badge)}
+                            style={{ height: "auto" }}
                         >
                             <div className="flex items-center gap-3 mb-2 bg-inherit">
                                 <Star className="h-5 w-5 text-[#D4A76A] flex-shrink-0" />
                                 <span className="font-semibold text-[#6F4E37] truncate">{getTypeLabel(badge.attributeId)}</span>
-                                {/* <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            className="ml-auto flex-shrink-0"
-                            onClick={(e) => handleRemoveBadge(badge.id, e)}
-                        >
-                            <X className="h-5 w-5 text-[#A67C52] hover:text-red-500 transition-colors" />
-                        </motion.button> */}
                             </div>
                             {badge.value && (
                                 <div className="text-sm text-[#A67C52] font-medium bg-[#FAF3E0]/50 p-2 rounded-lg">

@@ -17,6 +17,7 @@ export {
     Stamp,
     BookOpen,
     CalendarIcon,
+     BadgeCheck,
     BookOpenText,
     LayoutGrid,
     UploadIcon,

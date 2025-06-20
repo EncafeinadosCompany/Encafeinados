@@ -19,7 +19,7 @@ export const TitleForm = ({title, subtitle, className}: TitleFormProps) => {
                 {title}
             </motion.h1>
             <motion.p
-                className={`text-[14px]  text-gray-500 mt-3 ${className}`}
+                className={`text-[14px] text-center text-gray-500 mt-3 ${className}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}

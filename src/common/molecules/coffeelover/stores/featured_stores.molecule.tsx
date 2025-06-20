@@ -1,16 +1,17 @@
 import { ApprovedBranch } from "@/api/types/branches/branches_approval.types";
 // UI Components
-import { 
-  Carousel, 
-  CarouselApi, 
-  CarouselContent, 
-  CarouselItem, 
-  CarouselNext, 
-  CarouselPrevious 
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
 } from "@/common/ui/carousel";
 import FeaturedCard from "@/common/molecules/coffeelover/stores/featured_card.molecule";
 // Animation
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 // Types
 interface FeaturedCarouselStoresProps {
@@ -31,13 +32,14 @@ export const FeaturedCarouselStores = ({
   filteredBranches,
   carouselRef
 }: FeaturedCarouselStoresProps) => {
+
+ 
+
   return (
     <>
- 
+
       {/* Content Section */}
       <div className='w-full'>
-        <h2 className="text-lg font-bold mb-4">Destacados</h2>
-        
         {/* No Results State */}
         {filteredBranches.length === 0 ? (
           <div className="w-full py-8 text-center border-none">
@@ -58,43 +60,51 @@ export const FeaturedCarouselStores = ({
             </button>
           </div>
         ) : (
-          // Carousel Display
-          <Carousel
-            className="flex w-full flex-col touch-pan-y will-change-transform"
-            opts={{ 
-              loop: true, 
-              align: "center",
-              dragFree: true,
-              containScroll: "trimSnaps"
-            }}
-            setApi={(api) => (carouselRef.current = api)}
-          >
-            <div className="relative w-full">
-              <CarouselContent className=" item-center mx-7 flex cursor-grab active:cursor-grabbing">
-                {filteredBranches.map((branch) => (
-                  <CarouselItem 
-                    key={branch.id} 
-                    className="basis-4/5 sm:basis-1/2 lg:basis-1/3 pl-2 touch-pan-x"
-                  >
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.5 }}
-                      className="touch-pan-x px-1"
-                      layout={false} 
-                    >
-                      <FeaturedCard branches={branch} />
-                    </motion.div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-
-              {/* Navigation Controls */}
-              <CarouselPrevious className="flex absolute left-0 top-1/3 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md z-10" />
-              <CarouselNext className="flex absolute right-0 top-1/3 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md z-10" />
+          <div className="py-2 relative">
+            <div className="flex justify-between mb-2">
+              <h2 className="text-3xl font-light text-gray-700">Cafés Destacados</h2>
+              <span className="text-gray-400">
+                01/{branches.length}
+              </span>
             </div>
-          </Carousel>
+
+            <Carousel opts={{ align: "center" }} className="w-full max-w-7xl h-full py-2">
+              <CarouselContent>
+              {branches.map((branch, index) => (
+                <CarouselItem
+                key={branch.id}
+                className="md:basis-1/2 lg:basis-1/3 items-center flex justify-center p-4"
+                >
+                <FeaturedCard
+                  branches={branch}
+                  isFeatured={index === 1} // El del centro es featured
+                />
+                </CarouselItem>
+              ))}
+              </CarouselContent>
+              {/* CarouselNext sigue en la posición original */}
+               <div className="absolute bottom-4 right-12 -translate-x-1/2 z-10">
+                <CarouselNext className="bg-white/80 backdrop-blur-sm" />
+               </div>
+             
+              {/* CarouselPrevious se mueve abajo, centrado horizontalmente */}
+              <div className="absolute bottom-4 left-12 -translate-x-1/2 z-10">
+              <CarouselPrevious className="bg-white/80 backdrop-blur-sm" />
+              </div>
+            </Carousel>
+
+            {/* Dots/Indicadores de navegación (opcional) */}
+            <div className="flex justify-center gap-2 mt-6">
+              {branches.map((_, index) => (
+                <button
+                  key={index}
+                  className={`h-1.5 transition-all duration-300 rounded-full ${index === 1 ? "bg-gray-600 w-10" : "bg-gray-300 w-6"
+                    }`}
+                  aria-label={`Ver café ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </>
