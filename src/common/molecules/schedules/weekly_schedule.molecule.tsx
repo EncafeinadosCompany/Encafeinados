@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import { Clock, ChevronDown, ChevronUp } from "lucide-react";
+import { Clock, ChevronDown, ChevronUp } from "@/common/ui/icons";
 import { BranchSchedule } from "@/api/types/schedules/schedule.types";
-import { 
-  getWeeklyScheduleFormatted, 
-  isBranchOpenNow,
-  getCurrentScheduleInfo,
-  getCurrentDayOfWeek
-} from "@/common/utils/schedules/schedule.utils";
+import { getWeeklyScheduleFormatted, isBranchOpenNow,getCurrentScheduleInfo,getCurrentDayOfWeek} from "@/common/utils/schedules/schedule.utils";
 
 interface WeeklyScheduleProps {
   schedules: BranchSchedule[];
@@ -19,7 +14,6 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
-  // Debug para ver qué datos están llegando
   console.log("Schedules data received:", schedules);
 
   const dayNames: { [key: string]: string } = {
@@ -46,9 +40,7 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
   const currentInfo = getCurrentScheduleInfo(schedules);
   const currentDay = getCurrentDayOfWeek();
 
-  console.log("Processed data:", { weeklySchedule, isCurrentlyOpen, currentInfo, currentDay });
 
-  // Buscar el horario de hoy
   const todaySchedule = weeklySchedule.find(schedule => 
     schedule.day.toLowerCase() === currentDay.toLowerCase()
   );
@@ -56,7 +48,6 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
   if (compact) {
     return (
       <div className="space-y-3">
-        {/* Estado actual */}
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600">Estado actual:</span>
           <span className={`text-sm font-medium px-2 py-1 rounded-full ${
@@ -68,7 +59,6 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
           </span>
         </div>
 
-        {/* Horario de hoy */}
         {todaySchedule && (
           <div className="bg-white/80 border border-[#E6D7C3] rounded-lg p-3 backdrop-blur-sm">
             <div className="flex items-center justify-between">
@@ -82,14 +72,12 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
           </div>
         )}
 
-        {/* Información adicional si está cerrado */}
         {!isCurrentlyOpen && currentInfo.nextOpenTime && currentInfo.nextOpenDay && (
           <div className="text-xs text-gray-600 text-center py-1">
             Abre {dayNames[currentInfo.nextOpenDay] || currentInfo.nextOpenDay} a las {currentInfo.nextOpenTime}
           </div>
         )}
 
-        {/* Toggle para ver horarios completos */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           className="w-full flex items-center justify-center gap-2 text-[#6F4E37] text-sm font-medium hover:text-[#5D3D26] transition-colors py-2 border-t border-[#E6D7C3]/50"
@@ -98,7 +86,6 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
           {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </button>
 
-        {/* Horarios completos expandibles */}
         {isExpanded && (
           <div className="space-y-2 border-t border-[#E6D7C3] pt-3">
             {weeklySchedule.map((schedule, index) => {
@@ -136,7 +123,6 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
     );
   }
 
-  // Versión expandida para uso en otros lugares
   return (
     <div className="bg-white border border-[#E6D7C3] rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
@@ -185,7 +171,6 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
         })}
       </div>
 
-      {/* Información adicional del estado actual */}
       {currentInfo && (
         <div className="mt-4 p-3 bg-[#F5E4D2]/30 rounded-lg border-l-4 border-[#6F4E37]">
           <div className="flex items-start gap-2">

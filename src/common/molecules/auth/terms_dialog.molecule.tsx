@@ -1,18 +1,9 @@
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-  DialogOverlay,
-} from "@/common/ui/dialog";
+import {Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle,DialogClose,DialogOverlay} from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
 import { Checkbox } from "@/common/ui/checkbox";
 import { ScrollArea } from "@/common/ui/scroll-area";
-import { Coffee, Lock, Shield, FileCheck } from "lucide-react";
+import { Coffee, Lock, Shield, FileCheck } from'@/common/ui/icons';
 
 interface TermsDialogProps {
   open: boolean;

@@ -18,9 +18,9 @@ import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.t
 import { useAttributes, useBranchAttributes } from "@/api/queries/attributes/attributes.query"
 import { AttributeFormType, RegisterAttributeSchema } from "@/common/utils/schemas/attributes/create_attributes.schema"
 import { useCreateAttributeMutation, useUpdateAttributeMutation } from "@/api/mutations/attributes/attributes.mutation"
-import { getAuthStorage } from "@/common/utils/auth_storage.utils"
-import { ChevronDown, Coffee } from "lucide-react"
+import { ChevronDown, Coffee }  from "@/common/ui/icons";
 import { ScrollIndicator } from "@/common/atoms/indicator"
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
 
 
 export default function AttributesDashboard() {
@@ -30,12 +30,14 @@ export default function AttributesDashboard() {
     const [isMultiSelectOpen, setIsMultiSelectOpen] = useState(false)
     const [selectedOptions, setSelectedOptions] = useState<Attribute[]>([])
     const [badges, setBadges] = useState<RegisterAttibute[]>([])
-    const { storeOrBranch } = getAuthStorage()
+    
     const [attributes, setAttributes] = useState<Attribute[]>([])
     const [selectedAttributes, setSelectedAttributes] = useState<RegisterAttibute[]>([])
     
-    if (!storeOrBranch) return null
-    const { data: attributesByID } = useBranchAttributes(storeOrBranch)
+    const idBranch = getEncryptedItem("branchId") as string | null;
+    if (!idBranch) return null
+
+    const { data: attributesByID } = useBranchAttributes(idBranch)
     const { data: attribute } = useAttributes()
     
     const { mutateAsync: useAttribute } = useCreateAttributeMutation()
@@ -85,6 +87,8 @@ export default function AttributesDashboard() {
 
     const onSubmit = async (data: AttributeFormType) => {
         try {
+
+            console.log('Submitting attributes:', data.values);
             const existingAttr = attributesByID?.attributes.find(
                 attr => attr.attributeId === data.values[0].attributeId
             );
@@ -224,7 +228,6 @@ export default function AttributesDashboard() {
                         <h3 className="font-medium mb-2">Elementos seleccionados:</h3>
                         <p>{selectedBadges.length} elementos seleccionados</p>
                         <div className="flex gap-2 mt-2 flex-wrap">
-                            {/* Mostrar badges seleccionados en orden */}
                             {badges
                                 .filter((badge) => selectedBadges.includes(badge.id))
                                 .map((badge) => (
@@ -235,21 +238,6 @@ export default function AttributesDashboard() {
                         </div>
                     </div>
                 )}
-
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <FormAttributes
-                        method={method}
-                        selectedAttributes={selectedAttributes}
-                        attributes={attributes}
-                        onSubmit={onSubmit}
-                        getTypeLabel={getTypeLabel}
-                        setSelectedAttributes={setSelectedAttributes}
-                        setIsDialogOpen={setIsDialogOpen}
-                    />
-                </Dialog>
-
-      
-
                 <div className="mt-8 p-4 bg-gray-50/10 rounded-xl border border-[#E5E7EB]">
                     <h3 className="text-[#2C1810] font-medium mb-2">Guía Rápida</h3>
                     <ul className="space-y-2 text-sm text-[#6B7280]">
@@ -267,6 +255,18 @@ export default function AttributesDashboard() {
                         </li>
                     </ul>
                 </div>
+
+                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <FormAttributes
+                        method={method}
+                        selectedAttributes={selectedAttributes}
+                        attributes={attributes}
+                        onSubmit={onSubmit}
+                        getTypeLabel={getTypeLabel}
+                        setSelectedAttributes={setSelectedAttributes}
+                        setIsDialogOpen={setIsDialogOpen}
+                    />
+                </Dialog>
             </div>
         </div>
     )

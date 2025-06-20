@@ -1,4 +1,4 @@
-export interface Store {
+export interface StoreDto {
   id: number;
   name: string;
   type_document: string;
@@ -10,7 +10,6 @@ export interface Store {
   latitude?: number;
   longitude?: number;
 }
-
 
 export interface RegisterStoreDto {
   name: string
@@ -24,7 +23,7 @@ export interface RegisterStoreDto {
 export interface StoresResponse {
   message: string;
   stores: {
-    stores: Store[];
+    stores: StoreDto[];
   };
 }
 

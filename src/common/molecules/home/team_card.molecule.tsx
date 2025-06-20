@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, ChevronDown, ChevronUp, X, Coffee, Linkedin, Twitter, Globe } from 'lucide-react';
+import { User, ChevronDown, ChevronUp, X, Coffee, Linkedin, Twitter, Globe } from'@/common/ui/icons'
 
 interface Member {
   name: string;

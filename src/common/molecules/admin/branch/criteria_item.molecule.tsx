@@ -1,13 +1,7 @@
 import React, { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogOverlay,
-} from "@/common/ui/dialog";
-import { Button } from "@/common/ui/button";
+
 import { CriteriaResponse } from "@/api/types/branches/branches_approval.types";
-import { ZoomIn, X, Check, AlertCircle } from "lucide-react";
+import { ZoomIn, X, Check, AlertCircle } from "@/common/ui/icons";
 
 interface CriteriaItemProps {
   criteriaResponse: CriteriaResponse;

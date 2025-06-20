@@ -1,10 +1,10 @@
 import { usePageByAlbumQuery } from "@/api/queries/album/album.query";
 import List_Stamps from "./coffeelover/album/list_stamps.widget";
 import { useRef, useState } from "react";
-import { Coffee, ChevronDown, StickyNote } from "lucide-react";
+import { Coffee, ChevronDown, StickyNote }  from "@/common/ui/icons"
 import { Button } from "@/common/ui/button";
 
-export const Prueba_album = () => {
+export  default function  Prueba_album  ()  {
     const { data, isLoading, error } = usePageByAlbumQuery('1');
     const [activePageId, setActivePageId] = useState<number | null>(null);
     const pageRefs = useRef<Record<number, HTMLDivElement | null>>({});

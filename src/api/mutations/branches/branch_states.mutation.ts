@@ -8,6 +8,7 @@ import { AxiosResponse } from "axios";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import toast from "react-hot-toast";
 import { z } from "zod";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 const authClient = new AuthClient();
 
@@ -16,7 +17,7 @@ export const useApproveBranchMutation = () => {
 
   return useMutation({
     mutationFn: async (approvalId: number) => {
-      const userId = localStorage.getItem("userId");
+      const userId = getEncryptedItem("userId");
 
       if (!userId) {
         throw new Error(
@@ -24,14 +25,16 @@ export const useApproveBranchMutation = () => {
         );
       }
 
+      console.log("Aprobando sucursal con ID:", userId, approvalId);
+
       return await authClient.patch(`/branch-approvals/${approvalId}`, {
         status: true,
-        approvedById: parseInt(userId),
+        approvedById: Number(userId),
       });
-    },
-    onSuccess: () => {
+    },    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branches", "pending"] });
       queryClient.invalidateQueries({ queryKey: ["branches", "PENDING"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "APPROVED"] });
       queryClient.invalidateQueries({ queryKey: ["branches"] });
     },
   });
@@ -49,7 +52,7 @@ export const useRejectBranchMutation = () => {
       approvalId: number;
       reason: string;
     }) => {
-      const userId = localStorage.getItem("userId");
+      const userId = getEncryptedItem("userId");
 
       if (!userId) {
         throw new Error(
@@ -59,13 +62,14 @@ export const useRejectBranchMutation = () => {
 
       return await authClient.patch(`/branch-approvals/${approvalId}`, {
         status: false,
-        approvedById: parseInt(userId),
+        approvedById: Number(userId),
         comments: reason,
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branches", "pending"] });
       queryClient.invalidateQueries({ queryKey: ["branches", "PENDING"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "REJECTED"] });
       queryClient.invalidateQueries({ queryKey: ["branches"] });
     },
   });
@@ -126,6 +130,8 @@ export const useStatesIsOpen = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branches"] });
+      queryClient.invalidateQueries({ queryKey:['branches', 'APPROVED'] });
+      queryClient.invalidateQueries({ queryKey: ['branch-approvals'] });
       
     }
   });
@@ -151,7 +157,7 @@ export const useUpdateImagenBrandMutation = () => {
     mutationFn: async (data: z.infer<typeof formSchemaBranches>): Promise<image> => {
       try {
 
-        const id_branch = localStorage.getItem("storeOrBranchId");
+         const id_branch = getEncryptedItem("branchId");
         if (!id_branch) throw new Error("No se encontró el id de la sucursal");
 
         let image_url = "";
@@ -162,7 +168,7 @@ export const useUpdateImagenBrandMutation = () => {
 
         const payload: UpdateImagen = {
           related_type: 'BRANCH',
-          related_id: parseInt(id_branch),
+          related_id: Number(id_branch),
           images: [
             {
               image_url: image_url,
@@ -228,3 +234,70 @@ export const deleteImagenBrandMutation =  () => {
     }
   });
 }
+
+export const useReApproveBranchMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (approvalId: number) => {
+      const userId = getEncryptedItem("userId");
+
+      if (!userId) {
+        throw new Error(
+          "No se encontró ID de usuario en el sistema. Por favor, inicia sesión nuevamente."
+        );
+      }
+
+      console.log("Re-aprobando sucursal con ID:", userId, approvalId);
+
+      return await authClient.patch(`/branch-approvals/${approvalId}`, {
+        status: true,
+        approvedById: Number(userId),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branches", "pending"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "PENDING"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "APPROVED"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "REJECTED"] });
+      queryClient.invalidateQueries({ queryKey: ["branches"] });
+    },
+  });
+};
+
+export const useReRejectBranchMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      approvalId,
+      reason,
+    }: {
+      approvalId: number;
+      reason?: string;
+    }) => {
+      const userId = getEncryptedItem("userId");
+
+      if (!userId) {
+        throw new Error(
+          "No se encontró ID de usuario en el sistema. Por favor, inicia sesión nuevamente."
+        );
+      }
+
+      console.log("Re-rechazando sucursal con ID:", userId, approvalId);
+
+      return await authClient.patch(`/branch-approvals/${approvalId}`, {
+        status: false,
+        approvedById: Number(userId),
+        ...(reason && { comments: reason }),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["branches", "pending"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "PENDING"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "APPROVED"] });
+      queryClient.invalidateQueries({ queryKey: ["branches", "REJECTED"] });
+      queryClient.invalidateQueries({ queryKey: ["branches"] });
+    },
+  });
+};

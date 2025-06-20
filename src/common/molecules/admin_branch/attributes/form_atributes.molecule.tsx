@@ -1,13 +1,13 @@
 import { Button } from "@/common/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/common/ui/form"
 import { Input } from "@/common/ui/input"
-import { AttributeFormType} from "@/common/utils/schemas/attributes/create_attributes.schema"
-import { AlertCircle, Coffee} from "lucide-react"
+import { AttributeFormType } from "@/common/utils/schemas/attributes/create_attributes.schema"
+import { AlertCircle, Coffee } from '@/common/ui/icons'
 import { useForm } from "react-hook-form"
 import { motion } from "framer-motion"
 import { Attribute, RegisterAttibute } from "@/api/types/attributes/attributes.type"
 import { DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog"
-
+import { NumericFormat } from "react-number-format"
 
 
 interface form_atributes_props {
@@ -24,7 +24,7 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
 
 
     return (
-        <DialogContent className="bg-white/95  border-none shadow-xl rounded-2xl">
+        <DialogContent className=" w-full max-w-5xl bg-white/95  border-none shadow-xl rounded-2xl">
             <div className="w-full flex flex-col items-center">
                 <div className="flex justify-between items-center mb-6">
                     <DialogHeader>
@@ -37,13 +37,7 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
                                 : "Configurar atributos"}
                         </DialogTitle>
                     </DialogHeader>
-                    {/* <Button
-                    variant="ghost"
-                    onClick={() => setIsDialogOpen(false)}
-                    className="text-gray-400 hover:text-gray-600"
-                >
-                    <X className="h-5 w-5" />
-                </Button> */}
+
                 </div>
 
                 <div className="border-b border-gray-100 pb-4">
@@ -62,8 +56,8 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
                 <Form {...method}>
                     <form onSubmit={method.handleSubmit(onSubmit)} className="space-y-6">
                         <div className={`grid gap-4 ${selectedAttributes.length > 1
-                                ? "md:grid-cols-2 grid-cols-1"
-                                : "grid-cols-1"
+                            ? "md:grid-cols-2 grid-cols-1"
+                            : "grid-cols-1"
                             }`}>
                             {selectedAttributes.map((attr, index) => (
                                 <FormField
@@ -72,8 +66,7 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
                                     name={`values.${index}.value`}
                                     render={({ field, formState }) => {
                                         const currentAttribute = attributes.find(e => e.id === attr.attributeId);
-                                        // We should not modify the field object directly as it's a controlled form input
-                                        const requiresResponse = currentAttribute?.requires_response;
+
 
                                         return (
                                             <FormItem className="bg-gray-50/50 p-4 rounded-xl border border-gray-100 relative">
@@ -83,42 +76,49 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
                                                 <p className="text-sm text-gray-500 mb-3">
                                                     {currentAttribute?.description}
                                                 </p>
-                                                    {currentAttribute?.requires_response === false && 
-                                                        <span className="text-green-600 absolute top-2 right-5 bg-green-200 w-fit px-3 rounded-full">Si</span>
-                                                    }                               
-                                                 <FormControl>
+                                                {currentAttribute?.requires_response === false &&
+                                                    <span className="text-green-600 absolute top-2 right-5 bg-green-200 w-fit px-3 rounded-full">Si</span>
+                                                }
+                                                <FormControl>
                                                     {currentAttribute?.requires_response && (
                                                         currentAttribute.name === "Rango de Precio" ? (
                                                             <div className="flex gap-2 items-center">
-                                                                <Input
-                                                                    {...field}
-                                                                    type="number"
-                                                                    min="1000"
-                                                                    step="1000"
-                                                                    placeholder="Precio mínimo"
-                                                                    className="border border-gray-200 focus:border-[#6F4E37] focus:ring-[#6F4E37]/10 rounded-lg"
-                                                                    onChange={(e) => {
-                                                                        const min = new Intl.NumberFormat('es-CO').format(Number(e.target.value));
+                                                             <div className="flex flex-col w-full">
+                                                                <p>Precio Minimo</p>
+                                                                   <NumericFormat
+                                                                    prefix="$"
+                                                                    thousandSeparator="."
+                                                                    decimalSeparator=","
+                                                                    allowNegative={false}
+                                                                    placeholder="$0"
+                                                                    className="pl-3 w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-[#DB8935] focus:border-[#DB8935] transition placeholder-slate-400 sm:text-sm"
+                                                                    onValueChange={({ value }) => {
+                                                                        const min = `$${new Intl.NumberFormat('es-CO').format(Number(value))}`;
                                                                         const max = field.value?.split('-')[1] || '';
-                                                                        field.onChange(`$${min}-${max}`);
+                                                                        field.onChange(`${min}-${max}`);
                                                                     }}
-                                                                    
                                                                     value={field.value?.split('-')[0]?.replace(/\D/g, '') || ''}
                                                                 />
+                                                             </div>
                                                                 <span className="text-gray-500">-</span>
-                                                                <Input
-                                                                    type="number"
-                                                                    min="1000"
-                                                                    step="1000"
-                                                                    placeholder="Precio máximo"
-                                                                    className="border border-gray-200 focus:border-[#6F4E37] focus:ring-[#6F4E37]/10 rounded-lg"
-                                                                    onChange={(e) => {
+
+                                                               <div className="w-full">
+                                                                <p>Precio Máximo</p>
+                                                                 <NumericFormat
+                                                                    prefix="$"
+                                                                    thousandSeparator="."
+                                                                    decimalSeparator=","
+                                                                    allowNegative={false}
+                                                                    placeholder="$0"
+                                                                    className="pl-3 w-full p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-[#DB8935] focus:border-[#DB8935] transition placeholder-slate-400 sm:text-sm"
+                                                                    onValueChange={({ value }) => {
                                                                         const min = field.value?.split('-')[0] || '';
-                                                                        const max = new Intl.NumberFormat('es-CO').format(Number(e.target.value));
-                                                                        field.onChange(`${min}-$${max}`);
+                                                                        const max = `$${new Intl.NumberFormat('es-CO').format(Number(value))}`;
+                                                                        field.onChange(`${min}-${max}`);
                                                                     }}
                                                                     value={field.value?.split('-')[1]?.replace(/\D/g, '') || ''}
                                                                 />
+                                                               </div>
                                                             </div>
                                                         ) : (
                                                             <Input
@@ -149,17 +149,7 @@ export const FormAttributes = ({ method, attributes, onSubmit, getTypeLabel, sel
                         </div>
 
                         <div className="flex justify-center items-center gap-3 pt-4 mt-6 border-t border-gray-100">
-                            {/* <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => {
-                                    setIsDialogOpen(false)
-                                    setSelectedAttributes([])
-                                }}
-                                className="bg-transparent hover:bg-gray-50 border border-gray-200 text-gray-600"
-                            >
-                                Cancelar
-                            </Button> */}
+
                             <Button
                                 type="submit"
                                 disabled={method.formState.isValidating || !method.formState.isValid}

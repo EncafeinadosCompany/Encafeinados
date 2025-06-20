@@ -2,7 +2,7 @@ import React from 'react';
 import { useReviewsByIdBranches } from '@/api/queries/reviews/reviews.query';
 import ListReviews from '@/common/molecules/coffeelover/reviews/list_reviews.molecule';
 import { Skeleton } from '@/common/ui/skeleton';
-import { MessageSquareOff, AlertTriangle } from 'lucide-react';
+import { MessageSquareOff, AlertTriangle } from "@/common/ui/icons"
 
 interface ReviewsWidgetProps {
   branchId: number;

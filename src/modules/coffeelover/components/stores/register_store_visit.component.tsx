@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {MapPin,Coffee,CheckCircle,AlertCircle,Loader2,Store,MapIcon,ArrowUpRight,RefreshCcw,Sparkles,MessageCircle} from "lucide-react";
+import { MapPin, Coffee, CheckCircle, AlertCircle, Loader2, Store, MapIcon, ArrowUpRight, RefreshCcw, Sparkles, MessageCircle } from "@/common/ui/icons"
 import { Button } from "@/common/ui/button";
 import { CoffeeBackground } from "@/common/widgets/coffee_background.widget";
 
@@ -13,15 +13,15 @@ const ValidateVisitPage = () => {
   const [animationComplete, setAnimationComplete] = useState(false);
   const navigate = useNavigate();
 
-  const { mutate: validateVisit, isError, isIdle, status, error, reset, data: responseData} = useRegisterVisitMutation();
+  const { mutate: validateVisit, isError, isIdle, status, error, reset, data: responseData } = useRegisterVisitMutation();
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
     document.body.style.height = '100%';
-    document.body.style.touchAction = 'none'; 
-    
+    document.body.style.touchAction = 'none';
+
     return () => {
       document.body.style.overflow = '';
       document.body.style.position = '';
@@ -75,16 +75,16 @@ const ValidateVisitPage = () => {
   }, [responseData]);
 
   const coffeecoinsEarned = responseData?.data?.coffeecoins_earned || 0;
-const stampInfo = responseData?.data?.stamp || null;
+  const stampInfo = responseData?.data?.stamp || null;
 
-const handleReviewClick = () => {
-  navigate(`/coffeelover/review?branch_id=${branchId}&branch_name=${encodeURIComponent(stampInfo?.name || '')}`);
-};
+  const handleReviewClick = () => {
+    navigate(`/coffeelover/review?branch_id=${branchId}&branch_name=${encodeURIComponent(stampInfo?.name || '')}`);
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center overflow-hidden touch-none">
       <CoffeeBackground />
-      
+
       <AnimatePresence mode="wait">
         <motion.div
           key={status}
@@ -102,7 +102,7 @@ const handleReviewClick = () => {
               </div>
 
               <div className="absolute top-0 right-0 w-24 h-24 opacity-20">
-                <motion.div 
+                <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
                   className="w-full h-full"
@@ -228,19 +228,19 @@ const handleReviewClick = () => {
                       <motion.div
                         key={`spark-${i}`}
                         className="absolute w-2 h-2 bg-green-300 rounded-full"
-                        initial={{ 
-                          x: 0, 
-                          y: 0, 
-                          opacity: 1, 
-                          scale: 0.2 
+                        initial={{
+                          x: 0,
+                          y: 0,
+                          opacity: 1,
+                          scale: 0.2
                         }}
-                        animate={{ 
-                          x: Math.cos(i * Math.PI * 0.67) * 40, 
+                        animate={{
+                          x: Math.cos(i * Math.PI * 0.67) * 40,
                           y: Math.sin(i * Math.PI * 0.67) * 40,
                           opacity: 0,
-                          scale: 0 
+                          scale: 0
                         }}
-                        transition={{ 
+                        transition={{
                           repeat: Infinity,
                           duration: 1.5,
                           delay: i * 0.2,
@@ -250,7 +250,7 @@ const handleReviewClick = () => {
                     ))}
                     <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 text-green-500" />
                   </motion.div>
-                  
+
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -265,12 +265,12 @@ const handleReviewClick = () => {
                       {stampInfo && (
                         <div className="flex items-center mb-2 pb-2 border-b border-amber-100">
                           {stampInfo.logo ? (
-                            <img 
-                              src={stampInfo.logo} 
-                              alt={stampInfo.name} 
+                            <img
+                              src={stampInfo.logo}
+                              alt={stampInfo.name}
                               className="h-8 w-8 sm:h-10 sm:w-10 object-cover rounded-lg mr-2"
                               onError={(e) => {
-                                (e.target as HTMLImageElement).src = "/public/cafeino.png"; 
+                                (e.target as HTMLImageElement).src = "/public/cafeino.png";
                               }}
                             />
                           ) : (
@@ -288,7 +288,7 @@ const handleReviewClick = () => {
                           </div>
                         </div>
                       )}
-                      
+
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium text-amber-800 flex items-center">
                           <Coffee className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1 text-amber-600" />
@@ -319,7 +319,7 @@ const handleReviewClick = () => {
                           </div>
                         </div>
                       </Button>
-                      
+
                       <div className="flex gap-2 w-full mt-2">
                         <Button
                           className="flex-1 bg-white border border-amber-200 hover:bg-amber-50 text-amber-700 font-medium text-xs sm:text-sm h-auto py-2 sm:py-2.5 transition-colors"
@@ -328,7 +328,7 @@ const handleReviewClick = () => {
                           <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1.5" />
                           Volver al inicio
                         </Button>
-                        
+
                         <Button
                           className="flex-1 bg-white border border-amber-200 hover:bg-amber-50 text-amber-700 font-medium text-xs sm:text-sm h-auto py-2 sm:py-2.5 transition-colors"
                           onClick={() => navigate("/coffeelover/map-coffelover")}
@@ -337,7 +337,7 @@ const handleReviewClick = () => {
                           Ver mapa
                         </Button>
                       </div>
-                      
+
                       <p className="text-[9px] sm:text-[10px] text-center text-amber-800/70 mt-1">
                         Gana 5 CoffeeCoins adicionales por compartir tu opinión
                       </p>
@@ -411,7 +411,7 @@ const handleReviewClick = () => {
               </p>
             </div>
           </div>
-          
+
           <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-3/4 h-8 bg-amber-900/5 blur-xl rounded-full z-0"></div>
         </motion.div>
       </AnimatePresence>

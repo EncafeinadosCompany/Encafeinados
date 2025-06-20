@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
-import {  RefreshCw, Search, AlertTriangle, Coffee } from "lucide-react";
-import {  AnimatePresence } from "framer-motion";
+import { RefreshCw, Search, AlertTriangle, Coffee } from "@/common/ui/icons";
+import { AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
-import { ApprovedBranch } from '@/api/types/branches/branches_approval.types';
+import { ApprovedBranch, BranchApprovalDetails } from '@/api/types/branches/branches_approval.types';
 import { StatusBadge } from "@/common/atoms/StatusBadge";
 import { BranchSearchBar } from "@/common/molecules/admin/branch/branch_search_bar.molecule";
 import { BranchPagination } from "@/common/molecules/admin/branch/branch_pagination.molecule";
 import { BranchCard } from "@/common/molecules/admin/branch/branch_card.molecule";
-import { BranchDetailsDialog } from "@/common/molecules/admin/branch/branch_details_dialog.molecule";
+import { BranchDetailsModal } from "@/common/molecules/admin/branch/branch_details_enhanced_modal.molecule";
+import { BranchRejectDialog } from "@/common/molecules/admin/branch/branch_reject_dialog.molecule";
 import { useApprovedBranchesWidget } from "@/common/hooks/branches/useApprovedBranchesWidget";
+import { useReRejectBranchMutation } from "@/api/mutations/branches/branch_states.mutation";
+import { useQueryClient } from "@tanstack/react-query";
+import { useBranchApprovalDetails } from "@/api/queries/branches/branch.query";
+import AuthClient from "@/api/client/axios";
+import toast from 'react-hot-toast';
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 export const ApprovedBranchesWidget = () => {
   const {
@@ -38,6 +45,73 @@ export const ApprovedBranchesWidget = () => {
     handleViewDetails,
     handleRefresh
   } = useApprovedBranchesWidget();
+
+  const queryClient = useQueryClient();
+  const authClient = new AuthClient();
+  const reRejectMutation = useReRejectBranchMutation();
+  
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedBranchForAction, setSelectedBranchForAction] = useState<number | null>(null);
+
+  const checkUserAuth = () => {
+    const userId = getEncryptedItem('userId');
+    if (!userId) {
+      toast.error('No se detecta una sesión activa. Por favor, inicia sesión nuevamente.');
+      return false;
+    }
+    return true;
+  };
+
+  const openRejectDialog = (branchId: number) => {
+    setSelectedBranchForAction(branchId);
+    setIsRejectDialogOpen(true);
+  };
+  const confirmReject = async (branchId: number, reason: string) => {
+    if (!checkUserAuth()) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Obtener detalles de la sucursal directamente usando el branchId correcto
+      const branchDetails = await authClient.get<BranchApprovalDetails>(`/branch-approvals/detail/${branchId}`);
+      
+      if (!branchDetails?.approvalId) {
+        toast.error("No se encontró la información necesaria para rechazar");
+        setIsSubmitting(false);
+        setIsRejectDialogOpen(false);
+        return;
+      }
+
+      reRejectMutation.mutate(
+        { 
+          approvalId: branchDetails.approvalId, 
+          reason 
+        },
+        {
+          onSuccess: () => {
+            toast.success("Sucursal rechazada correctamente");
+            setIsSubmitting(false);
+            setIsRejectDialogOpen(false);
+            handleRefresh();
+          },
+          onError: (error) => {
+            toast.error(`Error al rechazar la sucursal: ${error.message}`);
+            setIsSubmitting(false);
+          }
+        }
+      );
+    } catch (error: any) {
+      toast.error(`Error al obtener información de la sucursal: ${error.message}`);
+      setIsSubmitting(false);
+    }
+  };
+
+  const getBranchName = (branchId: number | null) => {
+    if (!branchId) return undefined;
+    const branch = originalBranches.find(b => b.id === branchId);
+    return branch?.name;
+  };
 
   const renderEmptyState = () => {
     if (originalBranches.length > 0 && searchTerm) {
@@ -150,6 +224,7 @@ export const ApprovedBranchesWidget = () => {
                     index={index}
                     onView={handleViewDetails}
                     type="approved"
+                    onReject={openRejectDialog}
                   />
                 ))}
               </AnimatePresence>
@@ -212,10 +287,17 @@ export const ApprovedBranchesWidget = () => {
           {renderContent()}
         </div>
       </Card>
-      
-      <BranchDetailsDialog 
-        branch={selectedBranch} 
-        onClose={() => setSelectedBranch(null)} 
+        <BranchDetailsModal 
+        branch={selectedBranch}
+        onClose={() => setSelectedBranch(null)}
+      />
+        <BranchRejectDialog
+        isOpen={isRejectDialogOpen}
+        onClose={() => setIsRejectDialogOpen(false)}
+        onConfirm={confirmReject}
+        branchId={selectedBranchForAction}
+        branchName={getBranchName(selectedBranchForAction)}
+        isSubmitting={isSubmitting}
       />
     </>
   );

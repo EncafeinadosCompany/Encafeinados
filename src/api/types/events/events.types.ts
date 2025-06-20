@@ -1,4 +1,4 @@
-export interface EvenType {
+export interface EventDto {
     id?: number;
     name: string;
     description: string;

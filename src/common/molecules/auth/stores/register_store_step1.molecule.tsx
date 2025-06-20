@@ -7,7 +7,7 @@ import SelectTypeDocument from "@/common/atoms/auth/select_type_document.atom"
 import { CurrentSchema } from "@/common/utils/schemas/auth/register_store_shema"
 import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 import { TextError } from "@/common/atoms/textError"
-import { FileText, Hash, Mail, Phone, Store } from "lucide-react"
+import { FileText, Hash, Mail, Phone, Store } from'@/common/ui/icons'
 
 
 interface registerStoreProps {
@@ -31,7 +31,7 @@ const RegisterStoreStep1 = ({ register, errors, direction, control }: registerSt
             className="w-full "
             style={{ perspective: "1000px" }}>
       
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 ">
                     <div className="space-y-2 relative">
                         <Label className={`flex items-center text-xs transition-colors ${focusedField === "name" ? "text-[#DB8935]" : "text-gray-600"}`}>Nombre de la cafetería</Label>
                         <Store className="absolute top-9 left-4 text-gray-400" size={16}></Store>

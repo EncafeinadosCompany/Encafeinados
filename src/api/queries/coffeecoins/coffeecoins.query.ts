@@ -1,6 +1,6 @@
 
 import AuthClient from '@/api/client/axios'
-import { getAuthStorage } from '@/common/utils/auth_storage.utils'
+import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 import { useQuery } from '@tanstack/react-query'
 
 interface  coffeecoins  {
@@ -15,8 +15,7 @@ export const useCoffeeCoinsQuery = () => {
         queryKey: ['coffecoins'],
         queryFn: async (): Promise<coffeecoins> => {
             try {
-                const {user} = getAuthStorage()
-                const {id} = user
+                const id = getEncryptedItem("userId");
                 const response = await authClient.get<coffeecoins>(`/clients/user/${id}`)
                 return response
             } catch (error) {

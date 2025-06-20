@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { LatLngTuple, Cafe, MarkerPosition } from "@/api/types/map/map_search.types";
 import { calculateDistance } from "@/common/utils/map/map_utils";
 import { Branch, BranchesResponse} from "@/api/types/branches/branches.types";
-import { Store, StoresResponse } from "@/api/types/stores/stores.type";
+import { StoreDto, StoresResponse } from "@/api/types/stores/stores.type";
 
 export const useMapData = (
   branchesData: BranchesResponse | undefined,
@@ -102,7 +102,7 @@ export const useMapData = (
     if (!storesData?.stores?.stores) return [];
 
 
-    return storesData.stores.stores.map((store: Store) => ({
+    return storesData.stores.stores.map((store: StoreDto) => ({
       id: store.id,
       name: store.name,
     }));

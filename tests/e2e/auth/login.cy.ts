@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { mockLoginSuccess } from "cypress/support/api/login";
+import { mockGetBranches, mockLoginSuccess } from "cypress/support/api/login";
 import { doLogin } from "cypress/support/flows/auth/loginFlow";
 
 console.log("mockLoginSuccess", mockLoginSuccess);
@@ -9,6 +9,7 @@ describe("Login", () => {
 
   beforeEach(() => {
     cy.visit("/login");
+    mockGetBranches();
 
   });
 
@@ -16,7 +17,7 @@ describe("Login", () => {
     doLogin({
       email: "admin@example.com",
       password: "1234",
-      role: "Super Administrador",
+      roles: ["Super Administrador"],
       name: "Anita",
     });
     cy.url().should("include", "/admin");
@@ -27,7 +28,7 @@ describe("Login", () => {
     doLogin({
       email: "coffeelover@example.com",
       password: "1234",
-      role: "Cliente",
+      roles: ["Cliente"],
       name: "Coffeelover"
     });
 
@@ -39,9 +40,12 @@ describe("Login", () => {
     doLogin({
       email: "tienda@example.com",
       password: "1234",
-      role: "Administrador de Tienda",
-      name: "Tienda"
+      roles: ["Administrador de Tienda"],
+      name: "Tienda",
+      storeId: 1
+      
     })
-    cy.url().should("include", "/store");
+    cy.url().should("include", "/stores");
+    cy.wait(2000);
   })
 });

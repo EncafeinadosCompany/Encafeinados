@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { BrancheIDresponse, BranchesImagen, BranchesResponse, image } from '../../types/branches/branches.types'
-import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse } from '../../types/branches/branches_approval.types'
+import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse, RejectedBranchesResponse } from '../../types/branches/branches_approval.types'
 
 import AuthClient from '@/api/client/axios'
 import { BranchAttributesResponse } from '@/api/types/branches/branch_attributes.types'
@@ -25,7 +25,8 @@ export const useBranchesID = (id: number) => {
     queryFn: async () => {
       const response = await authClient.get<BrancheIDresponse>(`/branches/${id}`)
       return response
-    }
+    },
+    enabled: !!id
   })
 }
 
@@ -91,6 +92,18 @@ export const useApprovedBranches = () => {
     queryKey: ['branches', 'APPROVED'],
     queryFn: async () => {
       const response = await authClient.get<ApprovedBranchesResponse>('/branches/status/APPROVED')
+      return response
+    },
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
+  })
+}
+
+export const useRejectedBranches = () => {
+  return useQuery<RejectedBranchesResponse>({
+    queryKey: ['branches', 'REJECTED'],
+    queryFn: async () => {
+      const response = await authClient.get<RejectedBranchesResponse>('/branches/status/REJECTED')
       return response
     },
     staleTime: 5 * 60 * 1000,

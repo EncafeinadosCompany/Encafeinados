@@ -3,7 +3,7 @@ import type React from "react"
 import z from "zod"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Coffee, Loader2, Pencil, Plus, RefreshCw, Trash2, X } from "lucide-react"
+import { Coffee, Loader2, Pencil, Plus, RefreshCw, Trash2, X,  ChevronDown, ChevronUp }  from "@/common/ui/icons"
 import { Button } from "@/common/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/common/ui/dialog"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/common/ui/alert-dialog"
@@ -18,7 +18,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/common/ui/card"
 import toast from "react-hot-toast"
 import { Badge } from "@/common/ui/badge"
 
-import { ChevronDown, ChevronUp } from "lucide-react"; // Add to imports
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
 
 
 const tipo_imagen = [
@@ -49,7 +49,7 @@ export const formSchemaBranches = z.object({
 
 export default function ImagesGallery() {
 
-    const BranchId = localStorage.getItem('storeOrBranchId')
+    const BranchId = getEncryptedItem("branchId") as string | null;
     if (!BranchId) {
         return toast.error('No se encontro el id de la sucursal')
     }
@@ -94,7 +94,6 @@ export default function ImagesGallery() {
             type: values.image_type,
         };
         setImages([...images, newImageData]);
-
         try {
             useImagen(values)
             useUpdateImagenBrandMutation
@@ -107,11 +106,8 @@ export default function ImagesGallery() {
 
 
     const handleAddClick = () => {
-        // setModalMode('add');
         setIsModalOpen(true);
         form.reset();
-
-        console.log("Modal abierto", isModalOpen)
     };
 
 

@@ -1,7 +1,7 @@
 
 import { NavItemType } from "@/api/types/nav/nav.types"
 import { Home} from "@/common/ui/icons"
-import { Book, Map, User } from "lucide-react"
+import { Book, Map, User }  from "@/common/ui/icons"
 
 export const CoffeloverItems: NavItemType[] = [
     {
@@ -20,7 +20,7 @@ export const CoffeloverItems: NavItemType[] = [
       icon: <Map className="h-4 w-4" />
     },
     {
-      title: "Yo",
+      title: "Perfil",
       href: "/coffeelover/Profile",
       icon: <User className="h-4 w-4" />
     },

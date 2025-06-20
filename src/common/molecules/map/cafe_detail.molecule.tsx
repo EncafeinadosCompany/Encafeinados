@@ -1,23 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Star,
-  MapPin,
-  Navigation,
-  Phone,
-  ChevronDown,
-  ChevronUp,
-  MessageSquare,
-  X,
-  Tag,
-  Clock
-} from "lucide-react";
+import {Star,MapPin,Navigation,Phone,ChevronDown,ChevronUp,MessageSquare,X,Tag,Clock} from "@/common/ui/icons";
 import { Cafe } from "@/api/types/map/map_search.types";
-import { Popover, PopoverContent, PopoverTrigger } from "@/common/ui/popover";
-import {
-  normalizeSocialNetwork,
-  SocialNetworkType,
-} from "@/common/utils/social_networks.utils";
+import {normalizeSocialNetwork,SocialNetworkType} from "@/common/utils/social_networks.utils";
 import ReviewsDialog from "@/common/molecules/coffeelover/reviews/reviews_dialog.molecule";
 import WeeklySchedule from "@/common/molecules/schedules/weekly_schedule.molecule";
 import { useBranchSchedules } from "@/api/queries/schedules/schedule.query";

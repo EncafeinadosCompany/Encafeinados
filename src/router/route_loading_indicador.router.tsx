@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import LoadingSpinner from "@/common/atoms/LoadingSpinner";
 
-export const RouteLoadingIndicator = () => {
+export default function RouteLoadingIndicator () {
     const [progress, setProgress] = useState(0);
     const location = useLocation();
   

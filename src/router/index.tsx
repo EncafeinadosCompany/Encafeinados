@@ -1,15 +1,13 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
+
+
+
+// ROUTES
 import { ROLES } from "@/common/utils/lists/roles.utils";
-import PrivateRoute from "./PrivateRouter";
-import RoleRoute from "./RouleRoute";
-
-import { RouteLoadingIndicator } from "./route_loading_indicador.router";
-import { FormRegisterEvents } from "@/common/widgets/forms/events/form_events.widget";
-import { EventList } from "@/common/widgets/admin/events/event.widget";
-import { Prueba_album } from "@/common/widgets/prueba_album";
-const  StoreDetailsCard = lazy(()=> import("@/common/molecules/coffeelover/stores/details_stores_dialog.molecule"));
-
+import PrivateRoute from "@/router/private-route";
+import RoleRoute from "@/router/role-route";
+import RouteLoadingIndicator from "./route_loading_indicador.router";
 
 // LAYOUTS
 const HomePage = lazy(() => import("@/modules/home/views/landing/home_page"));
@@ -27,29 +25,38 @@ const FinishAdminRegistration = lazy(() => import("@/modules/admin/views/finish_
 
 
 //ADMIN
-const HomeAdmin = lazy(() => import("@/modules/admin/views/home_admin_nav"));
+const Menubar_admin = lazy(() => import("@/modules/admin/views/menubar_admin_nav"));
+const Album_Management = lazy(() => import("@/modules/admin/components/album/album_manager.component"));
+const Event_Management= lazy(() => import ("@/common/widgets/admin/events/event.widget"));
+const Branch_Management = lazy(() => import("@/modules/admin/components/branches/pending_branches_list.component"));
+const Register_events = lazy(() => import("@/common/widgets/forms/events/form_events.widget"));
 
 
 // STORES
-const HomeStores = lazy(() => import("@/modules/admin_stores/views/home_stores_nav"));
+const Menubar_store= lazy(() => import("@/modules/admin_stores/views/menubar_store"));
 const BranchManagement = lazy(() => import("@/common/widgets/admin_stores/branches/branch_management.widget"));
+const StoreDetailsCard = lazy(() => import("@/common/molecules/coffeelover/stores/details_stores_dialog.molecule"));
 
 // ADMIN STORES
-const PendingBranchesView = lazy(() => import("@/modules/admin/components/branches/pending_branches_list.component"));
-const AlbumManager = lazy(() => import("@/modules/admin/components/album/album_manager.component"));
 const ImagesGallery = lazy(() => import("@/common/widgets/admin_branches/images.widget"));
-const FormEditBranch = lazy(() => import("@/common/widgets/forms/auth/form_edit_branches_widget"));
+const Form_edit_branch = lazy(() => import("@/common/widgets/forms/branch/form_edit_branches_widget"));
+
 //BRANCHES
-const HomeBranchesNav = lazy(() => import("@/modules/admin_branches/views/home_branches_nav"));
+const Menubar_branch = lazy(() => import("@/modules/admin_branches/views/menubar_branch"));
 const DetailsBranches = lazy(() => import("@/common/widgets/admin_branches/details_branches.widget"));
 const AttributesDashboard = lazy(() => import("@/common/widgets/admin_branches/attributes.widget"));
 
 // COFFEELOVER
-const HomeCoffeelover = lazy(() => import("@/modules/coffeelover/views/home_coffeelover_page"));
-const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover_nav"));
+const Menubar_Coffelover = lazy(() => import("@/modules/coffeelover/views/menubar_coffelover"));
+const PrincipalCoffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover.view"));
 const RegisterStoreVisit = lazy(() => import("@/modules/coffeelover/components/stores/register_store_visit.component"));
 const ReviewView = lazy(() => import('@/modules/coffeelover/components/review/review.view'));
 const ProfileView = lazy(() => import('@/modules/coffeelover/components/profile/profile.view'));
+const Prueba_album= lazy(() => import("@/common/widgets/prueba_album") );
+
+// ALBUMS COFFELOVER
+const ListAlbum = lazy(() => import("@/common/widgets/coffeelover/album/list_album_coffeelover.widget"));
+const PageAlbum = lazy(() => import("@/common/widgets/coffeelover/album/page_album.widget"));
 
 
 // MAP
@@ -58,13 +65,6 @@ const MapView = lazy(() => import("@/common/widgets/map/map_view.widget"));
 // SETTINGS
 const NotFound = lazy(() => import("@/modules/settings/404"));
 const UnauthorizedPage = lazy(() => import("@/modules/settings/authorization_page"));
-
-
-// ALBUMS
-const ListAlbum = lazy(() => import("@/common/widgets/coffeelover/album/list_album_coffeelover.widget"));
-const PageAlbum = lazy(() => import("@/common/widgets/coffeelover/album/page_album.widget"));
-
-
 
 
 const AuthRoutes = () => {
@@ -79,13 +79,10 @@ const AuthRoutes = () => {
           <Routes>
 
             {/* PRUEBAS */}
-
             <Route path="/prueba" element={<Prueba_album />} />
 
             {/* PUBLIC ROUTES */}
             <Route path="/" element={<HomePage />} />
-            {/* <Route path="/hora" element={<ScheduleModule branchId={1} />} /> */}
-
             <Route path="/map" element={<MapView view={true} />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -104,44 +101,46 @@ const AuthRoutes = () => {
             <Route element={<PrivateRoute />}>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.COFFEE_LOVER]} />}>
-                <Route path="/open-album" element={<PageAlbum />} />
-                <Route path="/coffeelover" element={<HomeCoffeelover />}>
+
+                <Route path="/coffeelover" element={<Menubar_Coffelover/>}>
                     <Route index element={<PrincipalCoffeelover />} />
                     <Route path="album" element={<ListAlbum />} />
                     <Route path="review" element={<ReviewView />} />
                     <Route path="Profile" element={<ProfileView />} />
                     <Route path="map-coffelover" element={<MapView />} />
-                    <Route path="prueba" element={< StoreDetailsCard />} />
-                    <Route path="pruebas" element={<Prueba_album />} />
+                    <Route path="prueba" element={<StoreDetailsCard />} />
+                    <Route path="pruebas-album" element={<Prueba_album />} />
                     <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
-                </Route>     
+                </Route>
+                <Route path="/open-album" element={<PageAlbum />} />
+
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
-                <Route path="/stores" element={<HomeStores />}>
+                <Route path="/stores" element={<Menubar_store/>}>
                   <Route index element={<BranchManagement />} />
                 </Route>
               </Route>
 
 
-              <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL]} />}>
-                <Route path="/sucursal" element={<HomeBranchesNav />}>
-                  <Route index element={<DetailsBranches/>} />
+              <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL, ROLES.STORE]} />}>
+                <Route path="/sucursal" element={<Menubar_branch/>}>
+                  <Route index element={<DetailsBranches />} />
                   <Route path="images" element={<ImagesGallery />} />
-                  <Route path="perfil" element={<FormEditBranch />} />
+                  <Route path="perfil" element={<Form_edit_branch/>} />
                   <Route path="attributes" element={<AttributesDashboard />} />
                 </Route>
               </Route>
 
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
-                <Route path="/admin" element={<HomeAdmin />}>
-                  <Route index element={<PendingBranchesView />} />
-                  <Route path="albums" element={<AlbumManager />}/>
-                  <Route path="event" element={<EventList/>} />
-                  <Route path="form" element={<FormRegisterEvents/>} />
-
+                <Route path="/admin" element={<Menubar_admin/>}>
+                  <Route index element={<Branch_Management/>} />
+                  <Route path="albums" element={<Album_Management />} />
+                  <Route path="event" element={<Event_Management />} />
+                  <Route path="form-event" element={<Register_events/>} />
                 </Route>
               </Route>
+              
             </Route>
             <Route path="*" element={<Navigate to="/404" replace />} />
             <Route path="unauthorized" element={<UnauthorizedPage />} />

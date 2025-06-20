@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
-import { Store as StoreIcon, RefreshCw, Search, AlertTriangle } from "lucide-react";
+import { Store as StoreIcon, RefreshCw, Search, AlertTriangle }  from "@/common/ui/icons"
 import { AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 

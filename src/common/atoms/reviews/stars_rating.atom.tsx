@@ -1,5 +1,5 @@
 import React from "react";
-import { Star } from "lucide-react";
+import { Star } from'@/common/ui/icons';
 import { useSafeNumericValue } from "@/common/hooks/useSafeNumericValue";
 
 interface StarsRatingProps {

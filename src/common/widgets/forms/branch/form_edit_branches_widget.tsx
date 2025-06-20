@@ -1,9 +1,8 @@
-import { Store, Phone, Coffee, ChevronDown } from "lucide-react";
+import { Store, Phone, Coffee, ChevronDown } from "@/common/ui/icons"
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/ui/card";
-import MapSearch from "../../map/map_search.widget";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/common/ui/button";
@@ -15,14 +14,19 @@ import { Label } from "@/common/ui/label";
 import { useUpdateBranchMutation } from "@/api/mutations/branches/branches.mutation";
 import { InputForm } from "@/common/atoms/auth/input_form.atom";
 
+//MAP
+import MapSearch from "@/common/widgets/map/map_search.widget";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 export default function FormEditBranch() {
-    const { data: useBranches } = useBranchesID(1)
-    const { mutateAsync: useUpdateBranches } = useUpdateBranchMutation()
 
+    const id = getEncryptedItem("branchId")
+
+    const { data: useBranches, isLoading, isError } = useBranchesID(Number(id));
+    const { mutateAsync: useUpdateBranches } = useUpdateBranchMutation()
     const [baseAddress, setBaseAddress] = useState("");
 
-    const { register, setValue, reset, handleSubmit, watch, control, formState: { errors } } = useForm<EditBrancheType>({
+    const { register, setValue, reset, handleSubmit, watch, formState: { errors } } = useForm<EditBrancheType>({
         resolver: zodResolver(EditBranchesSchemas),
         defaultValues: {
             name: "",
@@ -32,6 +36,16 @@ export default function FormEditBranch() {
             longitude: 0
         }
     });
+
+
+
+    if (!id) {
+        return (
+            <div className="text-center text-red-600">
+                No se encontró la sucursal seleccionada.
+            </div>
+        );
+    }
 
     useEffect(() => {
         if (useBranches) {
@@ -65,6 +79,10 @@ export default function FormEditBranch() {
         setBaseAddress(address);
     };
 
+
+    if (isLoading) return <p className="text-center">Cargando sucursal...</p>;
+    if (isError) return <p className="text-center text-red-500">Error al cargar datos.</p>;
+    
     return (
         <div className="h-full w-full p-4 grid grid-cols-1 items-center">
             <Card className=" border-none mx-auto w-full md:w-5xl bg-white ">
@@ -146,7 +164,7 @@ export default function FormEditBranch() {
                                     initialLat={watch("latitude")}
                                     initialLng={watch("longitude")}
                                     onLocationSelect={onLocationSelect}
-                                    
+
                                 />
                             ) : null}
                             <div className="flex justify-center">

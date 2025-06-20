@@ -1,5 +1,5 @@
 import AuthClient from "@/api/client/axios";
-import { EvenType } from "@/api/types/events/events.types";
+import { EventDto } from "@/api/types/events/events.types";
 import { useError } from "@/common/hooks/auth/useErrors";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -13,11 +13,11 @@ export const useEventMutation = () => {
     const useErrors = useError("events")
     const navigate = useNavigate()
   
-    return useMutation<any, Error, EvenType>({
-      mutationFn: async (formData: EvenType): Promise<any> => {
+    return useMutation<any, Error, EventDto>({
+      mutationFn: async (formData: EventDto): Promise<any> => {
   
         try {
-          const response = await authClient.post<EvenType>('/events', formData); 
+          const response = await authClient.post<EventDto>('/events', formData); 
           return response;
     
         } catch (error: any) {

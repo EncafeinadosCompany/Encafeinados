@@ -2,7 +2,7 @@ import { StampsByClientResponse } from "@/api/types/album/stamps.types";
 import { Badge } from "@/common/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog"
 
-import { MapPin, Stamp, StarsIcon } from "lucide-react";
+import { MapPin, Stamp, StarsIcon } from'@/common/ui/icons'
 import { useNavigate } from "react-router-dom";
 
 interface DetailsProps {

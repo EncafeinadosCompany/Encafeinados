@@ -1,4 +1,4 @@
-import { X, Filter } from "lucide-react";
+import { X, Filter } from'@/common/ui/icons'
 
 interface FilterButtonsProps {
     uniqueTypes: string[];

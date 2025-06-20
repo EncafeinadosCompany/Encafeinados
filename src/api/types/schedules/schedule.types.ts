@@ -1,9 +1,8 @@
 export interface BranchSchedule {
   id: number;
-  day: string; // Cambiado de day_of_week a day
+  day: string; 
   open_time: string;
   close_time: string;
-  // Campos opcionales que pueden no venir en la respuesta
   branch_id?: number;
   is_closed?: boolean;
   created_at?: string;

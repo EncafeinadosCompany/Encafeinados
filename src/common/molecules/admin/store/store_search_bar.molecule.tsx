@@ -1,6 +1,6 @@
 import React from "react";
 import { Input } from "@/common/ui/input";
-import { Search } from "lucide-react";
+import { Search } from'@/common/ui/icons';
 
 interface StoreSearchBarProps {
   value: string;

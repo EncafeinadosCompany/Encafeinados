@@ -1,15 +1,15 @@
 import AuthClient from "@/api/client/axios"
-import { EventClienType, EvenType } from "@/api/types/events/events.types"
+import { EventClienType, EventDto } from "@/api/types/events/events.types"
 import { useQuery, UseQueryOptions } from "@tanstack/react-query"
 
 const authClient = new AuthClient()
 
 
 export const useEventAll= () => {
-    return useQuery<EvenType[], Error>({
+    return useQuery<EventDto[], Error>({
       queryKey: ['events'],
       queryFn: async () => {
-        const response = await authClient.get<EvenType[]>(`/events`)
+        const response = await authClient.get<EventDto[]>(`/events`)
         return response
       } 
     })
@@ -17,10 +17,10 @@ export const useEventAll= () => {
 
 
   export const useEventByStatus= () => {
-    return useQuery<EvenType[], Error>({
+    return useQuery<EventDto[], Error>({
       queryKey: ['events-status'],
       queryFn: async () => {
-        const response = await authClient.get<EvenType[]>(`/events/status/PUBLISHED`)
+        const response = await authClient.get<EventDto[]>(`/events/status/PUBLISHED`)
         return response
       } 
     })

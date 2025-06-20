@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Coffee, Star, MapPin, Heart, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Coffee, Star, Heart, ChevronRight, ChevronLeft } from'@/common/ui/icons';
 import { Link } from 'react-router-dom';
 import { useWindowSize } from '@/common/hooks/useWindowSize';
 import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';

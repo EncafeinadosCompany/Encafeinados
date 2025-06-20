@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
-import { Camera, X, Image, Upload } from "lucide-react";
+import { Camera, X, Upload } from "@/common/ui/icons";
 import { uploadImage } from "@/api/mutations/image/image.mutations";
 import toast from "react-hot-toast";
-import { Button } from "@/common/ui/button";
+
 
 interface ReviewImageUploadProps {
   imageUrls: string[];

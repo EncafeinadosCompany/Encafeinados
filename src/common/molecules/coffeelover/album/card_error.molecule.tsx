@@ -1,4 +1,4 @@
-import { AlertCircle, Coffee } from "lucide-react"
+import { AlertCircle, Coffee } from'@/common/ui/icons'
 
 export const CardError = () => {
     return (

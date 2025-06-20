@@ -1,6 +1,5 @@
 import { NavItemType } from "@/api/types/nav/nav.types"
-import { Home, Star, Store} from "@/common/ui/icons"
-import { Images } from "lucide-react"
+import { Home, Star, Store, Images} from "@/common/ui/icons"
 
 export const AdminBranchesItems: NavItemType[] = [
   {
@@ -22,6 +21,5 @@ export const AdminBranchesItems: NavItemType[] = [
     title: "Perfil",
     href: "/sucursal/perfil",
     icon: <Store className="h-4 w-4" />,
-  },
-  
+  }
 ]

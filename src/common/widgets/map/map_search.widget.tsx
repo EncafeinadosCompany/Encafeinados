@@ -76,8 +76,6 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat,
 
   
   const GetCurrenLocation = () => {
-
-
       getCurrentLocation({
         onLocationSelect,
         setCurrentAddress,

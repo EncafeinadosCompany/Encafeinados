@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useSubmitReviewMutation } from "@/api/mutations/reviews/review.mutation";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Award, Check, ArrowLeft } from "lucide-react";
+import { Award, Check, ArrowLeft }  from "@/common/ui/icons"
 import toast from "react-hot-toast";
 import ReviewForm from "@/common/molecules/reviews/review_form.molecule";
 import { Button } from "@/common/ui/button";

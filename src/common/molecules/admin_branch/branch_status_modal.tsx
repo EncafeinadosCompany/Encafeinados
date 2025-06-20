@@ -1,7 +1,7 @@
 "use client"
 import { Button } from "@/common/ui/button"
 import {Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle} from "@/common/ui/dialog"
-import { AlertTriangle } from "lucide-react"
+import { AlertTriangle } from'@/common/ui/icons'
 
 interface BranchStatusModalProps {
     isOpen: boolean;

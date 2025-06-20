@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Coffee, Edit, Mail, Phone } from 'lucide-react';
+import { Coffee, Edit, Mail, Phone } from'@/common/ui/icons'
 import { CoffeeLoverProfileType} from '@/api/types/coffelovers/coffelovers.type';
 import EditProfileModal from './edit_profile_modal.molecule';
 

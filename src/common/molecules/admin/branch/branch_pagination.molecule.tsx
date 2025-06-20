@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from '@/common/ui/button'
-import { Select } from '@/common/ui/select'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+
+import { ChevronLeft, ChevronRight } from'@/common/ui/icons'
 
 interface BranchPaginationProps {
   currentPage: number

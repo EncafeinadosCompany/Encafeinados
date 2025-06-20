@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check, User, Mail, Phone, FileText, Loader, Coffee, AlertCircle } from 'lucide-react';
+import { X, Check, User, Mail, Phone, FileText,Loader, Coffee, AlertCircle } from'@/common/ui/icons'
 import { CoffeeLoverProfileType } from '@/api/types/coffelovers/coffelovers.type';
 
 interface EditProfileModalProps {

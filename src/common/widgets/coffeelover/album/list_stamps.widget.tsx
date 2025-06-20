@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stamps.query";
-import { getAuthStorage } from "@/common/utils/auth_storage.utils";
+
 import { Stamps } from "@/api/types/album/stamps.types";
 import { CardEmpy } from "@/common/molecules/coffeelover/stamps/card_empy.molecule";
 import { CardStampsError } from "@/common/molecules/coffeelover/stamps/card_error.molecule";
@@ -9,7 +9,9 @@ import { CardStampsDetails } from "@/common/molecules/coffeelover/stamps/dialog_
 import { Badge } from "@/common/ui/badge";
 import { Card, CardContent } from "@/common/ui/card";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { Search }  from "@/common/ui/icons"
+import { UserData } from "@/api/types/auth/auth.types";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 interface PruebaProps {
     id_page: number;
@@ -17,9 +19,9 @@ interface PruebaProps {
 }
 export default function List_Stamps({ id_page }: PruebaProps) {
 
-    const { user } = getAuthStorage();
-    const { id } = user;
-    const { data: users } = useStampsByClientQuery(id);
+    const userData = getEncryptedItem("userId") as UserData | null;
+    const userId = userData?.id ?? null;
+    const { data: users } = useStampsByClientQuery(userId as number);
     const { data: stampData, error, isLoading } = useStampsByPageQuery(id_page);
     const [stamps, setStamps] = useState<Stamps[]>([]);
     const [flippedCards, setFlippedCards] = useState<number[]>([]);
@@ -45,7 +47,7 @@ export default function List_Stamps({ id_page }: PruebaProps) {
             setStamps(stampData.stamps);
         }
         // console.log("stamps", stampData);
-    }, [id, stampData]);
+    }, [userId, stampData]);
 
 
     const skeletonArray = Array(4).fill(0);

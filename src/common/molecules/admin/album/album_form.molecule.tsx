@@ -10,10 +10,8 @@ import { Button } from '@/common/ui/button';
 import { Label } from '@/common/ui/label';
 import { Textarea } from '@/common/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/common/ui/popover';
-import { CalendarIcon, UploadIcon, XIcon } from 'lucide-react';
-import { toast } from 'react-toastify';
 import { CreateAlbumDto, AlbumType } from '@/api/types/album/album.types';
-import { Image, Edit2, BookmarkIcon, AlignLeft, CalendarCheck, InfoIcon, BookPlus, AlertCircle } from 'lucide-react';
+import { Image, Edit2, BookmarkIcon, AlignLeft, CalendarCheck, InfoIcon, BookPlus, AlertCircle, CalendarIcon, UploadIcon, XIcon  } from '@/common/ui/icons';
 
 const albumSchema = z.object({
   title: z.string().min(3, "El título debe tener al menos 3 caracteres").max(100, "El título no puede exceder 100 caracteres"),

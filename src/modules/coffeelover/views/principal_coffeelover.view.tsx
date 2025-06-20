@@ -1,13 +1,13 @@
 import { FeaturedStoresWidget } from '@/common/widgets/coffeelover/stores/feature_stores.widget'
 import SearchCoffee from '@/common/atoms/search';
 import { useState, useCallback, useEffect } from 'react';
-import { QrCode } from 'lucide-react';
+import { QrCode } from "@/common/ui/icons";
 import { CoffeeBackground } from '@/common/widgets/coffee_background.widget';
 import QRScannerDialog from '@/common/molecules/coffeelover/stores/QR_scanner_dialog.molecule';
 import { Button } from '@/common/ui/button';
 import { EventList } from '@/common/widgets/coffeelover/events/event_list.widget';
 
-const PrincipalCoffeelover = () => {
+export default function PrincipalCoffeelover () {
   const [globalSearchTerm, setGlobalSearchTerm] = useState("");
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -37,7 +37,7 @@ const PrincipalCoffeelover = () => {
   }, []);
 
   return (
-    <div className='flex flex-col max-w-full  overflow-hidden h-full relative'>
+    <div className='flex flex-col max-w-full  overflow-x-hidden h-full relative'>
       <CoffeeBackground
         coffeeCount={10}
         circleCount={6}
@@ -62,7 +62,7 @@ const PrincipalCoffeelover = () => {
           globalSearchTerm={globalSearchTerm}
           setGlobalSearchTerm={setGlobalSearchTerm}
         />
-        <EventList>         
+        <EventList>
         </EventList>
       </div>
 
@@ -85,4 +85,3 @@ const PrincipalCoffeelover = () => {
   )
 }
 
-export default PrincipalCoffeelover

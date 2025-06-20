@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { Coffee } from "lucide-react";
-import React, { useRef, useMemo } from "react";
+import { Coffee }  from "@/common/ui/icons"
+import React, { useMemo } from "react";
 
 interface CoffeeBackgroundProps {
   coffeeCount?: number;

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card,  CardHeader, CardTitle, CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Skeleton } from "@/common/ui/skeleton";
-import { Coffee, RefreshCw, Search, AlertTriangle } from "lucide-react";
+import { Coffee, RefreshCw, Search, AlertTriangle }  from "@/common/ui/icons"
 import { AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 
@@ -15,15 +15,17 @@ import { BranchApproveDialog } from "@/common/molecules/admin/branch/branch_appr
 import { BranchRejectDialog } from "@/common/molecules/admin/branch/branch_reject_dialog.molecule";
 import { usePendingBranchesWidget } from "@/common/hooks/branches/usePendingBranchesWidget";
 import { BranchApprovalDetails } from '@/api/types/branches/branches_approval.types';
+import { useBranchApprovalDetails } from '@/api/queries/branches/branch.query';
 
 import { useQueryClient } from "@tanstack/react-query";
 import toast from 'react-hot-toast';
 import { useApproveBranchMutation, useRejectBranchMutation } from "@/api/mutations/branches/branch_states.mutation";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 
 export const PendingBranchesWidget = () => {
   const checkUserAuth = () => {
-    const userId = localStorage.getItem('userId');
+    const userId =  getEncryptedItem('userId');
     if (!userId) {
       toast.error('No se detecta una sesión activa. Por favor, inicia sesión nuevamente.');
       return false;
@@ -54,8 +56,6 @@ export const PendingBranchesWidget = () => {
     setSelectedBranch,
     setItemsPerPage,
     handlePageChange,
-    handleApprove,
-    handleReject,
     handleViewDetails,
     handleRefresh,
   } = usePendingBranchesWidget();
@@ -79,73 +79,117 @@ export const PendingBranchesWidget = () => {
     setSelectedBranchForAction(branchId);
     setIsRejectDialogOpen(true);
   };
-  
-  const confirmApprove = (branchId: number) => {
+    const confirmApprove = async (branchId: number) => {
     if (!checkUserAuth()) return;
     
     setIsSubmitting(true);
     
-    const branchDetails = queryClient.getQueryData<BranchApprovalDetails>(
-      ['branch-approvals', 'detail', branchId]
-    );
-    
-    if (!branchDetails?.approvalId) {
-      toast.error("No se encontró la información necesaria para aprobar");
-      setIsSubmitting(false);
-      setIsApproveDialogOpen(false);
-      return;
-    }
-    
-    approveBranchMutation.mutate(branchDetails.approvalId, {
-      onSuccess: () => {
-        toast.success("Sucursal aprobada correctamente");
+    try {
+      // Intentar obtener de la cache primero
+      let branchDetails = queryClient.getQueryData<BranchApprovalDetails>(
+        ['branch-approvals', 'detail', branchId]
+      );
+      
+      // Si no está en cache, obtenerlo de la API
+      if (!branchDetails?.approvalId) {
+        console.log("Obteniendo detalles de la sucursal desde la API...");
+        const response = await queryClient.fetchQuery({
+          queryKey: ['branch-approvals', 'detail', branchId],
+          queryFn: async () => {
+            const authClient = new (await import("@/api/client/axios")).default();
+            return authClient.get<BranchApprovalDetails>(`/branch-approvals/detail/${branchId}`);
+          }
+        });
+        branchDetails = response;
+      }
+      
+      if (!branchDetails?.approvalId) {
+        toast.error("No se encontró la información necesaria para aprobar");
         setIsSubmitting(false);
         setIsApproveDialogOpen(false);
-        refetch();
-        setDetailsDialogOpen(false);
-      },
-      onError: (error) => {
-        toast.error(`Error al aprobar la sucursal: ${error.message}`);
-        setIsSubmitting(false);
+        return;
       }
-    });
-  };
-  
-  const confirmReject = (branchId: number, reason: string) => {
-    if (!checkUserAuth()) return;
-    
-    setIsSubmitting(true);
-    
-    const branchDetails = queryClient.getQueryData<BranchApprovalDetails>(
-      ['branch-approvals', 'detail', branchId]
-    );
-    
-    if (!branchDetails?.approvalId) {
-      toast.error("No se encontró la información necesaria para rechazar");
-      setIsSubmitting(false);
-      setIsRejectDialogOpen(false);
-      return;
-    }
-    
-    rejectBranchMutation.mutate(
-      { 
-        approvalId: branchDetails.approvalId, 
-        reason 
-      },
-      {
+
+      console.log("Aprobando sucursal con approvalId:", branchDetails.approvalId);
+      
+      approveBranchMutation.mutate(branchDetails.approvalId, {
         onSuccess: () => {
-          toast.success("Sucursal rechazada correctamente");
+          toast.success("Sucursal aprobada correctamente");
           setIsSubmitting(false);
-          setIsRejectDialogOpen(false);
+          setIsApproveDialogOpen(false);
           refetch();
           setDetailsDialogOpen(false);
         },
         onError: (error) => {
-          toast.error(`Error al rechazar la sucursal: ${error.message}`);
+          toast.error(`Error al aprobar la sucursal: ${error.message}`);
           setIsSubmitting(false);
         }
+      });
+    } catch (error) {
+      console.error("Error obteniendo detalles de la sucursal:", error);
+      toast.error("Error obteniendo información de la sucursal");
+      setIsSubmitting(false);
+      setIsApproveDialogOpen(false);
+    }
+  };
+    const confirmReject = async (branchId: number, reason: string) => {
+    if (!checkUserAuth()) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Intentar obtener de la cache primero
+      let branchDetails = queryClient.getQueryData<BranchApprovalDetails>(
+        ['branch-approvals', 'detail', branchId]
+      );
+      
+      // Si no está en cache, obtenerlo de la API
+      if (!branchDetails?.approvalId) {
+        console.log("Obteniendo detalles de la sucursal desde la API...");
+        const response = await queryClient.fetchQuery({
+          queryKey: ['branch-approvals', 'detail', branchId],
+          queryFn: async () => {
+            const authClient = new (await import("@/api/client/axios")).default();
+            return authClient.get<BranchApprovalDetails>(`/branch-approvals/detail/${branchId}`);
+          }
+        });
+        branchDetails = response;
       }
-    );
+      
+      if (!branchDetails?.approvalId) {
+        toast.error("No se encontró la información necesaria para rechazar");
+        setIsSubmitting(false);
+        setIsRejectDialogOpen(false);
+        return;
+      }
+      
+      console.log("Rechazando sucursal con approvalId:", branchDetails.approvalId);
+      
+      rejectBranchMutation.mutate(
+        { 
+          approvalId: branchDetails.approvalId, 
+          reason: reason || "Sin motivo especificado"
+        },
+        {
+          onSuccess: () => {
+            toast.success("Sucursal rechazada correctamente");
+            setIsSubmitting(false);
+            setIsRejectDialogOpen(false);
+            refetch();
+            setDetailsDialogOpen(false);
+          },
+          onError: (error) => {
+            toast.error(`Error al rechazar la sucursal: ${error.message}`);
+            setIsSubmitting(false);
+          }
+        }
+      );
+    } catch (error) {
+      console.error("Error obteniendo detalles de la sucursal:", error);
+      toast.error("Error obteniendo información de la sucursal");
+      setIsSubmitting(false);
+      setIsRejectDialogOpen(false);
+    }
   };
   
   const getBranchName = (branchId: number | null) => {

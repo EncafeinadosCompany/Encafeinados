@@ -1,7 +1,7 @@
 import { Card } from "@/common/ui/card"
-import { Stamp } from "lucide-react"
+import { Stamp, Bean, Gift} from'@/common/ui/icons'
 import { motion } from "framer-motion"
-import { Bean, Gift } from "lucide-react"
+
 import { CardContent } from "@/common/ui/card"
 
 export const CardEmpy = () => {

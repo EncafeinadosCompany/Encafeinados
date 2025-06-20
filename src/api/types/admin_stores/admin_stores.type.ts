@@ -7,3 +7,22 @@ export interface RegisterAdminStores {
   userData: User_Data,
   personData: PersonData
 }
+
+export interface RegisterAdminData {
+  userData: {
+    email: string,
+    password: string,
+    roles: string[]
+  },
+  personData: {
+    type_document: string,
+    number_document: string,
+    full_name: string,
+    phone_number: string
+  },
+  entityData?: {
+    branchId?: number
+    storeId?: number
+
+  }
+}

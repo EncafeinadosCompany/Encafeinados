@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog";
-import { X, Coffee, MessageSquare } from 'lucide-react';
+import { X, Coffee, MessageSquare } from'@/common/ui/icons'
 import ReviewsWidget from '@/common/widgets/coffeelover/reviews/reviews_widget';
 import { Button } from '@/common/ui/button';
 

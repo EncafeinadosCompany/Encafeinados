@@ -4,7 +4,7 @@ import { Badge } from "@/common/ui/badge";
 import { Button } from "@/common/ui/button";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Stamp as StampIcon, X, Coins, CheckCircle, XCircle, Search, BookOpenCheck } from "lucide-react";
+import { Stamp as StampIcon, X, Coins, CheckCircle, XCircle, Search, BookOpenCheck } from'@/common/ui/icons';
 import { usePageStampsQuery } from "@/api/queries/album/page.query";
 
 interface PageStampsDialogProps {

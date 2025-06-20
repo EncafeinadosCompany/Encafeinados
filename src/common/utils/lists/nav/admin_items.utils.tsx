@@ -1,6 +1,6 @@
 import { NavItemType } from "@/api/types/nav/nav.types"
-import {  Building, Album} from "@/common/ui/icons"
-import { CalendarFold} from "lucide-react"
+import {  Building, Album,  CalendarFold} from "@/common/ui/icons"
+
 
 export const AdminItems: NavItemType[] = [
   {

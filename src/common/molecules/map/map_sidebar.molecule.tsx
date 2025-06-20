@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Coffee, ArrowLeft } from 'lucide-react';
+import { Coffee, ArrowLeft } from "@/common/ui/icons";
 import { Cafe } from '@/api/types/map/map_search.types';
 import { FilterOptions } from '@/common/hooks/map/useSearchFilter'; 
-import HighlightText from '@/common/atoms/HighlightText';
 import CafeCard from '@/common/molecules/map/cafe_card.molecule';
 import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
 import { useAppData } from '@/common/context/AppDataContext';

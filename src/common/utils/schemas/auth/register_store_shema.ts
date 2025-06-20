@@ -6,7 +6,7 @@ export const RegisterStoreSchema = [
             .nonempty({ message: 'Queremos conocerte, ¿cómo te llamas?' })
             .min(3, { message: 'Tu nombre debe tener al menos 3 letras, como un buen café debe tener su esencia' })
             .max(30, { message: 'Wow, tu nombre es más largo que una charla con un barista sobre granos de especialidad' })
-            .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, { message: "Tu nombre no puede contener números ni caracteres especiales, solo letras y espacios" }),
+            .regex(/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+$/, { message: "Tu nombre debe contener letras y solo puede tener letras, números y espacios" }),
       
         type_document:z
             .string({message:'Por favor ingresa tu tipo de documento'})

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/common/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from'@/common/ui/icons';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/common/ui/select";
 
 interface StorePaginationProps {

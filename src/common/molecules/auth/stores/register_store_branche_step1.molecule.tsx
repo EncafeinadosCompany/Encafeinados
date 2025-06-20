@@ -4,7 +4,7 @@ import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
 import { Label } from "@/common/ui/label"
 import { RegisterStoreBrancheSchemaType } from "@/common/utils/schemas/auth/register_store_branche.schema"
 
-import { Phone, Store } from "lucide-react"
+import { Phone, Store } from'@/common/ui/icons'
 import { UseFormRegister } from "react-hook-form"
 
 interface RegisterStoreBranchesProps {

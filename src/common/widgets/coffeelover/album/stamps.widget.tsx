@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stamps.query";
-import { getAuthStorage } from "@/common/utils/auth_storage.utils";
+import { getAuthStorage } from "@/common/utils/security/auth_storage.utils";
 import { Stamps } from "@/api/types/album/stamps.types";
 import { CardStamp } from "@/common/molecules/coffeelover/stamps/card_stamp.molecule";
 import { CardEmpy } from "@/common/molecules/coffeelover/stamps/card_empy.molecule";
 import { CardStampsError } from "@/common/molecules/coffeelover/stamps/card_error.molecule";
 import { CardStampSkeleton } from "@/common/molecules/coffeelover/stamps/card_skeleton.molecule";
 import { CardStampsDetails } from "@/common/molecules/coffeelover/stamps/dialog_details.molecule";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
+import { UserData } from "@/api/types/auth/auth.types";
 
 
 interface PruebaProps {
@@ -15,9 +17,8 @@ interface PruebaProps {
 }
 export default function ListStamps({ id_page }: PruebaProps) {
 
-    const { user } = getAuthStorage();
-    const { id } = user;
-    const { data: users } = useStampsByClientQuery(id);
+    const id = getEncryptedItem("userId") ;
+    const { data: users } = useStampsByClientQuery(id as number);
     const { data: stampData, error, isLoading } = useStampsByPageQuery(id_page);
     const [stamps, setStamps] = useState<Stamps[]>([]);
     const [flippedCards, setFlippedCards] = useState<number[]>([]);

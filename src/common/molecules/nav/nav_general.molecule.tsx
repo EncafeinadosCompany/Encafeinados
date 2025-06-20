@@ -2,11 +2,12 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { ChevronRight, ChevronLeft } from "@/common/ui/icons";
 import { Button } from "@/common/ui/button";
 import { NavItemType } from "@/api/types/nav/nav.types";
-import { clearAuthStorage } from "@/common/utils/auth_storage.utils";
-import { LogOutIcon, Coffee, ChevronDown, ChevronUp } from "lucide-react";
+import { clearAuthStorage } from "@/common/utils/security/auth_storage.utils";
+import { LogOutIcon, Coffee, ChevronDown, ChevronUp } from "@/common/ui/icons";
 import logoImage from "@/assets/images/logonav.jpg";
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import { useState } from "react";
+import { AdminBranchesItems } from "@/common/utils/lists/nav/admin_branches.utils";
 
 
 interface NavGeneralProps {
@@ -17,7 +18,7 @@ interface NavGeneralProps {
   logoPath?: string;
   coffeecoins?: number;
   isLoading?: boolean;
-  role?: string | null;
+  role?: string[] | null;
   name?: string | null;
   children?: React.ReactNode;
 }
@@ -34,7 +35,7 @@ export const NavGeneral = ({
   coffeecoins,
   role,
   name,
-  logoPath = logoImage,
+ logoPath  = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);
@@ -115,7 +116,7 @@ export const NavGeneral = ({
                       {name ? `Bienvenido, ${name.split('@')[0]}` : 'Encafeinados'}
                     </span>
                   </h1>
-                  {role === ROLES.COFFEE_LOVER && coffeecoins !== undefined && (
+                  {role?.includes(ROLES.COFFEE_LOVER) && coffeecoins !== undefined && (
                     <div className="flex items-center mt-1 text-[#8B593C]">
                       <img className="w-4 h-4 mr-1 opacity-80" src="/coins.png" alt="Coffee Coins" />
                       <span className="text-xs">{coffeecoins} granos</span>
@@ -189,11 +190,51 @@ export const NavGeneral = ({
                 )}
               </Link>
             ))}
+
+
+            {role?.includes(ROLES.ADMIN_SUCURSAL) && role.includes(ROLES.STORE) && (
+              AdminBranchesItems.map((item) => (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 relative",
+                    isRouteActive(item.href)
+                      ? "bg-gradient-to-r from-amber-50 to-amber-100/70 text-amber-800 font-medium"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                    isExpanded ? "" : "justify-center"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "flex-shrink-0",
+                      isRouteActive(item.href)
+                        ? "text-amber-600"
+                        : "text-gray-500"
+                    )}
+                  >
+                    {item.icon}
+                  </div>
+                  <span
+                    className={cn(
+                      "font-medium whitespace-nowrap transition-opacity duration-300",
+                      isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+                    )}
+                  >
+                    {item.title}
+                  </span>
+
+                  {isRouteActive(item.href) && !isExpanded && (
+                    <div className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full"></div>
+                  )}
+                </Link>
+              ))
+            )}
           </nav>
 
           <div className="mt-auto border-t border-gray-100">
             <div className="px-2 py-3">
-              {role === ROLES.COFFEE_LOVER && (
+              {role?.includes(ROLES.COFFEE_LOVER) && (
                 <Link
                   to="/coffeelover"
                   className={cn(
@@ -239,10 +280,10 @@ export const NavGeneral = ({
         </div>
       )}
 
-      <div className="flex-1 flex flex-col h-full mx-auto item-center justify-center min-w-0 overflow-hidden">        
+      <div className="flex-1 flex flex-col h-full mx-auto item-center justify-center min-w-0 overflow-hidden">
         <main className={`flex-1 w-full h-full relative  ${isMobile ? 'has-mobile-nav' : ''}`}>
-        <Outlet />
-      </main>
+          <Outlet />
+        </main>
 
         {isMobile && (
           <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white mobile-navbar shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">
@@ -290,7 +331,7 @@ export const NavGeneral = ({
             )}
 
             <nav className="flex justify-around items-center h-16 px-2 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">
-              {role === ROLES.COFFEE_LOVER && (
+              {role?.includes(ROLES.COFFEE_LOVER) && (
                 <Link
                   to="/coffeelover"
                   className="flex flex-col items-center justify-center px-2 py-1 rounded-xl transition-all duration-300 text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"

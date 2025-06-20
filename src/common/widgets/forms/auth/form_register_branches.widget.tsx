@@ -17,6 +17,7 @@ import { validateImageRequirements } from "@/common/hooks/useCriteria"
 import { useRegisterBrandMutation } from "@/api/mutations/branches/branches.mutation"
 import { useCriteria } from "@/api/queries/criteria/criteria.query"
 import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query"
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
 
 
 
@@ -32,10 +33,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
     const{mutateAsync: useBranchesMutation, status} = useRegisterBrandMutation();
     const { data: criteria } = useCriteria();
     const { data: socialNetworks } = useSocialNetworksQuery();
-
-
-
-    const storeId = localStorage.getItem("storeOrBranchId");
+    const storeId = getEncryptedItem("storeId");
 
 
     const methods = useForm<RegisterStoreBrancheSchemaType>({
@@ -60,7 +58,7 @@ const FormRegisterBrands = ({ onClose }: FormRegisterBrandsProps) => {
                     image_url: undefined,
                 };
                 return acc;
-            }, {} as Record<string, { response_text: string; image_url?: string; other_text?: string }>));
+            }, {} as Record<string,{ response_text: string; image_url?: string; other_text?: string }>));
         }
     }, [criteria, methods]);
 

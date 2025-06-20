@@ -4,12 +4,13 @@ import { useUpdateProfileMutation } from '@/api/mutations/coffelover/profile.mut
 import ProfileInfo from '@/common/molecules/coffeelover/profile/profile_info.molecule';
 import FavoriteCafes from '@/common/molecules/coffeelover/profile/favorite_cafes.molecule';
 import UserReviews from '@/common/molecules/coffeelover/profile/user_reviews.molecule';
-import { Loader, User, Coffee, Star } from 'lucide-react';
+import { Loader, User, Coffee, Star }  from "@/common/ui/icons"
 import { useWindowSize } from '@/common/hooks/useWindowSize';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/ui/tabs';
+import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 
 export const ProfileWidget: React.FC = () => {
-  const id = localStorage.getItem('userId');
+  const id = getEncryptedItem('userId');
   const { data: profile, isLoading, error } = useCoffeeLoverProfile(Number(id));
   const updateProfile = useUpdateProfileMutation();
   const { height } = useWindowSize();

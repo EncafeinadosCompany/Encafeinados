@@ -1,16 +1,19 @@
 import { ApprovedBranch } from "@/api/types/branches/branches_approval.types";
+import AutoPlay from "embla-carousel-autoplay";
+
 // UI Components
-import { 
-  Carousel, 
-  CarouselApi, 
-  CarouselContent, 
-  CarouselItem, 
-  CarouselNext, 
-  CarouselPrevious 
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
 } from "@/common/ui/carousel";
 import FeaturedCard from "@/common/molecules/coffeelover/stores/featured_card.molecule";
-// Animation
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { use } from "chai";
+
 
 // Types
 interface FeaturedCarouselStoresProps {
@@ -20,7 +23,6 @@ interface FeaturedCarouselStoresProps {
   filteredBranches: ApprovedBranch[];
   setFilteredBranches: React.Dispatch<React.SetStateAction<ApprovedBranch[]>>;
   handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  carouselRef: React.MutableRefObject<CarouselApi | null>;
 }
 
 export const FeaturedCarouselStores = ({
@@ -29,15 +31,41 @@ export const FeaturedCarouselStores = ({
   setSearchTerm,
   setFilteredBranches,
   filteredBranches,
-  carouselRef
 }: FeaturedCarouselStoresProps) => {
+
+  const [api, setApi] = useState<CarouselApi | null>(null);
+  const [count, setCount] = useState(0);
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+
+
+
+    setCount(api.scrollSnapList().length);
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+
+    
+  api.on("pointerDown", () => {
+    console.log("👆 Tocaste el carrusel");
+  });
+
+  api.on("scroll", () => {
+    console.log("📦 Se está scrolleando");
+  });
+
+  }, [api]);
+
+
+  console.log("Branches:", count, current);
   return (
     <>
- 
+
       {/* Content Section */}
-      <div className='w-full'>
-        <h2 className="text-lg font-bold mb-4">Destacados</h2>
-        
+      <div className='w-full relative '>
         {/* No Results State */}
         {filteredBranches.length === 0 ? (
           <div className="w-full py-8 text-center border-none">
@@ -58,43 +86,49 @@ export const FeaturedCarouselStores = ({
             </button>
           </div>
         ) : (
-          // Carousel Display
-          <Carousel
-            className="flex w-full flex-col touch-pan-y will-change-transform"
-            opts={{ 
-              loop: true, 
-              align: "center",
-              dragFree: true,
-              containScroll: "trimSnaps"
-            }}
-            setApi={(api) => (carouselRef.current = api)}
-          >
-            <div className="relative w-full">
-              <CarouselContent className=" item-center mx-7 flex cursor-grab active:cursor-grabbing">
-                {filteredBranches.map((branch) => (
-                  <CarouselItem 
-                    key={branch.id} 
-                    className="basis-4/5 sm:basis-1/2 lg:basis-1/3 pl-2 touch-pan-x"
+          <div className="py-2 h-full">
+            <div className="flex justify-between mb-2">
+              <h2 className="text-3xl font-light text-gray-700">Cafés Destacados</h2>
+            </div>
+
+            <Carousel setApi={setApi} opts={{ align: "start", loop: false,  dragFree: false  }} className="w-full max-w-7xl h-full py-2"
+              plugins={[AutoPlay({ delay: 5000 })]}
+              
+
+            >
+              <CarouselContent className="flex w-full h-full">
+                {branches.map((branch, index) => (
+                  <CarouselItem
+                    key={branch.id}
+                    className="basis-full md:basis-1/2 lg:basis-1/3 flex justify-center"
                   >
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.5 }}
-                      className="touch-pan-x px-1"
-                      layout={false} 
-                    >
-                      <FeaturedCard branches={branch} />
-                    </motion.div>
+                    <FeaturedCard
+                      branches={branch}
+                      current={current}
+                      isFeatured={index === 1} // El del centro es featured
+                      index={index}
+                    />
                   </CarouselItem>
                 ))}
               </CarouselContent>
+              {/* CarouselNext sigue en la posición original */}
+              <div className="absolute top-32 right-12 -translate-x-1/2 z-10 hidden md:block">
+                <CarouselNext className="bg-black/10  backdrop-blur-sm" />
+              </div>
 
-              {/* Navigation Controls */}
-              <CarouselPrevious className="flex absolute left-0 top-1/3 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md z-10" />
-              <CarouselNext className="flex absolute right-0 top-1/3 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md z-10" />
-            </div>
-          </Carousel>
+              {/* CarouselPrevious se mueve abajo, centrado horizontalmente */}
+              <div className="absolute top-32 left-12 -translate-x-1/2 z-10 hidden md:block">
+                <CarouselPrevious className="bg-black/10 backdrop-blur-sm" />
+              </div>
+            </Carousel>
+          </div>
+        )}
+        {count > 0 && (
+          <div className="flex absolute bottom-0 w-full justify-center mt-4">
+            <span className="text-xs text-gray-400">
+              Mostrando <span className="font-semibold">{current}</span> de <span className="font-semibold">{count}</span> tiendas destacadas
+            </span>
+          </div>
         )}
       </div>
     </>

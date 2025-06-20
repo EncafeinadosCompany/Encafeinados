@@ -9,21 +9,19 @@ import { RegisterEventSchema, RegisterEventSchemaType } from "@/common/utils/sch
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
-import { CalendarCheck, CalendarIcon } from "lucide-react"
+import { CalendarCheck, CalendarIcon } from "@/common/ui/icons"
 import { useForm } from "react-hook-form"
-import MapSearch from "../../map/map_search.widget"
 
 import { TimePicker } from "@/common/ui/time-picker"
 import { combineDateTime } from "@/common/utils/dataTime.utils"
-import { useNavigate, useSearchParams } from "react-router-dom"
+import {useSearchParams } from "react-router-dom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/ui/card"
 import { Calendar } from "@/common/ui/calendar"
 import { useApprovedBranches } from "@/api/queries/branches/branch.query"
 import Select from "react-select"
 
-export const FormRegisterEvents = () => {
+export default function FormRegisterEvents ()  {
     const { mutateAsync: useRegisterEvent } = useEventMutation()
-    const navigate = useNavigate();
     const [searchParams] = useSearchParams()
     const start_time = searchParams.get("start_time")
     const { data: BranchesAll } = useApprovedBranches()

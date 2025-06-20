@@ -1,6 +1,6 @@
 import React from 'react';
 import { ClientReview } from '@/api/types/reviews/review.type';
-import { Store, Calendar } from 'lucide-react';
+import { Store, Calendar } from'@/common/ui/icons'
 import ReviewStars from '@/common/atoms/reviews/review_stars.atom';
 import ReviewImages from '@/common/atoms/reviews/review_images.atom';
 

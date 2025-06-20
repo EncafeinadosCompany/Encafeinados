@@ -5,18 +5,22 @@ import { mockLoginSuccess } from "../../api/login";
 interface UserProps {
   email?: string,
   password?: string
-  role?: "Super Administrador" | "Administrador de Tienda" | "Cliente"
+  roles?: Array<"Super Administrador" |"Administrador de Sucursal"| "Administrador de Tienda" | "Cliente">
   name?: string
+  storeId?: number
+  branchId?: number
 }
 
 export function doLogin({
   email = "admin@example.com",
   password = "1234",
-  role = "Super Administrador",
-  name = "Santiago"
+  roles = ["Super Administrador"],
+  name = "Santiago",
+  storeId,
+  branchId,
 }: UserProps) {
 
-  mockLoginSuccess({ email, role, name });
+  mockLoginSuccess({ email, roles, name, storeId, branchId });
   cy.get("input[name=email]").type(email);
   cy.get("[data-testid='custom-input-password']").type(password);
   cy.get("button[type=submit]").click();

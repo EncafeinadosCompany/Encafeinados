@@ -1,15 +1,8 @@
 import { QRCode } from "@/common/atoms/QRCode";
-import { CardContent } from "@/common/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/common/ui/dialog";
+import {Dialog,DialogContent,DialogHeader,DialogTitle} from "@/common/ui/dialog";
 import { Description } from "@radix-ui/react-dialog";
 import { toPng } from "html-to-image";
-import { DownloadIcon, QrCodeIcon } from "lucide-react";
-import { useRef } from "react";
+import { DownloadIcon, InfoIcon, QrCodeIcon } from'@/common/ui/icons';
 
 export const QRCodeBranchModal = ({
   isOpen,
@@ -42,52 +35,102 @@ export const QRCodeBranchModal = ({
         id="qr-code-dialog"
         aria-labelledby="qr-code-dialog-title"
         aria-describedby="qr-code-dialog-description"
-        className=" bg-white shadow-xl border-none rounded-lg max-h-[90vh] w-[70vh]"
+        className="bg-white shadow-xl border-none rounded-lg max-h-[90vh] w-full max-w-3xl p-0 overflow-hidden"
       >
-        <div className="relative">
-          <div className="absolute opacity-5 -right-7 -top-6">
-            <QrCodeIcon className="text-[#2B2B2B]" size={120} />
+        {/* Diseño de dos columnas */}
+        <div className="flex flex-col md:flex-row w-full h-full">
+          {/* Columna izquierda - QR Code */}
+          <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-4 md:p-6 bg-[#FAFAFA] border-r border-[#F0F0F0]">
+            {/* QR Code Display */}
+            <div
+              id="qr-code-branch"
+              className="bg-white rounded-lg border border-[#D4D4D4] shadow-sm p-4 flex flex-col items-center"
+            >
+              {qrCodeUrl ? (
+                <>
+                  <div className="mb-4">
+                    <QRCode
+                      url={qrCodeUrl}
+                      width={Math.min(250, window.innerWidth * 0.6)}
+                    />
+                  </div>
+                  <div className="text-center text-sm text-[#546F75] mb-2">
+                    Código QR para tu cafetería
+                  </div>
+                </>
+              ) : (
+                <div className="flex items-center justify-center h-[250px]">
+                  <div className="animate-pulse text-[#546F75]">
+                    Cargando QR Code...
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Botón de descarga */}
+            <button
+              onClick={downloadComponent}
+              className="mt-4 flex items-center justify-center bg-[#DB8935] text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg px-4 py-2 w-full max-w-xs"
+            >
+              <DownloadIcon className="h-4 w-4 mr-2" />
+              Descargar QR
+            </button>
           </div>
 
-        </div>
-          <DialogHeader className="flex flex-col items-center">
-            <div className="flex items-center justify-center">
-              <div className="bg-[#DB8935] p-2 rounded-full mr-3">
-                <QrCodeIcon className="text-white" size={24} />
+          {/* Columna derecha - Información */}
+          <div className="w-full md:w-1/2 p-4 md:p-6 flex flex-col">
+            <DialogHeader className="mb-4">
+              <div className="flex items-center">
+                <div className="bg-[#DB8935] p-2 rounded-full mr-3">
+                  <QrCodeIcon className="text-white" size={20} />
+                </div>
+                <DialogTitle className="text-[#020F17] font-semibold text-lg">
+                  Código QR de Verificación
+                </DialogTitle>
               </div>
-              <DialogTitle className="text-[#020F17] font-semibold text-xl"></DialogTitle>
-            </div>
-            <div className="flex items-center space-x-1 ">
-              <div className="h-[2px] w-12 bg-[#DC3545]"></div>
-              <div className="text-[#DB8935]">●</div>
-              <div className="h-[2px] w-12 bg-[#DC3545]"></div>
-            </div>
-            <Description className="text-[#546F75] text-sm text-center max-w-2xl">
-              El siguiente código podrá ser utilizado para que los coffeelovers
-              que entren a tu tienda registren su visita.
-            </Description>
-          </DialogHeader>
 
-        {/* QR Code Display */}
-        <div
-          id="qr-code-branch"
-          className="bg-[#FAFAFA] sm:p-2 rounded-md border border-[#D4D4D4] shadow-inner  z-10"
-        >
-          {qrCodeUrl ? (
-            <div className="p-2">
-              <div className="flex items-center justify-center mt-5 mb-5">
-                <QRCode url={qrCodeUrl} width={300} />
+              <div className="flex items-center space-x-1 my-2">
+                <div className="h-[2px] w-12 bg-[#DC3545]"></div>
+                <div className="text-[#DB8935]">●</div>
+                <div className="h-[2px] w-12 bg-[#DC3545]"></div>
               </div>
-              <button
-                onClick={downloadComponent}
-                className="flex items-center justify-center bg-[#DB8935] text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg px-2 py-2"
-              >
-                <DownloadIcon className="h-4 w-4 mr-1 ml-1" />
-              </button>
+            </DialogHeader>
+
+            <div className="flex-grow">
+              <div className="bg-[#FFF9F2] rounded-lg p-4 mb-4 border border-[#FFECD9]">
+                <div className="flex items-start">
+                  <InfoIcon className="h-5 w-5 text-[#DB8935] mt-0.5 mr-2 flex-shrink-0" />
+                  <Description className="text-[#546F75] text-sm">
+                    Este código QR podrá ser utilizado para que los coffeelovers
+                    que visiten tu cafetería registren su visita.
+                  </Description>
+                </div>
+              </div>
+
+              <div className="space-y-3 text-sm text-[#546F75]">
+                <h4 className="font-medium text-[#020F17]">
+                  Cómo usar este código:
+                </h4>
+                <ol className="list-decimal pl-5 space-y-2">
+                  <li>
+                    Al terminar una visita de un coffelover, muestra este codigo  QR 
+                  </li>
+                  <li>Los usuarios escanean el código con la app Encafeinados</li>
+                  <li>La visita queda registrada automáticamente</li>
+                  <li>
+                    El usuario gana CoffeeCoins y añade tu cafetería a su álbum
+                  </li>
+                </ol>
+
+                <div className="pt-2">
+                  <p className="text-xs border-t border-[#F0F0F0] pt-2 mt-2 text-[#546F75]/70">
+                    Recuerda que cada QR es único para tu sucursal y no debe ser
+                    compartido con otras locaciones.
+                  </p>
+                </div>
+              </div>
             </div>
-          ) : (
-            "Cargando QR Code..."
-          )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

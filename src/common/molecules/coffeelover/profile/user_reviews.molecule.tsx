@@ -1,13 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { MessageSquare, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { MessageSquare, Calendar, ChevronLeft, ChevronRight } from'@/common/ui/icons';
 import { useWindowSize } from '@/common/hooks/useWindowSize';
 import { useClientReviews } from '@/api/queries/reviews/reviews.query';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { getAuthStorage } from '@/common/utils/auth_storage.utils';
 import ReviewImages from '@/common/atoms/reviews/review_images.atom';
 import StarsRating from '@/common/atoms/reviews/stars_rating.atom';
+import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 
 interface UserReviewsProps {
   heightAdjustment?: boolean;
@@ -16,15 +15,15 @@ interface UserReviewsProps {
 export const UserReviews: React.FC<UserReviewsProps> = ({ heightAdjustment = false }) => {
   const userId = React.useMemo(() => {
     try {
-      const { user } = getAuthStorage();
-      return user?.id || 4; 
+      const id = getEncryptedItem("userId");
+      return id || 4; 
     } catch (error) {
       console.error('Error getting user ID:', error);
       return 4;
     }
   }, []);
 
-  const { data: clientReviews, isLoading, error } = useClientReviews(userId);
+  const { data: clientReviews, isLoading, error } = useClientReviews(userId as number);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { height } = useWindowSize();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, Clock, Route as RouteIcon, Navigation } from 'lucide-react';
+import { X, Clock, Route as RouteIcon, Navigation } from "@/common/ui/icons";
 
 interface RouteControlsProps {
   isActive: boolean;

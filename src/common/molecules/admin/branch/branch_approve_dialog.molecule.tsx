@@ -3,7 +3,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogOverlay 
 } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
-import { RefreshCw, CheckCircle2 } from "lucide-react";
+import { RefreshCw, CheckCircle2 } from'@/common/ui/icons';
 
 interface BranchApproveDialogProps {
   isOpen: boolean;

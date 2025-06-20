@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { Store } from "@/api/types/stores/stores.type";
-import { CheckCircle2, XCircle, AlertTriangle } from "lucide-react"; 
+import { StoreDto } from "@/api/types/stores/stores.type";
+import { CheckCircle2, XCircle, AlertTriangle } from'@/common/ui/icons'; 
 import toast from "react-hot-toast";
 import { usePendingStores } from "@/api/queries/stores/stores.query";
 import { useChangeStoreStatus } from "@/api/mutations/stores/change_stores_status.mutation";
@@ -19,7 +19,7 @@ export const usePendingStoresWidget = () => {
   
   // UI state
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+  const [selectedStore, setSelectedStore] = useState<StoreDto | null>(null);
   const [confirmationDialog, setConfirmationDialog] = useState<{
     isOpen: boolean, 
     action: 'approve' | 'reject', 
@@ -53,7 +53,7 @@ export const usePendingStoresWidget = () => {
     if (!searchTerm) return originalStores;
     
     const term = searchTerm.toLowerCase();
-    return originalStores.filter((store: Store) => 
+    return originalStores.filter((store: StoreDto) => 
       store.name?.toLowerCase().includes(term) || 
       store.email?.toLowerCase().includes(term)
     );
@@ -103,7 +103,7 @@ export const usePendingStoresWidget = () => {
     });
   };
   
-  const handleViewDetails = (store: Store) => {
+  const handleViewDetails = (store: StoreDto) => {
     setSelectedStore(store);
   };
 
