@@ -1,6 +1,5 @@
 import { ApprovedBranch } from "@/api/types/branches/branches_approval.types";
-import { CarouselApi } from "@/common/ui/carousel"
-import { useEffect, useRef, useState } from "react";
+import { useEffect,  useState } from "react";
 import { FeaturedCarouselStores } from "@/common/molecules/coffeelover/stores/featured_stores.molecule";
 import { useApprovedBranches } from "@/api/queries/branches/branch.query";
 
@@ -17,17 +16,7 @@ export const FeaturedStoresWidget = ({
 
   const { data: branches, isLoading, isError } = useApprovedBranches();
   const [filteredBranches, setFilteredBranches] = useState<ApprovedBranch[]>([]);
-  const carouselRef = useRef<CarouselApi | null>(null);
 
-  useEffect(() => {
-    if (!carouselRef.current) return;
-
-    const interval = setInterval(() => {
-      carouselRef.current?.scrollNext();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     if (!branches) return;
@@ -77,7 +66,6 @@ export const FeaturedStoresWidget = ({
       searchTerm={globalSearchTerm}
       branches={branches}
       filteredBranches={filteredBranches}
-      carouselRef={carouselRef}
       setFilteredBranches={setFilteredBranches}
       setSearchTerm={setGlobalSearchTerm}
       handleSearchChange={(e) => setGlobalSearchTerm(e.target.value)}
