@@ -27,13 +27,13 @@ export const FeaturedCarouselStores = ({
   setSearchTerm,
   setFilteredBranches,
   filteredBranches,
-}: FeaturedCarouselStoresProps) => {
-  const [api, setApi] = useState<CarouselApi | null>(null);
+}: FeaturedCarouselStoresProps) => {  const [api, setApi] = useState<CarouselApi | null>(null);
   const [count, setCount] = useState(0);
   const [current, setCurrent] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isSwipeActive, setIsSwipeActive] = useState<boolean>(false);
+  const [isDesktop, setIsDesktop] = useState<boolean>(window.innerWidth >= 1024);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const minSwipeDistance = 50;
@@ -80,8 +80,7 @@ export const FeaturedCarouselStores = ({
     setTouchStart(null);
     setTouchEnd(null);
     setIsSwipeActive(false);
-  }, [touchStart, touchEnd, api, minSwipeDistance]);
-  useEffect(() => {
+  }, [touchStart, touchEnd, api, minSwipeDistance]);  useEffect(() => {
     if (!api) return;
 
     setCount(api.scrollSnapList().length);
@@ -89,20 +88,20 @@ export const FeaturedCarouselStores = ({
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap() + 1);
     });
-
-    api.on("pointerDown", () => {
-      console.log("👆 Carousel touched");
-    });
-
-    api.on("scroll", () => {
-      console.log("📦 Carousel scrolling");
-    });
   }, [api]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   console.log("Branches:", count, current);
   return (
     <>
-      <div className="w-full relative ">
+      <div className="w-full relative mb-2 px-2 md:px-0">
         {filteredBranches.length === 0 ? (
           <div className="w-full py-8 text-center border-none">
             <p className="text-gray-500">
@@ -123,18 +122,15 @@ export const FeaturedCarouselStores = ({
           </div>
         ) : (
           <div className="py-2 h-full">
-            {" "}
-            <div className="flex justify-between mb-2">
+            {" "}            <div className="flex justify-between mb-2">
               <h2 className="text-3xl font-light text-gray-700">
                 Cafés Destacados
               </h2>
-             
             </div>{" "}
             <Carousel
               ref={carouselRef}
-              setApi={setApi}
-              opts={{
-                align: "start",
+              setApi={setApi}              opts={{
+                align: isDesktop ? "start" : "center", 
                 loop: false,
                 dragFree: false,
                 containScroll: "trimSnaps",
@@ -143,6 +139,7 @@ export const FeaturedCarouselStores = ({
                   "(max-width: 768px)": {
                     dragFree: true,
                     containScroll: false,
+                    align: "center",
                   },
                 },
               }}
@@ -154,16 +151,20 @@ export const FeaturedCarouselStores = ({
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
             >
-              <CarouselContent className="flex w-full h-full">
+              <CarouselContent className="flex w-full h-full -ml-2 md:-ml-4">
                 {branches.map((branch, index) => (
                   <CarouselItem
                     key={branch.id}
-                    className="basis-full md:basis-1/2 lg:basis-1/3 flex justify-center"
+                    className="basis-[85%] sm:basis-[80%] md:basis-1/2 lg:basis-1/3 flex justify-center pl-2 md:pl-4"
                   >
                     <FeaturedCard
                       branches={branch}
                       current={current}
-                      isFeatured={index === 1}
+                      isFeatured={
+                        isDesktop
+                          ? index === api?.selectedScrollSnap()+1 
+                          : index === current - 1 
+                      }
                       index={index}
                     />
                   </CarouselItem>
@@ -180,7 +181,7 @@ export const FeaturedCarouselStores = ({
           </div>
         )}{" "}
         {count > 0 && (
-          <div className="flex flex-col items-center w-full mt-4 space-y-2">
+          <div className="flex flex-col items-center w-full space-y-2">
             <div className="md:hidden flex justify-center space-x-2">
               {Array.from({ length: count }, (_, index) => (
                 <button
