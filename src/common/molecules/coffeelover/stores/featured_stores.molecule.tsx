@@ -27,13 +27,15 @@ export const FeaturedCarouselStores = ({
   setSearchTerm,
   setFilteredBranches,
   filteredBranches,
-}: FeaturedCarouselStoresProps) => {  const [api, setApi] = useState<CarouselApi | null>(null);
+}: FeaturedCarouselStoresProps) => {
+  const [api, setApi] = useState<CarouselApi | null>(null);
   const [count, setCount] = useState(0);
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(1);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isSwipeActive, setIsSwipeActive] = useState<boolean>(false);
   const [isDesktop, setIsDesktop] = useState<boolean>(window.innerWidth >= 1024);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const minSwipeDistance = 50;
@@ -55,6 +57,7 @@ export const FeaturedCarouselStores = ({
     },
     [touchStart]
   );
+  
   const onTouchEnd = useCallback(() => {
     if (!touchStart || !touchEnd || !api) {
       setIsSwipeActive(false);
@@ -80,14 +83,23 @@ export const FeaturedCarouselStores = ({
     setTouchStart(null);
     setTouchEnd(null);
     setIsSwipeActive(false);
-  }, [touchStart, touchEnd, api, minSwipeDistance]);  useEffect(() => {
+  }, [touchStart, touchEnd, api, minSwipeDistance]);
+
+  useEffect(() => {
     if (!api) return;
+    const snapList = api.scrollSnapList();
+    setCount(snapList.length);
+    const onSelect = () => {
+      const selectedIndex = api.selectedScrollSnap();
+      setCurrent(selectedIndex + 1);
+    };
+    onSelect();
+        api.on("select", onSelect);
+    setIsInitialized(true);
 
-    setCount(api.scrollSnapList().length);
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
+    return () => {
+      api.off("select", onSelect);
+    };
   }, [api]);
 
   useEffect(() => {
@@ -98,7 +110,7 @@ export const FeaturedCarouselStores = ({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  console.log("Branches:", count, current);
+
   return (
     <>
       <div className="w-full relative mb-2 px-2 md:px-0">
@@ -122,14 +134,15 @@ export const FeaturedCarouselStores = ({
           </div>
         ) : (
           <div className="py-2 h-full">
-            {" "}            <div className="flex justify-between mb-2">
+            <div className="flex justify-between mb-2">
               <h2 className="text-3xl font-light text-gray-700">
                 Cafés Destacados
               </h2>
-            </div>{" "}
+            </div>
             <Carousel
               ref={carouselRef}
-              setApi={setApi}              opts={{
+              setApi={setApi}
+              opts={{
                 align: isDesktop ? "start" : "center", 
                 loop: false,
                 dragFree: false,
@@ -171,7 +184,7 @@ export const FeaturedCarouselStores = ({
                 ))}
               </CarouselContent>
               <div className="absolute top-32 right-12 -translate-x-1/2 z-10 hidden md:block">
-                <CarouselNext className="bg-black/10  backdrop-blur-sm" />
+                <CarouselNext className="bg-black/10 backdrop-blur-sm" />
               </div>
 
               <div className="absolute top-32 left-12 -translate-x-1/2 z-10 hidden md:block">
@@ -179,8 +192,9 @@ export const FeaturedCarouselStores = ({
               </div>
             </Carousel>
           </div>
-        )}{" "}
-        {count > 0 && (
+        )}
+        
+        {count > 0 && isInitialized && (
           <div className="flex flex-col items-center w-full space-y-2">
             <div className="md:hidden flex justify-center space-x-2">
               {Array.from({ length: count }, (_, index) => (
