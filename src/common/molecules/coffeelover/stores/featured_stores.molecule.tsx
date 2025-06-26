@@ -162,7 +162,7 @@ export const FeaturedCarouselStores = ({
                       current={current}
                       isFeatured={
                         isDesktop
-                          ? index === api?.selectedScrollSnap()+1 
+                          ? index === (api?.selectedScrollSnap() ?? -1) + 1 
                           : index === current - 1 
                       }
                       index={index}

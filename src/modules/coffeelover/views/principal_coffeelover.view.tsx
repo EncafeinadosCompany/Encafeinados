@@ -6,6 +6,7 @@ import { CoffeeBackground } from '@/common/widgets/coffee_background.widget';
 import QRScannerDialog from '@/common/molecules/coffeelover/stores/QR_scanner_dialog.molecule';
 import { Button } from '@/common/ui/button';
 import { EventList } from '@/common/widgets/coffeelover/events/event_list.widget';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/common/ui/tooltip';
 
 export default function PrincipalCoffeelover () {
   const [globalSearchTerm, setGlobalSearchTerm] = useState("");
@@ -67,13 +68,35 @@ export default function PrincipalCoffeelover () {
       </div>
 
       <div className={`fixed ${isMobile ? 'bottom-20' : 'bottom-6'} right-6 z-20`}>
-        <Button
-          onClick={() => setIsScannerOpen(true)}
-          className="h-14 w-14 rounded-full bg-amber-600 hover:bg-amber-700 shadow-lg flex items-center justify-center"
-          aria-label="Escanear código QR"
-        >
-          <QrCode className="h-6 w-6 text-white" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {isMobile ? (
+                <Button
+                  onClick={() => setIsScannerOpen(true)}
+                  className="h-12 px-4 rounded-full bg-amber-600 hover:bg-amber-700 shadow-lg flex items-center gap-2"
+                  aria-label="Registrar visita con QR"
+                >
+                  <QrCode className="h-5 w-5 text-white flex-shrink-0" />
+                  <span className="text-white text-sm font-medium whitespace-nowrap">Registrar visita</span>
+                </Button>
+              ) : (
+                <div className="relative">
+                  <Button
+                    onClick={() => setIsScannerOpen(true)}
+                    className="h-14 w-14 rounded-full bg-amber-600 hover:bg-amber-700 shadow-lg flex items-center justify-center"
+                    aria-label="Registrar visita con QR"
+                  >
+                    <QrCode className="h-6 w-6 text-white" />
+                  </Button>
+                </div>
+              )}
+            </TooltipTrigger>
+            <TooltipContent side="left" className="bg-amber-50 border border-amber-200">
+              <p className="text-amber-800 font-medium">Escanea el QR para registrar tu visita</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       <QRScannerDialog
