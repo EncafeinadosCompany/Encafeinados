@@ -345,7 +345,7 @@ export default function PruebaDashboard () {
                 {/* Cards de estadísticas - VALORES CORREGIDOS */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
                     <StatCard
-                        title="Total de Sellos"
+                        title="Total de sellos por cafeterías"
                         value={stampsCount}
                         icon={Coffee}
                         trend="12"
@@ -353,7 +353,7 @@ export default function PruebaDashboard () {
                         loading={stampsLoading}
                     />
                     <StatCard
-                        title="Visitas Totales"
+                        title="Visitas totales por cafeterías"
                         value={visitsCount}
                         icon={Users}
                         trend="8"
