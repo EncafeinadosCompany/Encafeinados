@@ -44,15 +44,14 @@ const Formlogin = () => {
   };
 
   return (
-      <LoginCard
-        register={register}
-        errors={errors}
-        control={control}
-        isLoading={isLoading}
-        onSubmit={handleSubmit(onSubmit)}
-        onGoogleSignIn={handleGoogleSignIn}>
-      </LoginCard>
- 
+    <LoginCard
+      register={register}
+      errors={errors}
+      control={control}
+      isLoading={isLoading}
+      onSubmit={handleSubmit(onSubmit)}
+      onGoogleSignIn={handleGoogleSignIn}>
+    </LoginCard>
   )
 }
 

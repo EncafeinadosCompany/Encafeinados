@@ -16,7 +16,6 @@ const RoleRoute = ({ allowedRoles }: RouteProps) => {
 
   const userRole = (user as { roles: string[] }).roles;
 
-  console.log("User role from storage:", userRole, 'holaa', allowedRoles.includes(ROLES.COFFEE_LOVER));
 
   const roleValue = Array.isArray(userRole) ? userRole[0] : userRole;
 

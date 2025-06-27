@@ -28,6 +28,7 @@ export {
     AlignLeft,
     CalendarCheck,
     CalendarClock,
+    LayoutDashboard,
     Ghost,
     Plus,
     Trash2,
