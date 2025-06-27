@@ -26,7 +26,6 @@ export default function PasswordResetPage() {
   const passwordResetMutation = usePasswordResetMutation();
   const changePasswordMutation = useChangePasswordMutation();
 
-  // Form para solicitud de reset
   const resetForm = useForm<PasswordResetData>({
     resolver: zodResolver(passwordResetSchema),
     defaultValues: {
@@ -34,7 +33,6 @@ export default function PasswordResetPage() {
     }
   });
 
-  // Form para cambio de contraseña
   const changeForm = useForm<ChangePasswordData>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: {
@@ -73,7 +71,6 @@ export default function PasswordResetPage() {
     navigate("/login");
   };
 
-  // Solo mostrar éxito para el modo de solicitud de reset
   if (isSuccess && !isChangePasswordMode) {
     return (
       <div className="min-h-screen w-full bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center p-4">
