@@ -56,4 +56,11 @@ export const errorMessages: Record<number, string> = {
         400:"No tienes la stampa de esta sucursal, ¡te invitamos a conocerla!",
         404: "No se encuentra el cliente o la sucursal"
     },
+    invoice: {
+        409: "Ya existe una factura para este período.",
+        400: "No se pudo crear la factura. Por favor, verifica los datos ingresados.",
+        404: "Factura no encontrada.",
+        422: "Datos de la factura no válidos.",
+        500: "Error al procesar la factura. Inténtalo de nuevo más tarde."
+    },
   };
