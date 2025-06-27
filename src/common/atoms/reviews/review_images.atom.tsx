@@ -9,20 +9,16 @@ const ReviewImages: React.FC<ReviewImagesProps> = ({ images }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [isZoomed, setIsZoomed] = useState(false);
 
-  // Bloquear scroll cuando el visor está abierto
   useEffect(() => {
     if (selectedImageIndex !== null) {
-      // Bloquear scroll y añadir clase para CSS
       document.body.style.overflow = 'hidden';
       
-      // Cleanup
       return () => {
         document.body.style.overflow = '';
       };
     }
   }, [selectedImageIndex]);
 
-  // Manejar navegación con teclado
   useEffect(() => {
     if (selectedImageIndex === null) return;
     
@@ -72,7 +68,6 @@ const ReviewImages: React.FC<ReviewImagesProps> = ({ images }) => {
 
   return (
     <div>
-      {/* Grid de miniaturas */}
       <div className="flex flex-wrap gap-2 mt-3">
         {images.slice(0, images.length > 4 ? 3 : 4).map((imageUrl, index) => (
           <button
@@ -106,7 +101,6 @@ const ReviewImages: React.FC<ReviewImagesProps> = ({ images }) => {
         )}
       </div>
 
-      {/* SOLUCIÓN INTEGRADA: Visor de imágenes directamente en este componente */}
       {selectedImageIndex !== null && (
         <div 
           className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/95"
@@ -124,12 +118,10 @@ const ReviewImages: React.FC<ReviewImagesProps> = ({ images }) => {
           }}
           onClick={closeViewer}
         >
-          {/* Contenedor principal */}
           <div 
             className="relative w-full h-full flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Botón de cierre */}
             <button
               type="button"
               className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 p-3 rounded-full text-white transition-colors"
@@ -150,7 +142,6 @@ const ReviewImages: React.FC<ReviewImagesProps> = ({ images }) => {
               <X size={24} />
             </button>
             
-            {/* Contador de imágenes */}
             <div 
               className="absolute top-4 left-4 z-10 bg-black/50 px-3 py-1 rounded-full text-white"
               style={{
@@ -167,7 +158,6 @@ const ReviewImages: React.FC<ReviewImagesProps> = ({ images }) => {
               {selectedImageIndex + 1} / {images.length}
             </div>
             
-            {/* Botón para imagen anterior */}
             {images.length > 1 && (
               <button
                 type="button"
@@ -194,7 +184,6 @@ const ReviewImages: React.FC<ReviewImagesProps> = ({ images }) => {
               </button>
             )}
             
-            {/* Botón para imagen siguiente */}
             {images.length > 1 && (
               <button
                 type="button"
@@ -221,7 +210,6 @@ const ReviewImages: React.FC<ReviewImagesProps> = ({ images }) => {
               </button>
             )}
             
-            {/* Botón de zoom */}
             <button
               type="button"
               className="absolute bottom-24 right-4 z-10 bg-black/50 hover:bg-black/70 p-3 rounded-full text-white transition-colors"
@@ -245,7 +233,6 @@ const ReviewImages: React.FC<ReviewImagesProps> = ({ images }) => {
               {isZoomed ? <ZoomOut size={20} /> : <ZoomIn size={20} />}
             </button>
             
-            {/* Imagen */}
             <div 
               className="h-full w-full flex items-center justify-center overflow-hidden"
               onClick={(e) => e.stopPropagation()}
@@ -276,7 +263,6 @@ const ReviewImages: React.FC<ReviewImagesProps> = ({ images }) => {
               />
             </div>
             
-            {/* Miniaturas */}
             {images.length > 1 && (
               <div 
                 className="absolute bottom-6 left-0 right-0 flex justify-center pointer-events-none"
