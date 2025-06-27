@@ -5,7 +5,7 @@ const authClient = new AuthClient()
 
 export const useQuantityVisitByBranch= (id?:number) => {
     return useQuery<{quantity:number}, Error>({
-      queryKey: ['vista-data'],
+      queryKey: ['vista-data',id],
       queryFn: async () => {
         const response = await authClient.get<{quantity:number}>(`/register-visit/${id}`)
         return response
