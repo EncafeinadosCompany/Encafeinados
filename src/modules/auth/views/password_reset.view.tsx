@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { passwordResetSchema, PasswordResetData } from "@/common/utils/schemas/auth/password_reset.schema";
-import { usePasswordResetMutation } from "@/api/mutations/auth/authMutations";
+import { changePasswordSchema, ChangePasswordData } from "@/common/utils/schemas/auth/change_password.schema";
+import { usePasswordResetMutation, useChangePasswordMutation } from "@/api/mutations/auth/authMutations";
 import { Button } from "@/common/ui/button";
 import { Label } from "@/common/ui/label";
 import { InputEmail } from "@/common/atoms/auth/Input_email.atom";
+import { InputPin } from "@/common/atoms/auth/Input_pin.atom";
 import { TextError } from "@/common/atoms/textError";
 import { Card, CardContent } from "@/common/ui/card";
 import { ArrowLeft } from "@/common/ui/icons";
@@ -15,24 +17,33 @@ import toast from "react-hot-toast";
 export default function PasswordResetPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   
+  const token = searchParams.get('token');
+  const isChangePasswordMode = !!token;
+  
   const passwordResetMutation = usePasswordResetMutation();
+  const changePasswordMutation = useChangePasswordMutation();
 
-  const { 
-    register, 
-    handleSubmit, 
-    formState: { errors }, 
-    reset,
-    getValues
-  } = useForm<PasswordResetData>({
+  // Form para solicitud de reset
+  const resetForm = useForm<PasswordResetData>({
     resolver: zodResolver(passwordResetSchema),
     defaultValues: {
       email: ''
     }
   });
 
-  const onSubmit = async (data: PasswordResetData) => {
+  // Form para cambio de contraseña
+  const changeForm = useForm<ChangePasswordData>({
+    resolver: zodResolver(changePasswordSchema),
+    defaultValues: {
+      newPassword: '',
+      confirmPassword: ''
+    }
+  });
+
+  const onSubmitReset = async (data: PasswordResetData) => {
     try {
       setIsLoading(true);
       await passwordResetMutation.mutateAsync(data);
@@ -43,11 +54,27 @@ export default function PasswordResetPage() {
     }
   };
 
+  const onSubmitChange = async (data: ChangePasswordData) => {
+    if (!token) return;
+    
+    try {
+      setIsLoading(true);
+      await changePasswordMutation.mutateAsync({
+        token,
+        newPassword: data.newPassword
+      });
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleBackToLogin = () => {
     navigate("/login");
   };
 
-  if (isSuccess) {
+  // Solo mostrar éxito para el modo de solicitud de reset
+  if (isSuccess && !isChangePasswordMode) {
     return (
       <div className="min-h-screen w-full bg-gradient-to-br from-amber-50 to-amber-100 flex items-center justify-center p-4">
         <div className="w-full max-w-4xl">
@@ -81,7 +108,7 @@ export default function PasswordResetPage() {
                     ¡Correo enviado!
                   </h1>
                   <p className="text-sm text-muted-foreground mb-2">
-                    Hemos enviado un enlace de recuperación a <strong>{getValues('email')}</strong>
+                    Hemos enviado un enlace de recuperación a <strong>{resetForm.getValues('email')}</strong>
                   </p>
                   <p className="text-xs text-gray-500 mb-4">
                     Si no ves el correo, revisa tu carpeta de spam o correos no deseados.
@@ -94,7 +121,7 @@ export default function PasswordResetPage() {
                     variant="outline"
                     onClick={() => {
                       setIsSuccess(false);
-                      reset();
+                      resetForm.reset();
                     }}
                     className="w-full border-amber-200 text-amber-800 hover:bg-amber-50 rounded-full"
                   >
@@ -141,45 +168,106 @@ export default function PasswordResetPage() {
 
             <div className="flex flex-col space-y-2 text-center mb-6 mt-8">
               <h1 className="text-2xl font-semibold tracking-tight text-amber-800">
-                Recuperar contraseña
+                {isChangePasswordMode ? "Nueva contraseña" : "Recuperar contraseña"}
               </h1>
               <p className="text-sm text-muted-foreground">
-                Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña
+                {isChangePasswordMode 
+                  ? "Ingresa tu nueva contraseña de 4 dígitos"
+                  : "Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña"
+                }
               </p>
             </div>
             
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="reset-email" className="text-sm text-gray-800 font-medium">
-                  Correo electrónico
-                </Label>
-                <InputEmail
-                  id="reset-email"
-                  autoComplete="email"
-                  placeholder="coffelover@gmail.com"
-                  className="border bg-white rounded-full border-gray-300 placeholder:text-xs"
-                  {...register("email")}
-                />
-                {errors.email && <TextError>{errors.email.message}</TextError>}
-              </div>
-              
-              <Button
-                type="submit"
-                className="w-full bg-[#D4A76A] hover:bg-[#bb9765] text-amber-950 font-medium rounded-full"
-                disabled={isLoading}
-              >
-                {isLoading ? "Enviando..." : "Enviar enlace de recuperación"}
-              </Button>
-            </form>
+            {isChangePasswordMode ? (
+              <form onSubmit={changeForm.handleSubmit(onSubmitChange)} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-password" className="text-sm text-gray-800 font-medium">
+                    Nueva contraseña
+                  </Label>
+                  <InputPin
+                    id="new-password"
+                    placeholder="****"
+                    className="border bg-white rounded-full border-gray-300 placeholder:text-xs"
+                    {...changeForm.register("newPassword")}
+                  />
+                  {changeForm.formState.errors.newPassword && (
+                    <TextError>{changeForm.formState.errors.newPassword.message}</TextError>
+                  )}
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-password" className="text-sm text-gray-800 font-medium">
+                    Confirmar contraseña
+                  </Label>
+                  <InputPin
+                    id="confirm-password"
+                    placeholder="****"
+                    className="border bg-white rounded-full border-gray-300 placeholder:text-xs"
+                    {...changeForm.register("confirmPassword")}
+                  />
+                  {changeForm.formState.errors.confirmPassword && (
+                    <TextError>{changeForm.formState.errors.confirmPassword.message}</TextError>
+                  )}
+                </div>
+                
+                <Button
+                  type="submit"
+                  className="w-full bg-[#D4A76A] hover:bg-[#bb9765] text-amber-950 font-medium rounded-full"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Cambiando contraseña..." : "Cambiar contraseña"}
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={resetForm.handleSubmit(onSubmitReset)} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email" className="text-sm text-gray-800 font-medium">
+                    Correo electrónico
+                  </Label>
+                  <InputEmail
+                    id="reset-email"
+                    autoComplete="email"
+                    placeholder="coffelover@gmail.com"
+                    className="border bg-white rounded-full border-gray-300 placeholder:text-xs"
+                    {...resetForm.register("email")}
+                  />
+                  {resetForm.formState.errors.email && (
+                    <TextError>{resetForm.formState.errors.email.message}</TextError>
+                  )}
+                </div>
+                
+                <Button
+                  type="submit"
+                  className="w-full bg-[#D4A76A] hover:bg-[#bb9765] text-amber-950 font-medium rounded-full"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Enviando..." : "Enviar enlace de recuperación"}
+                </Button>
+              </form>
+            )}
             
             <div className="text-center text-sm text-amber-800 mt-6">
-              ¿Recordaste tu contraseña?{" "}
-              <Link 
-                to="/login" 
-                className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
-              >
-                Iniciar sesión
-              </Link>
+              {isChangePasswordMode ? (
+                <>
+                  ¿Recordaste tu contraseña?{" "}
+                  <Link 
+                    to="/login" 
+                    className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
+                  >
+                    Iniciar sesión
+                  </Link>
+                </>
+              ) : (
+                <>
+                  ¿Recordaste tu contraseña?{" "}
+                  <Link 
+                    to="/login" 
+                    className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
+                  >
+                    Iniciar sesión
+                  </Link>
+                </>
+              )}
             </div>
           </CardContent>
         </Card>
