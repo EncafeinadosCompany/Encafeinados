@@ -13,6 +13,7 @@ import { Eye, EyeOff }  from'@/common/ui/icons'
 import { User } from "@/api/types/auth/auth.types"
 import { InputEmail } from "@/common/atoms/auth/Input_email.atom"
 
+
 type LoginCardProps = {
   register: UseFormRegister<User>
   isLoading: boolean
@@ -20,7 +21,6 @@ type LoginCardProps = {
   onSubmit: (e: React.FormEvent) => void
   onGoogleSignIn: () => void
   control: any
-
 }
 export const LoginCard = (
   {
@@ -79,11 +79,9 @@ export const LoginCard = (
                 {errors.email && <TextError>{errors.email.message}</TextError>}
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="password" className="text-[#3D3D3D] font-medium">PIN</Label>
-                <div className="flex  mx-auto">
-                  {/* <a href="#" className="ml-auto text-sm text-amber-800 underline-offset-2 hover:underline">
-                    {t("¿Olvidaste tu contraseña?")}
-                  </a> */}
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password" className="text-[#3D3D3D] font-medium">PIN</Label>
+                  
                 </div>
                 <Controller
                   control={control}
@@ -131,11 +129,21 @@ export const LoginCard = (
                 {isLoading ? "Cargando..." : t("Ingresar")}
               </Button>
 
-              <div className="text-center text-sm text-amber-800">
-                ¿No tienes una cuenta?{" "}
-                <Link to="/register" data-testid="register-link" className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700">
-                  Registrate
-                </Link>
+              <div className="text-center text-sm text-amber-800 space-y-2">
+                <div>
+                  ¿No tienes una cuenta?{" "}
+                  <Link to="/register" data-testid="register-link" className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700">
+                    Registrate
+                  </Link>
+                </div>
+                <div>
+                  <Link 
+                    to="/reset-password" 
+                    className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </div>
               </div>
             </div>
           </form>

@@ -5,6 +5,8 @@ import toast from 'react-hot-toast';
 // Types
 import { LoginResponse, User_Data } from '@/api/types/auth/auth.types';
 import { CoffeeLoverProfileType } from '@/api/types/coffelovers/coffelovers.type';
+import { PasswordResetData } from '@/common/utils/schemas/auth/password_reset.schema';
+import { ChangePasswordData } from '@/common/utils/schemas/auth/change_password.schema';
 
 // Utils & Services
 import AuthClient from '@/api//client/axios';
@@ -56,6 +58,77 @@ export const useLoginMutation = () => {
   });
 }
 
+export const usePasswordResetMutation = () => {
+  return useMutation<{ message: string }, Error, PasswordResetData>({
+    mutationFn: async (formData: PasswordResetData) => {
+      try {
+        const response = await authClient.post<{ message: string }>('/auth/req-pass-reset', formData);
+        return response as { message: string };
+      } catch (error: any) {
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      toast.success('Enlace de recuperación enviado exitosamente');
+    },
+    onError: (error: any) => {
+      const status = error?.response?.status || error?.status || error?.statusCode;
+      
+      switch (status) {
+        case 400:
+          toast.error('El formato del correo electrónico no es válido');
+          break;
+        case 404:
+          toast.error('No encontramos una cuenta con ese correo electrónico');
+          break;
+        case 500:
+          toast.error('Error interno del servidor. Intenta más tarde');
+          break;
+        default:
+          toast.error('Error al enviar el enlace. Intenta nuevamente');
+      }
+    },
+  });
+}
+
+export const useChangePasswordMutation = () => {
+  const navigate = useNavigate();
+  
+  return useMutation<{ message: string }, Error, { token: string; newPassword: string }>({
+    mutationFn: async ({ token, newPassword }) => {
+      try {
+        const response = await authClient.put<{ message: string }>('/auth/reset-pass', {
+          token,
+          newPassword
+        });
+        return response as { message: string };
+      } catch (error: any) {
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      toast.success('Contraseña cambiada exitosamente');
+      navigate('/login');
+    },
+    onError: (error: any) => {
+      const status = error?.response?.status || error?.status || error?.statusCode;
+      
+      switch (status) {
+        case 400:
+          toast.error('Token inválido o expirado');
+          break;
+        case 404:
+          toast.error('Token no encontrado');
+          break;
+        case 500:
+          toast.error('Error interno del servidor. Intenta más tarde');
+          break;
+        default:
+          toast.error('Error al cambiar la contraseña. Intenta nuevamente');
+      }
+    },
+  });
+}
 
 function saveUserData(data: LoginResponse) {
   

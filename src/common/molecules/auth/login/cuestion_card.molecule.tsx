@@ -39,7 +39,6 @@ export default function CuestionCard() {
               </motion.p>
             </motion.div>
 
-            {/* Tarjetas con diseño inspirado en la imagen */}
             <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
               <CardRegister
                 link="/coffee-lover-registration"
