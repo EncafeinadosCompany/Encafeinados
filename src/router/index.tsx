@@ -15,6 +15,7 @@ const AboutPage = lazy(() => import("@/modules/home/views/landing/about_page"));
 
 // AUTH
 const LoginPage = lazy(() => import("@/modules/home/views/Login/login_page"));
+const PasswordResetPage = lazy(() => import("@/modules/auth/views/password_reset.view"));
 const CuestionCard = lazy(() => import("@/common/molecules/auth/login/cuestion_card.molecule"));
 const GoogleCallback = lazy(() => import("@/common/hooks/google"));
 const CompleteProfile = lazy(() => import("@/common/widgets/forms/auth/form_complete_profile.widget"));
@@ -58,7 +59,6 @@ const Prueba_album= lazy(() => import("@/common/widgets/prueba_album") );
 const ListAlbum = lazy(() => import("@/common/widgets/coffeelover/album/list_album_coffeelover.widget"));
 const PageAlbum = lazy(() => import("@/common/widgets/coffeelover/album/page_album.widget"));
 
-
 // MAP
 const MapView = lazy(() => import("@/common/widgets/map/map_view.widget"));
 
@@ -86,6 +86,7 @@ const AuthRoutes = () => {
             <Route path="/map" element={<MapView view={true} />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/password-reset" element={<PasswordResetPage />} />
             <Route path="/register" element={<CuestionCard />} />
             <Route path="/google/callback" element={<GoogleCallback />} />
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />

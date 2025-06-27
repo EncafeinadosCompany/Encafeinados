@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 // Types
 import { LoginResponse, User_Data } from '@/api/types/auth/auth.types';
 import { CoffeeLoverProfileType } from '@/api/types/coffelovers/coffelovers.type';
+import { PasswordResetData } from '@/common/utils/schemas/auth/password_reset.schema';
 
 // Utils & Services
 import AuthClient from '@/api//client/axios';
@@ -56,6 +57,24 @@ export const useLoginMutation = () => {
   });
 }
 
+export const usePasswordResetMutation = () => {
+  return useMutation<{ message: string }, Error, PasswordResetData>({
+    mutationFn: async (formData: PasswordResetData) => {
+      try {
+        const response = await authClient.post<{ message: string }>('/auth/req-pass-reset', formData);
+        return response as { message: string };
+      } catch (error: any) {
+        throw handleApiError(error);
+      }
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || 'Se ha enviado un enlace de recuperación a tu correo electrónico');
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Error al enviar el enlace de recuperación');
+    },
+  });
+}
 
 function saveUserData(data: LoginResponse) {
   
