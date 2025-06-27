@@ -64,14 +64,28 @@ export const usePasswordResetMutation = () => {
         const response = await authClient.post<{ message: string }>('/auth/req-pass-reset', formData);
         return response as { message: string };
       } catch (error: any) {
-        throw handleApiError(error);
+        throw error;
       }
     },
     onSuccess: (data) => {
-      toast.success(data.message || 'Se ha enviado un enlace de recuperación a tu correo electrónico');
+      toast.success('Enlace de recuperación enviado exitosamente');
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Error al enviar el enlace de recuperación');
+      const status = error?.response?.status || error?.status || error?.statusCode;
+      
+      switch (status) {
+        case 400:
+          toast.error('El formato del correo electrónico no es válido');
+          break;
+        case 404:
+          toast.error('No encontramos una cuenta con ese correo electrónico');
+          break;
+        case 500:
+          toast.error('Error interno del servidor. Intenta más tarde');
+          break;
+        default:
+          toast.error('Error al enviar el enlace. Intenta nuevamente');
+      }
     },
   });
 }

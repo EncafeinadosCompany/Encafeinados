@@ -37,9 +37,7 @@ export default function PasswordResetPage() {
       setIsLoading(true);
       await passwordResetMutation.mutateAsync(data);
       setIsSuccess(true);
-      toast.success("Enlace de recuperación enviado exitosamente");
     } catch (error) {
-      toast.error("Error al enviar el enlace. Intenta nuevamente.");
     } finally {
       setIsLoading(false);
     }
@@ -63,10 +61,13 @@ export default function PasswordResetPage() {
               >
                 <source src="/video_cafeino.mp4" type="video/mp4" />
               </video>
+              <div className="absolute inset-0 bg-gradient-to-br "></div>
+              <div className="relative z-10 flex flex-col justify-between h-full p-6 text-white">
+              </div>
             </div>
             
             <CardContent className="p-6 md:p-8">
-          
+         
 
               <div className="text-center space-y-4 mt-8">
                 <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
@@ -88,13 +89,7 @@ export default function PasswordResetPage() {
                 </div>
                 
                 <div className="flex flex-col gap-3">
-                  <Button
-                    onClick={handleBackToLogin}
-                    className="w-full bg-[#D4A76A] hover:bg-[#bb9765] text-amber-950 font-medium rounded-full"
-                  >
-                    Volver al inicio de sesión
-                  </Button>
-                  
+               
                   <Button
                     variant="outline"
                     onClick={() => {
@@ -137,13 +132,12 @@ export default function PasswordResetPage() {
             >
               <source src="/video_cafeino.mp4" type="video/mp4" />
             </video>
-            <div className="absolute inset-0 bg-gradient-to-br"></div>
-            <div className="relative z-10 flex flex-col justify-between h-full p-6 text-white">
-            </div>
+            <div className="absolute inset-0"></div>
+           
           </div>
           
           <CardContent className="p-6 md:p-8">
-        
+         
 
             <div className="flex flex-col space-y-2 text-center mb-6 mt-8">
               <h1 className="text-2xl font-semibold tracking-tight text-amber-800">

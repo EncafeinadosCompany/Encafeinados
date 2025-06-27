@@ -138,7 +138,7 @@ export const LoginCard = (
                 </div>
                 <div>
                   <Link 
-                    to="/password-reset" 
+                    to="/reset-password" 
                     className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
                   >
                     ¿Olvidaste tu contraseña?

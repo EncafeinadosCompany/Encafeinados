@@ -86,7 +86,7 @@ const AuthRoutes = () => {
             <Route path="/map" element={<MapView view={true} />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/password-reset" element={<PasswordResetPage />} />
+            <Route path="/reset-password" element={<PasswordResetPage />} />
             <Route path="/register" element={<CuestionCard />} />
             <Route path="/google/callback" element={<GoogleCallback />} />
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
