@@ -8,15 +8,16 @@ import { useBranchesID } from '@/api/queries/branches/branch.query';
 import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 import { BranchReviewCard } from '@/common/molecules/admin_branch/reviews/branch_review_card.molecule';
 import StarsRating from '@/common/atoms/reviews/stars_rating.atom';
-import toast from 'react-hot-toast';
 
 const BranchReviewsWidget: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<string>('newest');
   const [showAll, setShowAll] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
+  
+  const ITEMS_PER_PAGE = 12; 
   const branchId = getEncryptedItem("branchId") as string | null;
   
   const { data: branchData, isLoading: isBranchLoading } = useBranchesID(Number(branchId));
@@ -42,7 +43,15 @@ const BranchReviewsWidget: React.FC = () => {
     });
   }, [reviewsData, searchTerm, sortBy]);
 
-  const displayedReviews = showAll ? filteredAndSortedReviews : filteredAndSortedReviews.slice(0, 3);
+  const displayedReviews = showAll 
+    ? filteredAndSortedReviews.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+    : filteredAndSortedReviews.slice(0, 3);
+
+  const totalPages = Math.ceil(filteredAndSortedReviews.length / ITEMS_PER_PAGE);
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [showAll, searchTerm, sortBy]);
 
   const scrollToIndex = (index: number) => {
     if (scrollContainerRef.current) {
@@ -109,7 +118,6 @@ const BranchReviewsWidget: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 p-4">
       <div className="max-w-7xl mx-auto space-y-6">
         
-        {/* Card de información de la sucursal */}
         {branchData && (
           <div className="bg-white rounded-xl shadow-sm border border-amber-200 p-6">
             <div className="flex items-center justify-between">
@@ -199,11 +207,59 @@ const BranchReviewsWidget: React.FC = () => {
               <p>No se encontraron resultados para tu búsqueda</p>
             </div>
           ) : showAll ? (
-            <div className="space-y-4">
-              {displayedReviews.map((review) => (
-                <BranchReviewCard key={review.id} review={review} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 max-h-[70vh] overflow-y-auto p-2 bg-gray-50 rounded-lg">
+                {displayedReviews.map((review) => (
+                  <div key={review.id} className="h-fit bg-white rounded-lg">
+                    <BranchReviewCard review={review} />
+                  </div>
+                ))}
+              </div>
+              
+              {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-4 mt-6">
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    className="border-amber-200 text-amber-700 hover:bg-amber-50 disabled:opacity-50"
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-1" />
+                    Anterior
+                  </Button>
+                  
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-8 h-8 rounded-full text-sm font-medium transition-colors ${
+                          currentPage === page
+                            ? 'bg-[#DB8935] text-white'
+                            : 'bg-white text-gray-700 hover:bg-amber-50 border border-amber-200'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                    className="border-amber-200 text-amber-700 hover:bg-amber-50 disabled:opacity-50"
+                  >
+                    Siguiente
+                    <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </div>
+              )}
+              
+              <div className="text-center text-sm text-gray-500 mt-4">
+                Mostrando {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredAndSortedReviews.length)} de {filteredAndSortedReviews.length} comentarios
+              </div>
+            </>
           ) : (
             <>
               <div 
@@ -242,11 +298,14 @@ const BranchReviewsWidget: React.FC = () => {
             <div className="text-center mt-6">
               <Button 
                 variant="outline"
-                onClick={() => setShowAll(!showAll)}
+                onClick={() => {
+                  setShowAll(!showAll);
+                  setCurrentPage(1);
+                }}
                 className="border-amber-200 text-amber-700 hover:bg-amber-50"
               >
                 {showAll 
-                  ? 'Ver menos comentarios' 
+                  ? 'Ver resumen (3 comentarios)' 
                   : `Ver todos los comentarios (${filteredAndSortedReviews.length})`
                 }
               </Button>
