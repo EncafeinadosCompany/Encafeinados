@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Coffee, ArrowLeft } from "@/common/ui/icons";
 import { Cafe } from '@/api/types/map/map_search.types';
-import { FilterOptions } from '@/common/hooks/map/useSearchFilter'; 
+import { FilterOptions } from '@/common/hooks/map/useBranchSearch'; 
 import CafeCard from '@/common/molecules/map/cafe_card.molecule';
 import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
 import { useAppData } from '@/common/context/AppDataContext';
@@ -118,7 +118,7 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                       {searchTerm.trim() !== "" && (
                         <span className="ml-1">para "<strong>{searchTerm}</strong>"</span>
                       )}
-                      {filterOptions.onlyOpen && (
+                      {filterOptions.isOpen && (
                         <span className="ml-1">(solo abiertas)</span>
                       )}
                     </div>

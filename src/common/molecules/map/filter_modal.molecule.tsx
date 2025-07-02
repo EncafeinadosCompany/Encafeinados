@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Star, Clock } from '@/common/ui/icons';
-import { FilterOptions } from '@/common/hooks/map/useSearchFilter';
+import { FilterOptions } from '@/common/hooks/map/useBranchSearch';
 
 interface FilterModalProps {
   isOpen: boolean;
@@ -9,7 +9,9 @@ interface FilterModalProps {
   filterOptions: FilterOptions; 
   updateFilterOptions: (options: Partial<FilterOptions>) => void; 
   resetFilters: () => void;
-  availableTags: string[];
+  hasActiveFilters?: boolean;
+  totalResults?: number;
+  isLoading?: boolean;
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({ 
@@ -18,7 +20,9 @@ const FilterModal: React.FC<FilterModalProps> = ({
   filterOptions,
   updateFilterOptions,
   resetFilters,
-  availableTags
+  hasActiveFilters = false,
+  totalResults = 0,
+  isLoading = false
 }) => {
   if (!isOpen) return null;
   
@@ -45,7 +49,14 @@ const FilterModal: React.FC<FilterModalProps> = ({
           >
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold text-[#2C1810]">Filtrar resultados</h3>
+                <div>
+                  <h3 className="text-lg font-bold text-[#2C1810]">Filtrar resultados</h3>
+                  {totalResults > 0 && (
+                    <p className="text-sm text-gray-600 mt-1">
+                      {isLoading ? 'Buscando...' : `${totalResults} cafeterías encontradas`}
+                    </p>
+                  )}
+                </div>
                 <button 
                   onClick={onClose} 
                   className="p-2 rounded-full hover:bg-gray-100"
@@ -68,7 +79,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                   >
                     Distancia
                   </button>
-                  {/* <button 
+                  <button 
                     className={`px-4 py-2 rounded-full text-sm font-medium ${
                       filterOptions.sortBy === 'rating' 
                         ? 'bg-[#6F4E37] text-white' 
@@ -77,16 +88,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
                     onClick={() => updateFilterOptions({ sortBy: 'rating' })}
                   >
                     Calificación
-                  </button> */}
-                  <button 
-                    className={`px-4 py-2 rounded-full text-sm font-medium ${
-                      filterOptions.sortBy === 'name' 
-                        ? 'bg-[#6F4E37] text-white' 
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                    onClick={() => updateFilterOptions({ sortBy: 'name' })}
-                  >
-                    Nombre A-Z
                   </button>
                 </div>
               </div>
@@ -94,7 +95,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
               {/* Minimum Rating */}
               <div className="mb-6">
                 <h4 className="font-medium text-[#6F4E37] mb-2">Calificación mínima</h4>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-wrap">
                   {[0, 3, 3.5, 4, 4.5].map((rating) => (
                     <button
                       key={rating}
@@ -118,59 +119,39 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </div>
               </div>
               
-              {/* Type of shop coffee */}
-              <div className="mb-6">
-                <h4 className="font-medium text-[#6F4E37] mb-2">Tipo de cafetería</h4>
-                <div className="flex gap-2 flex-wrap">
-                  {availableTags.map((tag) => (
-                    <button
-                      key={tag}
-                      className={`px-3 py-1.5 rounded-full text-sm ${
-                        filterOptions.tags?.includes(tag) 
-                          ? 'bg-[#6F4E37] text-white' 
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                      onClick={() => {
-                        const updatedTags = filterOptions.tags?.includes(tag)
-                          ? filterOptions.tags.filter(t => t !== tag)
-                          : [...(filterOptions.tags || []), tag];
-                        updateFilterOptions({ tags: updatedTags });
-                      }}
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
               {/* Status */}
               <div className="mb-8">
                 <h4 className="font-medium text-[#6F4E37] mb-2">Estado</h4>
                 <button
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
-                    filterOptions.onlyOpen
-                      ? 'bg-[#6F4E37] text-white' 
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                    filterOptions.isOpen
+                      ? 'bg-[#6F4E37] text-white shadow-md' 
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
-                  onClick={() => updateFilterOptions({ onlyOpen: !filterOptions.onlyOpen })}
+                  onClick={() => updateFilterOptions({ isOpen: !filterOptions.isOpen })}
                 >
                   <Clock size={18} />
                   <span>Solo abiertos ahora</span>
+                  {filterOptions.isOpen && (
+                    <div className="w-2 h-2 bg-green-400 rounded-full ml-auto"></div>
+                  )}
                 </button>
               </div>
               
               <div className="flex gap-4">
                 <button
-                  className="flex-1 py-3 border border-[#6F4E37] text-[#6F4E37] rounded-xl font-medium hover:bg-[#6F4E37]/10 transition-colors"
+                  className="flex-1 py-3 border border-[#6F4E37] text-[#6F4E37] rounded-xl font-medium hover:bg-[#6F4E37]/10 transition-colors disabled:opacity-50"
                   onClick={resetFilters}
+                  disabled={!hasActiveFilters}
                 >
                   Restablecer
                 </button>
                 <button
-                  className="flex-1 py-3 bg-[#6F4E37] text-white rounded-xl font-medium hover:bg-[#5d4230] transition-colors"
+                  className="flex-1 py-3 bg-[#6F4E37] text-white rounded-xl font-medium hover:bg-[#5d4230] transition-colors disabled:opacity-50"
                   onClick={onClose}
+                  disabled={isLoading}
                 >
-                  Aplicar filtros
+                  {isLoading ? 'Aplicando...' : 'Aplicar filtros'}
                 </button>
               </div>
             </div>
