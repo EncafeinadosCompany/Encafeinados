@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Star, Clock, ChevronDown, ChevronUp, Coffee } from '@/common/ui/icons';
+import { X, Star, Clock, ChevronDown, ChevronUp, Coffee, ArrowLeft } from '@/common/ui/icons';
 import { FilterOptions } from '@/common/hooks/map/useBranchSearch';
 import { useAttributeCategories, useAttributesByCategory } from '@/api/queries/attributes/attribute_categories.query';
 
@@ -25,7 +25,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
   totalResults = 0,
   isLoading = false
 }) => {
-  const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
+  const [activeCategory, setActiveCategory] = useState<number | null>(null);
   
   const { data: categoriesData } = useAttributeCategories();
   const categories = categoriesData?.categories || [];
@@ -37,15 +37,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
   });
   
   const toggleCategory = (categoryId: number) => {
-    setExpandedCategories(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(categoryId)) {
-        newSet.delete(categoryId);
-      } else {
-        newSet.add(categoryId);
-      }
-      return newSet;
-    });
+    setActiveCategory(prev => prev === categoryId ? null : categoryId);
   };
   
   const toggleAttribute = (attributeId: number) => {
@@ -56,6 +48,12 @@ const FilterModal: React.FC<FilterModalProps> = ({
     
     updateFilterOptions({ attributes: newAttributes });
   };
+
+  const backToCategories = () => {
+    setActiveCategory(null);
+  };
+  
+  const isAttributeView = activeCategory !== null;
   
   if (!isOpen) return null;
   
@@ -81,8 +79,22 @@ const FilterModal: React.FC<FilterModalProps> = ({
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h3 className="text-lg font-bold text-[#2C1810]">Filtrar resultados</h3>
-                  {totalResults > 0 && (
+                  {isAttributeView ? (
+                    <div className="flex items-center">
+                      <button
+                        onClick={backToCategories}
+                        className="mr-2 p-2 rounded-full hover:bg-gray-100"
+                      >
+                        <ArrowLeft size={18} className="text-[#6F4E37]" />
+                      </button>
+                      <h3 className="text-lg font-bold text-[#2C1810]">
+                        {categories.find(c => c.id === activeCategory)?.name}
+                      </h3>
+                    </div>
+                  ) : (
+                    <h3 className="text-lg font-bold text-[#2C1810]">Filtrar resultados</h3>
+                  )}
+                  {totalResults > 0 && !isAttributeView && (
                     <p className="text-sm text-gray-600 mt-1">
                       {isLoading ? 'Buscando...' : `${totalResults} cafeterías encontradas`}
                     </p>
@@ -96,169 +108,161 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </button>
               </div>
               
-              <div className="mb-6">
-                <h4 className="font-medium text-[#6F4E37] mb-2">Ordenar por</h4>
-                <div className="flex gap-2 flex-wrap">
-                  <button 
-                    className={`px-4 py-2 rounded-full text-sm font-medium ${
-                      filterOptions.sortBy === 'distance' 
-                        ? 'bg-[#6F4E37] text-white' 
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                    onClick={() => updateFilterOptions({ sortBy: 'distance' })}
-                  >
-                    Distancia
-                  </button>
-                  <button 
-                    className={`px-4 py-2 rounded-full text-sm font-medium ${
-                      filterOptions.sortBy === 'rating' 
-                        ? 'bg-[#6F4E37] text-white' 
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                    onClick={() => updateFilterOptions({ sortBy: 'rating' })}
-                  >
-                    Calificación
-                  </button>
-                </div>
-              </div>
-              
-              <div className="mb-6">
-                <h4 className="font-medium text-[#6F4E37] mb-2">Calificación mínima</h4>
-                <div className="flex items-center gap-4 flex-wrap">
-                  {[0, 3, 3.5, 4, 4.5].map((rating) => (
-                    <button
-                      key={rating}
-                      className={`px-3 py-2 rounded-lg flex items-center gap-1 ${
-                        filterOptions.minRating === rating 
-                          ? 'bg-[#6F4E37] text-white' 
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                      onClick={() => updateFilterOptions({ minRating: rating })}
-                    >
-                      {rating > 0 ? (
-                        <>
-                          <Star size={16} className={filterOptions.minRating === rating ? 'fill-white' : 'fill-amber-400'} />
-                          <span>{rating}+</span>
-                        </>
-                      ) : (
-                        'Todos'
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="mb-6">
-                <h4 className="font-medium text-[#6F4E37] mb-2">Estado</h4>
-                <button
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                    filterOptions.isOpen
-                      ? 'bg-[#6F4E37] text-white shadow-md' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                  onClick={() => updateFilterOptions({ isOpen: !filterOptions.isOpen })}
-                >
-                  <Clock size={18} />
-                  <span>Solo abiertos ahora</span>
-                  {filterOptions.isOpen && (
-                    <div className="w-2 h-2 bg-green-400 rounded-full ml-auto"></div>
-                  )}
-                </button>
-              </div>
-              
-              <div className="mb-8">
-                <h4 className="font-medium text-[#6F4E37] mb-3">Características</h4>
-                
-                <div className="relative mb-4">
-                  <div className="overflow-x-auto flex gap-2 scrollbar-hide pb-2 -mx-1 px-1">
-                    {categories.map((category) => (
-                      <button
-                        key={category.id}
-                        onClick={() => toggleCategory(category.id)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap flex-shrink-0 transition-all ${
-                          expandedCategories.has(category.id)
-                            ? 'bg-[#6F4E37] text-white shadow-sm' 
+              {!isAttributeView && (
+                <>
+                  <div className="mb-6">
+                    <h4 className="font-medium text-[#6F4E37] mb-2">Ordenar por</h4>
+                    <div className="flex gap-2 flex-wrap">
+                      <button 
+                        className={`px-4 py-2 rounded-full text-sm font-medium ${
+                          filterOptions.sortBy === 'distance' 
+                            ? 'bg-[#6F4E37] text-white' 
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
+                        onClick={() => updateFilterOptions({ sortBy: 'distance' })}
                       >
-                        <Coffee size={16} />
-                        <span className="font-medium">{category.name}</span>
-                        {(filterOptions.attributes || []).filter(id => 
-                          attributesByCategory[category.id]?.some(attr => attr.id === id)
-                        ).length > 0 && (
-                          <span className="bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                            {(filterOptions.attributes || []).filter(id => 
-                              attributesByCategory[category.id]?.some(attr => attr.id === id)
-                            ).length}
-                          </span>
-                        )}
+                        Distancia
                       </button>
+                      <button 
+                        className={`px-4 py-2 rounded-full text-sm font-medium ${
+                          filterOptions.sortBy === 'rating' 
+                            ? 'bg-[#6F4E37] text-white' 
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                        onClick={() => updateFilterOptions({ sortBy: 'rating' })}
+                      >
+                        Calificación
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-6">
+                    <h4 className="font-medium text-[#6F4E37] mb-2">Calificación mínima</h4>
+                    <div className="flex items-center gap-4 flex-wrap">
+                      {[0, 3, 3.5, 4, 4.5].map((rating) => (
+                        <button
+                          key={rating}
+                          className={`px-3 py-2 rounded-lg flex items-center gap-1 ${
+                            filterOptions.minRating === rating 
+                              ? 'bg-[#6F4E37] text-white' 
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                          onClick={() => updateFilterOptions({ minRating: rating })}
+                        >
+                          {rating > 0 ? (
+                            <>
+                              <Star size={16} className={filterOptions.minRating === rating ? 'fill-white' : 'fill-amber-400'} />
+                              <span>{rating}+</span>
+                            </>
+                          ) : (
+                            'Todos'
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="mb-6">
+                    <h4 className="font-medium text-[#6F4E37] mb-2">Estado</h4>
+                    <button
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                        filterOptions.isOpen
+                          ? 'bg-[#6F4E37] text-white shadow-md' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                      onClick={() => updateFilterOptions({ isOpen: !filterOptions.isOpen })}
+                    >
+                      <Clock size={18} />
+                      <span>Solo abiertos ahora</span>
+                      {filterOptions.isOpen && (
+                        <div className="w-2 h-2 bg-green-400 rounded-full ml-auto"></div>
+                      )}
+                    </button>
+                  </div>
+                  
+                  <div className="mb-8">
+                    <h4 className="font-medium text-[#6F4E37] mb-3">Características</h4>
+                    
+                    <div className="grid grid-cols-2 gap-3 mt-2">
+                      {categories.map((category) => (
+                        <button
+                          key={category.id}
+                          onClick={() => toggleCategory(category.id)}
+                          className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-amber-200 hover:bg-amber-50/50 transition-all"
+                        >
+                          <div className="w-10 h-10 flex items-center justify-center bg-amber-100 rounded-full mb-2">
+                            <Coffee size={18} className="text-[#6F4E37]" />
+                          </div>
+                          <span className="text-sm font-medium text-gray-800 text-center">
+                            {category.name}
+                          </span>
+                          
+                          {(filterOptions.attributes || []).filter(id => 
+                            attributesByCategory[category.id]?.some(attr => attr.id === id)
+                          ).length > 0 && (
+                            <span className="mt-2 bg-amber-500 text-white text-xs rounded-full px-2 py-0.5 inline-flex items-center">
+                              {(filterOptions.attributes || []).filter(id => 
+                                attributesByCategory[category.id]?.some(attr => attr.id === id)
+                              ).length} seleccionados
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+              
+              {isAttributeView && (
+                <div className="mb-6">
+                  <p className="text-sm text-gray-500 mb-4">
+                    Selecciona los atributos que buscas en una cafetería:
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {attributesByCategory[activeCategory]?.map((attribute) => (
+                      <label
+                        key={attribute.id}
+                        className={`flex items-center gap-3 p-3 cursor-pointer rounded-lg border transition-all ${
+                          (filterOptions.attributes || []).includes(attribute.id) 
+                            ? 'border-amber-400 bg-amber-50' 
+                            : 'border-gray-200 hover:bg-gray-50'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={(filterOptions.attributes || []).includes(attribute.id)}
+                          onChange={() => toggleAttribute(attribute.id)}
+                          className="w-5 h-5 text-[#6F4E37] border-gray-300 rounded focus:ring-[#6F4E37]"
+                        />
+                        <div className="flex-1">
+                          <span className="text-sm font-medium text-gray-800 block">
+                            {attribute.name}
+                          </span>
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            {attribute.description}
+                          </p>
+                        </div>
+                      </label>
                     ))}
                   </div>
                 </div>
-                
-                <AnimatePresence>
-                  {Array.from(expandedCategories).map(categoryId => (
-                    <motion.div
-                      key={categoryId}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0, marginBottom: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden bg-gray-50 rounded-lg mb-3"
-                    >
-                      <div className="p-3">
-                        <div className="flex items-center justify-between mb-2">
-                          <h5 className="font-medium text-[#6F4E37]">
-                            {categories.find(c => c.id === categoryId)?.name}
-                          </h5>
-                          <button
-                            onClick={() => toggleCategory(categoryId)}
-                            className="p-1 rounded-full hover:bg-gray-200 text-gray-500"
-                          >
-                            <X size={16} />
-                          </button>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 gap-1 mt-2">
-                          {attributesByCategory[categoryId]?.map((attribute) => (
-                            <label
-                              key={attribute.id}
-                              className="flex items-center gap-3 p-2 cursor-pointer hover:bg-white rounded transition-colors"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={(filterOptions.attributes || []).includes(attribute.id)}
-                                onChange={() => toggleAttribute(attribute.id)}
-                                className="w-4 h-4 text-[#6F4E37] border-gray-300 rounded focus:ring-[#6F4E37]"
-                              />
-                              <div className="flex-1">
-                                <span className="text-sm font-medium text-gray-700">{attribute.name}</span>
-                                <p className="text-xs text-gray-500 mt-0.5">{attribute.description}</p>
-                              </div>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
+              )}
               
-              <div className="flex gap-4">
+              <div className="flex gap-4 mt-6">
                 <button
                   className="flex-1 py-3 border border-[#6F4E37] text-[#6F4E37] rounded-xl font-medium hover:bg-[#6F4E37]/10 transition-colors disabled:opacity-50"
-                  onClick={resetFilters}
-                  disabled={!hasActiveFilters}
+                  onClick={isAttributeView ? backToCategories : resetFilters}
+                  disabled={!isAttributeView && !hasActiveFilters}
                 >
-                  Restablecer
+                  {isAttributeView ? 'Volver' : 'Restablecer'}
                 </button>
                 <button
                   className="flex-1 py-3 bg-[#6F4E37] text-white rounded-xl font-medium hover:bg-[#5d4230] transition-colors disabled:opacity-50"
-                  onClick={onClose}
+                  onClick={isAttributeView ? backToCategories : onClose}
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Aplicando...' : 'Aplicar filtros'}
+                  {isAttributeView ? 'Guardar' : (isLoading ? 'Aplicando...' : 'Aplicar filtros')}
                 </button>
               </div>
             </div>
@@ -266,83 +270,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
         </>
       )}
     </AnimatePresence>
-  );
-};
-
-interface AttributeCategoryProps {
-  category: { id: number; name: string };
-  isExpanded: boolean;
-  onToggle: () => void;
-  selectedAttributes: number[];
-  onAttributeToggle: (attributeId: number) => void;
-}
-
-const AttributeCategory: React.FC<AttributeCategoryProps> = ({
-  category,
-  isExpanded,
-  onToggle,
-  selectedAttributes,
-  onAttributeToggle
-}) => {
-  const { data: attributesData } = useAttributesByCategory(category.id);
-  const attributes = attributesData?.attributes || [];
-  
-  const selectedCount = attributes.filter(attr => selectedAttributes.includes(attr.id)).length;
-  
-  return (
-    <div className="border border-gray-200 rounded-lg">
-      <button
-        onClick={onToggle}
-        className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
-      >
-        <div className="flex items-center gap-2">
-          <Coffee size={16} className="text-[#6F4E37]" />
-          <span className="font-medium text-gray-700">{category.name}</span>
-          {selectedCount > 0 && (
-            <span className="bg-[#6F4E37] text-white text-xs rounded-full px-2 py-1 ml-2">
-              {selectedCount}
-            </span>
-          )}
-        </div>
-        {isExpanded ? (
-          <ChevronUp size={16} className="text-gray-500" />
-        ) : (
-          <ChevronDown size={16} className="text-gray-500" />
-        )}
-      </button>
-      
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="px-4 pb-3 space-y-2 border-t border-gray-100">
-              {attributes.map((attribute) => (
-                <label
-                  key={attribute.id}
-                  className="flex items-center gap-3 py-2 cursor-pointer hover:bg-gray-50 rounded px-2 transition-colors"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedAttributes.includes(attribute.id)}
-                    onChange={() => onAttributeToggle(attribute.id)}
-                    className="w-4 h-4 text-[#6F4E37] border-gray-300 rounded focus:ring-[#6F4E37]"
-                  />
-                  <div className="flex-1">
-                    <span className="text-sm font-medium text-gray-700">{attribute.name}</span>
-                    <p className="text-xs text-gray-500 mt-1">{attribute.description}</p>
-                  </div>
-                </label>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
   );
 };
 
