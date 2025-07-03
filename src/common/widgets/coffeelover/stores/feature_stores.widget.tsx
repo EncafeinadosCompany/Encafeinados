@@ -2,23 +2,48 @@ import { ApprovedBranch } from "@/api/types/branches/branches_approval.types";
 import { useEffect,  useState } from "react";
 import { FeaturedCarouselStores } from "@/common/molecules/coffeelover/stores/featured_stores.molecule";
 import { useApprovedBranches } from "@/api/queries/branches/branch.query";
-
+import { SearchBranch } from "@/api/types/branches/branches.types";
 
 interface FeaturedStoresWidgetProps {
   globalSearchTerm: string;
   setGlobalSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  apiFilteredBranches?: SearchBranch[]; // Branches filtrados por la API
+  apiIsLoading?: boolean;
 }
 
 export const FeaturedStoresWidget = ({ 
   globalSearchTerm, 
-  setGlobalSearchTerm 
+  setGlobalSearchTerm,
+  apiFilteredBranches,
+  apiIsLoading = false
 }: FeaturedStoresWidgetProps) => {
 
-  const { data: branches, isLoading, isError } = useApprovedBranches();
+  const { data: branches, isLoading: branchesLoading, isError } = useApprovedBranches();
   const [filteredBranches, setFilteredBranches] = useState<ApprovedBranch[]>([]);
-
+  
+  // Usar isLoading combinado de API y branches
+  const isLoading = apiIsLoading || branchesLoading;
 
   useEffect(() => {
+    // Si tenemos resultados filtrados de la API, los usamos preferentemente
+    if (apiFilteredBranches && apiFilteredBranches.length > 0) {
+      // Convertir los SearchBranch a ApprovedBranch (simplificado, ajustar según tus tipos)
+      const convertedBranches = apiFilteredBranches.map(branch => ({
+        id: branch.id,
+        name: branch.name,
+        address: branch.address,
+        latitude: branch.latitude,
+        longitude: branch.longitude,
+        store_logo: branch.store_logo,
+        status: "APPROVED",
+        average_rating: branch.average_rating
+      } as unknown as ApprovedBranch));
+      
+      setFilteredBranches(convertedBranches);
+      return;
+    }
+    
+    // Filtrado local si no hay resultados de API o no estamos usando API
     if (!branches) return;
 
     const searchTermLower = globalSearchTerm.toLowerCase().trim();
@@ -30,7 +55,7 @@ export const FeaturedStoresWidget = ({
 
     setFilteredBranches(filtered);
 
-  }, [branches, globalSearchTerm]);
+  }, [branches, globalSearchTerm, apiFilteredBranches]);
 
   if (isLoading) {
     return (

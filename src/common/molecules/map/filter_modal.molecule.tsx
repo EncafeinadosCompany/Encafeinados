@@ -37,11 +37,9 @@ const FilterModal: React.FC<FilterModalProps> = ({
   const { data: categoriesData } = useAttributeCategories();
   const categories = categoriesData?.categories || [];
   
-  const attributesByCategory: Record<number, any[]> = {};
-  categories.forEach(category => {
-    const { data } = useAttributesByCategory(category.id);
-    attributesByCategory[category.id] = data?.attributes || [];
-  });
+  // Obtener atributos solo para la categoría activa para evitar hooks condicionales
+  const { data: activeAttributesData } = useAttributesByCategory(activeCategory || 0);
+  const activeAttributes = activeAttributesData?.attributes || [];
   
   const toggleCategory = (categoryId: number) => {
     setActiveCategory(prev => prev === categoryId ? null : categoryId);
@@ -242,13 +240,9 @@ const FilterModal: React.FC<FilterModalProps> = ({
                             {category.name}
                           </span>
                           
-                          {(tempFilterOptions.attributes || []).filter(id => 
-                            attributesByCategory[category.id]?.some(attr => attr.id === id)
-                          ).length > 0 && (
+                          {(tempFilterOptions.attributes || []).length > 0 && (
                             <span className="mt-2 bg-amber-500 text-white text-xs rounded-full px-2 py-0.5 inline-flex items-center">
-                              {(tempFilterOptions.attributes || []).filter(id => 
-                                attributesByCategory[category.id]?.some(attr => attr.id === id)
-                              ).length} seleccionados
+                              {(tempFilterOptions.attributes || []).length} seleccionados
                             </span>
                           )}
                         </button>
@@ -265,7 +259,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                   </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {attributesByCategory[activeCategory]?.map((attribute) => (
+                    {activeAttributes.map((attribute) => (
                       <label
                         key={attribute.id}
                         className={`flex items-center gap-3 p-3 cursor-pointer rounded-lg border transition-all ${
