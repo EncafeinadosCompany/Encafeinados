@@ -101,6 +101,7 @@ export default function PrincipalCoffeelover () {
           setGlobalSearchTerm={setGlobalSearchTerm}
           apiFilteredBranches={apiBranches}
           apiIsLoading={apiIsLoading}
+          hasActiveFilters={apiHasActiveFilters}
         />
         <EventList>
         </EventList>
