@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Star, Clock } from '@/common/ui/icons';
+import { X, Star, Clock, ChevronDown, ChevronUp, Coffee } from '@/common/ui/icons';
 import { FilterOptions } from '@/common/hooks/map/useBranchSearch';
+import { useAttributeCategories, useAttributesByCategory } from '@/api/queries/attributes/attribute_categories.query';
 
 interface FilterModalProps {
   isOpen: boolean;
@@ -24,13 +25,44 @@ const FilterModal: React.FC<FilterModalProps> = ({
   totalResults = 0,
   isLoading = false
 }) => {
+  const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
+  
+  const { data: categoriesData } = useAttributeCategories();
+  const categories = categoriesData?.categories || [];
+  
+  const attributesByCategory: Record<number, any[]> = {};
+  categories.forEach(category => {
+    const { data } = useAttributesByCategory(category.id);
+    attributesByCategory[category.id] = data?.attributes || [];
+  });
+  
+  const toggleCategory = (categoryId: number) => {
+    setExpandedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(categoryId)) {
+        newSet.delete(categoryId);
+      } else {
+        newSet.add(categoryId);
+      }
+      return newSet;
+    });
+  };
+  
+  const toggleAttribute = (attributeId: number) => {
+    const currentAttributes = filterOptions.attributes || [];
+    const newAttributes = currentAttributes.includes(attributeId)
+      ? currentAttributes.filter(id => id !== attributeId)
+      : [...currentAttributes, attributeId];
+    
+    updateFilterOptions({ attributes: newAttributes });
+  };
+  
   if (!isOpen) return null;
   
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             className="fixed inset-0 bg-black/40 z-50"
             initial={{ opacity: 0 }}
@@ -39,7 +71,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
             onClick={onClose}
           />
           
-          {/* Modal */}
           <motion.div
             className="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl z-50 max-h-[80vh] overflow-auto"
             initial={{ y: "100%" }}
@@ -65,7 +96,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </button>
               </div>
               
-              {/* Order by */}
               <div className="mb-6">
                 <h4 className="font-medium text-[#6F4E37] mb-2">Ordenar por</h4>
                 <div className="flex gap-2 flex-wrap">
@@ -92,7 +122,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </div>
               </div>
               
-              {/* Minimum Rating */}
               <div className="mb-6">
                 <h4 className="font-medium text-[#6F4E37] mb-2">Calificación mínima</h4>
                 <div className="flex items-center gap-4 flex-wrap">
@@ -119,8 +148,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 </div>
               </div>
               
-              {/* Status */}
-              <div className="mb-8">
+              <div className="mb-6">
                 <h4 className="font-medium text-[#6F4E37] mb-2">Estado</h4>
                 <button
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
@@ -136,6 +164,85 @@ const FilterModal: React.FC<FilterModalProps> = ({
                     <div className="w-2 h-2 bg-green-400 rounded-full ml-auto"></div>
                   )}
                 </button>
+              </div>
+              
+              <div className="mb-8">
+                <h4 className="font-medium text-[#6F4E37] mb-3">Características</h4>
+                
+                <div className="relative mb-4">
+                  <div className="overflow-x-auto flex gap-2 scrollbar-hide pb-2 -mx-1 px-1">
+                    {categories.map((category) => (
+                      <button
+                        key={category.id}
+                        onClick={() => toggleCategory(category.id)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap flex-shrink-0 transition-all ${
+                          expandedCategories.has(category.id)
+                            ? 'bg-[#6F4E37] text-white shadow-sm' 
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        <Coffee size={16} />
+                        <span className="font-medium">{category.name}</span>
+                        {(filterOptions.attributes || []).filter(id => 
+                          attributesByCategory[category.id]?.some(attr => attr.id === id)
+                        ).length > 0 && (
+                          <span className="bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            {(filterOptions.attributes || []).filter(id => 
+                              attributesByCategory[category.id]?.some(attr => attr.id === id)
+                            ).length}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                
+                <AnimatePresence>
+                  {Array.from(expandedCategories).map(categoryId => (
+                    <motion.div
+                      key={categoryId}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden bg-gray-50 rounded-lg mb-3"
+                    >
+                      <div className="p-3">
+                        <div className="flex items-center justify-between mb-2">
+                          <h5 className="font-medium text-[#6F4E37]">
+                            {categories.find(c => c.id === categoryId)?.name}
+                          </h5>
+                          <button
+                            onClick={() => toggleCategory(categoryId)}
+                            className="p-1 rounded-full hover:bg-gray-200 text-gray-500"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 gap-1 mt-2">
+                          {attributesByCategory[categoryId]?.map((attribute) => (
+                            <label
+                              key={attribute.id}
+                              className="flex items-center gap-3 p-2 cursor-pointer hover:bg-white rounded transition-colors"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={(filterOptions.attributes || []).includes(attribute.id)}
+                                onChange={() => toggleAttribute(attribute.id)}
+                                className="w-4 h-4 text-[#6F4E37] border-gray-300 rounded focus:ring-[#6F4E37]"
+                              />
+                              <div className="flex-1">
+                                <span className="text-sm font-medium text-gray-700">{attribute.name}</span>
+                                <p className="text-xs text-gray-500 mt-0.5">{attribute.description}</p>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
               
               <div className="flex gap-4">
@@ -159,6 +266,83 @@ const FilterModal: React.FC<FilterModalProps> = ({
         </>
       )}
     </AnimatePresence>
+  );
+};
+
+interface AttributeCategoryProps {
+  category: { id: number; name: string };
+  isExpanded: boolean;
+  onToggle: () => void;
+  selectedAttributes: number[];
+  onAttributeToggle: (attributeId: number) => void;
+}
+
+const AttributeCategory: React.FC<AttributeCategoryProps> = ({
+  category,
+  isExpanded,
+  onToggle,
+  selectedAttributes,
+  onAttributeToggle
+}) => {
+  const { data: attributesData } = useAttributesByCategory(category.id);
+  const attributes = attributesData?.attributes || [];
+  
+  const selectedCount = attributes.filter(attr => selectedAttributes.includes(attr.id)).length;
+  
+  return (
+    <div className="border border-gray-200 rounded-lg">
+      <button
+        onClick={onToggle}
+        className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
+      >
+        <div className="flex items-center gap-2">
+          <Coffee size={16} className="text-[#6F4E37]" />
+          <span className="font-medium text-gray-700">{category.name}</span>
+          {selectedCount > 0 && (
+            <span className="bg-[#6F4E37] text-white text-xs rounded-full px-2 py-1 ml-2">
+              {selectedCount}
+            </span>
+          )}
+        </div>
+        {isExpanded ? (
+          <ChevronUp size={16} className="text-gray-500" />
+        ) : (
+          <ChevronDown size={16} className="text-gray-500" />
+        )}
+      </button>
+      
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 pb-3 space-y-2 border-t border-gray-100">
+              {attributes.map((attribute) => (
+                <label
+                  key={attribute.id}
+                  className="flex items-center gap-3 py-2 cursor-pointer hover:bg-gray-50 rounded px-2 transition-colors"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedAttributes.includes(attribute.id)}
+                    onChange={() => onAttributeToggle(attribute.id)}
+                    className="w-4 h-4 text-[#6F4E37] border-gray-300 rounded focus:ring-[#6F4E37]"
+                  />
+                  <div className="flex-1">
+                    <span className="text-sm font-medium text-gray-700">{attribute.name}</span>
+                    <p className="text-xs text-gray-500 mt-1">{attribute.description}</p>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 

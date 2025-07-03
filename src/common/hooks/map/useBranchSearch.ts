@@ -6,6 +6,7 @@ export interface FilterOptions {
   minRating: number;
   isOpen: boolean;
   sortBy: 'distance' | 'rating';
+  attributes: number[]; // Array de IDs de atributos seleccionados
 }
 
 export const useBranchSearch = (userLocation?: [number, number]) => {
@@ -13,7 +14,8 @@ export const useBranchSearch = (userLocation?: [number, number]) => {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     minRating: 0,
     isOpen: false,
-    sortBy: 'distance'
+    sortBy: 'distance',
+    attributes: []
   });
   const [isFilterModalOpen, setIsFilterModalOpen] = useState<boolean>(false);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>('');
@@ -34,13 +36,14 @@ export const useBranchSearch = (userLocation?: [number, number]) => {
     isOpen: filterOptions.isOpen ? true : undefined,
     lat: userLocation ? userLocation[0] : undefined,
     lng: userLocation ? userLocation[1] : undefined,
-    sortBy: filterOptions.sortBy
+    sortBy: filterOptions.sortBy,
+    attributes: filterOptions.attributes.length > 0 ? filterOptions.attributes.join(',') : undefined
   }), [debouncedSearchTerm, filterOptions, userLocation]);
 
   const { data, isLoading, error } = useSearchBranches(searchParams);
 
   const hasActiveFilters = useMemo(() => {
-    return !!searchTerm || filterOptions.minRating > 0 || filterOptions.isOpen;
+    return !!searchTerm || filterOptions.minRating > 0 || filterOptions.isOpen || filterOptions.attributes.length > 0;
   }, [searchTerm, filterOptions]);
 
   const updateFilterOptions = useCallback((newOptions: Partial<FilterOptions>) => {
@@ -54,7 +57,8 @@ export const useBranchSearch = (userLocation?: [number, number]) => {
     setFilterOptions({
       minRating: 0,
       isOpen: false,
-      sortBy: 'distance'
+      sortBy: 'distance',
+      attributes: []
     });
     setSearchTerm('');
     setDebouncedSearchTerm('');

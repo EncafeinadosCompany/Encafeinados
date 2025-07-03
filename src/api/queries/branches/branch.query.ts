@@ -143,6 +143,7 @@ export interface BranchSearchParams {
   lat?: number;
   lng?: number;
   sortBy?: 'distance' | 'rating';
+  attributes?: string; // Lista de IDs separados por comas
 }
 
 export const useSearchBranches = (params: BranchSearchParams) => {
