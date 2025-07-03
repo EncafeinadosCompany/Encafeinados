@@ -1016,6 +1016,9 @@ return (
       filterOptions={apiFilters}
       updateFilterOptions={updateApiFilters}
       resetFilters={resetApiFilters}
+      hasActiveFilters={apiHasActiveFilters}
+      totalResults={sortedCafes.length}
+      isLoading={apiIsLoading}
     />
 
     {!showSidebar && !activeCafe && window.innerWidth < 768 && (
@@ -1063,12 +1066,10 @@ return (
               transition={{ type: 'spring', damping: 30 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Barra de arrastre con indicador visual */}
               <div className="sticky top-0 w-full flex justify-center py-2 bg-white md:hidden z-10">
                 <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
               </div>
               
-              {/* Wrapper para scroll */}
 <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden bg-[#FBF7F4] rounded-t-3xl md:rounded-3xl">
                 {activeCafeData && (
                   <CafeDetail
@@ -1089,7 +1090,6 @@ return (
       )}
     </AnimatePresence>
 
-    {/* Pulsating indicator on map for selected cafe */}
     {activeCafe && (
       <motion.div
         className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
@@ -1104,7 +1104,6 @@ return (
       </motion.div>
     )}
 
-    {/* Route Controls */}
     <AnimatePresence>
       {showRouteControls && activeCafeData && (
         <RouteControls

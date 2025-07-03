@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Star, Clock, ChevronDown, ChevronUp, Coffee, ArrowLeft } from '@/common/ui/icons';
 import { FilterOptions } from '@/common/hooks/map/useBranchSearch';
@@ -26,7 +26,14 @@ const FilterModal: React.FC<FilterModalProps> = ({
   isLoading = false
 }) => {
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [tempFilterOptions, setTempFilterOptions] = useState<FilterOptions>(filterOptions);
   
+  useEffect(() => {
+    if (isOpen) {
+      setTempFilterOptions({...filterOptions});
+    }
+  }, [isOpen, filterOptions]);
+
   const { data: categoriesData } = useAttributeCategories();
   const categories = categoriesData?.categories || [];
   
@@ -41,16 +48,54 @@ const FilterModal: React.FC<FilterModalProps> = ({
   };
   
   const toggleAttribute = (attributeId: number) => {
-    const currentAttributes = filterOptions.attributes || [];
+    const currentAttributes = tempFilterOptions.attributes || [];
     const newAttributes = currentAttributes.includes(attributeId)
       ? currentAttributes.filter(id => id !== attributeId)
       : [...currentAttributes, attributeId];
     
-    updateFilterOptions({ attributes: newAttributes });
+    setTempFilterOptions(prev => ({
+      ...prev,
+      attributes: newAttributes
+    }));
+  };
+
+  const updateTempSortBy = (sortBy: 'distance' | 'rating') => {
+    setTempFilterOptions(prev => ({
+      ...prev,
+      sortBy
+    }));
+  };
+
+  const updateTempMinRating = (minRating: number) => {
+    setTempFilterOptions(prev => ({
+      ...prev,
+      minRating
+    }));
+  };
+
+  const toggleTempIsOpen = () => {
+    setTempFilterOptions(prev => ({
+      ...prev,
+      isOpen: !prev.isOpen
+    }));
   };
 
   const backToCategories = () => {
     setActiveCategory(null);
+  };
+  
+  const applyFilters = () => {
+    updateFilterOptions(tempFilterOptions);
+    onClose();
+  };
+
+  const resetTempFilters = () => {
+    setTempFilterOptions({
+      minRating: 0,
+      isOpen: false,
+      sortBy: 'distance',
+      attributes: []
+    });
   };
   
   const isAttributeView = activeCategory !== null;
@@ -115,21 +160,21 @@ const FilterModal: React.FC<FilterModalProps> = ({
                     <div className="flex gap-2 flex-wrap">
                       <button 
                         className={`px-4 py-2 rounded-full text-sm font-medium ${
-                          filterOptions.sortBy === 'distance' 
+                          tempFilterOptions.sortBy === 'distance' 
                             ? 'bg-[#6F4E37] text-white' 
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
-                        onClick={() => updateFilterOptions({ sortBy: 'distance' })}
+                        onClick={() => updateTempSortBy('distance')}
                       >
                         Distancia
                       </button>
                       <button 
                         className={`px-4 py-2 rounded-full text-sm font-medium ${
-                          filterOptions.sortBy === 'rating' 
+                          tempFilterOptions.sortBy === 'rating' 
                             ? 'bg-[#6F4E37] text-white' 
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
-                        onClick={() => updateFilterOptions({ sortBy: 'rating' })}
+                        onClick={() => updateTempSortBy('rating')}
                       >
                         Calificación
                       </button>
@@ -143,15 +188,15 @@ const FilterModal: React.FC<FilterModalProps> = ({
                         <button
                           key={rating}
                           className={`px-3 py-2 rounded-lg flex items-center gap-1 ${
-                            filterOptions.minRating === rating 
+                            tempFilterOptions.minRating === rating 
                               ? 'bg-[#6F4E37] text-white' 
                               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           }`}
-                          onClick={() => updateFilterOptions({ minRating: rating })}
+                          onClick={() => updateTempMinRating(rating)}
                         >
                           {rating > 0 ? (
                             <>
-                              <Star size={16} className={filterOptions.minRating === rating ? 'fill-white' : 'fill-amber-400'} />
+                              <Star size={16} className={tempFilterOptions.minRating === rating ? 'fill-white' : 'fill-amber-400'} />
                               <span>{rating}+</span>
                             </>
                           ) : (
@@ -166,15 +211,15 @@ const FilterModal: React.FC<FilterModalProps> = ({
                     <h4 className="font-medium text-[#6F4E37] mb-2">Estado</h4>
                     <button
                       className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                        filterOptions.isOpen
+                        tempFilterOptions.isOpen
                           ? 'bg-[#6F4E37] text-white shadow-md' 
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
-                      onClick={() => updateFilterOptions({ isOpen: !filterOptions.isOpen })}
+                      onClick={toggleTempIsOpen}
                     >
                       <Clock size={18} />
                       <span>Solo abiertos ahora</span>
-                      {filterOptions.isOpen && (
+                      {tempFilterOptions.isOpen && (
                         <div className="w-2 h-2 bg-green-400 rounded-full ml-auto"></div>
                       )}
                     </button>
@@ -197,11 +242,11 @@ const FilterModal: React.FC<FilterModalProps> = ({
                             {category.name}
                           </span>
                           
-                          {(filterOptions.attributes || []).filter(id => 
+                          {(tempFilterOptions.attributes || []).filter(id => 
                             attributesByCategory[category.id]?.some(attr => attr.id === id)
                           ).length > 0 && (
                             <span className="mt-2 bg-amber-500 text-white text-xs rounded-full px-2 py-0.5 inline-flex items-center">
-                              {(filterOptions.attributes || []).filter(id => 
+                              {(tempFilterOptions.attributes || []).filter(id => 
                                 attributesByCategory[category.id]?.some(attr => attr.id === id)
                               ).length} seleccionados
                             </span>
@@ -224,14 +269,14 @@ const FilterModal: React.FC<FilterModalProps> = ({
                       <label
                         key={attribute.id}
                         className={`flex items-center gap-3 p-3 cursor-pointer rounded-lg border transition-all ${
-                          (filterOptions.attributes || []).includes(attribute.id) 
+                          (tempFilterOptions.attributes || []).includes(attribute.id) 
                             ? 'border-amber-400 bg-amber-50' 
                             : 'border-gray-200 hover:bg-gray-50'
                         }`}
                       >
                         <input
                           type="checkbox"
-                          checked={(filterOptions.attributes || []).includes(attribute.id)}
+                          checked={(tempFilterOptions.attributes || []).includes(attribute.id)}
                           onChange={() => toggleAttribute(attribute.id)}
                           className="w-5 h-5 text-[#6F4E37] border-gray-300 rounded focus:ring-[#6F4E37]"
                         />
@@ -252,14 +297,17 @@ const FilterModal: React.FC<FilterModalProps> = ({
               <div className="flex gap-4 mt-6">
                 <button
                   className="flex-1 py-3 border border-[#6F4E37] text-[#6F4E37] rounded-xl font-medium hover:bg-[#6F4E37]/10 transition-colors disabled:opacity-50"
-                  onClick={isAttributeView ? backToCategories : resetFilters}
-                  disabled={!isAttributeView && !hasActiveFilters}
+                  onClick={isAttributeView ? backToCategories : resetTempFilters}
+                  disabled={!isAttributeView && !hasActiveFilters && 
+                    tempFilterOptions.minRating === 0 && 
+                    !tempFilterOptions.isOpen && 
+                    tempFilterOptions.attributes.length === 0}
                 >
                   {isAttributeView ? 'Volver' : 'Restablecer'}
                 </button>
                 <button
                   className="flex-1 py-3 bg-[#6F4E37] text-white rounded-xl font-medium hover:bg-[#5d4230] transition-colors disabled:opacity-50"
-                  onClick={isAttributeView ? backToCategories : onClose}
+                  onClick={isAttributeView ? backToCategories : applyFilters}
                   disabled={isLoading}
                 >
                   {isAttributeView ? 'Guardar' : (isLoading ? 'Aplicando...' : 'Aplicar filtros')}
