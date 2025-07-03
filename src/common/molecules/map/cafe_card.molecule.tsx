@@ -41,7 +41,7 @@ const CafeCard: React.FC<CafeCardProps> = ({
 }) => {
   const { data: schedulesData } = useBranchSchedules(cafe.id);
   
-  const isCurrentlyOpen = schedulesData ? isBranchOpenNow(schedulesData) : cafe.isOpen;
+  const isCurrentlyOpen = cafe.isOpen;
   const currentInfo = schedulesData ? getCurrentScheduleInfo(schedulesData) : null;
 
   return (
@@ -94,11 +94,11 @@ const CafeCard: React.FC<CafeCardProps> = ({
         </div>        <div className="flex justify-between items-center mt-2">
           <div className={`px-2 py-0.5 rounded-full text-xs font-medium
             ${isCurrentlyOpen 
-              ? 'bg-red-100 text-red-700 ' 
-              : 'bg-green-100 text-green-700'
+              ? 'bg-green-100 text-green-700' 
+              : ' bg-red-100 text-red-700 '
             }`}
           >
-            {isCurrentlyOpen ? 'Cerrado' : 'Abierto'}
+            {isCurrentlyOpen ? 'Abierto' : 'Cerrado'}
           </div>
           
           {currentInfo && currentInfo.openTime && currentInfo.closeTime && (

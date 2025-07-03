@@ -155,10 +155,12 @@ export const useSearchBranches = (params: BranchSearchParams) => {
     queryKey: ['branches', 'search', params],
     queryFn: async () => {
       const response = await authClient.get<SearchBranchesResponse>(`/branches/search?${queryString}`);
-      console.log('API Call:', `/branches/search?${queryString}`, response);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('API Call:', `/branches/search?${queryString}`, response);
+      }
       return response;
     },
     enabled: true, // Siempre habilitado para que funcione con sortBy
-    staleTime: 1000 * 60 * 1 // Reducir para testing
+    staleTime: 1000 * 60 * 5 // Volver al valor normal
   });
 };

@@ -28,18 +28,14 @@ export const useBranchSearch = (userLocation?: [number, number]) => {
     };
   }, [searchTerm]);
 
-  const searchParams: BranchSearchParams = useMemo(() => {
-    const params = {
-      q: debouncedSearchTerm || undefined,
-      minRating: filterOptions.minRating > 0 ? filterOptions.minRating : undefined,
-      isOpen: filterOptions.isOpen ? true : undefined,
-      lat: userLocation ? userLocation[0] : undefined,
-      lng: userLocation ? userLocation[1] : undefined,
-      sortBy: filterOptions.sortBy
-    };
-    console.log('Search params changed:', params);
-    return params;
-  }, [debouncedSearchTerm, filterOptions, userLocation]);
+  const searchParams: BranchSearchParams = useMemo(() => ({
+    q: debouncedSearchTerm || undefined,
+    minRating: filterOptions.minRating > 0 ? filterOptions.minRating : undefined,
+    isOpen: filterOptions.isOpen ? true : undefined,
+    lat: userLocation ? userLocation[0] : undefined,
+    lng: userLocation ? userLocation[1] : undefined,
+    sortBy: filterOptions.sortBy
+  }), [debouncedSearchTerm, filterOptions, userLocation]);
 
   const { data, isLoading, error } = useSearchBranches(searchParams);
 
@@ -48,12 +44,10 @@ export const useBranchSearch = (userLocation?: [number, number]) => {
   }, [searchTerm, filterOptions]);
 
   const updateFilterOptions = useCallback((newOptions: Partial<FilterOptions>) => {
-    console.log('Updating filter options:', newOptions);
-    setFilterOptions(prev => {
-      const updated = { ...prev, ...newOptions };
-      console.log('New filter options:', updated);
-      return updated;
-    });
+    setFilterOptions(prev => ({
+      ...prev,
+      ...newOptions
+    }));
   }, []);
 
   const resetFilters = useCallback(() => {
@@ -71,29 +65,24 @@ export const useBranchSearch = (userLocation?: [number, number]) => {
   }, []);
 
   const mapToCafeFormat = useCallback((branches: SearchBranch[]) => {
-    console.log('Mapping branches:', branches);
-    return branches.map(branch => {
-      const mapped = {
-        id: branch.id,
-        name: branch.name,
-        rating: parseFloat(branch.average_rating),
-        reviewCount: 0, 
-        openTime: "", 
-        image: branch.store_logo,
-        isOpen: branch.isOpen,
-        latitude: branch.latitude,
-        longitude: branch.longitude,
-        address: branch.address,
-        status: "APPROVED",
-        storeId: 0, 
-        storeName: "", 
-        distanceValue: 0,
-        distanceText: "",
-        tags: [] 
-      };
-      console.log(`Branch ${branch.name}: isOpen=${branch.isOpen} -> mapped=${mapped.isOpen}`);
-      return mapped;
-    });
+    return branches.map(branch => ({
+      id: branch.id,
+      name: branch.name,
+      rating: parseFloat(branch.average_rating),
+      reviewCount: 0, 
+      openTime: "", 
+      image: branch.store_logo,
+      isOpen: branch.isOpen,
+      latitude: branch.latitude,
+      longitude: branch.longitude,
+      address: branch.address,
+      status: "APPROVED",
+      storeId: 0, 
+      storeName: "", 
+      distanceValue: 0,
+      distanceText: "",
+      tags: [] 
+    }));
   }, []);
 
   return {
