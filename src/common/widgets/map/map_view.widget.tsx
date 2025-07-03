@@ -1023,7 +1023,7 @@ return (
         className="absolute bottom-24 right-4 bg-[#6F4E37] rounded-full p-3 shadow-lg pointer-events-auto"
         style={{ 
           position: 'fixed', 
-          zIndex: 9999,
+          zIndex: 10,
         }}
         onClick={() => {
           setShowSidebar(true);

@@ -14,20 +14,10 @@ export const useBranchSchedules = (branchId: number | undefined) => {
       }
       
       try {
-        console.log(`Fetching schedules for branch ${branchId}...`);
         
-        // La respuesta es directamente un array de schedules
         const response = await authClient.get<BranchSchedule[]>(`/branch-schedule/branch/${branchId}`);
         
-        console.log("API Response raw:", response);
-        
-        // Validar que la respuesta es un array válido
-        if (!Array.isArray(response)) {
-          console.warn("API response is not an array:", response);
-          return [];
-        }
-        
-        // Validar estructura de cada schedule
+      
         const validSchedules = response.filter((schedule: any) => {
           const isValid = schedule && 
                          typeof schedule.id === 'number' &&
@@ -42,7 +32,6 @@ export const useBranchSchedules = (branchId: number | undefined) => {
           return isValid;
         });
         
-        console.log(`Validated ${validSchedules.length} of ${response.length} schedules for branch ${branchId}`);
         
         return validSchedules;
       } catch (error: any) {
@@ -52,20 +41,16 @@ export const useBranchSchedules = (branchId: number | undefined) => {
           data: error.response?.data
         });
         
-        // En caso de error, retornar array vacío en lugar de throw
-        // para que el componente pueda mostrar "Horario no disponible"
         return [];
       }
     },
     enabled: !!branchId,
-    staleTime: 10 * 60 * 1000, // Cache por 10 minutos
+    staleTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: (failureCount, error: any) => {
-      // No reintentar si es un error 404 (horarios no encontrados)
       if (error?.response?.status === 404) {
         return false;
       }
-      // Reintentar hasta 2 veces para otros errores
       return failureCount < 2;
     }
   });
