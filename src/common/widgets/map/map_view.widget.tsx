@@ -1007,6 +1007,7 @@ return (
       toggleFavorite={toggleFavorite}
       navigateToCafe={navigateToCafe}
       resetFilters={resetApiFilters}
+      updateFilterOptions={updateApiFilters}
     />
 
     <FilterModal

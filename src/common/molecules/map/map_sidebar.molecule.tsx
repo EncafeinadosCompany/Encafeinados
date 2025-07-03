@@ -23,6 +23,7 @@ interface MapSidebarProps {
   toggleFavorite: (id: number) => void;
   navigateToCafe: (id: number) => void;
   resetFilters: () => void;
+  updateFilterOptions: (newOptions: Partial<FilterOptions>) => void;
 }
 
 const MapSidebar: React.FC<MapSidebarProps> = ({
@@ -40,7 +41,8 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   setActiveCafe,
   toggleFavorite,
   navigateToCafe,
-  resetFilters
+  resetFilters,
+  updateFilterOptions
 }) => {const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { isMobile } = useAppData();
 
@@ -101,6 +103,36 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                 </button>
               </div>
             </div>
+
+            {sortedCafes.length > 0 && (
+              <div className="flex-none px-4 py-3 border-b border-gray-100">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600 font-medium">Ordenar por:</span>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => updateFilterOptions({ sortBy: 'distance' })}
+                      className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                        filterOptions.sortBy === 'distance'
+                          ? 'bg-[#6F4E37] text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      Distancia
+                    </button>
+                    <button
+                      onClick={() => updateFilterOptions({ sortBy: 'rating' })}
+                      className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                        filterOptions.sortBy === 'rating'
+                          ? 'bg-[#6F4E37] text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      Calificación
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <div 
               className="flex-1 h-full overflow-y-auto p-4 pb-32" 
