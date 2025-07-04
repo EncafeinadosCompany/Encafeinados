@@ -24,7 +24,7 @@ export default defineConfig({
   },
   server: {
     host: true,
-    port: 5173
+    port: 5173,
   },
   build: {
     rollupOptions: {
@@ -49,8 +49,9 @@ export default defineConfig({
           reactLeaflet: ['react-leaflet', 'leaflet'],
           recoil: ['recoil'],
           reactI18next: ['react-i18next'],
+          swiper: ['swiper/react', 'swiper/modules'],
         },
       },
     },
-  }
-})
+  },
+});
