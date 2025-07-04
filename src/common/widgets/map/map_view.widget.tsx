@@ -247,7 +247,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   // ==============================
   const { data: branchesData, isLoading: branchesLoading, error: branchesError } = useBranches();
   const { data: storesData, isLoading: storesLoading } = useApprovedStores();
-  const { data: filteredBranchesData } = useBranchesByStore(selectedStore);
+  const { data: filteredBranchesData } = useBranchesByStore(selectedStore ? selectedStore : undefined);
 
   // ==============================
   // DERIVED STATE / COMPUTED VALUES 
@@ -272,7 +272,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   // SEARCH AND FILTER (API-BASED)
   // ==============================
 
-  // Hook para búsqueda y filtros basado en API
   const {
     searchTerm: apiSearchTerm,
     setSearchTerm: setApiSearchTerm,
@@ -284,10 +283,19 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     isLoading: apiIsLoading
   } = useBranchSearch(userLocation || undefined);
 
-  // Usar datos de la API cuando están disponibles, sino usar datos locales
   const sortedCafes = useMemo(() => {
-    return apiCafes.length > 0 ? apiCafes : cafes;
-  }, [apiCafes, cafes]);
+    // LÓGICA DE FILTRADO Y ORDENAMIENTO
+    // Si hay filtros activos (búsqueda o filtros), usar los datos de la API
+    // Si no hay filtros activos, usar los datos locales completos
+    
+    if (apiHasActiveFilters) {
+      // Usar datos filtrados de la API - pueden estar vacíos si no hay resultados
+      return apiCafes;
+    }
+    
+    // Sin filtros activos: usar datos locales completos ordenados por distancia
+    return cafes;
+  }, [apiCafes, cafes, apiHasActiveFilters]);
 
   const availableTags = useMemo(() => {
     const allTags = cafes.flatMap(cafe => cafe.tags);
@@ -418,31 +426,36 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   // ==============================
 
 const navigateToCafe = useCallback((cafeId: number): void => {
-  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  // NAVEGACIÓN A CAFETERÍA - Buscar en datos filtrados/ordenados
+  // Siempre buscar en sortedCafes que contiene los datos correctos según el contexto
+  const selectedCafe = sortedCafes.find(cafe => cafe.id === cafeId);
   if (!selectedCafe) return;
   
+  // Evitar navegación redundante
   if (activeCafe !== cafeId) {
     setActiveCafeData(selectedCafe);
-    
     setActiveCafe(cafeId);
   }
 
+  // En móviles, ocultar sidebar al navegar
   if (window.innerWidth < 768) {
     setShowSidebar(false);
   }
 
+  // Verificar ubicación del usuario
   if (!userLocation) {
     getUserLocation();
     setShouldResetMapOnClose(false);
     return;
   }
 
+  // Volar hacia la cafetería seleccionada
   mapInstance?.flyTo(
     [selectedCafe.latitude, selectedCafe.longitude],
     16,
     { duration: 1.5, animate: true }
   );
-}, [userLocation, cafes, mapInstance, getUserLocation, activeCafe]);
+}, [userLocation, sortedCafes, mapInstance, getUserLocation, activeCafe]);
 
 const startRoute = useCallback((cafeId: number) => {
   if (!userLocation) {
@@ -451,7 +464,7 @@ const startRoute = useCallback((cafeId: number) => {
     return;
   }
 
-  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  const selectedCafe = sortedCafes.find(cafe => cafe.id === cafeId);
   if (selectedCafe) {
     // Verificar si la cafetería está cerrada
     if (!selectedCafe.isOpen) {
@@ -486,7 +499,7 @@ const startRoute = useCallback((cafeId: number) => {
       duration: 3000,
     });
   }
-}, [userLocation, cafes, mapInstance, setRouteOrigin, setRouteDestination, getUserLocation]);
+}, [userLocation, sortedCafes, mapInstance, setRouteOrigin, setRouteDestination, getUserLocation]);
 
 const setupRoute = useCallback((cafeId: number) => {
   if (!userLocation) {
@@ -495,7 +508,7 @@ const setupRoute = useCallback((cafeId: number) => {
     return;
   }
 
-  const selectedCafe = cafes.find(cafe => cafe.id === cafeId);
+  const selectedCafe = sortedCafes.find(cafe => cafe.id === cafeId);
   if (selectedCafe) {
     if (!selectedCafe.isOpen) {
       toast.error("No puedes navegar a una cafetería cerrada", {
@@ -514,7 +527,7 @@ const setupRoute = useCallback((cafeId: number) => {
       setShowRouteControls(true);
     }, 100);
   }
-}, [userLocation, cafes, setRouteOrigin, setRouteDestination, getUserLocation, setIsRouteLoading]);
+}, [userLocation, sortedCafes, setRouteOrigin, setRouteDestination, getUserLocation, setIsRouteLoading]);
 
 const copyToClipboard = useCallback((text: string) => {
   navigator.clipboard.writeText(text);
@@ -535,10 +548,21 @@ const handleCloseRouteControls = useCallback(() => {
 
 const handleCloseDetails = useCallback(() => {
   setActiveCafe(null);
+  
+  // LIMPIEZA DE URL - Remover cafeId para evitar reabrir la modal
+  // Esto previene que la modal se vuelva a abrir automáticamente
+  const currentParams = new URLSearchParams(searchParams);
+  if (currentParams.has('cafeId')) {
+    currentParams.delete('cafeId');
+    const newUrl = `${window.location.pathname}${currentParams.toString() ? '?' + currentParams.toString() : ''}`;
+    window.history.replaceState({}, '', newUrl);
+  }
+  
+  // Reset del zoom solo si es necesario y no hay controles de ruta activos
   if (shouldResetMapOnClose && !showRouteControls) {
     mapInstance?.setZoom(13, { animate: true });
   }
-}, [shouldResetMapOnClose, showRouteControls, mapInstance]);
+}, [shouldResetMapOnClose, showRouteControls, mapInstance, searchParams]);
 
 const clearAllFilters = useCallback(() => {
   resetApiFilters();
@@ -669,16 +693,32 @@ useEffect(() => {
 
 useEffect(() => {
   if (activeCafe) {
-    const selectedCafe = cafes.find(cafe => cafe.id === activeCafe);
+    const selectedCafe = sortedCafes.find(cafe => cafe.id === activeCafe);
     if (selectedCafe) {
       setActiveCafeData(selectedCafe);
     }
   } else {
     setActiveCafeData(null);
   }
-}, [activeCafe, cafes]);
+}, [activeCafe, sortedCafes]);
+
+// Función para limpiar filtros de manera estable
+const clearFiltersForNavigation = useCallback(() => {
+  resetApiFilters();
+  setSearchInputValue('');
+  setDebouncedSearchValue('');
+  setSearchTermLocal('');
+  setApiSearchTerm('');
+  setIsSearchProcessing(false);
+  setIsTyping(false);
+  lastToastRef.current = '';
+}, [resetApiFilters, setApiSearchTerm]);
 
 useEffect(() => {
+  // NAVEGACIÓN POR URL - Manejo de cafeId en parámetros de URL
+  // Este efecto maneja la navegación a una cafetería específica cuando se proporciona un cafeId en la URL
+  
+  // Esperar a que el mapa esté cargado y tengamos datos
   if (!mapLoaded || !cafes.length || !mapInstance) return;
   
   const cafeId = searchParams.get('cafeId');
@@ -687,21 +727,55 @@ useEffect(() => {
   const cafeIdNumber = parseInt(cafeId, 10);
   if (isNaN(cafeIdNumber)) return;
   
+  // Verificar si ya tenemos esta cafetería activa para evitar bucles
+  if (activeCafe === cafeIdNumber) return;
+  
+  // Primero buscar en los datos completos (cafes) para asegurar que la cafetería existe
   const selectedCafe = cafes.find(cafe => cafe.id === cafeIdNumber);
   if (!selectedCafe) {
     toast.error("La cafetería seleccionada no se encuentra disponible");
     return;
   }
   
-  setActiveCafe(cafeIdNumber);
+  // Variable para controlar si necesitamos limpiar filtros
+  let needsFilterClear = false;
   
-  mapInstance.flyTo(
-    [selectedCafe.latitude, selectedCafe.longitude],
-    16,
-    { duration: 1.5, animate: true }
-  );
+  // Si hay filtros activos y la cafetería no está en los resultados filtrados,
+  // limpiar los filtros para mostrar la cafetería
+  if (apiHasActiveFilters && !apiCafes.find(cafe => cafe.id === cafeIdNumber)) {
+    needsFilterClear = true;
+    
+    // Limpiar filtros primero
+    clearFiltersForNavigation();
+    
+    toast.success("Se limpiaron los filtros para mostrar la cafetería seleccionada", {
+      duration: 3000,
+      icon: '🔍'
+    });
+  }
   
-}, [cafes, mapInstance, searchParams, setActiveCafe, mapLoaded]); // Añadir mapLoaded a las dependencias
+  // Función para mostrar la cafetería
+  const showCafe = () => {
+    setActiveCafe(cafeIdNumber);
+    
+    mapInstance.flyTo(
+      [selectedCafe.latitude, selectedCafe.longitude],
+      16,
+      { duration: 1.5, animate: true }
+    );
+  };
+  
+  // Si necesitamos limpiar filtros, esperamos un poco para que se actualice el estado
+  if (needsFilterClear) {
+    // Timeout para permitir que el estado de filtros se actualice
+    setTimeout(showCafe, 300);
+  } else {
+    showCafe();
+  }
+  
+  // NOTA: No usar cleanup function aquí para evitar interferencias con la navegación
+  
+}, [mapLoaded, cafes.length, mapInstance, searchParams, activeCafe, clearFiltersForNavigation, apiHasActiveFilters, apiCafes]); // Dependencias específicas
 
 // ==============================
 // RENDER FUNCTIONS

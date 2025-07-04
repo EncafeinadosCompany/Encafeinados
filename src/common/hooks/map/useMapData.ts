@@ -25,7 +25,7 @@ export const useMapData = (
   [branches]);
 
   const cafes: Cafe[] = useMemo(() => {
-    if (!branchesData?.branches?.branches) return [];
+    if (!branches || branches.length === 0) return [];
    
     return filteredBranches      .map((branch: Branch) => {
         if (!branch.latitude || !branch.longitude) return null;
@@ -33,7 +33,6 @@ export const useMapData = (
         const storeLogo = branch.store?.store_logo ||
           "https://images.pexels.com/photos/2396220/pexels-photo-2396220.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
-        // Por ahora usamos horarios por defecto hasta que tengamos el endpoint de todos los horarios
         const defaultOpenTime = "7:00 AM - 6:00 PM";
         const isCurrentlyOpen = branch.is_open;
 
@@ -43,7 +42,7 @@ export const useMapData = (
           rating: branch.average_rating ? parseFloat(branch.average_rating) : null,
           openTime: defaultOpenTime,
           image: storeLogo,
-          tags: ["Coffee", "Specialty"], // Mantener como fallback
+          tags: ["Sin especialidades"], 
           latitude: branch.latitude,
           longitude: branch.longitude,
           isOpen: isCurrentlyOpen !== undefined ? isCurrentlyOpen : true,
