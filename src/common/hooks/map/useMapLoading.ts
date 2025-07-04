@@ -1,19 +1,20 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 export const useMapLoading = () => {
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
-  const [tilesLoaded, setTilesLoaded] = useState<number>(0);
-  const [totalTiles, setTotalTiles] = useState<number>(0);
   const [loadingProgress, setLoadingProgress] = useState<number>(0);
+  
+  const setTotalTiles = useCallback(() => {}, []);
+  const setTilesLoaded = useCallback(() => {}, []);
   
   return {
     mapLoaded,
     setMapLoaded,
-    tilesLoaded,
-    setTilesLoaded,
-    totalTiles,
-    setTotalTiles,
     loadingProgress,
-    setLoadingProgress
+    setLoadingProgress,
+    tilesLoaded: 0,
+    totalTiles: 100,
+    setTotalTiles,
+    setTilesLoaded
   };
 };

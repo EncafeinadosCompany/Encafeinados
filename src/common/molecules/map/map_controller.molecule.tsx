@@ -12,96 +12,52 @@ interface MapControllerProps {
 
 const MapController: React.FC<MapControllerProps> = ({
   setMapInstance,
-  setTotalTiles,
-  setTilesLoaded,
   setLoadingProgress,
   setMapLoaded
 }) => {
   const map = useMap();
-  const tileLoadingRef = useRef({
-    total: 0,
-    loaded: 0,
-  });
+  const progressRef = useRef(0);
+  const intervalRef = useRef<any>(null);
   
   useEffect(() => {
     if (map) {
       setMapInstance(map);
       
+      // Configuración básica
       map.attributionControl.setPrefix('');
-      
-      map.on('layeradd', (e) => {
-        if (e.layer instanceof L.TileLayer) {
-          e.layer.on('loading', () => {
-            tileLoadingRef.current.total += 16; // Estimado de tiles a cargar
-            setTotalTiles(tileLoadingRef.current.total);
-          });
-          
-          e.layer.on('load', () => {
-            tileLoadingRef.current.loaded += 1;
-            setTilesLoaded(tileLoadingRef.current.loaded);
-            
-            const progress = Math.min(
-              100,
-              Math.round(
-                (tileLoadingRef.current.loaded / tileLoadingRef.current.total) * 100
-              )
-            );
-            
-            setLoadingProgress(progress);
-            
-            if (progress >= 98) {
-              setTimeout(() => {
-                setMapLoaded(true);
-              }, 500);
-            }
-          });
-          
-          e.layer.on('tileloadstart', () => {
-            tileLoadingRef.current.total += 1;
-            setTotalTiles(tileLoadingRef.current.total);
-          });
-          
-          e.layer.on('tileload', () => {
-            tileLoadingRef.current.loaded += 1;
-            setTilesLoaded(tileLoadingRef.current.loaded);
-            
-            const progress = Math.min(
-              100,
-              Math.round(
-                (tileLoadingRef.current.loaded / tileLoadingRef.current.total) * 100
-              )
-            );
-            
-            setLoadingProgress(progress);
-            
-            if (progress >= 98) {
-              setTimeout(() => {
-                setMapLoaded(true);
-              }, 500);
-            }
-          });
-        }
-      });
-
-      // Configurar zoom mínimo y máximo
       map.setMinZoom(8);
       map.setMaxZoom(19);
       
-      // Configurar límites de vista (opcional)
-      const southWest = L.latLng(-5.0, -85.0);
-      const northEast = L.latLng(13.0, -70.0);
-      const bounds = L.latLngBounds(southWest, northEast);
-      map.setMaxBounds(bounds);
+      // Simulamos un progreso de carga más fiable
+      intervalRef.current = setInterval(() => {
+        progressRef.current += 5;
+        if (progressRef.current >= 100) {
+          progressRef.current = 100;
+          clearInterval(intervalRef.current);
+          setTimeout(() => {
+            setMapLoaded(true);
+          }, 300);
+        }
+        setLoadingProgress(progressRef.current);
+      }, 150);
       
-      // Establecer un timeout de seguridad para mostrar el mapa
-      // en caso de que la carga de tiles no se complete correctamente
+      // Timeout de seguridad
       setTimeout(() => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+        setLoadingProgress(100);
         setMapLoaded(true);
       }, 5000);
     }
-  }, [map, setMapInstance, setTotalTiles, setTilesLoaded, setLoadingProgress, setMapLoaded]);
+    
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [map, setMapInstance, setLoadingProgress, setMapLoaded]);
 
-  // Componente no renderiza nada visible
   return null;
 };
 
