@@ -1,9 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Card, CardContent } from "@/common/ui/card";
 import { Input } from "@/common/ui/input";
-import { Badge } from "@/common/ui/badge";
 import { motion } from "framer-motion";
-import { Coffee, CalendarDays, TrendingUp, Clock } from "lucide-react";
+import { Coffee, CalendarDays, TrendingUp, Clock } from "@/common/ui/icons";
 import { Label } from "@/common/ui/label";
 import { useQuantityStampByPeriod } from '@/api/queries/dashboard/stapms_by_period.query';
 import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';

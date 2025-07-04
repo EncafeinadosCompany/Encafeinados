@@ -1,29 +1,25 @@
-import React, { useState, useMemo } from 'react';
+"use client";
+import { useState, useMemo } from 'react';
 import { useCreateInvoiceMutation } from "@/api/mutations/dashboard/create_register_for_period";
 import { useInvoicesForPeriod } from "@/api/queries/dashboard/list_invoices_for_period.query";
 import { useQuantityStampByBranch } from "@/api/queries/dashboard/quantity_stamp_by_branch.query";
 import { useQuantityVisitByBranch } from "@/api/queries/dashboard/quantity_visit_by_branch.query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/common/ui/card";
+import { Card, CardContent } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { Input } from "@/common/ui/input";
 import { Badge } from "@/common/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 
 import {
-    Calendar,
     Search,
-    Filter,
     Plus,
-    TrendingUp,
     Coffee,
     Users,
     Receipt,
     Download,
-    Eye,
     MoreVertical,
     CalendarDays,
-    Clock
-} from "lucide-react";
+} from "@/common/ui/icons";
 import {
     Dialog,
     DialogContent,
@@ -50,7 +46,7 @@ import { Label } from "@/common/ui/label";
 import toast from "react-hot-toast";
 import { InvoiceData, PDFService } from './invoices_dasboard';
 
-export default function PruebaDashboard () {
+export default function PruebaDashboard() {
     // Estados para filtros y búsqueda
     const [startDate, setStartDate] = useState<Date>(new Date());
     const [endDate, setEndDate] = useState<Date>(new Date());
@@ -109,7 +105,7 @@ export default function PruebaDashboard () {
             setNewInvoiceStart("");
             setNewInvoiceEnd("");
         } catch (error) {
-           
+
         }
     };
 
@@ -337,7 +333,7 @@ export default function PruebaDashboard () {
                             type="date"
                             value={endDate.toISOString().split('T')[0]}
                             onChange={(e) => setEndDate(new Date(e.target.value))}
-                            className="w-full md:w-auto border border-gray-200" 
+                            className="w-full md:w-auto border border-gray-200"
                         />
                     </div>
                 </motion.div>
@@ -434,7 +430,7 @@ export default function PruebaDashboard () {
                                                 exit={{ opacity: 0, x: 20 }}
                                                 transition={{ delay: index * 0.05 }}
                                                 className="hover:bg-gray-50 transition-colors"
-                                                onClick={()=>setSelectedBranch(invoice.branch.id)}
+                                                onClick={() => setSelectedBranch(invoice.branch.id)}
                                             >
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                     #{invoice.id}
