@@ -144,7 +144,7 @@ const FormRegisterStores = () => {
                     {/* Form content */}
                     <FormProvider {...methods}>
                         <form>
-                            <CardContent className="p-8">
+                            <CardContent className="p-2 xl:p-8">
                                 <AnimatePresence initial={false} custom={direction} mode="wait">
                                     {step === 0 && (
                                         <motion.div

@@ -49,8 +49,8 @@ export default function FeaturedCard({ current, branches, isFeatured = false, in
         className="w-full h-full overflow-hidden rounded-2xl shadow-lg border-0 cursor-pointer"
 
         onClick={(e) => {
-          e.stopPropagation(); // 👈 esto evita que bloquee el swipe
-          navigate(`/coffeelover/prueba?branch=${branches.id}`);
+          e.stopPropagation(); 
+          navigate(`/coffeelover/details?branch=${branches.id}`);
         }}
       >
         {/* Contenedor de imagen con efecto de gradiente */}

@@ -110,7 +110,7 @@ const AuthRoutes = () => {
                   <Route path="review" element={<ReviewView />} />
                   <Route path="Profile" element={<ProfileView />} />
                   <Route path="map-coffelover" element={<MapView />} />
-                  <Route path="prueba" element={<StoreDetailsCard />} />
+                  <Route path="details" element={<StoreDetailsCard />} />
                   <Route path="pruebas-album" element={<Prueba_album />} />
                   <Route path="register-branch-visit/" element={<RegisterStoreVisit />} />
                 </Route>
