@@ -8,6 +8,7 @@ import { ROLES } from "@/common/utils/lists/roles.utils";
 import PrivateRoute from "@/router/private-route";
 import RoleRoute from "@/router/role-route";
 import RouteLoadingIndicator from "./route_loading_indicador.router";
+import Dashboard_Branch from "@/modules/admin_branches/views/manage_dashboard.view";
 const PruebaDashboard = lazy(() => import("@/modules/admin/components/manage_dasboard.view"))
 
 // LAYOUTS
@@ -131,6 +132,7 @@ const AuthRoutes = () => {
                   <Route path="images" element={<ImagesGallery />} />
                   <Route path="perfil" element={<Form_edit_branch />} />
                   <Route path="attributes" element={<AttributesDashboard />} />
+                  <Route path="dashboard" element={<Dashboard_Branch/>} />
                 </Route>
               </Route>
 

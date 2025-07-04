@@ -22,7 +22,8 @@ export default function PrincipalBranchesPage() {
 
     const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
     const { data: branches, error: branchError, isPending: isBranchLoading } = useBranchesID(Number(BranchId));
-    const { data: imagen, error: imageError, isPending: isImageLoading } = useImagenBranch(Number(BranchId)); const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
+    const { data: imagen, error: imageError, isPending: isImageLoading } = useImagenBranch(Number(BranchId)); 
+    const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
     const [branchStatus, setBranchStatus] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
@@ -93,7 +94,8 @@ export default function PrincipalBranchesPage() {
                         EXPOSED_URL={EXPOSED_URL}
                         onManageSchedule={handleManageSchedule} />
                 </div>
-            </div>            <BranchStatusModal
+            </div>            
+            <BranchStatusModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 currentStatus={branchStatus}

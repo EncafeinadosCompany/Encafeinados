@@ -31,7 +31,7 @@ export const useApproveBranchMutation = () => {
         status: true,
         approvedById: Number(userId),
       });
-    },    onSuccess: () => {
+    }, onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branches", "pending"] });
       queryClient.invalidateQueries({ queryKey: ["branches", "PENDING"] });
       queryClient.invalidateQueries({ queryKey: ["branches", "APPROVED"] });
@@ -44,7 +44,7 @@ export const useRejectBranchMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    
+
     mutationFn: async ({
       approvalId,
       reason,
@@ -93,9 +93,6 @@ export const useRegisterVisitMutation = (): UseMutationResult<
         longitude
       });
 
-      console.log("Respuesta completa:", res);
-      console.log("Datos de la respuesta:", res.data);
-
       let validResponse: ValidateVisitResponse;
 
       if (res.data?.message && res.data?.data) {
@@ -121,20 +118,31 @@ export const useRegisterVisitMutation = (): UseMutationResult<
 };
 
 
+interface response {
+  message: string
+  branch:
+  {
+    id: number,
+    name: string,
+    is_open: boolean
+  }
+
+
+}
+
 export const useStatesIsOpen = () => {
   const queryClient = useQueryClient();
-  return useMutation<any, Error,{ id: number; is_open: boolean } >({
+  return useMutation<any, Error, { id: number; is_open: boolean }>({
     mutationFn: async ({ id, is_open }: { id: number; is_open: boolean }) => {
-      const response = await authClient.patch(`/branches/open-close/${id}`, { isOpen: is_open });
+      const response = await authClient.patch<response>(`/branches/open-close/${id}`, { isOpen: is_open });
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["branches"] });
-      queryClient.invalidateQueries({ queryKey:['branches', 'APPROVED'] });
-      queryClient.invalidateQueries({ queryKey: ['branch-approvals'] });
-      
-    }
-  });
+      queryClient.invalidateQueries({ queryKey: ["branches_imagen"] });
+      queryClient.invalidateQueries({ queryKey: ["branches"], exact: true });
+    },
+  }
+  );
 }
 
 interface image {
@@ -157,7 +165,7 @@ export const useUpdateImagenBrandMutation = () => {
     mutationFn: async (data: z.infer<typeof formSchemaBranches>): Promise<image> => {
       try {
 
-         const id_branch = getEncryptedItem("branchId");
+        const id_branch = getEncryptedItem("branchId");
         if (!id_branch) throw new Error("No se encontró el id de la sucursal");
 
         let image_url = "";
@@ -192,7 +200,7 @@ export const useUpdateImagenBrandMutation = () => {
 
       queryClient.invalidateQueries({ queryKey: ['branches'] });
       queryClient.invalidateQueries({ queryKey: ['branches_imagen'] });
-      queryClient.invalidateQueries({queryKey:['branch-approvals']})
+      queryClient.invalidateQueries({ queryKey: ['branch-approvals'] })
 
     },
     onError: (error: any) => {
@@ -204,12 +212,12 @@ export const useUpdateImagenBrandMutation = () => {
 
 
 
-export const deleteImagenBrandMutation =  () => {
+export const deleteImagenBrandMutation = () => {
   const queryClient = useQueryClient();
   const useErrors = useError("attributes");
- 
-  return useMutation<number, Error,any>({
-    mutationFn: async (id:number): Promise<any> => {
+
+  return useMutation<number, Error, any>({
+    mutationFn: async (id: number): Promise<any> => {
       try {
         const response = await authClient.delete(`/images/${id}`)
         return response

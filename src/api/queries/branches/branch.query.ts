@@ -5,28 +5,28 @@ import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, A
 import AuthClient from '@/api/client/axios'
 import { BranchAttributesResponse } from '@/api/types/branches/branch_attributes.types'
 
-const authClient = new AuthClient()
 
+const authClient = new AuthClient()
 export const useBranches = () => {
-  return useQuery<BranchesResponseList>({
+  return useQuery<BranchesResponseList, Error>({
     queryKey: ['branches'],
     queryFn: async () => {
-      const response = await authClient.get<BranchesResponseList>('/branches')
-      return response
+      const response = await authClient.get<BranchesResponseList>('/branches');
+      return response;
     },
-    staleTime: 1000 * 60 * 5
-  })
-}
+    
+  });
+};
 
 
-export const useBranchesID = (id: number) => {
+export const useBranchesID = (id?: number) => {
   return useQuery<BrancheIDresponse>({
-    queryKey: ['branches'],
+    queryKey: ['branches', id],
     queryFn: async () => {
       const response = await authClient.get<BrancheIDresponse>(`/branches/${id}`)
       return response
     },
-    enabled: !!id
+    enabled: id !== undefined && id !== null && id > 0,
   })
 }
 
@@ -54,7 +54,7 @@ export const usePendingBranches = () => {
 
 export const useBranch = (branchId: number | undefined) => {
   return useQuery<BranchesResponse, Error>({
-    queryKey: ['branches', branchId],
+    queryKey: ['branches', 'stores', branchId],
     queryFn: async () => {
       const response = await authClient.get<BranchesResponse>(`/branches/${branchId}`)
       return response
@@ -77,13 +77,13 @@ export const usePendingBranchesQuery = () => {
 
 export const useBranchApprovalDetails = (branchId: number | undefined) => {
   return useQuery<BranchApprovalDetails, Error>({
-    queryKey: ['branch-approvals', 'detail', branchId],
+    queryKey: ['branches','branch-approvals', 'detail', branchId],
     queryFn: async () => {
       const response = await authClient.get<BranchApprovalDetails>(`/branch-approvals/detail/${branchId}`)
       return response
     },
-    enabled: !!branchId,
-    staleTime: 5 * 60 * 1000,
+     enabled: !!branchId
+
   })
 }
 
@@ -94,8 +94,7 @@ export const useApprovedBranches = () => {
       const response = await authClient.get<ApprovedBranchesResponse>('/branches/status/APPROVED')
       return response
     },
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false
+    
   })
 }
 
@@ -118,8 +117,7 @@ export const useBranchAttributes = (branchId: number | undefined) => {
       const response = await authClient.get<BranchAttributesResponse>(`/branch-attributes/${branchId}`);
       return response;
     },
-    enabled: !!branchId,
-    staleTime: 5 * 60 * 1000, 
+    enabled: !!branchId
   });
 };
 

@@ -6,7 +6,7 @@ const authClient = new AuthClient();
 
 export const useBranchSchedules = (branchId: number | undefined) => {
   return useQuery<BranchSchedule[]>({
-    queryKey: ['branch-schedules', branchId],
+    queryKey: ['branches','branch-schedules', branchId],
     queryFn: async () => {
       if (!branchId) {
         console.warn("useBranchSchedules: No branchId provided");

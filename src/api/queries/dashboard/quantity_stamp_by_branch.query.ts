@@ -14,5 +14,7 @@ export const useQuantityStampByBranch = (id?: number) => {
             return response;
         },
         enabled: id !== undefined && id !== null,
+        staleTime: 1 * 60 * 1000, 
+        refetchOnWindowFocus: false
     });
 }
