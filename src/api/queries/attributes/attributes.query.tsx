@@ -25,8 +25,6 @@ export const useBranchAttributes = (branchId: string) => {
       const response = await authClient.get<AttributeByID>(`/branch-attributes/${branchId}`)
       return response
     },
-    enabled: !!branchId,
-    // staleTime: 5 * 60 * 1000, 
-
+    enabled: !!branchId
   })
 }

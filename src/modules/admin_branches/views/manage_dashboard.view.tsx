@@ -9,7 +9,9 @@ import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.util
 
 export default function Dashboard_Branch() {
   
-    const [startDate, setStartDate] = useState<Date>(new Date());
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const [startDate, setStartDate] = useState<Date>(firstDayOfMonth);
     const [endDate, setEndDate] = useState<Date>(new Date());
     const branchId = getEncryptedItem("branchId") as number | null;
 
