@@ -1,7 +1,7 @@
 import { Skeleton } from "@/common/ui/skeleton";
 import { Card, CardFooter, CardHeader } from "@/common/ui/card";
 import { BookOpen, Search, X, Coffee, Filter, SlidersHorizontal, Calendar, CheckCircle, XCircle, Sparkles, Layout, List, Eye}  from "@/common/ui/icons";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/common/ui/input";
 import { Button } from "@/common/ui/button";
 import { AlbumDetailDialog } from "@/common/molecules/admin/album/album_detail_dialog.molecule";
@@ -15,8 +15,6 @@ import { useAlbumsQuery } from "@/api/queries/album/album.query";
 
 export const ListAlbumWidget = () => {
     const { data: listAlbum, isLoading, error } = useAlbumsQuery();
-    const containerRef = useRef<HTMLDivElement>(null);
-
     const [selectedAlbumId, setSelectedAlbumId] = useState<number | null>(null); // Cambiamos de objeto a ID
     const [isDetailOpen, setIsDetailOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
