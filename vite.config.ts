@@ -38,7 +38,6 @@ export default defineConfig({
           framerMotion: ['framer-motion'],
           reactHookForm: ['react-hook-form'],
           lucideReact: ['lucide-react'],
-          HTMLFlipBook: ['react-pageflip'],
           reactRouterDom: ['react-router-dom'],
           Html5Qrcode: ['html5-qrcode'],
           dateFns: ['date-fns'],

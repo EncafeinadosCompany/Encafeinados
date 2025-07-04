@@ -74,7 +74,6 @@
     "react-leaflet": "^5.0.0",
     "react-leaflet-markercluster": "^5.0.0-rc.0",
     "react-number-format": "^5.4.4",
-    "react-pageflip": "^2.0.3",
     "react-router-dom": "^7.3.0",
     "react-scroll": "^1.9.3",
     "react-select": "^5.10.1",
