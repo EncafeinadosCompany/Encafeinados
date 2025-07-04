@@ -16,7 +16,11 @@ const HomePage = () => {
   ];
 
 
-  const {data} = useApprovedBranches();
+  const { data, isLoading, error } = useApprovedBranches();
+
+  if (isLoading || error || !data) {
+    return null;
+  }
 
   return (
     <main className="min-h-screen bg-[#FAF3E0] relative overflow-x-hidden">

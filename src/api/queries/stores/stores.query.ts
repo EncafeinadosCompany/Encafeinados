@@ -13,7 +13,7 @@ export const useStores = () => {
       const response = await authClient.get<StoresResponse>('/stores')
       return response
     },
-    staleTime: 5 * 60 * 1000,
+    // staleTime: 5 * 60 * 1000,
   })
 }
 
@@ -58,7 +58,7 @@ export const useApprovedStores = () => {
       const response = await authClient.get<StoresResponse>('/stores/status/APPROVED')
       return response
     },
-    staleTime: 5 * 60 * 1000,
+    // staleTime: 5 * 60 * 1000,
   })
 }
 

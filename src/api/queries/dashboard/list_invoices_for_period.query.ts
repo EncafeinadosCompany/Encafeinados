@@ -7,7 +7,7 @@ const authClient = new AuthClient()
 
 export const useInvoicesForPeriod= (startDate:Date,endDate:Date) => {
     return useQuery<InvoiceResponse, Error>({
-      queryKey: ['criteria status'],
+      queryKey: ['invoicesForPeriod', startDate, endDate],
       queryFn: async () => {
         const response = await authClient.get<InvoiceResponse>(`/branch-invoice/by-period/${startDate.toISOString()}/${endDate.toISOString()}`)
         return response
