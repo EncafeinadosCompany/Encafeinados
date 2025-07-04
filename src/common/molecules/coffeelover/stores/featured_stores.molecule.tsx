@@ -50,10 +50,8 @@ export const FeaturedCarouselStores = ({
       if (!touchStart) return;
       setTouchEnd(e.targetTouches[0].clientX);
 
-      const distance = Math.abs(touchStart - e.targetTouches[0].clientX);
-      if (distance > 10) {
-        e.preventDefault();
-      }
+      // Removemos el preventDefault para evitar el error de passive event listener
+      // El carrusel manejará el scroll automáticamente
     },
     [touchStart]
   );

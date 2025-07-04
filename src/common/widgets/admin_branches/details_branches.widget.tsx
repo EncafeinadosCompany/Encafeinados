@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 import { ScrollIndicator } from "@/common/atoms/indicator";
-import BranchStatusModal from "@/common/molecules/admin_branch/branch_status_modal";
-import { LeftCardBranch } from "@/common/molecules/admin_branch/details_branches/left_card.molecule";
-import { MessageBranches } from "@/common/molecules/admin_branch/details_branches/message_branches.molecule";
-import { RightCardBranch } from "@/common/molecules/admin_branch/details_branches/right_card.molecule";
-import { ScheduleManagementModal } from "@/common/molecules/admin_branch/details_branches/schedule_management_modal.molecule";
+import BranchStatusModal from "@/common/molecules/admin_branch/branch/branch_status_modal";
+import { LeftCardBranch } from "@/common/molecules/admin_branch/branch/left_card.molecule";
+import { MessageBranches } from "@/common/molecules/admin_branch/branch/message_branches.molecule";
+import { RightCardBranch } from "@/common/molecules/admin_branch/branch/right_card.molecule";
+import { ScheduleManagementModal } from "@/common/molecules/admin_branch/branch/schedule_management_modal.molecule";
 
 import { useStatesIsOpen } from "@/api/mutations/branches/branch_states.mutation";
 import { useBranchesID, useImagenBranch } from "@/api/queries/branches/branch.query";
@@ -22,7 +22,8 @@ export default function PrincipalBranchesPage() {
 
     const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
     const { data: branches, error: branchError, isPending: isBranchLoading } = useBranchesID(Number(BranchId));
-    const { data: imagen, error: imageError, isPending: isImageLoading } = useImagenBranch(Number(BranchId)); const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
+    const { data: imagen, error: imageError, isPending: isImageLoading } = useImagenBranch(Number(BranchId)); 
+    const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
     const [branchStatus, setBranchStatus] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
@@ -93,7 +94,8 @@ export default function PrincipalBranchesPage() {
                         EXPOSED_URL={EXPOSED_URL}
                         onManageSchedule={handleManageSchedule} />
                 </div>
-            </div>            <BranchStatusModal
+            </div>            
+            <BranchStatusModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 currentStatus={branchStatus}

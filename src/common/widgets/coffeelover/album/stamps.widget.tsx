@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useStampsByClientQuery, useStampsByPageQuery } from "@/api/queries/album/stamps.query";
-import { getAuthStorage } from "@/common/utils/security/auth_storage.utils";
 import { Stamps } from "@/api/types/album/stamps.types";
 import { CardStamp } from "@/common/molecules/coffeelover/stamps/card_stamp.molecule";
 import { CardEmpy } from "@/common/molecules/coffeelover/stamps/card_empy.molecule";
@@ -8,8 +7,6 @@ import { CardStampsError } from "@/common/molecules/coffeelover/stamps/card_erro
 import { CardStampSkeleton } from "@/common/molecules/coffeelover/stamps/card_skeleton.molecule";
 import { CardStampsDetails } from "@/common/molecules/coffeelover/stamps/dialog_details.molecule";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
-import { UserData } from "@/api/types/auth/auth.types";
-
 
 interface PruebaProps {
     id_page: number;
@@ -48,33 +45,12 @@ export default function ListStamps({ id_page }: PruebaProps) {
 
     const skeletonArray = Array(4).fill(0);
 
-
-    // navigator.geolocation.getCurrentPosition(
-    //     (position) => {
-    //       const latitude = position.coords.latitude;
-    //       const longitude = position.coords.longitude;
-
-    //       // Aquí haces la llamada al backend
-    //     //   enviarUbicacionAlBackend(latitude, longitude);
-    //     console.log("Latitud:", latitude);
-    //     console.log("Longitud:", longitude);
-    //     },
-    //     (error) => {
-    //       console.error("Error obteniendo la ubicación:", error);
-    //     },
-    //     {
-    //       enableHighAccuracy: true,
-    //       timeout: 5000,
-    //       maximumAge: 0
-    //     }
-    //   );
-
     return (
         <div className="flex flex-col justify-center items-center p-4 sm:p-6 md:p-2 w-full min-h-0 pb-20" onPointerDown={(e) => e.stopPropagation()}>
             <div className="w-full">
                 {/* Loading State */}
                 {isLoading && (
-                    <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 xl:grid-cols-6">
                         {skeletonArray.map((_, index) => (
                             <CardStampSkeleton key={index} />
                         ))}

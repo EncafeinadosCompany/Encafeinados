@@ -287,10 +287,10 @@ export const NavGeneral = ({
 
         {isMobile && (
           <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white mobile-navbar shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">
-            {isMenuExpanded && navItems.length > 4 && (
+            {isMenuExpanded && navItems.length > 3 && (
               <div className="absolute bottom-full w-full bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] rounded-t-2xl border-t border-gray-100 transition-all duration-300">
                 <nav className="grid grid-cols-4 gap-2 p-4">
-                  {navItems.slice(4).map((item) => (
+                  {navItems.slice(3).map((item) => (
 
                     <Link
                       key={item.href}
@@ -348,7 +348,7 @@ export const NavGeneral = ({
 
 
 
-              {navItems.slice(0, 4).map((item) => (
+              {navItems.slice(0, 3).map((item) => (
                 <Link
                   key={item.href}
                   to={item.href}
@@ -371,7 +371,7 @@ export const NavGeneral = ({
                 </Link>
               ))}
 
-              {navItems.length > 5 ? (
+              {navItems.length > 3 ? (
                 <button
                   onClick={() => setIsMenuExpanded(!isMenuExpanded)}
                   className={cn(

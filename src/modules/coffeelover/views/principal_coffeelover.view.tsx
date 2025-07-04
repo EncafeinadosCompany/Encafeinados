@@ -1,27 +1,49 @@
 import { FeaturedStoresWidget } from '@/common/widgets/coffeelover/stores/feature_stores.widget'
 import SearchCoffee from '@/common/atoms/search';
 import { useState, useCallback, useEffect } from 'react';
-import { QrCode } from "@/common/ui/icons";
+import { QrCode, Filter, MapPin } from "@/common/ui/icons";
 import { CoffeeBackground } from '@/common/widgets/coffee_background.widget';
 import QRScannerDialog from '@/common/molecules/coffeelover/stores/QR_scanner_dialog.molecule';
 import { Button } from '@/common/ui/button';
 import { EventList } from '@/common/widgets/coffeelover/events/event_list.widget';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/common/ui/tooltip';
+import FilterModal from '@/common/molecules/map/filter_modal.molecule';
+import { useBranchSearch } from '@/common/hooks/map/useBranchSearch';
+import { useNavigate } from 'react-router-dom';
 
 export default function PrincipalCoffeelover () {
   const [globalSearchTerm, setGlobalSearchTerm] = useState("");
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  
+  const navigate = useNavigate();
+  
+  // Hook para búsqueda y filtros basado en API
+  const {
+    searchTerm: apiSearchTerm,
+    setSearchTerm: setApiSearchTerm,
+    filterOptions: apiFilters,
+    updateFilterOptions: updateApiFilters,
+    resetFilters: resetApiFilters,
+    hasActiveFilters: apiHasActiveFilters,
+    branches: apiBranches,
+    isLoading: apiIsLoading,
+    totalBranches
+  } = useBranchSearch();
+  
+  // Sincronizar búsqueda global con la API
   useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    setApiSearchTerm(globalSearchTerm);
+  }, [globalSearchTerm, setApiSearchTerm]);
 
-    checkIfMobile();
-    window.addEventListener("resize", checkIfMobile);
-    return () => window.removeEventListener("resize", checkIfMobile);
+  const toggleFilterModal = useCallback(() => {
+    setIsFilterModalOpen(prev => !prev);
   }, []);
+
+  const handleMapNavigation = useCallback(() => {
+    navigate('/coffeelover/map-coffelover');
+  }, [navigate]);
 
   const handleGlobalSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setGlobalSearchTerm(e.target.value);
@@ -36,6 +58,20 @@ export default function PrincipalCoffeelover () {
       console.log('Código QR escaneado:', result);
     }
   }, []);
+
+  // Configurar acciones del SearchCoffee
+  const searchActions = [
+    {
+      icon: <Filter size={16} className="text-[#6F4E37]" />,
+      onClick: toggleFilterModal,
+      ariaLabel: "Abrir filtros"
+    },
+    {
+      icon: <MapPin size={16} className="text-blue-500" />,
+      onClick: handleMapNavigation,
+      ariaLabel: "Ir al mapa"
+    }
+  ];
 
   return (
     <div className='flex flex-col max-w-full  overflow-x-hidden h-full relative'>
@@ -54,6 +90,7 @@ export default function PrincipalCoffeelover () {
             onChange={handleGlobalSearchChange}
             className="mb-2"
             placeholder="Buscar cafeterías..."
+            actions={searchActions}
           />
         </div>
       </div>
@@ -62,6 +99,9 @@ export default function PrincipalCoffeelover () {
         <FeaturedStoresWidget
           globalSearchTerm={globalSearchTerm}
           setGlobalSearchTerm={setGlobalSearchTerm}
+          apiFilteredBranches={apiBranches}
+          apiIsLoading={apiIsLoading}
+          hasActiveFilters={apiHasActiveFilters}
         />
         <EventList>
         </EventList>
@@ -103,6 +143,18 @@ export default function PrincipalCoffeelover () {
         isOpen={isScannerOpen}
         onClose={() => setIsScannerOpen(false)}
         onScanSuccess={handleScanSuccess}
+      />
+
+      {/* Modal de filtros */}
+      <FilterModal
+        isOpen={isFilterModalOpen}
+        onClose={toggleFilterModal}
+        filterOptions={apiFilters}
+        updateFilterOptions={updateApiFilters}
+        resetFilters={resetApiFilters}
+        hasActiveFilters={apiHasActiveFilters}
+        totalResults={totalBranches}
+        isLoading={apiIsLoading}
       />
     </div>
   )

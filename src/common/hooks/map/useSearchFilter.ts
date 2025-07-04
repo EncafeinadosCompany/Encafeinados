@@ -1,7 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Cafe } from '@/api/types/map/map_search.types';
 
-// Definir la interfaz para las opciones de filtro
 export interface FilterOptions {
   minRating: number;
   onlyOpen: boolean;
@@ -20,15 +19,12 @@ export const useSearchFilter = (cafes: Cafe[]) => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState<boolean>(false);
   const [hasActiveFilters, setHasActiveFilters] = useState(false);
 
-  // Función segura para buscar coincidencias en texto
   const safeTextSearch = (text: unknown, term: string): boolean => {
     if (!text || typeof text !== 'string') return false;
     return text.toLowerCase().includes(term);
   };
 
-  // Filtrar cafés basado en el término de búsqueda y filtros
   const filteredCafes = useMemo(() => {
-    // Si no hay filtros activos, devolver todos los cafés
     if (!cafes) return [];
     
     if (!searchTerm && filterOptions.minRating === 0 && !filterOptions.onlyOpen && filterOptions.tags.length === 0) {
@@ -36,18 +32,14 @@ export const useSearchFilter = (cafes: Cafe[]) => {
     }
     
     return cafes.filter(cafe => {
-      // Validar que cafe existe y es un objeto
       if (!cafe || typeof cafe !== 'object') return false;
       
-      // Búsqueda de texto mejorada
       if (searchTerm) {
         const query = searchTerm.toLowerCase().trim();
         const terms = query.split(/\s+/).filter(Boolean); // Filtrar términos vacíos
         
-        // Si no hay términos válidos después de limpiar, mostrar todos
         if (terms.length === 0) return true;
         
-        // Verifica si TODOS los términos de búsqueda están en algún campo
         const matchesAllTerms = terms.every(term => 
           safeTextSearch(cafe.name, term) || 
           safeTextSearch(cafe.address, term) ||
@@ -58,20 +50,17 @@ export const useSearchFilter = (cafes: Cafe[]) => {
         if (!matchesAllTerms) return false;
       }
       
-      // Filtro de calificación mínima (con valor predeterminado si rating es undefined)
       const cafeRating = typeof cafe.rating === 'number' ? cafe.rating : 0;
       const meetsRating = cafeRating >= filterOptions.minRating;
       
-      // Filtro de abierto/cerrado (con valor predeterminado)
       const isOpenFilter = !filterOptions.onlyOpen || cafe.isOpen === true;
       
-      // Filtro de etiquetas (con comprobación de array)
       const hasMatchingTags = filterOptions.tags.length === 0 || 
         (Array.isArray(cafe.tags) && filterOptions.tags.some(tag => cafe.tags.includes(tag)));
       
       return meetsRating && isOpenFilter && hasMatchingTags;
     });
-  }, [cafes, searchTerm, filterOptions]);    // Calcular si hay filtros activos usando la lógica correcta
+  }, [cafes, searchTerm, filterOptions]);   
   const hasActiveFiltersCalculated = useMemo(() => {
     const hasSearchTerm = Boolean(searchTerm.trim());
     
@@ -93,11 +82,9 @@ export const useSearchFilter = (cafes: Cafe[]) => {
     return result;
   }, [searchTerm, filterOptions]);
 
-  // Ordenar cafés según el criterio seleccionado
   const sortedCafes = useMemo(() => {
     let filtered = [...cafes];
     
-    // Aplicar filtro de texto
     if (searchTerm.trim()) {
       filtered = filtered.filter(cafe => 
         cafe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -138,7 +125,6 @@ export const useSearchFilter = (cafes: Cafe[]) => {
     }
   }, [cafes, searchTerm, filterOptions]);
 
-  // Actualizar las opciones de filtro con tipo correcto
   const updateFilterOptions = useCallback((newOptions: Partial<FilterOptions>) => {
     setFilterOptions(prev => ({
       ...prev,
@@ -146,7 +132,6 @@ export const useSearchFilter = (cafes: Cafe[]) => {
     }));
   }, []);
   
-  // Restablecer todos los filtros
   const resetFilters = useCallback(() => {
     setFilterOptions({
       minRating: 0,
@@ -157,7 +142,6 @@ export const useSearchFilter = (cafes: Cafe[]) => {
     setSearchTerm('');
   }, []);
   
-  // Manejar la apertura/cierre del modal de filtros
   const toggleFilterModal = useCallback(() => {
     setIsFilterModalOpen(prev => !prev);
   }, []);

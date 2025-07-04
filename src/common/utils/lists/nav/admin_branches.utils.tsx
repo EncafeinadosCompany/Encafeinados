@@ -1,7 +1,12 @@
 import { NavItemType } from "@/api/types/nav/nav.types"
-import { Home, Star, Store, Images, MessageSquare } from "@/common/ui/icons"
+import { Home, Star, Store, Images, MessageSquare, LayoutDashboard } from "@/common/ui/icons"
 
 export const AdminBranchesItems: NavItemType[] = [
+    {
+    title: "Dashboard",
+    href: "/sucursal/dashboard",
+    icon: <LayoutDashboard className="h-4 w-4" />,
+  },
   {
     title: "Inicio",
     href: "/sucursal",

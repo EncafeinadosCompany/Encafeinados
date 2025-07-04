@@ -172,8 +172,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   copyToClipboard,
   copied,
 }) => {
-  const { data: attributesData, isLoading: attributesLoading } =
-    useBranchAttributes(cafe.id);
+  const { data: attributesData, isLoading: attributesLoading } =useBranchAttributes(cafe.id);
   const { data: schedulesData, isLoading: schedulesLoading } = useBranchSchedules(cafe.id);
   const [showAllTags, setShowAllTags] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);

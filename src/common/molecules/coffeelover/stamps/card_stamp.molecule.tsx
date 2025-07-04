@@ -16,7 +16,7 @@ interface CardStampProps {
 
 export const CardStamp = ({stamps, users, flippedCards, hoverStamp, handleFlip, setSelectedStamp, setModalOpen  }:CardStampProps) => {
   return (
-    <div className="grid gap-2 grid-cols-2  sm:gap-3 md:gap-3 w-full w-max-sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5  overflow-auto max-h-[48vh]  p-2 sm:p-3 md:p-4 lg:p-5 xl:p-4 2xl:p-7">
+    <div className="grid gap-2 grid-cols-2  sm:gap-3 md:gap-3 w-full w-max-sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6  overflow-auto max-h-[48vh]  p-2 sm:p-3 md:p-4 lg:p-5 xl:p-4 2xl:p-7">
     {stamps.map((sello: Stamps) => {
         const aplica = users?.stamps.find((selloCliente) => {
             return selloCliente.id === sello.id;

@@ -1,6 +1,6 @@
 import { Badge } from "@/common/ui/badge"
 import { Card } from "@/common/ui/card"
-import ImageCarousel from "../imagen_carousel"
+import ImageCarousel from "./imagen_carousel"
 import { AlertCircle, PhoneIcon, Star } from'@/common/ui/icons'
 import { BrancheIDresponse } from "@/api/types/branches/branches.types";
 

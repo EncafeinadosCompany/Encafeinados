@@ -44,11 +44,11 @@ export const QRCodeBranchModal = ({
             {/* QR Code Display */}
             <div
               id="qr-code-branch"
-              className="bg-white rounded-lg border border-[#D4D4D4] shadow-sm p-4 flex flex-col items-center"
+              className="bg-white w-full rounded-lg border border-[#D4D4D4] shadow-sm p-4 flex flex-col items-center"
             >
               {qrCodeUrl ? (
                 <>
-                  <div className="mb-4">
+                  <div className="mb-4  w-full">
                     <QRCode
                       url={qrCodeUrl}
                       width={Math.min(250, window.innerWidth * 0.6)}

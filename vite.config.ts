@@ -24,6 +24,33 @@ export default defineConfig({
   },
   server: {
     host: true,
-    port: 5173
-  }
-})
+    port: 5173,
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          lodash: ['lodash'],
+          jsPDF: ['jspdf'],
+          html2canvas: ['html2canvas'],
+          reactQuery: ['@tanstack/react-query'],
+          framerMotion: ['framer-motion'],
+          reactHookForm: ['react-hook-form'],
+          lucideReact: ['lucide-react'],
+          reactRouterDom: ['react-router-dom'],
+          Html5Qrcode: ['html5-qrcode'],
+          dateFns: ['date-fns'],
+          reactSelect: ['react-select'],
+          toast: ['react-hot-toast'],
+          dateFnsLocale: ['date-fns/locale'],
+          cryptoJS: ['crypto-js'],
+          reactLeaflet: ['react-leaflet', 'leaflet'],
+          recoil: ['recoil'],
+          reactI18next: ['react-i18next'],
+          swiper: ['swiper/react', 'swiper/modules'],
+        },
+      },
+    },
+  },
+});
