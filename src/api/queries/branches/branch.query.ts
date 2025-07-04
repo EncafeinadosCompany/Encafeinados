@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { BrancheIDresponse, BranchesImagen, BranchesResponse, image } from '../../types/branches/branches.types'
+import { BrancheIDresponse, BranchesImagen, BranchesResponse, image, SearchBranchesResponse} from '../../types/branches/branches.types'
 import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, ApprovedBranchesResponse, RejectedBranchesResponse } from '../../types/branches/branches_approval.types'
 
 import AuthClient from '@/api/client/axios'
@@ -133,3 +133,30 @@ export const useValidateVisit = (coordinates: any, shopId: any) => {
   }
 }
 
+//SEARCH BRANCHES IN TE MAP AND PRINCIPAL COFFELOVER PAGE
+export interface BranchSearchParams {
+  q?: string;
+  minRating?: number;
+  isOpen?: boolean;
+  lat?: number;
+  lng?: number;
+  sortBy?: 'distance' | 'rating';
+  attributes?: string; // Lista de IDs separados por comas
+}
+
+export const useSearchBranches = (params: BranchSearchParams) => {
+  const queryString = Object.entries(params)
+    .filter(([_, value]) => value !== undefined && value !== null && value !== '')
+    .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+    .join('&');
+
+  return useQuery<SearchBranchesResponse>({
+    queryKey: ['branches', 'search', params],
+    queryFn: async () => {
+      const response = await authClient.get<SearchBranchesResponse>(`/branches/search?${queryString}`);
+      return response;
+    },
+    enabled: true, 
+    staleTime: 1000 * 60 * 5 
+  });
+};

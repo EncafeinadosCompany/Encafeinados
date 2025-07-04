@@ -24,7 +24,7 @@ import { Cafe } from '@/api/types/map/map_search.types';
 import { useFavorites } from '@/common/hooks/map/useFavorites';
 import { useGeolocation } from '@/common/hooks/map/useGeolocation';
 import { useMapData } from '@/common/hooks/map/useMapData';
-import { useSearchFilter } from '@/common/hooks/map/useSearchFilter';
+import { useBranchSearch } from '@/common/hooks/map/useBranchSearch';
 import { useRouteNavigation } from '@/common/hooks/map/useRouteNavigation';
 
 // Components
@@ -39,7 +39,7 @@ import '@/common/styles/mapMarkers.css';
 import CafeDetail from '@/common/molecules/map/cafe_detail.molecule';
 import MapSidebar from '@/common/molecules/map/map_sidebar.molecule';
 import { containerVariants, cardVariants, pulseVariants } from './map_animations.widget';
-import { useBranches } from '@/api/queries/branches/branch.query';
+import { useBranches, useSearchBranches } from '@/api/queries/branches/branch.query';
 import LoadingSpinner from '@/common/atoms/LoadingSpinner';
 import { useAppData } from '@/common/context/AppDataContext';
 // import 'leaflet.markercluster/dist/leaflet.markercluster.css';
@@ -269,24 +269,30 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   );
 
   // ==============================
-  // SEARCH AND FILTER
+  // SEARCH AND FILTER (API-BASED)
   // ==============================
+
+  // Hook para búsqueda y filtros basado en API
+  const {
+    searchTerm: apiSearchTerm,
+    setSearchTerm: setApiSearchTerm,
+    filterOptions: apiFilters,
+    updateFilterOptions: updateApiFilters,
+    resetFilters: resetApiFilters,
+    hasActiveFilters: apiHasActiveFilters,
+    cafes: apiCafes,
+    isLoading: apiIsLoading
+  } = useBranchSearch(userLocation || undefined);
+
+  // Usar datos de la API cuando están disponibles, sino usar datos locales
+  const sortedCafes = useMemo(() => {
+    return apiCafes.length > 0 ? apiCafes : cafes;
+  }, [apiCafes, cafes]);
 
   const availableTags = useMemo(() => {
     const allTags = cafes.flatMap(cafe => cafe.tags);
     return [...new Set(allTags)];
   }, [cafes]);
-  const {
-    searchTerm: filterSearchTerm,
-    setSearchTerm: setFilterSearchTerm,
-    filterOptions,
-    updateFilterOptions,
-    resetFilters,
-    sortedCafes,
-    isFilterModalOpen: filterModalOpen,
-    toggleFilterModal: toggleFilterModalOriginal,
-    hasActiveFilters
-  } = useSearchFilter(cafes);
 
   const toggleFilterModal = useCallback(() => {
     if (activeCafe) {
@@ -296,8 +302,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   }, [isFilterModalOpen, activeCafe]);
 
   useEffect(() => {
-    setFilterSearchTerm(searchTerm);
-  }, [searchTerm, setFilterSearchTerm]);
+    setApiSearchTerm(searchTerm);
+  }, [searchTerm, setApiSearchTerm]);
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchInputValue(value);
@@ -321,7 +327,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
       setIsTyping(false);
       if (debouncedSearchValue === '') {
         setSearchTermLocal('');
-        setFilterSearchTerm('');
+        setApiSearchTerm('');
       }
       return;
     }
@@ -333,7 +339,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
 
     const filterTimer = setTimeout(() => {
       setSearchTermLocal(currentSearch);
-      setFilterSearchTerm(currentSearch);
+      setApiSearchTerm(currentSearch);
 
       const resultTimer = setTimeout(() => {
         const searchHash = `${currentSearch}-${sortedCafes.length}`;
@@ -535,12 +541,12 @@ const handleCloseDetails = useCallback(() => {
 }, [shouldResetMapOnClose, showRouteControls, mapInstance]);
 
 const clearAllFilters = useCallback(() => {
-  resetFilters();
+  resetApiFilters();
   
   setSearchInputValue('');
   setDebouncedSearchValue('');
   setSearchTermLocal('');
-  setFilterSearchTerm('');
+  setApiSearchTerm('');
   
   setIsSearchProcessing(false);
   setIsTyping(false);
@@ -561,7 +567,7 @@ const clearAllFilters = useCallback(() => {
       }
     }
   }
-}, [resetFilters, setFilterSearchTerm, mapInstance, defaultCenter, userLocation, sortedCafes.length, cafes.length]);
+}, [resetApiFilters, setApiSearchTerm, mapInstance, defaultCenter, userLocation, sortedCafes.length, cafes.length]);
 
 // ==============================
 // EFFECTS
@@ -926,7 +932,7 @@ return (
       </motion.button>
 
       <AnimatePresence>
-        {hasActiveFilters && (
+        {apiHasActiveFilters && (
           <motion.div 
             className="absolute top-24 left-4 z-[400] bg-white/90 backdrop-blur-sm rounded-full px-3 py-2 shadow-lg pointer-events-auto flex items-center gap-2"
             initial={{ opacity: 0, x: -20 }}
@@ -950,7 +956,7 @@ return (
       </AnimatePresence>
 
       <AnimatePresence>
-        {searchTerm && sortedCafes.length > 1 && !isSearchProcessing && (
+        {apiSearchTerm && sortedCafes.length > 1 && !isSearchProcessing && (
           <motion.button
             className="absolute top-24 left-[285px] z-[400] bg-[#6F4E37] text-white rounded-full px-3 py-2 shadow-lg pointer-events-auto flex items-center gap-2"
             initial={{ opacity: 0, x: -20 }}
@@ -991,25 +997,28 @@ return (
       sortedCafes={sortedCafes}
       activeCafe={activeCafe}
       favorites={favorites}
-      searchTerm={searchTerm}
-      filterOptions={filterOptions} 
+      searchTerm={apiSearchTerm}
+      filterOptions={apiFilters} 
       totalCafeCount={cafes.length} 
-      hasActiveFilters={hasActiveFilters}
+      hasActiveFilters={apiHasActiveFilters}
       setShowSidebar={setShowSidebar}
       setViewMode={setViewMode}
       setActiveCafe={setActiveCafe}
       toggleFavorite={toggleFavorite}
       navigateToCafe={navigateToCafe}
-      resetFilters={resetFilters}
+      resetFilters={resetApiFilters}
+      updateFilterOptions={updateApiFilters}
     />
 
     <FilterModal
       isOpen={isFilterModalOpen}
       onClose={toggleFilterModal}
-      filterOptions={filterOptions}
-      updateFilterOptions={updateFilterOptions}
-      resetFilters={resetFilters}
-      availableTags={availableTags}
+      filterOptions={apiFilters}
+      updateFilterOptions={updateApiFilters}
+      resetFilters={resetApiFilters}
+      hasActiveFilters={apiHasActiveFilters}
+      totalResults={sortedCafes.length}
+      isLoading={apiIsLoading}
     />
 
     {!showSidebar && !activeCafe && window.innerWidth < 768 && (
@@ -1017,7 +1026,7 @@ return (
         className="absolute bottom-24 right-4 bg-[#6F4E37] rounded-full p-3 shadow-lg pointer-events-auto"
         style={{ 
           position: 'fixed', 
-          zIndex: 9999,
+          zIndex: 10,
         }}
         onClick={() => {
           setShowSidebar(true);
@@ -1057,12 +1066,10 @@ return (
               transition={{ type: 'spring', damping: 30 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Barra de arrastre con indicador visual */}
               <div className="sticky top-0 w-full flex justify-center py-2 bg-white md:hidden z-10">
                 <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
               </div>
               
-              {/* Wrapper para scroll */}
 <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-hidden bg-[#FBF7F4] rounded-t-3xl md:rounded-3xl">
                 {activeCafeData && (
                   <CafeDetail
@@ -1083,7 +1090,6 @@ return (
       )}
     </AnimatePresence>
 
-    {/* Pulsating indicator on map for selected cafe */}
     {activeCafe && (
       <motion.div
         className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
@@ -1098,7 +1104,6 @@ return (
       </motion.div>
     )}
 
-    {/* Route Controls */}
     <AnimatePresence>
       {showRouteControls && activeCafeData && (
         <RouteControls

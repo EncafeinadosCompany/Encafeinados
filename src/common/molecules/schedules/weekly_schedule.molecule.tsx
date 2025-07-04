@@ -14,7 +14,6 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
-  console.log("Schedules data received:", schedules);
 
   const dayNames: { [key: string]: string } = {
     'monday': 'Lunes',

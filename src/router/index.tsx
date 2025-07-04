@@ -48,6 +48,7 @@ const Form_edit_branch = lazy(() => import("@/common/widgets/forms/branch/form_e
 const Menubar_branch = lazy(() => import("@/modules/admin_branches/views/menubar_branch"));
 const DetailsBranches = lazy(() => import("@/common/widgets/admin_branches/details_branches.widget"));
 const AttributesDashboard = lazy(() => import("@/common/widgets/admin_branches/attributes.widget"));
+const BranchReviewsView = lazy(() => import("@/modules/admin_branches/views/branch_reviews.view"));
 
 // COFFEELOVER
 const Menubar_Coffelover = lazy(() => import("@/modules/coffeelover/views/menubar_coffelover"));
@@ -80,10 +81,8 @@ const AuthRoutes = () => {
         }>
           <Routes>
 
-            {/* PRUEBAS */}
             <Route path="/prueba" element={<Prueba_album />} />
 
-            {/* PUBLIC ROUTES */}
             <Route path="/" element={<HomePage />} />
             <Route path="/map" element={<MapView view={true} />} />
             <Route path="/about" element={<AboutPage />} />
@@ -129,6 +128,7 @@ const AuthRoutes = () => {
               <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL, ROLES.STORE]} />}>
                 <Route path="/sucursal" element={<Menubar_branch />}>
                   <Route index element={<DetailsBranches />} />
+                  <Route path="valoraciones" element={<BranchReviewsView />} />
                   <Route path="images" element={<ImagesGallery />} />
                   <Route path="perfil" element={<Form_edit_branch />} />
                   <Route path="attributes" element={<AttributesDashboard />} />

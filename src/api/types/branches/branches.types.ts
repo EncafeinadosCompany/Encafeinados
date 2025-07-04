@@ -25,7 +25,7 @@ export interface Branch {
     store_email: string;
   };
   social_branches?: SocialBranch[];
-  is_open?: boolean; // Nuevo campo añadido
+  is_open?: boolean; 
 }
 
 export interface BranchPost {
@@ -91,3 +91,21 @@ export interface BrancheIDresponse {
     }[];
   };
 }
+
+// THIS IS FOR THE SEARCH IN THE MAP AND FILTERS.
+export interface SearchBranchesResponse {
+  totalBranches: number;
+  count: number;
+  branches: SearchBranch[];
+}
+
+export interface SearchBranch {
+  id: number;
+  name: string;
+  average_rating: string;
+  isOpen: boolean;
+  latitude: number;
+  longitude: number;
+  address: string;
+  store_logo: string;
+}  
