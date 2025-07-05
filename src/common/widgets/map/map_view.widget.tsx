@@ -1,211 +1,50 @@
-import React, {
-  useState,
-  useCallback,
-  useMemo,
-  useEffect,
-  useRef,
-} from "react";
-import {
-  ArrowLeft,
-  Search,
-  Filter,
-  Coffee,
-  Navigation,
-  Map as MapIcon,
-  X,
-} from "@/common/ui/icons";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
+import { ArrowLeft } from "@/common/ui/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useSearchParams } from "react-router-dom";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import L from "leaflet";
-import toast from "react-hot-toast";
 import "leaflet/dist/leaflet.css";
 import "@/common/styles/leaflet-markercluster.css";
 import "@/common/styles/mapMarkers.css";
 import "@/common/styles/desktopDetails.css";
-
-//   COMMENTS FOR EACH SECTION ARE NECESSARY IN THIS MODULE BECAUSE I GET LOST :(
+import toast from "react-hot-toast";
 
 // API imports
-
 import { useApprovedStores } from "@/api/queries/stores/stores.query";
 import { useBranchesByStore } from "@/api/queries/stores/stores.query";
+import { useBranches } from "@/api/queries/branches/branch.query";
 
-// Types
-import { Cafe } from "@/api/types/map/map_search.types";
-
-// Hooks
+// Hooks personalizados
 import { useFavorites } from "@/common/hooks/map/useFavorites";
 import { useGeolocation } from "@/common/hooks/map/useGeolocation";
 import { useMapData } from "@/common/hooks/map/useMapData";
 import { useBranchSearch } from "@/common/hooks/map/useBranchSearch";
 import { useRouteNavigation } from "@/common/hooks/map/useRouteNavigation";
+import { useMapSearch } from "@/common/hooks/map/useMapSearch";
+import { useMapLoading } from "@/common/hooks/map/useMapLoading";
+import { useUrlNavigation } from "@/common/hooks/map/useUrlNavigation";
+import { useCafeDetails } from "@/common/hooks/map/useCafeDetails";
 
-// Components
+// Moléculas
 import MapFocus from "@/common/molecules/map/map_focus.molecule";
 import FilterModal from "@/common/molecules/map/filter_modal.molecule";
 import SmartClusterGroup from "@/common/molecules/map/smart_custer_group.molecule";
 import UserMarker from "@/common/molecules/map/user_marker.molecule";
 import DirectRouteLine from "@/common/molecules/map/direct_route_line.molecule";
 import RouteControls from "@/common/molecules/map/route_controls.molecule";
-import "@/common/styles/mapMarkers.css";
 import CafeDetail from "@/common/molecules/map/cafe_detail.molecule";
 import MapSidebar from "@/common/molecules/map/map_sidebar.molecule";
-import {containerVariants,pulseVariants} from "./map_animations.widget";
-import {useBranches} from "@/api/queries/branches/branch.query";
+import MapController from "@/common/molecules/map/map_controller.molecule";
+import MapSearchBar from "@/common/molecules/map/map_search_bar.molecule";
+import MapControls from "@/common/molecules/map/map_controls.molecule";
+import FilterIndicator from "@/common/molecules/map/filter_indicator.molecule";
+import MapLoadingOverlay from "@/common/molecules/map/map_loading_overlay.molecule";
 
-import "@/common/styles/leaflet-markercluster.css";
-import LoadingSpinner from "@/common/atoms/common/loading_spinner.atom";
+import { containerVariants, pulseVariants } from "./map_animations.widget";
+
+import { Coffee } from "@/common/ui/icons";
 import { useAppData } from "@/common/context/app_data.context";
-
-const MapController: React.FC<{
-  setMapInstance: (map: L.Map) => void;
-  setTotalTiles: (total: number) => void;
-  setTilesLoaded: (loaded: number) => void;
-  setLoadingProgress: (progress: number) => void;
-  setMapLoaded: (loaded: boolean) => void;
-}> = ({
-  setMapInstance,
-  setTotalTiles,
-  setTilesLoaded,
-  setLoadingProgress,
-  setMapLoaded,
-}) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (map) {
-      setMapInstance(map);
-
-      setTimeout(() => {
-        const mapContainer = map.getContainer();
-        const controlContainer = mapContainer.querySelector(
-          ".leaflet-control-container"
-        ) as HTMLElement;
-        if (controlContainer) {
-          controlContainer.style.zIndex = "400";
-        }
-
-        mapContainer.addEventListener("touchmove", () => {}, { passive: true });
-      }, 100);
-
-      let loadedTiles = 0;
-      let totalTilesCount = 0;
-
-      setLoadingProgress(30);
-
-      const backupTimer = setTimeout(() => {
-        const isMobile =
-          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-            navigator.userAgent
-          );
-
-        if (loadedTiles === 0) {
-          if (isMobile) {
-            let fakeTotalTiles = 12;
-            let fakeLoadedTiles = 0;
-
-            let progress = 30;
-            const interval = setInterval(() => {
-              progress += Math.floor(Math.random() * 4) + 2;
-              setLoadingProgress(progress);
-
-              fakeLoadedTiles = Math.ceil(
-                ((progress - 30) / 70) * fakeTotalTiles
-              );
-              setTotalTiles(fakeTotalTiles);
-              setTilesLoaded(fakeLoadedTiles);
-
-              if (progress >= 90) {
-                clearInterval(interval);
-                setTimeout(() => {
-                  setLoadingProgress(95);
-                  setTimeout(() => {
-                    setLoadingProgress(100);
-                    setTimeout(() => setMapLoaded(true), 300);
-                  }, 200);
-                }, 300);
-              }
-            }, 200);
-
-            return () => clearInterval(interval);
-          } else {
-            let progress = 30;
-            const interval = setInterval(() => {
-              progress += Math.floor(Math.random() * 4) + 2;
-              setLoadingProgress(progress);
-
-              if (progress >= 90) {
-                clearInterval(interval);
-                setTimeout(() => {
-                  setLoadingProgress(95);
-                  setTimeout(() => {
-                    setLoadingProgress(100);
-                    setTimeout(() => setMapLoaded(true), 300);
-                  }, 200);
-                }, 300);
-              }
-            }, 200);
-
-            return () => clearInterval(interval);
-          }
-        }
-      }, 2500);
-
-      const maxWaitTimer = setTimeout(() => {
-        setLoadingProgress(100);
-        setTimeout(() => setMapLoaded(true), 300);
-      }, 4000);
-
-      function onTileLoadStart() {
-        totalTilesCount++;
-        setTotalTiles(totalTilesCount);
-      }
-
-      function onTileLoad() {
-        loadedTiles++;
-        setTilesLoaded(loadedTiles);
-
-        const maxTiles = Math.max(10, totalTilesCount);
-        const tileProgress = Math.min(
-          Math.floor((loadedTiles / maxTiles) * 70),
-          70
-        );
-        const totalProgress = 30 + tileProgress;
-
-        setLoadingProgress(totalProgress);
-
-        if (totalProgress >= 90) {
-          setTimeout(() => {
-            setLoadingProgress(100);
-            setTimeout(() => {
-              setMapLoaded(true);
-            }, 300);
-          }, 200);
-        }
-      }
-
-      map.on("tileloadstart", onTileLoadStart);
-      map.on("tileload", onTileLoad);
-
-      return () => {
-        map.off("tileloadstart", onTileLoadStart);
-        map.off("tileload", onTileLoad);
-        clearTimeout(backupTimer);
-        clearTimeout(maxWaitTimer);
-      };
-    }
-  }, [
-    map,
-    setMapInstance,
-    setTotalTiles,
-    setTilesLoaded,
-    setLoadingProgress,
-    setMapLoaded,
-  ]);
-
-  return null;
-};
 
 // ==============================
 // MAIN COMPONENT
@@ -219,40 +58,16 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   const { isMobile } = useAppData();
   const [searchParams] = useSearchParams();
 
-  // ==============================
-  // STATE MANAGEMENT
-  // ==============================
-  const [mapLoaded, setMapLoaded] = useState<boolean>(false);
-  const [tilesLoaded, setTilesLoaded] = useState<number>(0);
-  const [totalTiles, setTotalTiles] = useState<number>(0);
-  const [loadingProgress, setLoadingProgress] = useState<number>(0);
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [showSidebar, setShowSidebar] = useState<boolean>(false);
-  const [activeCafe, setActiveCafe] = useState<number | null>(null);
-  const [searchFocused, setSearchFocused] = useState<boolean>(false);
-  const [showDirections, setShowDirections] = useState<boolean>(false);
-  const [viewMode, setViewMode] = useState<"map" | "list">("map");
-  const [selectedStore, setSelectedStore] = useState<number | undefined>(
-    undefined
-  );
-  const [searchTerm, setSearchTermLocal] = useState<string>("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [searchInputValue, setSearchInputValue] = useState("");
-  const [debouncedSearchValue, setDebouncedSearchValue] = useState("");
-  const [isSearchProcessing, setIsSearchProcessing] = useState(false);
-  const lastToastRef = useRef("");
-  const [copied, setCopied] = useState(false);
   const [showRouteControls, setShowRouteControls] = useState<boolean>(false);
-  const [shouldResetMapOnClose, setShouldResetMapOnClose] = useState(false);
-  const [view, setView] = useState(true);
-  const [activeCafeData, setActiveCafeData] = useState<Cafe | null>(null);
+  const [viewMode, setViewMode] = useState<"map" | "list">("map");
+  const [selectedStore, setSelectedStore] = useState<number | undefined>(undefined);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
-  const [processedCafeIds, setProcessedCafeIds] = useState<Set<number>>(
-    new Set()
-  );
-
+  const { mapLoaded, setMapLoaded, tilesLoaded, setTilesLoaded, totalTiles, setTotalTiles, loadingProgress, setLoadingProgress } = useMapLoading();
   const { favorites, toggleFavorite } = useFavorites();
+  
   const {
     userLocation,
     locatingUser,
@@ -260,6 +75,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     errorMessage,
     getUserLocation,
   } = useGeolocation(mapInstance);
+  
   const {
     transportMode,
     setTransportMode,
@@ -276,42 +92,27 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     isRouteActive,
   } = useRouteNavigation();
 
-  // ==============================
-  // API DATA FETCHING
-  // ==============================
-  const {
-    data: branchesData,
-    isLoading: branchesLoading,
-    error: branchesError,
-  } = useBranches();
-  const { data: storesData, isLoading: storesLoading } = useApprovedStores();
-  const { data: filteredBranchesData } = useBranchesByStore(
-    selectedStore ? selectedStore : undefined
-  );
+  // API Data fetching
+  const { data: branchesData } = useBranches();
+  const { data: storesData } = useApprovedStores();
+  const { data: filteredBranchesData } = useBranchesByStore(selectedStore);
 
-  // ==============================
-  // DERIVED STATE / COMPUTED VALUES
-  // ==============================
+  // Map data
   const {
     defaultCenter,
     cafes,
     cafePositions,
-    filteredCafes,
     sortedCafes: mapDataSortedCafes,
-    activeCafeData: derivedActiveCafeData,
     availableStores,
   } = useMapData(
     branchesData,
     filteredBranchesData,
     userLocation,
-    activeCafe,
+    null, 
     storesData
   );
 
-  // ==============================
-  // SEARCH AND FILTER (API-BASED)
-  // ==============================
-
+  // API-based search and filter
   const {
     searchTerm: apiSearchTerm,
     setSearchTerm: setApiSearchTerm,
@@ -322,145 +123,93 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     cafes: apiCafes,
     isLoading: apiIsLoading,
   } = useBranchSearch(userLocation || undefined);
-
+  
   const sortedCafes = useMemo(() => {
     if (apiHasActiveFilters) {
       return apiCafes;
     }
-
     return cafes;
   }, [apiCafes, cafes, apiHasActiveFilters]);
 
-  const availableTags = useMemo(() => {
-    const allTags = cafes.flatMap((cafe) => cafe.tags);
-    return [...new Set(allTags)];
-  }, [cafes]);
+  const {
+    activeCafe,
+    setActiveCafe,
+    activeCafeData,
+    shouldResetMapOnClose,
+    setShouldResetMapOnClose,
+    copied,
+    handleCloseDetails,
+    copyToClipboard
+  } = useCafeDetails(sortedCafes, mapInstance, showRouteControls, searchParams);
+  
+  const {
+    searchInputValue,
+    setSearchInputValue,
+    isTyping,
+    setIsTyping,
+    isSearchProcessing,
+    searchFocused,
+    setSearchFocused,
+    searchTerm,
+    handleSearchChange,
+    clearSearch
+  } = useMapSearch(
+    mapInstance,
+    sortedCafes,
+    userLocation,
+    setActiveCafe,
+    setShowSidebar,
+    setViewMode,
+    setApiSearchTerm
+  );
+
+  const clearAllFilters = useCallback(() => {
+    resetApiFilters();
+    clearSearch();
+    
+    if (sortedCafes.length !== cafes.length) {
+      if (mapInstance) {
+        if (userLocation) {
+          mapInstance.setView(userLocation, 13, {
+            animate: true,
+            duration: 1,
+          });
+        } else {
+          mapInstance.setView(defaultCenter, 13, {
+            animate: true,
+            duration: 1,
+          });
+        }
+      }
+    }
+  }, [resetApiFilters, clearSearch, mapInstance, defaultCenter, userLocation, sortedCafes.length, cafes.length]);
+
+  const clearFiltersForNavigation = useCallback(() => {
+    resetApiFilters();
+    clearSearch();
+  }, [resetApiFilters, clearSearch]);
+  
+  const {
+    processedCafeIds,
+    setProcessedCafeIds,
+    removeCafeIdParam
+  } = useUrlNavigation(
+    mapLoaded,
+    cafes,
+    mapInstance,
+    activeCafe,
+    setActiveCafe,
+    apiHasActiveFilters,
+    apiCafes,
+    clearFiltersForNavigation
+  );
 
   const toggleFilterModal = useCallback(() => {
     if (activeCafe) {
       setActiveCafe(null);
     }
     setIsFilterModalOpen(!isFilterModalOpen);
-  }, [isFilterModalOpen, activeCafe]);
-
-  useEffect(() => {
-    setApiSearchTerm(searchTerm);
-  }, [searchTerm, setApiSearchTerm]);
-
-  const handleSearchChange = useCallback((value: string) => {
-    setSearchInputValue(value);
-    setIsTyping(true);
-  }, []);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (searchInputValue !== debouncedSearchValue) {
-        setDebouncedSearchValue(searchInputValue);
-      }
-    }, 800);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchInputValue, debouncedSearchValue]);
-
-  useEffect(() => {
-    if (!debouncedSearchValue || debouncedSearchValue.length < 3) {
-      setIsTyping(false);
-      if (debouncedSearchValue === "") {
-        setSearchTermLocal("");
-        setApiSearchTerm("");
-      }
-      return;
-    }
-
-    setIsSearchProcessing(true);
-    setIsTyping(false);
-
-    const currentSearch = debouncedSearchValue.trim();
-
-    const filterTimer = setTimeout(() => {
-      setSearchTermLocal(currentSearch);
-      setApiSearchTerm(currentSearch);
-
-      const resultTimer = setTimeout(() => {
-        const searchHash = `${currentSearch}-${sortedCafes.length}`;
-        const shouldShowToast = lastToastRef.current !== searchHash;
-
-        if (sortedCafes.length > 0) {
-          if (userLocation) {
-            const closestCafe = sortedCafes[0];
-            if (activeCafe !== closestCafe.id || shouldShowToast) {
-              setActiveCafe(closestCafe.id);
-
-              if (mapInstance) {
-                mapInstance.flyTo(
-                  [closestCafe.latitude, closestCafe.longitude],
-                  16,
-                  { duration: 1.5, animate: true }
-                );
-              }
-            }
-          } else {
-            const firstResult = sortedCafes[0];
-            if (activeCafe !== firstResult.id || shouldShowToast) {
-              setActiveCafe(firstResult.id);
-
-              if (mapInstance) {
-                mapInstance.flyTo(
-                  [firstResult.latitude, firstResult.longitude],
-                  16,
-                  { duration: 1.5, animate: true }
-                );
-              }
-            }
-          }
-
-          if (window.innerWidth < 768) {
-            setShowSidebar(false);
-            setViewMode("map");
-          }
-
-          if (shouldShowToast) {
-            lastToastRef.current = searchHash;
-
-            if (sortedCafes.length === 1) {
-              toast.success(`¡Encontrada "${sortedCafes[0].name}"!`, {
-                icon: "🎯",
-                duration: 2000,
-                id: searchHash,
-              });
-            } else {
-              toast.success(
-                `Mostrando el más cercano de ${sortedCafes.length} resultados`,
-                {
-                  icon: "📍",
-                  duration: 2000,
-                  id: searchHash,
-                }
-              );
-            }
-          }
-        } else if (shouldShowToast) {
-          lastToastRef.current = searchHash;
-          toast.error("No se encontraron cafeterías con ese nombre", {
-            duration: 2000,
-            id: searchHash,
-          });
-        }
-
-        setIsSearchProcessing(false);
-      }, 400);
-
-      return () => clearTimeout(resultTimer);
-    }, 200);
-
-    return () => clearTimeout(filterTimer);
-  }, [debouncedSearchValue, userLocation, mapInstance, sortedCafes.length]);
-
-  // ==============================
-  // CALLBACKS
-  // ==============================
+  }, [isFilterModalOpen, activeCafe, setActiveCafe]);
 
   const navigateToCafe = useCallback(
     (cafeId: number): void => {
@@ -468,7 +217,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
       if (!selectedCafe) return;
 
       if (activeCafe !== cafeId) {
-        setActiveCafeData(selectedCafe);
         setActiveCafe(cafeId);
       }
 
@@ -487,7 +235,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
         animate: true,
       });
     },
-    [userLocation, sortedCafes, mapInstance, getUserLocation, activeCafe]
+    [userLocation, sortedCafes, mapInstance, getUserLocation, activeCafe, setActiveCafe, setShowSidebar, setShouldResetMapOnClose]
   );
 
   const startRoute = useCallback(
@@ -515,7 +263,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
         setTimeout(() => {
           setRouteOrigin(userLocation);
           setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
-          setActiveCafeData(selectedCafe);
           setShowRouteControls(true);
 
           if (mapInstance) {
@@ -539,144 +286,16 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
       mapInstance,
       setRouteOrigin,
       setRouteDestination,
+      setActiveCafe,
+      setShowRouteControls,
       getUserLocation,
     ]
   );
-
-  const setupRoute = useCallback(
-    (cafeId: number) => {
-      if (!userLocation) {
-        toast.error("Necesitamos tu ubicación para trazar la ruta");
-        getUserLocation();
-        return;
-      }
-
-      const selectedCafe = sortedCafes.find((cafe) => cafe.id === cafeId);
-      if (selectedCafe) {
-        if (!selectedCafe.isOpen) {
-          toast.error("No puedes navegar a una cafetería cerrada", {
-            icon: "⏰",
-            duration: 3000,
-          });
-          return;
-        }
-
-        setActiveCafe(null);
-        setIsRouteLoading(true);
-
-        setTimeout(() => {
-          setRouteOrigin(userLocation);
-          setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
-          setShowRouteControls(true);
-        }, 100);
-      }
-    },
-    [
-      userLocation,
-      sortedCafes,
-      setRouteOrigin,
-      setRouteDestination,
-      getUserLocation,
-      setIsRouteLoading,
-    ]
-  );
-
-  const copyToClipboard = useCallback((text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-
-    const popoverElement = document.querySelector(".popover-content");
-    if (popoverElement) {
-    }
-
-    setTimeout(() => setCopied(false), 2000);
-  }, []);
 
   const handleCloseRouteControls = useCallback(() => {
     setShowRouteControls(false);
     clearRoute();
-  }, [clearRoute]);
-
-  const handleCloseDetails = useCallback(() => {
-    if (activeCafe) {
-      setProcessedCafeIds((prev) => {
-        const newSet = new Set(prev);
-        newSet.add(activeCafe);
-        return newSet;
-      });
-    }
-
-    setActiveCafe(null);
-
-    const currentParams = new URLSearchParams(searchParams);
-    if (currentParams.has("cafeId")) {
-      currentParams.delete("cafeId");
-      const newUrl = `${window.location.pathname}${
-        currentParams.toString() ? "?" + currentParams.toString() : ""
-      }`;
-      window.history.replaceState({}, "", newUrl);
-    }
-
-    if (shouldResetMapOnClose && !showRouteControls) {
-      mapInstance?.setZoom(13, { animate: true });
-    }
-  }, [
-    shouldResetMapOnClose,
-    showRouteControls,
-    mapInstance,
-    searchParams,
-    activeCafe,
-  ]);
-
-  const removeCafeIdParam = () => {
-    const currentParams = new URLSearchParams(window.location.search);
-    currentParams.delete("cafeId");
-    const newUrl = `${window.location.pathname}${
-      currentParams.toString() ? "?" + currentParams.toString() : ""
-    }`;
-    window.history.replaceState({}, "", newUrl);
-  };
-
-  const clearAllFilters = useCallback(() => {
-    resetApiFilters();
-
-    setSearchInputValue("");
-    setDebouncedSearchValue("");
-    setSearchTermLocal("");
-    setApiSearchTerm("");
-
-    setIsSearchProcessing(false);
-    setIsTyping(false);
-    lastToastRef.current = "";
-
-    if (sortedCafes.length !== cafes.length) {
-      if (mapInstance) {
-        if (userLocation) {
-          mapInstance.setView(userLocation, 13, {
-            animate: true,
-            duration: 1,
-          });
-        } else {
-          mapInstance.setView(defaultCenter, 13, {
-            animate: true,
-            duration: 1,
-          });
-        }
-      }
-    }
-  }, [
-    resetApiFilters,
-    setApiSearchTerm,
-    mapInstance,
-    defaultCenter,
-    userLocation,
-    sortedCafes.length,
-    cafes.length,
-  ]);
-
-  // ==============================
-  // EFFECTS
-  // ==============================
+  }, [clearRoute, setShowRouteControls]);
 
   useEffect(() => {
     getUserLocation();
@@ -694,13 +313,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     setRouteOrigin,
     setRouteDestination,
   ]);
-
-  useEffect(() => {
-    if (activeCafe) {
-      setShowSidebar(false);
-      setViewMode("map");
-    }
-  }, [activeCafe]);
 
   useEffect(() => {
     if (mapInstance) {
@@ -779,111 +391,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     };
   }, [mapInstance, activeCafe, showRouteControls, handleCloseDetails]);
 
-  useEffect(() => {
-    if (activeCafe) {
-      const selectedCafe = sortedCafes.find((cafe) => cafe.id === activeCafe);
-      if (selectedCafe) {
-        setActiveCafeData(selectedCafe);
-      }
-    } else {
-      setActiveCafeData(null);
-    }
-  }, [activeCafe, sortedCafes]);
-
-  const clearFiltersForNavigation = useCallback(() => {
-    resetApiFilters();
-    setSearchInputValue("");
-    setDebouncedSearchValue("");
-    setSearchTermLocal("");
-    setApiSearchTerm("");
-    setIsSearchProcessing(false);
-    setIsTyping(false);
-    lastToastRef.current = "";
-  }, [resetApiFilters, setApiSearchTerm]);
-
-  useEffect(() => {
-    // NAVEGACIÓN POR URL - Manejo de cafeId en parámetros de URL
-    if (!mapLoaded || !cafes.length || !mapInstance) return;
-
-    const cafeId = searchParams.get("cafeId");
-    if (!cafeId) return;
-
-    const cafeIdNumber = parseInt(cafeId, 10);
-    if (isNaN(cafeIdNumber)) return;
-
-    if (activeCafe === cafeIdNumber || processedCafeIds.has(cafeIdNumber)) {
-      if (processedCafeIds.has(cafeIdNumber)) {
-        const currentParams = new URLSearchParams(searchParams);
-        currentParams.delete("cafeId");
-        const newUrl = `${window.location.pathname}${
-          currentParams.toString() ? "?" + currentParams.toString() : ""
-        }`;
-        window.history.replaceState({}, "", newUrl);
-      }
-      return;
-    }
-
-    const selectedCafe = cafes.find((cafe) => cafe.id === cafeIdNumber);
-    if (!selectedCafe) {
-      toast.error("La cafetería seleccionada no se encuentra disponible");
-      return;
-    }
-
-    let needsFilterClear = false;
-    if (
-      apiHasActiveFilters &&
-      !apiCafes.find((cafe) => cafe.id === cafeIdNumber)
-    ) {
-      needsFilterClear = true;
-
-      clearFiltersForNavigation();
-
-      toast.success(
-        "Se limpiaron los filtros para mostrar la cafetería seleccionada",
-        {
-          duration: 3000,
-          icon: "🔍",
-        }
-      );
-    }
-    const showCafe = () => {
-      setActiveCafe(cafeIdNumber);
-
-      mapInstance.flyTo([selectedCafe.latitude, selectedCafe.longitude], 16, {
-        duration: 1.5,
-        animate: true,
-      });
-    };
-
-    if (needsFilterClear) {
-      setTimeout(() => {
-        showCafe();
-        removeCafeIdParam();
-      }, 300);
-    } else {
-      showCafe();
-      removeCafeIdParam();
-    }
-  }, [
-    mapLoaded,
-    cafes.length,
-    mapInstance,
-    searchParams,
-    activeCafe,
-    clearFiltersForNavigation,
-    apiHasActiveFilters,
-    apiCafes,
-    processedCafeIds,
-  ]); // Añadir processedCafeIds como dependencia
-
-  // ==============================
-  // RENDER FUNCTIONS
-  // ==============================
-
-  // ==============================
   // COMPONENT RENDER
-  // ==============================
-
   return (
     <motion.div
       className={`${
@@ -897,32 +405,12 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
       initial="hidden"
       animate="visible"
     >
-      <AnimatePresence>
-        {!mapLoaded && (
-          <motion.div
-            className="absolute inset-0 bg-white z-50 flex flex-col items-center justify-center"
-            exit={{
-              opacity: 0,
-              transition: { duration: 0.7, ease: "easeInOut" },
-            }}
-          >
-            <LoadingSpinner
-              size="lg"
-              progress={loadingProgress}
-              message={
-                loadingProgress < 30
-                  ? "Inicializando mapa..."
-                  : loadingProgress < 70
-                  ? "Cargando datos de cafeterías..."
-                  : loadingProgress < 100
-                  ? "Preparando tu experiencia cafetera..."
-                  : "¡Listo!"
-              }
-              className="mb-4"
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <MapLoadingOverlay 
+        mapLoaded={mapLoaded} 
+        loadingProgress={loadingProgress} 
+        isSearchProcessing={isSearchProcessing} 
+      />
+      
       <div className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-white/95 via-white/80 to-white/0 pt-4 pb-12 px-4">
         <div className="flex items-center justify-between">
           {showView ? (
@@ -941,79 +429,19 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
           ) : (
             <div></div>
           )}
-          <motion.div
-            className={`relative transition-all duration-300 ${
-              searchFocused ? "w-full md:w-96" : "w-48 md:w-64"
-            }`}
-            layout
-          >
-            <div className="relative">
-              <input
-                type="text"
-                value={searchInputValue}
-                onChange={(e) => {
-                  setSearchInputValue(e.target.value);
-                  setIsTyping(true);
-                }}
-                placeholder={
-                  searchInputValue.length < 3 && searchInputValue.length > 0
-                    ? "Escribe al menos 3 caracteres..."
-                    : "Buscar cafeterías..."
-                }
-                className={`w-full h-11 pl-10 pr-12 rounded-full shadow-lg border-none outline-none transition-all duration-300 bg-white border-black/10 ${
-                  searchInputValue.length < 3 && searchInputValue.length > 0
-                    ? "focus:ring-2 focus:ring-amber-300"
-                    : "focus:ring-2 focus:ring-[#D4A76A]"
-                }`}
-                onFocus={() => setSearchFocused(true)}
-                onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
-              />
-
-              {isTyping || isSearchProcessing ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]"
-                >
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      fill="none"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
-                </motion.div>
-              ) : (
-                <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#6F4E37]"
-                  size={18}
-                />
-              )}
-
-              {searchInputValue.length > 0 && searchInputValue.length < 3 && (
-                <div className="absolute right-12 top-1/2 transform -translate-y-1/2 text-xs text-gray-400">
-                  {searchInputValue.length}/3
-                </div>
-              )}
-            </div>
-
-            <motion.button
-              className="absolute right-1.5 top-1/2 transform -translate-y-1/2 bg-[#6F4E37] text-white p-1.5 rounded-full hover:bg-[#5d4230] transition-colors duration-300"
-              whileTap={{ scale: 0.9 }}
-              onClick={toggleFilterModal}
-            >
-              <Filter size={16} />
-            </motion.button>
-          </motion.div>
+          
+          {/* Search Bar */}
+          <MapSearchBar 
+            searchInputValue={searchInputValue}
+            setSearchInputValue={setSearchInputValue}
+            searchFocused={searchFocused}
+            setSearchFocused={setSearchFocused}
+            isTyping={isTyping}
+            isSearchProcessing={isSearchProcessing}
+            toggleFilterModal={toggleFilterModal}
+          />
+          
+          {/* View Mode Switcher */}
           <div className="hidden md:flex bg-white/90 backdrop-blur-sm rounded-full shadow-lg overflow-hidden">
             <button
               className={`px-4 py-2 transition-colors duration-300 ${
@@ -1042,10 +470,11 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
               Lista
             </button>
           </div>
-          <div className="w-10 md:hidden"></div>{" "}
-          {/* Spacer for mobile layout */}
+          <div className="w-10 md:hidden"></div>
         </div>
       </div>
+      
+      {/* Map container */}
       <div
         className={`absolute inset-0 z-10 ${
           viewMode === "list" && window.innerWidth >= 768
@@ -1098,99 +527,27 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
         </MapContainer>
 
         {/* Map controls */}
-        <div className="absolute top-24 right-4 z-[400] flex flex-col gap-3 pointer-events-auto">
-          <motion.button
-            className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => mapInstance?.zoomIn()}
-          >
-            <span className="text-xl font-bold text-[#6F4E37]">+</span>
-          </motion.button>
-          <motion.button
-            className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => mapInstance?.zoomOut()}
-          >
-            <span className="text-xl font-bold text-[#6F4E37]">−</span>
-          </motion.button>
-        </div>
+        <MapControls
+          mapInstance={mapInstance}
+          getUserLocation={getUserLocation}
+          locatingUser={locatingUser}
+        />
 
-        <motion.button
-          className="absolute bottom-36 right-4 z-[999] bg-white rounded-full p-3 shadow-lg pointer-events-auto"
-          style={{
-            position: "fixed",
-            zIndex: 9999,
-          }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={getUserLocation}
-          disabled={locatingUser}
-        >
-          <Navigation
-            size={20}
-            className={`${locatingUser ? "animate-pulse" : ""} text-[#6F4E37]`}
-          />
-        </motion.button>
-
-        <AnimatePresence>
-          {apiHasActiveFilters && (
-            <motion.div
-              className="absolute top-24 left-4 z-[400] bg-white/90 backdrop-blur-sm rounded-full px-3 py-2 shadow-lg pointer-events-auto flex items-center gap-2"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              key="filter-indicator"
-            >
-              <Filter size={16} className="text-[#6F4E37]" />
-              <span className="text-sm font-medium text-[#6F4E37]">
-                Mostrando {sortedCafes.length} de {cafes.length} cafeterías
-              </span>
-              <button
-                className="ml-1 text-[#6F4E37] hover:text-[#5d4230] transition-colors"
-                onClick={clearAllFilters}
-                aria-label="Limpiar filtros"
-              >
-                <X size={14} />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {apiSearchTerm && sortedCafes.length > 1 && !isSearchProcessing && (
-            <motion.button
-              className="absolute top-24 left-[285px] z-[400] bg-[#6F4E37] text-white rounded-full px-3 py-2 shadow-lg pointer-events-auto flex items-center gap-2"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              onClick={() => {
-                if (mapInstance && sortedCafes.length > 1) {
-                  const bounds = new L.LatLngBounds(
-                    sortedCafes.map((cafe) => [cafe.latitude, cafe.longitude])
-                  );
-
-                  mapInstance.fitBounds(bounds, {
-                    padding: [50, 50],
-                    animate: true,
-                    duration: 1,
-                  });
-                }
-
-                setActiveCafe(null);
-
-                if (window.innerWidth < 768) {
-                  setShowSidebar(true);
-                }
-              }}
-            >
-              <MapIcon size={16} />
-              <span className="text-sm font-medium">Ver todos</span>
-            </motion.button>
-          )}
-        </AnimatePresence>
-      </div>{" "}
+        {/* Filter indicators */}
+        <FilterIndicator
+          apiHasActiveFilters={apiHasActiveFilters}
+          sortedCafes={sortedCafes}
+          cafes={cafes}
+          clearAllFilters={clearAllFilters}
+          apiSearchTerm={apiSearchTerm}
+          isSearchProcessing={isSearchProcessing}
+          mapInstance={mapInstance}
+          setActiveCafe={setActiveCafe}
+          setShowSidebar={setShowSidebar}
+        />
+      </div>
+      
+      {/* Sidebar */}
       <MapSidebar
         viewMode={viewMode}
         showSidebar={showSidebar}
@@ -1209,6 +566,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
         resetFilters={resetApiFilters}
         updateFilterOptions={updateApiFilters}
       />
+      
+      {/* Filter modal */}
       <FilterModal
         isOpen={isFilterModalOpen}
         onClose={toggleFilterModal}
@@ -1219,6 +578,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
         totalResults={sortedCafes.length}
         isLoading={apiIsLoading}
       />
+      
+      {/* Mobile list button */}
       {!showSidebar && !activeCafe && window.innerWidth < 768 && (
         <motion.button
           className="absolute bottom-24 right-4 bg-[#6F4E37] rounded-full p-3 shadow-lg pointer-events-auto"
@@ -1235,6 +596,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
           <Coffee size={20} className="text-white" />
         </motion.button>
       )}
+      
+      {/* Cafe detail modal */}
       <AnimatePresence>
         {activeCafe && (
           <>
@@ -1243,10 +606,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={(e) => {
-                e.preventDefault();
-                handleCloseDetails();
-              }}
+              onClick={handleCloseDetails}
             />
 
             <motion.div
@@ -1286,6 +646,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
           </>
         )}
       </AnimatePresence>
+      
+      {/* Active cafe marker animation */}
       {activeCafe && (
         <motion.div
           className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
@@ -1299,6 +661,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
           </div>
         </motion.div>
       )}
+      
+      {/* Route controls */}
       <AnimatePresence>
         {showRouteControls && activeCafeData && (
           <RouteControls
@@ -1314,47 +678,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
             destination={routeDestination}
             routeInfo={routeInfo}
           />
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {isSearchProcessing && (
-          <motion.div
-            className="absolute inset-0 bg-black/10 z-[50] flex items-center justify-center pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <motion.div
-              className="bg-white/90 backdrop-blur-sm py-2 px-4 rounded-full shadow-lg flex items-center gap-2"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 20, opacity: 0 }}
-            >
-              <svg
-                className="animate-spin h-4 w-4 text-[#6F4E37]"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-              <span className="text-sm font-medium text-[#6F4E37]">
-                Buscando cafeterías...
-              </span>
-            </motion.div>
-          </motion.div>
         )}
       </AnimatePresence>
     </motion.div>
