@@ -6,7 +6,7 @@ import {
 import { Button } from "@/common/ui/button";
 import { Badge } from "@/common/ui/badge";
 import { CheckCircle } from'@/common/ui/icons';
-import { StoreAvatar } from "@/common/atoms/StoreAvatar";
+import { StoreAvatar } from "@/common/atoms/common/StoreAvatar";
 
 interface ApprovedStoreDetailsDialogProps {
   store: StoreDto | null;

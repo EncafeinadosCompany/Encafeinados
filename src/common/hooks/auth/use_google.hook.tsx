@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import {  setAuthStorageGoogle } from "../utils/security/auth_storage.utils";
+import {  setAuthStorageGoogle } from "../../utils/security/auth_storage.utils";
 
 
 const GoogleCallback = () => {

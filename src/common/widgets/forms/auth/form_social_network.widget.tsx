@@ -10,10 +10,10 @@ import { Button } from "@/common/ui/button"
 import { Input } from "@/common/ui/input"
 import { Textarea } from "@/common/ui/textarea"
 import { motion, AnimatePresence } from "framer-motion"
-import { UseNetworkInputConfig } from "@/common/hooks/useNetworks"
+import { UseNetworkInputConfig } from "@/common/hooks/social_network/use_networks.hook"
 import { SocialBranch } from "@/api/types/branches/branches.types"
 import { useState } from "react"
-import { TextError } from "@/common/atoms/textError"
+import { TextError } from "@/common/atoms/forms/text_error.atom"
 
 interface DynamicSocialNetworksFormProps {
     availableSocialNetworks: SocialNetworksType | undefined
@@ -46,8 +46,6 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
         setCurrentSelection("")
     }
 
-
-    console.log(error?.social_networks?.[1]?.description?.message);
     return (
         <Card className="w-full max-w-3xl mx-auto border-none shadow-lg rounded-xl overflow-hidden">
             <CardHeader className="bg-gradient-to-r from-amber-50 to-amber-100 pb-6">

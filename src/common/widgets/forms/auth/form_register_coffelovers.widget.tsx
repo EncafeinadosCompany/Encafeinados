@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight } from "@/common/ui/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/common/ui/button";
-import { TitleForm } from "@/common/atoms/auth/title_form.atom";
+import { TitleForm } from "@/common/atoms/forms/title_form.atom";
 
 
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/coffelover/register_coffelover_step2.molecule";
@@ -13,7 +13,7 @@ import RegisterCoffeloverStep3 from "@/common/molecules/auth/coffelover/register
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/coffelover/register_coffelover_step1.molecule";
 import { TermConditions } from "./form_term_conditions.widget";
 
-import ProgressIndicator from "@/common/atoms/auth/progress_indicator.atom";
+import ProgressIndicator from "@/common/atoms/forms/progress_indicator.atom";
 
 // SCHEMAS AND TYPES
 import { registerCoffeeloverSchema, CurrentCoffeeLoverSchema } from "@/common/utils/schemas/auth/register_coffeelover.schema";

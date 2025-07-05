@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query'
 import AuthClient from '@/api/client/axios'
 import { Attribute, AttributeByID, Attributes } from '@/api/types/attributes/attributes.type'
 
-
 const authClient = new AuthClient()
 
 export const useAttributes = () => {
@@ -12,11 +11,10 @@ export const useAttributes = () => {
       const response = await authClient.get<Attributes>('/attributes')
       return response.attributes
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000
 
   })
 }
-
 
 export const useBranchAttributes = (branchId: string) => {
   return useQuery<AttributeByID, Error>({

@@ -44,7 +44,6 @@ import { useRouteNavigation } from "@/common/hooks/map/useRouteNavigation";
 // Components
 import MapFocus from "@/common/molecules/map/map_focus.molecule";
 import FilterModal from "@/common/molecules/map/filter_modal.molecule";
-import HighlightText from "@/common/atoms/HighlightText";
 import SmartClusterGroup from "@/common/molecules/map/smart_custer_group.molecule";
 import UserMarker from "@/common/molecules/map/user_marker.molecule";
 import DirectRouteLine from "@/common/molecules/map/direct_route_line.molecule";
@@ -52,19 +51,12 @@ import RouteControls from "@/common/molecules/map/route_controls.molecule";
 import "@/common/styles/mapMarkers.css";
 import CafeDetail from "@/common/molecules/map/cafe_detail.molecule";
 import MapSidebar from "@/common/molecules/map/map_sidebar.molecule";
-import {
-  containerVariants,
-  cardVariants,
-  pulseVariants,
-} from "./map_animations.widget";
-import {
-  useBranches,
-  useSearchBranches,
-} from "@/api/queries/branches/branch.query";
-import LoadingSpinner from "@/common/atoms/LoadingSpinner";
-import { useAppData } from "@/common/context/AppDataContext";
-// import 'leaflet.markercluster/dist/leaflet.markercluster.css';
+import {containerVariants,pulseVariants} from "./map_animations.widget";
+import {useBranches} from "@/api/queries/branches/branch.query";
+
 import "@/common/styles/leaflet-markercluster.css";
+import LoadingSpinner from "@/common/atoms/common/loading_spinner.atom";
+import { useAppData } from "@/common/context/app_data.context";
 
 const MapController: React.FC<{
   setMapInstance: (map: L.Map) => void;

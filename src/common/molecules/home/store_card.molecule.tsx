@@ -1,6 +1,6 @@
 import React, { useState, memo } from 'react';
 import { Card, CardContent } from '@/common/ui/card';
-import { Text } from '@/common/atoms/Text';
+import { Text } from '@/common/atoms/common/text.atom';
 import { Coffee, MapPin, Heart, Mail, Phone } from '@/common/ui/icons';
 import { motion } from 'framer-motion';  
 import { Link } from 'react-router-dom';

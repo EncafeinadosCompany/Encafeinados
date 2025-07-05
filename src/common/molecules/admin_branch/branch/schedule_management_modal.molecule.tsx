@@ -17,7 +17,8 @@ import {
   useUpdateSingleBranchScheduleMutation
 } from '@/api/mutations/schedules/schedule.mutation';
 import { DAYS_OF_WEEK, DEFAULT_SCHEDULE_DATA, validateDaySchedule } from '@/common/utils/schemas/schedules/schedule.schema';
-import LoadingSpinner from '@/common/atoms/LoadingSpinner';
+import LoadingSpinner from '@/common/atoms/common/loading_spinner.atom';
+
 
 interface ScheduleManagementModalProps {
   isOpen: boolean;

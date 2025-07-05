@@ -1,4 +1,4 @@
-import { TitleForm } from "@/common/atoms/auth/title_form.atom";
+import { TitleForm } from "@/common/atoms/forms/title_form.atom";
 import RegisterAdminStoreStep2 from "@/common/molecules/auth/admin_stores/finish_admin_store_step2.molecule"
 import { Button } from "@/common/ui/button"
 import { Card } from "@/common/ui/card"
@@ -9,7 +9,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "@/common/ui/icons"
 import RegisterAdminStoreStep1 from "@/common/molecules/auth/admin_stores/finish_admin_store_step1.molecule";
-import ProgressIndicator from "@/common/atoms/auth/progress_indicator.atom";
+import ProgressIndicator from "@/common/atoms/forms/progress_indicator.atom";
 import { useRegisterAdminMutation } from "@/api/mutations/admin/admin_stores.mutation";
 
 import { useNavigate } from "react-router-dom";

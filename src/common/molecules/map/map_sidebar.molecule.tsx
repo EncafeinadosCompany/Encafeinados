@@ -4,8 +4,8 @@ import { Coffee, ArrowLeft } from "@/common/ui/icons";
 import { Cafe } from '@/api/types/map/map_search.types';
 import { FilterOptions } from '@/common/hooks/map/useBranchSearch'; 
 import CafeCard from '@/common/molecules/map/cafe_card.molecule';
-import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
-import { useAppData } from '@/common/context/AppDataContext';
+import SafeNumericDisplay from '@/common/atoms/common/safe_numeric_display.atom';
+import { useAppData } from '@/common/context/app_data.context';
 
 interface MapSidebarProps {
   viewMode: 'map' | 'list';

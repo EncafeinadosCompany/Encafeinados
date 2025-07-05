@@ -1,6 +1,6 @@
 
-import { Label } from "../ui/label";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "@/common/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/common/ui/radio-group";
 
 
 export const renderRadioGroup = (criteriaId: string, field: any) => (

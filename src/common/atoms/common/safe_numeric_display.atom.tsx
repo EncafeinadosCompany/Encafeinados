@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSafeNumericValue } from '../hooks/useSafeNumericValue';
+import { useSafeNumericValue } from '../../hooks/reviews/use_safe_numeric_value.hook';
 
 interface SafeNumericDisplayProps {
   value: number | null | undefined;

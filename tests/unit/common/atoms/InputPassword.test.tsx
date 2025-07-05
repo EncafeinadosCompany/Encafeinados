@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import "jest";
-import { InputPassword } from "@/common/atoms/auth/input_passwork";
+import { InputPassword } from "@/common/atoms/forms/input_passwork";
 
 
 test("Renderizar el input de password con el texto correcto", () => {

@@ -1,6 +1,6 @@
 import AuthClient from "@/api/client/axios";
 import { RegisterStoreDto, responseStores } from "@/api/types/stores/stores.type";
-import { useError } from "@/common/hooks/auth/useErrors";
+import { useError } from "@/common/hooks/auth/use_errors.hook";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 

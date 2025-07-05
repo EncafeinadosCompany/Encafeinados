@@ -5,8 +5,8 @@ import { passwordResetSchema, PasswordResetData } from "@/common/utils/schemas/a
 import { usePasswordResetMutation } from "@/api/mutations/auth/authMutations";
 import { Button } from "@/common/ui/button";
 import { Label } from "@/common/ui/label";
-import { InputEmail } from "@/common/atoms/auth/Input_email.atom";
-import { TextError } from "@/common/atoms/textError";
+import { InputEmail } from "@/common/atoms/forms/Input_email.atom";
+import { TextError } from "@/common/atoms/forms/text_error.atom";
 import {
   Dialog,
   DialogContent,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import HighlightText from '@/common/atoms/HighlightText';
+import HighlightText from '@/common/atoms/common/highlight_text.atom';
 
 describe('HighlightText', () => {
   test('renderiza texto sin resaltar cuando no hay término de búsqueda', () => {

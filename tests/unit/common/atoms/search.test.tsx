@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import {MemoryRouter} from "react-router-dom"
-import SearchCoffee from "@/common/atoms/search";
+import SearchCoffee from "@/common/atoms/common/search.atom";
 
 test("Renderizar el input de busqueda con el texto correcto", () => {
   render(

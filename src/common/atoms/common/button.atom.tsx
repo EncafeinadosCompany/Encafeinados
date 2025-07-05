@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/common/ui/button";
 
 interface ButtonDefaultProps {
     className?: string;

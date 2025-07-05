@@ -6,12 +6,12 @@ import { Store as StoreIcon, RefreshCw, Search, AlertTriangle }  from "@/common/
 import { AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 
-import { StatusBadge } from "@/common/atoms/StatusBadge";
+import { StatusBadge } from "@/common/atoms/common/status_badge.atom";
 import { StoreSearchBar } from "@/common/molecules/admin/store/store_search_bar.molecule";
 import { StorePagination } from "@/common/molecules/admin/store/store_pagination.molecule";
 import { StoreCard } from "@/common/molecules/admin/store/store_card.molecule";
 import { ApprovedStoreDetailsDialog } from "@/common/molecules/admin/store/approved_store_details_dialog.molecule";
-import { useApprovedStoresWidget } from "@/common/hooks/stores/useApprovedStoresWidget";
+import { useApprovedStoresWidget } from "@/common/hooks/stores/use_approved_stores.hook";
 
 export const ApprovedStoresWidget = () => {
   const {

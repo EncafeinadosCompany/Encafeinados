@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import LoadingSpinner from "@/common/atoms/LoadingSpinner";
+import LoadingSpinner from "@/common/atoms/common/loading_spinner.atom";
 
 export default function RouteLoadingIndicator () {
     const [progress, setProgress] = useState(0);

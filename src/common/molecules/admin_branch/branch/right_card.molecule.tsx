@@ -1,5 +1,5 @@
 import { BrancheIDresponse } from "@/api/types/branches/branches.types"
-import { QRCode } from "@/common/atoms/QRCode"
+import { QRCode } from "@/common/atoms/common/QRCode.atom"
 import { Card } from "@/common/ui/card"
 import { Label } from "@/common/ui/label"
 import { Switch } from "@/common/ui/switch"

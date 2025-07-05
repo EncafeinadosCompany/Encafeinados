@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Coffee, Star, Heart, ChevronRight, ChevronLeft } from'@/common/ui/icons';
 import { Link } from 'react-router-dom';
 import { useWindowSize } from '@/common/hooks/useWindowSize';
-import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
+import SafeNumericDisplay from '@/common/atoms/common/safe_numeric_display.atom';
 
 interface FavoriteCafesProps {
   heightAdjustment?: boolean;

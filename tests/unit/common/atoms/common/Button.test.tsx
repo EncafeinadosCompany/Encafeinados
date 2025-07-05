@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import "jest";
-import { ButtonDefault } from "@/common/atoms/button"; 
+import { ButtonDefault } from "@/common/atoms/common/button.atom"; 
 
 test("Renderiza el botón con el texto correcto", () => {
   render(<ButtonDefault>Click Me</ButtonDefault>);

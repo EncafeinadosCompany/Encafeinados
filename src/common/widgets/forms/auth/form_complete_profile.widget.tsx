@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import { useRegisterCoffeloverMutation } from "@/api/mutations/coffelover/coffelover.mutation";
 import { Button } from "@/common/ui/button";
 import { motion } from "framer-motion";
-import { TitleForm } from "@/common/atoms/auth/title_form.atom";
+import { TitleForm } from "@/common/atoms/forms/title_form.atom";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CurrentfinishSchema, registerCoffeeloverGoogleSchema } from "@/common/utils/schemas/auth/register_coffeelover.schema";
-import SelectTypeDocument from "@/common/atoms/auth/select_type_document.atom";
-import { InputForm } from "@/common/atoms/auth/input_form.atom";
+import SelectTypeDocument from "@/common/atoms/forms/select_type_document.atom";
+import { InputForm } from "@/common/atoms/forms/input_form.atom";
 import { TermConditions } from "./form_term_conditions.widget";
-import { TextError } from "@/common/atoms/textError";
+import { TextError } from "@/common/atoms/forms/text_error.atom";
 
 
 const CompletePerfil = () => {

@@ -1,7 +1,7 @@
-import { InputForm } from "@/common/atoms/auth/input_form.atom"
-import SelectTypeDocument from "@/common/atoms/auth/select_type_document.atom"
-import { TextError } from "@/common/atoms/textError"
-import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
+import { InputForm } from "@/common/atoms/forms/input_form.atom"
+import SelectTypeDocument from "@/common/atoms/forms/select_type_document.atom"
+import { TextError } from "@/common/atoms/forms/text_error.atom"
+import { useRegisterFocus } from "@/common/hooks/auth/use_register_focus.hook"
 import { Label } from "@radix-ui/react-label"
 import { FileText, Hash, Phone, User } from'@/common/ui/icons'
 import { Controller, UseFormRegister } from "react-hook-form"

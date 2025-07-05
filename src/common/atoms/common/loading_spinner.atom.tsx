@@ -1,5 +1,6 @@
 import React, { useId } from "react";
-import SafeNumericDisplay from './SafeNumericDisplay';
+import SafeNumericDisplay from "./safe_numeric_display.atom";
+
 
 interface LoadingSpinnerProps {
   message?: string;

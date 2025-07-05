@@ -1,8 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
-
-
 // ROUTES
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import PrivateRoute from "@/router/private-route";
@@ -19,7 +17,7 @@ const AboutPage = lazy(() => import("@/modules/home/views/landing/about_page"));
 const LoginPage = lazy(() => import("@/modules/home/views/Login/login_page"));
 const PasswordResetPage = lazy(() => import("@/modules/auth/views/password_reset.view"));
 const CuestionCard = lazy(() => import("@/common/molecules/auth/login/cuestion_card.molecule"));
-const GoogleCallback = lazy(() => import("@/common/hooks/google"));
+const GoogleCallback = lazy(() => import("@/common/hooks/auth/use_google.hook"));
 const CompleteProfile = lazy(() => import("@/common/widgets/forms/auth/form_complete_profile.widget"));
 const RegisterCoffeloverPage = lazy(() => import("@/modules/home/views/Login/register_coffelover_page"));
 const RegisterStorePage = lazy(() => import("@/modules/home/views/Login/register_stores_page"));

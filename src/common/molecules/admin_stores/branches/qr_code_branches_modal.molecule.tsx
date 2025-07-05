@@ -1,4 +1,4 @@
-import { QRCode } from "@/common/atoms/QRCode";
+import { QRCode } from "@/common/atoms/common/QRCode.atom";
 import {Dialog,DialogContent,DialogHeader,DialogTitle} from "@/common/ui/dialog";
 import { Description } from "@radix-ui/react-dialog";
 import { toPng } from "html-to-image";

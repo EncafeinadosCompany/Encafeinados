@@ -1,6 +1,6 @@
 import React from "react"
 import { Search } from "@/common/ui/icons"
-import { Input } from "../ui/input"
+import { Input } from "../../ui/input"
 
 interface SearchAction {
   icon: React.ReactNode;

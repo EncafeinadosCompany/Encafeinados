@@ -1,4 +1,4 @@
-import { TextError } from "@/common/atoms/textError";
+import { TextError } from "@/common/atoms/forms/text_error.atom";
 import { TermsDialog } from "@/common/molecules/auth/terms_dialog.molecule";
 import { Checkbox } from "@/common/ui/checkbox";
 import { useState } from "react";

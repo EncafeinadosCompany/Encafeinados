@@ -1,10 +1,10 @@
 import React from 'react';
-import { Text } from '@/common/atoms/Text';
+import { Text } from '@/common/atoms/common/text.atom';
 import { Button } from '@/common/ui/button';
 import { Card, CardContent, CardFooter } from '@/common/ui/card';
 import { Navigation, Clock, Phone, Coffee, Star, X, MapPin } from '@/common/ui/icons';
 import { motion } from 'framer-motion';
-import SafeNumericDisplay from '@/common/atoms/SafeNumericDisplay';
+import SafeNumericDisplay from '@/common/atoms/common/safe_numeric_display.atom';
 
 interface CafeInfoCardProps {
   id: string;

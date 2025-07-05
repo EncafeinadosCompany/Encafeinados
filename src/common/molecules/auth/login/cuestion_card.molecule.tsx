@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import CardRegister from "@/common/atoms/auth/card_register.atom"
+import CardRegister from "@/common/atoms/forms/card_register.atom"
 import { LinkReturn } from "../LinkReturn"
 
 

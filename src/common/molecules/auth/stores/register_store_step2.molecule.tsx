@@ -1,8 +1,8 @@
 import { CurrentSchema } from "@/common/utils/schemas/auth/register_store_shema"
 import {  UseFormRegister } from "react-hook-form"
 import { motion } from "framer-motion"
-import { pageVariants } from "@/common/atoms/auth/page_variants.atom"
-import { TitleForm } from "@/common/atoms/auth/title_form.atom"
+import { pageVariants } from "@/common/atoms/forms/page_variants.atom"
+import { TitleForm } from "@/common/atoms/forms/title_form.atom"
 import Imagen from "@/common/widgets/Image/image_full.widget"
 
 interface registerStoreProps {
