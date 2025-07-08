@@ -87,7 +87,7 @@ export const useRegisterVisitMutation = (): UseMutationResult<
       latitude,
       longitude,
     }: ValidateVisitInput) => {
-      const res: any = await authClient.post("/branches/register-visit", {
+      const res: any = await authClient.post("/visits", {
         branch_id: branchId,
         latitude,
         longitude

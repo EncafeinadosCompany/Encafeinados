@@ -11,7 +11,7 @@ import { TitleForm } from "@/common/atoms/forms/title_form.atom";
 import RegisterCoffeloverStep2 from "@/common/molecules/auth/coffelover/register_coffelover_step2.molecule";
 import RegisterCoffeloverStep3 from "@/common/molecules/auth/coffelover/register_coffelover_step3.molecule";
 import RegisterCoffeloverStep1 from "@/common/molecules/auth/coffelover/register_coffelover_step1.molecule";
-import { TermConditions } from "./form_term_conditions.widget";
+import  TermConditions from "./form_term_conditions.widget";
 
 import ProgressIndicator from "@/common/atoms/forms/progress_indicator.atom";
 
@@ -26,7 +26,6 @@ const FormRegisterCoffeelover = () => {
     const [step, setStep] = useState(0);
     const [showInfo, setShowInfo] = useState(false)
     const [direction, setDirection] = useState(0);
-    const [isLoading, setIsLoading] = useState(false)
     const [formData, setFormData] = useState({});
     const useRegisterCoffeelover = useRegisterCoffeloverMutation()
 
@@ -98,6 +97,57 @@ const FormRegisterCoffeelover = () => {
             toast.remove();
         }
     };
+
+
+       // Calculate which icon to show based on current step
+    // const getStepIcon = () => {
+    //     switch (step) {
+    //         case 0:
+    //             return <User className="w-12 h-12 text-amber-600" />;
+    //         case 1:
+    //             return <Shield className="w-12 h-12 text-blue-600" />;
+    //         case 2:
+    //             return <Settings className="w-12 h-12 text-purple-600" />;
+    //         default:
+    //             return <BadgeCheck className="w-12 h-12 text-emerald-600" />;
+    //     }
+    // };
+
+
+    // Get current time for greeting
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return "¡Buenos días";
+        if (hour < 18) return "¡Buenas tardes";
+        return "¡Buenas noches";
+    };
+
+    const getStepTitle = () => {
+        switch (step) {
+            case 0:
+                return "Información personal";
+            case 1:
+                return "Credenciales de acceso";
+            case 2:
+                return "Configuración final";
+            default:
+                return "Registro de administrador";
+        }
+    };
+
+    const getStepDescription = () => {
+        switch (step) {
+            case 0:
+                return "Ingresa los datos personales del administrador";
+            case 1:
+                return "Establece las credenciales de acceso seguras";
+            case 2:
+                return "Configura los permisos y términos finales";
+            default:
+                return "";
+        }
+    };
+
 
     return (
         <div className="w-full flex flex-col items-center rounded-md max-w-3xl overflow-x-hidden mx-auto h-full max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent relative p-4 sm:p-6 border-none shadow-2xl bg-white/90">

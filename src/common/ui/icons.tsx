@@ -12,6 +12,7 @@ export {
     LinkIcon,
     PlusCircle,
     BookOpenCheck,
+    CreditCard,
     Coins,
     CheckCircle,
     Stamp,
