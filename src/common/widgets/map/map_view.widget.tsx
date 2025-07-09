@@ -127,17 +127,9 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     return cafes;
   }, [apiCafes, cafes, apiHasActiveFilters]);
 
-  const {
-    activeCafe,
-    setActiveCafe,
-    activeCafeData,
-    shouldResetMapOnClose,
-    setShouldResetMapOnClose,
-    copied,
-    handleCloseDetails,
-    copyToClipboard
-  } = useCafeDetails(sortedCafes, mapInstance, showRouteControls, searchParams);
-  
+  // Declare state variables that are shared across hooks
+  const [activeCafe, setActiveCafe] = useState<number | null>(null);
+
   const {
     searchInputValue,
     setSearchInputValue,
@@ -198,6 +190,23 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     apiHasActiveFilters,
     apiCafes,
     clearFiltersForNavigation
+  );
+
+  const {
+    activeCafeData,
+    shouldResetMapOnClose,
+    setShouldResetMapOnClose,
+    copied,
+    handleCloseDetails,
+    copyToClipboard
+  } = useCafeDetails(
+    sortedCafes,
+    mapInstance,
+    showRouteControls,
+    searchParams,
+    setProcessedCafeIds,
+    activeCafe,
+    setActiveCafe
   );
 
   const toggleFilterModal = useCallback(() => {
