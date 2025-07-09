@@ -6,7 +6,7 @@ export interface FilterOptions {
   minRating: number;
   isOpen: boolean;
   sortBy: 'distance' | 'rating';
-  attributes: number[]; // Array de IDs de atributos seleccionados
+  attributes: number[]; 
 }
 
 export const useBranchSearch = (userLocation?: [number, number]) => {
@@ -23,7 +23,7 @@ export const useBranchSearch = (userLocation?: [number, number]) => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-    }, 500);
+    }, 300); 
 
     return () => {
       clearTimeout(handler);
