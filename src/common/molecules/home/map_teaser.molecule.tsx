@@ -67,12 +67,10 @@ export const MapTeaser = ({ totalCafes, city = "Medellín" }: MapTeaserProps) =>
         viewport={{ once: true }}
         variants={containerVariants}
       >
-        {/* Decorative elements */}
         <div className="absolute -top-12 -right-12 w-40 h-40 bg-[#D4A76A]/10 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-[#6F4E37]/10 rounded-full blur-3xl"></div>
         
         <div className="grid md:grid-cols-2 gap-8 p-8 md:p-12">
-          {/* Left text content */}
           <motion.div className="flex flex-col justify-center" variants={containerVariants}>
             <motion.div className="inline-flex items-center gap-2 px-4 py-2 bg-[#6F4E37]/10 rounded-full mb-4 text-[#6F4E37] font-medium text-sm w-fit" variants={itemVariants}>
               <Coffee size={16} />
@@ -117,7 +115,6 @@ export const MapTeaser = ({ totalCafes, city = "Medellín" }: MapTeaserProps) =>
             </motion.div>
           </motion.div>
           
-          {/* Right map preview */}
           <motion.div 
             className="relative h-80"
             variants={itemVariants}
@@ -187,7 +184,6 @@ export const MapTeaser = ({ totalCafes, city = "Medellín" }: MapTeaserProps) =>
                 >
                   <div className="relative">
                     <MapPin size={32} className="text-[#D4A76A] drop-shadow-lg" />
-                    <Coffee size={14} className="absolute top-1.5 left-2.5 text-white" />
                   </div>
                 </motion.div>
                 

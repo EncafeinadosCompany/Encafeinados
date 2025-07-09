@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, MouseEvent } from 'react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Instagram,  Coffee, MapPin, Music2, Mail, ChevronDown, Phone } from '@/common/ui/icons';
+import { Instagram,  Coffee, User, Music2, Mail, ChevronDown, Phone } from '@/common/ui/icons';
 
 import logoIcon from "@/assets/images/logo.ico";
 import { useScrollNavigation } from '@/common/hooks/useScrollNavigation';
@@ -253,8 +253,8 @@ export const Footer = ({ sections }: FooterProps) => {
             <h3 className="text-lg font-semibold mb-4 text-[#D4A76A]">Contacto</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
-                <MapPin size={18} className="text-[#D4A76A] mr-2 mt-0.5" />
-                <span className="text-white/70">Calle 10 #42-45, Poblado, Medellín, Colombia</span>
+                <User size={18} className="text-[#D4A76A] mr-2 mt-0.5" />
+                <span className="text-white/70">Jader Rojas Jiménez</span>
               </li>
               
               <li className="flex items-center">
