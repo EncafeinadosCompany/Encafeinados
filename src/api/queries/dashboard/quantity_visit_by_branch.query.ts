@@ -7,7 +7,7 @@ export const useQuantityVisitByBranch = (id?: number) => {
   return useQuery<{ quantity: number }, Error>({
     queryKey: ['vista-data', id],
     queryFn: async () => {
-      const response = await authClient.get<{ quantity: number }>(`/register-visit/${id}`)
+      const response = await authClient.get<{ quantity: number }>(`/visits/by-branch/${id}`)
       return response
     },
     enabled: id !== undefined && id !== null,

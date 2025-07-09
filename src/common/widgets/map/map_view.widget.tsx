@@ -45,10 +45,6 @@ import { containerVariants, pulseVariants } from "./map_animations.widget";
 import { useAppData } from "@/common/context/AppDataContext";
 import { Coffee } from "@/common/ui/icons";
 
-// ==============================
-// MAIN COMPONENT
-// ==============================
-
 export interface MapViewProps {
   view?: boolean;
 }
@@ -429,7 +425,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
             <div></div>
           )}
           
-          {/* Search Bar */}
           <MapSearchBar 
             searchInputValue={searchInputValue}
             setSearchInputValue={setSearchInputValue}
