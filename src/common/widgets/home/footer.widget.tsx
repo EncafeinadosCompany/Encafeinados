@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, MouseEvent } from 'react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Instagram, ArrowUp, Coffee, MapPin, Music2, Mail, ChevronDown, Phone } from '@/common/ui/icons';
-import { SocialIcon } from '@/common/atoms/SocialIcon';
+import { Instagram,  Coffee, MapPin, Music2, Mail, ChevronDown, Phone } from '@/common/ui/icons';
+
 import logoIcon from "@/assets/images/logo.ico";
 import { useScrollNavigation } from '@/common/hooks/useScrollNavigation';
+import { SocialIcon } from '@/common/atoms/common/social_icon.atom';
+
 
 interface FooterProps {
   sections?: Array<{

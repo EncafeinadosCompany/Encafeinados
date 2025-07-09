@@ -6,14 +6,14 @@ import { Coffee, RefreshCw, Search, AlertTriangle }  from "@/common/ui/icons";
 import {  AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 
-import { StatusBadge } from "@/common/atoms/StatusBadge";
+import { StatusBadge } from "@/common/atoms/common/status_badge.atom";
 import { StoreSearchBar } from "@/common/molecules/admin/store/store_search_bar.molecule";
 import { StorePagination } from "@/common/molecules/admin/store/store_pagination.molecule";
 import { StoreCard } from "@/common/molecules/admin/store/store_card.molecule";
 import { StoreDetailsDialog } from "@/common/molecules/admin/store/store_details_dialog.molecule";
 import { StoreRejectDialog } from "@/common/molecules/admin/store/store_reject_dialog.molecule";
 import { StoreConfirmDialog } from "@/common/molecules/admin/store/store_confirm_dialog";
-import { usePendingStoresWidget } from "@/common/hooks/stores/usePendingStoresWidget";
+import { usePendingStoresWidget } from "@/common/hooks/stores/use_pending_stores.hook";
 
 export const PendingStoresWidget = () => {
   const {

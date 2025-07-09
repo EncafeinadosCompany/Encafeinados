@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { parseISO, isSameMonth, addMonths, subMonths, isSameDay } from "date-fns";
 
 import { EventDto } from "@/api/types/events/events.types";
-import { ScrollIndicator } from "@/common/atoms/indicator";
+import { ScrollIndicator } from "@/common/atoms/common/indicator.atom";
 import EventCard from "@/common/molecules/admin/event/event_card.molecule";
 import { StatusFeedbackEvent } from "@/common/molecules/admin/event/event_status_feedback.molecule";
 import HeaderEventMonth from "@/common/molecules/admin/event/event_header_month.molecule";

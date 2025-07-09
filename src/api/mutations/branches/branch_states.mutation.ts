@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult, useQueryClient } from "@tanstack/react-query";
 import { ValidateVisitInput, ValidateVisitResponse } from "../../types/branches/branches_approval.types";
 import AuthClient from "../../client/axios";
-import { useError } from "@/common/hooks/auth/useErrors";
+import { useError } from "@/common/hooks/auth/use_errors.hook";
 import { formSchemaBranches } from "@/common/widgets/admin_branches/images.widget";
 import { uploadImage } from "../image/image.mutations";
 import { AxiosResponse } from "axios";

@@ -7,9 +7,9 @@ import { changePasswordSchema, ChangePasswordData } from "@/common/utils/schemas
 import { usePasswordResetMutation, useChangePasswordMutation } from "@/api/mutations/auth/authMutations";
 import { Button } from "@/common/ui/button";
 import { Label } from "@/common/ui/label";
-import { InputEmail } from "@/common/atoms/auth/Input_email.atom";
-import { InputPin } from "@/common/atoms/auth/Input_pin.atom";
-import { TextError } from "@/common/atoms/textError";
+import { InputEmail } from "@/common/atoms/forms/Input_email.atom";
+import { InputPin } from "@/common/atoms/forms/Input_pin.atom";
+import { TextError } from "@/common/atoms/forms/text_error.atom";
 import { Card, CardContent } from "@/common/ui/card";
 import { ArrowLeft } from "@/common/ui/icons";
 import toast from "react-hot-toast";

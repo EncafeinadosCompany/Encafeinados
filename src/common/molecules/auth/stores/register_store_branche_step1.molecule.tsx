@@ -1,6 +1,6 @@
-import { InputForm } from "@/common/atoms/auth/input_form.atom"
-import { TextError } from "@/common/atoms/textError"
-import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
+import { InputForm } from "@/common/atoms/forms/input_form.atom"
+import { TextError } from "@/common/atoms/forms/text_error.atom"
+import { useRegisterFocus } from "@/common/hooks/auth/use_register_focus.hook"
 import { Label } from "@/common/ui/label"
 import { RegisterStoreBrancheSchemaType } from "@/common/utils/schemas/auth/register_store_branche.schema"
 

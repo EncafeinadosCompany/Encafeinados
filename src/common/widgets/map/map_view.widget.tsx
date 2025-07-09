@@ -42,8 +42,9 @@ import FilterIndicator from "@/common/molecules/map/filter_indicator.molecule";
 import MapLoadingOverlay from "@/common/molecules/map/map_loading_overlay.molecule";
 
 import { containerVariants, pulseVariants } from "./map_animations.widget";
-import { useAppData } from "@/common/context/AppDataContext";
+
 import { Coffee } from "@/common/ui/icons";
+import { useAppData } from "@/common/context/app_data.context";
 
 export interface MapViewProps {
   view?: boolean;

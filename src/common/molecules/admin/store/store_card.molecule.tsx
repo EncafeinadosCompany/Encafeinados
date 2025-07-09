@@ -5,7 +5,7 @@ import { Button } from "@/common/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 import { motion } from "framer-motion";
 import { Eye, CheckCircle2, XCircle } from'@/common/ui/icons';
-import { StoreAvatar } from "@/common/atoms/StoreAvatar";
+import { StoreAvatar } from "@/common/atoms/common/StoreAvatar";
 
 interface StoreCardProps {
   store: StoreDto;

@@ -5,7 +5,7 @@ import {
 } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
 import { Badge } from "@/common/ui/badge";
-import { StoreAvatar } from "@/common/atoms/StoreAvatar";
+import { StoreAvatar } from "@/common/atoms/common/StoreAvatar";
 
 interface StoreDetailsDialogProps {
   store: StoreDto | null;

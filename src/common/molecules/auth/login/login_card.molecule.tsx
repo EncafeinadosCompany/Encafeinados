@@ -5,13 +5,13 @@ import { Label } from "@/common/ui/label"
 import { Controller, UseFormRegister } from "react-hook-form"
 
 import { useTranslation } from "react-i18next"
-import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
+import { useRegisterFocus } from "@/common/hooks/auth/use_register_focus.hook"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/common/ui/input-otp"
-import { TextError } from "@/common/atoms/textError"
+import { TextError } from "@/common/atoms/forms/text_error.atom"
 import { useState } from "react"
 import { Eye, EyeOff }  from'@/common/ui/icons'
 import { User } from "@/api/types/auth/auth.types"
-import { InputEmail } from "@/common/atoms/auth/Input_email.atom"
+import { InputEmail } from "@/common/atoms/forms/Input_email.atom"
 
 
 type LoginCardProps = {

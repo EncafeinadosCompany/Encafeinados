@@ -19,7 +19,7 @@ import { useAttributes, useBranchAttributes } from "@/api/queries/attributes/att
 import { AttributeFormType, RegisterAttributeSchema } from "@/common/utils/schemas/attributes/create_attributes.schema"
 import { useCreateAttributeMutation, useUpdateAttributeMutation } from "@/api/mutations/attributes/attributes.mutation"
 import { ChevronDown, Coffee }  from "@/common/ui/icons";
-import { ScrollIndicator } from "@/common/atoms/indicator"
+import { ScrollIndicator } from "@/common/atoms/common/indicator.atom"
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
 
 

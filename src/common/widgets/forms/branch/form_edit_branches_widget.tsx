@@ -12,7 +12,7 @@ import { useBranchesID } from "@/api/queries/branches/branch.query";
 
 import { Label } from "@/common/ui/label";
 import { useUpdateBranchMutation } from "@/api/mutations/branches/branches.mutation";
-import { InputForm } from "@/common/atoms/auth/input_form.atom";
+import { InputForm } from "@/common/atoms/forms/input_form.atom";
 
 //MAP
 import MapSearch from "@/common/widgets/map/map_search.widget";

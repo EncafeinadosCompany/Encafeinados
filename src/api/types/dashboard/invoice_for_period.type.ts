@@ -47,8 +47,7 @@ export interface InvoiceForPeriodResponse {
 
 
 
-export interface InvoicesDto{
-    
+export interface InvoicesDto{ 
         id: number;
         branch: {
             id: number;

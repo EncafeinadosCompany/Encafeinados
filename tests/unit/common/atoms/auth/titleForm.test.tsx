@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { TitleForm } from '@/common/atoms/auth/title_form.atom';
+import { TitleForm } from '@/common/atoms/forms/title_form.atom';
 
 
 jest.mock('framer-motion', () => ({

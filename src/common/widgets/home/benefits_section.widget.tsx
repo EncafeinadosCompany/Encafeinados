@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text } from '@/common/atoms/Text';
+import { Text } from '@/common/atoms/common/text.atom';
 import { useInView } from 'react-intersection-observer';
 import { BenefitCard } from '@/common/molecules/home/benefit_card.molecule';
 import { motion, useAnimation } from 'framer-motion';

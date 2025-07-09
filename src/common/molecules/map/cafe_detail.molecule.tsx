@@ -8,7 +8,7 @@ import WeeklySchedule from "@/common/molecules/schedules/weekly_schedule.molecul
 import { useBranchSchedules } from "@/api/queries/schedules/schedule.query";
 import toast from "react-hot-toast";
 
-import SafeNumericDisplay from "@/common/atoms/SafeNumericDisplay";
+import SafeNumericDisplay from "@/common/atoms/common/safe_numeric_display.atom";
 import { useBranchAttributes } from "@/api/queries/branches/branch.query";
 
 const determineNetworkType = (

@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "jest";
 import "@testing-library/jest-dom";
-import { ButtonGoogle } from "@/common/atoms/auth/button_google.atom";
+import { ButtonGoogle } from "@/common/atoms/forms/button_google.atom";
 
 
 test("Renderizar el botón de Google con el texto correcto", () => {

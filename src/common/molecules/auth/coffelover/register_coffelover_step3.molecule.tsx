@@ -1,11 +1,11 @@
-import { pageVariants } from "@/common/atoms/auth/page_variants.atom";
+import { pageVariants } from "@/common/atoms/forms/page_variants.atom";
 
 import { Label } from "@radix-ui/react-label";
 import { UseFormRegister } from "react-hook-form";
 import { motion } from "framer-motion";
-import { TextError } from "@/common/atoms/textError";
-import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus";
-import { InputPassword } from "@/common/atoms/auth/input_passwork";
+import { TextError } from "@/common/atoms/forms/text_error.atom";
+import { useRegisterFocus } from "@/common/hooks/auth/use_register_focus.hook";
+import { InputPassword } from "@/common/atoms/forms/input_passwork";
 
 interface RegisterCoffeloverStep3Props {
   register: UseFormRegister<any>;

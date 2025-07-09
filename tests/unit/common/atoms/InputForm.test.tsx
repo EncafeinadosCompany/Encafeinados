@@ -2,7 +2,7 @@ import React from "react";
 import {render, screen, fireEvent} from "@testing-library/react"
 import "@testing-library/jest-dom"
 import "jest"
-import { InputForm } from "@/common/atoms/auth/input_form.atom";
+import { InputForm } from "@/common/atoms/forms/input_form.atom";
 
 test("Renderizar el input de formlario con el texto correcto", () => {
     render(<InputForm/>)

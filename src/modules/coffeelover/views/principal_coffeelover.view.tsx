@@ -1,5 +1,5 @@
 import { FeaturedStoresWidget } from '@/common/widgets/coffeelover/stores/feature_stores.widget'
-import SearchCoffee from '@/common/atoms/search';
+import SearchCoffee from '@/common/atoms/common/search.atom';
 import { useState, useCallback, useEffect } from 'react';
 import { QrCode, Filter, MapPin } from "@/common/ui/icons";
 import { CoffeeBackground } from '@/common/widgets/coffee_background.widget';

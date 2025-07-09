@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text } from "@/common/atoms/Text";
+import { Text } from "@/common/atoms/common/text.atom";
 import { motion } from "framer-motion";
 import { ArrowRightIcon, ChevronDownIcon } from "@/common/ui/icons";
 import { Link } from "react-router-dom";

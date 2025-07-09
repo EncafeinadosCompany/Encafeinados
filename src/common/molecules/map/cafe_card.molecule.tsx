@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, MapPin, Clock, Heart, Route}  from "@/common/ui/icons";
 import { Cafe } from '@/api/types/map/map_search.types';
-import HighlightText from '@/common/atoms/HighlightText';
+import HighlightText from '@/common/atoms/common/highlight_text.atom';
 import { useBranchSchedules } from '@/api/queries/schedules/schedule.query';
 import { getCurrentScheduleInfo, isBranchOpenNow } from '@/common/utils/schedules/schedule.utils';
 

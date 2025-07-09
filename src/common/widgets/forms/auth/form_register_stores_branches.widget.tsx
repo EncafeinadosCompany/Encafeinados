@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import toast from "react-hot-toast"
 
 import { Button } from "@/common/ui/button"
-import { validateImageRequirements } from "@/common/hooks/useCriteria"
+import { validateImageRequirements } from "@/common/hooks/criteria/use_criteria.hook"
 import { Card, CardContent, CardFooter} from "@/common/ui/card"
 import { RegisterStoreBrancheSchema, RegisterStoreBrancheSchemaType } from "@/common/utils/schemas/auth/register_store_branche.schema"
 
