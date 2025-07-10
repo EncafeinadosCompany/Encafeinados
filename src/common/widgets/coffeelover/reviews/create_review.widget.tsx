@@ -6,6 +6,7 @@ import { Award, Check, ArrowLeft }  from "@/common/ui/icons"
 import toast from "react-hot-toast";
 import ReviewForm from "@/common/molecules/reviews/review_form.molecule";
 import { Button } from "@/common/ui/button";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 interface ReviewWidgetProps {
   branchId: number;
@@ -23,9 +24,8 @@ export const ReviewWidget: React.FC<ReviewWidgetProps> = ({
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
   const submitReview = useSubmitReviewMutation();
-  const userId = localStorage.getItem("userId") ? 
-    parseInt(localStorage.getItem("userId")!) : 
-    null;
+  const encryptedUserId = getEncryptedItem<string>("userId");
+  const userId = encryptedUserId ? parseInt(encryptedUserId) : null;
 
   const handleSubmitReview = (data: {
     rating: number;
