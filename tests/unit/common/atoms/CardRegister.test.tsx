@@ -1,7 +1,7 @@
 import  React from "react";
 import {render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import CardRegister from "@/common/atoms/auth/card_register.atom";
+import CardRegister from "@/common/atoms/forms/card_register.atom";
 
 describe("CardRegister", ()=>{
 

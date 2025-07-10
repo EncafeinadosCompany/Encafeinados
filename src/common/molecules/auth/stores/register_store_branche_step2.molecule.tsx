@@ -2,7 +2,7 @@ import { Input } from "@/common/ui/input";
 import { Label } from "@/common/ui/label";
 import { Controller } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
-import { renderRadioGroup } from "@/common/atoms/RenderRadio";
+import { renderRadioGroup } from "@/common/atoms/criteria/render_radio.atom";
 import { criteriaResponseData } from "@/api/types/criteria/criteria.types";
 import { Image as ImageIcon, Check } from "lucide-react";
 

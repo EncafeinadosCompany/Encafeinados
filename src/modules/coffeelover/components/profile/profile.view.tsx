@@ -1,7 +1,7 @@
 import React from 'react';
 import ProfileWidget from '@/common/widgets/coffeelover/profile/profile.widget';
 import { CoffeeBackground } from '@/common/widgets/coffee_background.widget';
-import { useAppData } from '@/common/context/AppDataContext';
+import { useAppData } from '@/common/context/app_data.context';
 
 const ProfileView: React.FC = () => {
   const { isMobile } = useAppData();

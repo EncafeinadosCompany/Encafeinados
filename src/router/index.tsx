@@ -1,14 +1,14 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
-
-
 // ROUTES
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import PrivateRoute from "@/router/private-route";
 import RoleRoute from "@/router/role-route";
 import RouteLoadingIndicator from "./route_loading_indicador.router";
 import Dashboard_Branch from "@/modules/admin_branches/views/manage_dashboard.view";
+
+
 const PruebaDashboard = lazy(() => import("@/modules/admin/components/manage_dasboard.view"))
 
 // LAYOUTS
@@ -19,8 +19,7 @@ const AboutPage = lazy(() => import("@/modules/home/views/landing/about_page"));
 const LoginPage = lazy(() => import("@/modules/home/views/Login/login_page"));
 const PasswordResetPage = lazy(() => import("@/modules/auth/views/password_reset.view"));
 const CuestionCard = lazy(() => import("@/common/molecules/auth/login/cuestion_card.molecule"));
-const GoogleCallback = lazy(() => import("@/common/hooks/google"));
-const CompleteProfile = lazy(() => import("@/common/widgets/forms/auth/form_complete_profile.widget"));
+const GoogleCallback = lazy(() => import("@/common/hooks/auth/use_google.hook"));
 const RegisterCoffeloverPage = lazy(() => import("@/modules/home/views/Login/register_coffelover_page"));
 const RegisterStorePage = lazy(() => import("@/modules/home/views/Login/register_stores_page"));
 const RegisterStoreBranches = lazy(() => import("@/common/widgets/forms/auth/form_register_stores_branches.widget"));
@@ -49,6 +48,9 @@ const Menubar_branch = lazy(() => import("@/modules/admin_branches/views/menubar
 const DetailsBranches = lazy(() => import("@/common/widgets/admin_branches/details_branches.widget"));
 const AttributesDashboard = lazy(() => import("@/common/widgets/admin_branches/attributes.widget"));
 const BranchReviewsView = lazy(() => import("@/modules/admin_branches/views/branch_reviews.view"));
+const PaymentsByBranchView = lazy(() => import("@/modules/admin_branches/views/payments_by_branch.view"));
+const PaymentsDashboard = lazy(() => import("@/modules/admin_branches/views/payments_dashboard.view"));
+const PaymentResultView = lazy(() => import("@/modules/admin_branches/views/payment_result.view"));
 
 // COFFEELOVER
 const Menubar_Coffelover = lazy(() => import("@/modules/coffeelover/views/menubar_coffelover"));
@@ -81,7 +83,7 @@ const AuthRoutes = () => {
         }>
           <Routes>
 
-            <Route path="/prueba" element={<Prueba_album />} />
+            <Route path="/payment/result" element={<PaymentResultView/>} />
 
             <Route path="/" element={<HomePage />} />
             <Route path="/map" element={<MapView view={true} />} />
@@ -93,7 +95,6 @@ const AuthRoutes = () => {
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
             <Route path="/stores-registration/branches/:storeId" element={<RegisterStoreBranches />} />
-            <Route path="/completar-perfil" element={<CompleteProfile />} />
             <Route index path="/finish-admin-registration" element={<FinishAdminRegistration />} />
             <Route path="/404" element={<NotFound />} />
 
@@ -133,6 +134,7 @@ const AuthRoutes = () => {
                   <Route path="perfil" element={<Form_edit_branch />} />
                   <Route path="attributes" element={<AttributesDashboard />} />
                   <Route path="dashboard" element={<Dashboard_Branch/>} />
+                  <Route path="pagos" element={<PaymentsDashboard/>} />
                 </Route>
               </Route>
 

@@ -1,12 +1,12 @@
-import { InputForm } from "@/common/atoms/auth/input_form.atom"
-import SelectTypeDocument from "@/common/atoms/auth/select_type_document.atom"
+import { InputForm } from "@/common/atoms/forms/input_form.atom"
+import SelectTypeDocument from "@/common/atoms/forms/select_type_document.atom"
 import { Label } from "@/common/ui/label"
 import { HelpCircle, X } from "@/common/ui/icons"
 import { Controller, UseFormRegister } from "react-hook-form"
-import { pageVariants } from "@/common/atoms/auth/page_variants.atom"
+import { pageVariants } from "@/common/atoms/forms/page_variants.atom"
 import { motion } from "framer-motion"
-import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
-import { TextError } from "@/common/atoms/textError"
+import { useRegisterFocus } from "@/common/hooks/auth/use_register_focus.hook"
+import { TextError } from "@/common/atoms/forms/text_error.atom"
 
 interface RegisterCoffeloverStep2Props {
     toggleInfo: () => void

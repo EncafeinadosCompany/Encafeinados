@@ -1,7 +1,7 @@
 
-import { InputEmail } from "@/common/atoms/auth/Input_email.atom"
-import { InputPassword } from "@/common/atoms/auth/input_passwork"
-import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
+import { InputEmail } from "@/common/atoms/forms/Input_email.atom"
+import { InputPassword } from "@/common/atoms/forms/input_passwork"
+import { useRegisterFocus } from "@/common/hooks/auth/use_register_focus.hook"
 
 import { Label } from "@radix-ui/react-label"
 import { Lock, Mail } from'@/common/ui/icons'

@@ -1,7 +1,7 @@
 import AuthClient from "@/api/client/axios";
 import { LoginResponse } from "@/api/types/auth/auth.types";
 import { BranchPost } from "@/api/types/branches/branches.types";
-import { useError } from "@/common/hooks/auth/useErrors";
+import { useError } from "@/common/hooks/auth/use_errors.hook";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

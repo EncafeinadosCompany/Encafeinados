@@ -1,5 +1,5 @@
 import { FeaturedStoresWidget } from '@/common/widgets/coffeelover/stores/feature_stores.widget'
-import SearchCoffee from '@/common/atoms/search';
+import SearchCoffee from '@/common/atoms/common/search.atom';
 import { useState, useCallback, useEffect } from 'react';
 import { QrCode, Filter, MapPin } from "@/common/ui/icons";
 import { CoffeeBackground } from '@/common/widgets/coffee_background.widget';
@@ -19,7 +19,6 @@ export default function PrincipalCoffeelover () {
   
   const navigate = useNavigate();
   
-  // Hook para búsqueda y filtros basado en API
   const {
     searchTerm: apiSearchTerm,
     setSearchTerm: setApiSearchTerm,
@@ -32,10 +31,22 @@ export default function PrincipalCoffeelover () {
     totalBranches
   } = useBranchSearch();
   
-  // Sincronizar búsqueda global con la API
   useEffect(() => {
     setApiSearchTerm(globalSearchTerm);
   }, [globalSearchTerm, setApiSearchTerm]);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+
+    return () => {
+      window.removeEventListener('resize', checkIsMobile);
+    };
+  }, []);
 
   const toggleFilterModal = useCallback(() => {
     setIsFilterModalOpen(prev => !prev);
@@ -59,7 +70,6 @@ export default function PrincipalCoffeelover () {
     }
   }, []);
 
-  // Configurar acciones del SearchCoffee
   const searchActions = [
     {
       icon: <Filter size={16} className="text-[#6F4E37]" />,
@@ -107,7 +117,7 @@ export default function PrincipalCoffeelover () {
         </EventList>
       </div>
 
-      <div className={`fixed ${isMobile ? 'bottom-20' : 'bottom-6'} right-6 z-20`}>
+<div className={`fixed ${isMobile ? 'bottom-20' : 'bottom-6'} right-6 z-20`}>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -145,7 +155,6 @@ export default function PrincipalCoffeelover () {
         onScanSuccess={handleScanSuccess}
       />
 
-      {/* Modal de filtros */}
       <FilterModal
         isOpen={isFilterModalOpen}
         onClose={toggleFilterModal}

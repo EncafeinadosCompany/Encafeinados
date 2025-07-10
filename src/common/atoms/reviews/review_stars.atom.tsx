@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star } from'@/common/ui/icons';
-import { useSafeNumericValue } from '@/common/hooks/useSafeNumericValue';
+import { useSafeNumericValue } from '@/common/hooks/reviews/use_safe_numeric_value.hook';
 
 interface ReviewStarsProps {
   rating: number;

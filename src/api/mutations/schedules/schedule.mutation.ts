@@ -1,6 +1,6 @@
 import AuthClient from "@/api/client/axios";
 import { BranchSchedule } from "@/api/types/schedules/schedule.types";
-import { useError } from "@/common/hooks/auth/useErrors";
+import { useError } from "@/common/hooks/auth/use_errors.hook";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";

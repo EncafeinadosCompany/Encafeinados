@@ -1,12 +1,12 @@
-import { InputForm } from "@/common/atoms/auth/input_form.atom"
-import { pageVariants } from "@/common/atoms/auth/page_variants.atom"
+import { InputForm } from "@/common/atoms/forms/input_form.atom"
+import { pageVariants } from "@/common/atoms/forms/page_variants.atom"
 import { Label } from "@radix-ui/react-label"
 import { Controller, UseFormRegister } from "react-hook-form"
 import { motion } from "framer-motion"
-import SelectTypeDocument from "@/common/atoms/auth/select_type_document.atom"
+import SelectTypeDocument from "@/common/atoms/forms/select_type_document.atom"
 import { CurrentSchema } from "@/common/utils/schemas/auth/register_store_shema"
-import { useRegisterFocus } from "@/common/hooks/auth/useRegisterFocus"
-import { TextError } from "@/common/atoms/textError"
+import { useRegisterFocus } from "@/common/hooks/auth/use_register_focus.hook"
+import { TextError } from "@/common/atoms/forms/text_error.atom"
 import { FileText, Hash, Mail, Phone, Store } from'@/common/ui/icons'
 
 

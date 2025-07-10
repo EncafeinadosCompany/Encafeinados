@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AuthClient from "@/api/client/axios";
 import { ReviewSubmitInput, ReviewSubmitResponse } from "@/api/types/reviews/review.type";
-import { useError } from "@/common/hooks/auth/useErrors";
+import { useError } from "@/common/hooks/auth/use_errors.hook";
 import toast from "react-hot-toast";
 import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 

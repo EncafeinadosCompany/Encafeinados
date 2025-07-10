@@ -1,7 +1,7 @@
 
 import AuthClient from "@/api/client/axios";
 import { AddStampsToPageDto } from "@/api/types/album/stamps.types";
-import { useError } from "@/common/hooks/auth/useErrors";
+import { useError } from "@/common/hooks/auth/use_errors.hook";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const authClient = new AuthClient();

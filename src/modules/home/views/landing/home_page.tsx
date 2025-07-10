@@ -11,7 +11,7 @@ const HomePage = () => {
   const homeSections = [
     { name: 'Inicio', id: 'home' },
     { name: 'Mapa', id: 'map' },
-    { name: 'Tiendas', id: 'stores' },
+    { name: 'Cafeterías', id: 'stores' },
     { name: 'Beneficios', id: 'benefits' }
   ];
 

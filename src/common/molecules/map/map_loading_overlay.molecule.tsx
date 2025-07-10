@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import LoadingSpinner from '@/common/atoms/LoadingSpinner';
+import LoadingSpinner from '@/common/atoms/common/loading_spinner.atom';
+
 
 interface MapLoadingOverlayProps {
   mapLoaded: boolean;

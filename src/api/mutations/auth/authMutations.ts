@@ -16,8 +16,8 @@ import { saveCoffeeLoverProfileToStorage} from '@/common/utils/security/auth_sto
 import { saveEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 
 // Hooks
-import { useError } from '@/common/hooks/auth/useErrors';
-import { useAuth } from '@/common/hooks/auth/useAuth';
+import { useError } from '@/common/hooks/auth/use_errors.hook';
+import { useAuth } from '@/common/hooks/auth/use_auth.hook';
 
 const authClient = new AuthClient();
 

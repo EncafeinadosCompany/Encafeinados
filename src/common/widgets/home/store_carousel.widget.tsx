@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Text } from "@/common/atoms/Text";
+import { Text } from "@/common/atoms/common/text.atom";
 import { StoreCard } from "@/common/molecules/home/store_card.molecule";
 import { StoreCardSkeleton } from "@/common/molecules/home/store_card_skeleton.molecule";
-import {Carousel,CarouselContent,CarouselItem,CarouselNext,CarouselPrevious} from "@/common/ui/carousel";
+import {Carousel,CarouselContent,CarouselItem} from "@/common/ui/carousel";
 import { motion, useInView } from "framer-motion"; 
 import type { CarouselApi } from "@/common/ui/carousel";
 import { Coffee } from "@/common/ui/icons";

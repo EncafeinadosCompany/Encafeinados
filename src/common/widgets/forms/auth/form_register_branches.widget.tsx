@@ -13,7 +13,7 @@ import { RegisterStoreBrancheSchema, RegisterStoreBrancheSchemaType } from "@/co
 import RegisterStoreBrancheStep2 from "@/common/molecules/auth/stores/register_store_branche_step2.molecule"
 import MapSearch from "../../map/map_search.widget"
 import SocialNetworksForm from "./form_social_network.widget"
-import { validateImageRequirements } from "@/common/hooks/useCriteria"
+import { validateImageRequirements } from "@/common/hooks/criteria/use_criteria.hook"
 import { useRegisterBrandMutation } from "@/api/mutations/branches/branches.mutation"
 import { useCriteria } from "@/api/queries/criteria/criteria.query"
 import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query"

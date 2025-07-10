@@ -6,12 +6,12 @@ import { RefreshCw, Search, AlertTriangle, Coffee } from "@/common/ui/icons";
 import { AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 import { RejectedBranch } from '@/api/types/branches/branches_approval.types';
-import { StatusBadge } from "@/common/atoms/StatusBadge";
+import { StatusBadge } from "@/common/atoms/common/status_badge.atom";
 import { BranchSearchBar } from "@/common/molecules/admin/branch/branch_search_bar.molecule";
 import { BranchPagination } from "@/common/molecules/admin/branch/branch_pagination.molecule";
 import { BranchCard } from "@/common/molecules/admin/branch/branch_card.molecule";
 import { BranchDetailsModal } from "@/common/molecules/admin/branch/branch_details_enhanced_modal.molecule";
-import { useRejectedBranchesWidget } from "@/common/hooks/branches/useRejectedBranchesWidget";
+import { useRejectedBranchesWidget } from "@/common/hooks/branches/use_rejected_branches.hook";
 
 export const RejectedBranchesWidget = () => {
   const {

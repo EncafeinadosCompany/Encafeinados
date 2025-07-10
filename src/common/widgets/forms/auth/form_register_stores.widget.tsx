@@ -11,7 +11,7 @@ import RegisterStoreStep2 from "@/common/molecules/auth/stores/register_store_st
 import { useNavigate } from "react-router-dom"
 import { useRegisterStoreMutation } from "@/api/mutations/stores/register_stores.mutation"
 import { Card, CardContent, CardFooter } from "@/common/ui/card"
-import { TermConditions } from "./form_term_conditions.widget"
+import TermConditions  from "./form_term_conditions.widget"
 import { CurrentSchema, RegisterStoreSchema } from "@/common/utils/schemas/auth/register_store_shema"
 import { uploadImage } from "@/api/mutations/image/image.mutations"
 import { RegisterStoreDto } from "@/api/types/stores/stores.type"

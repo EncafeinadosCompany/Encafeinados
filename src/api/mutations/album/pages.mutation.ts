@@ -1,7 +1,7 @@
 
 import AuthClient from "@/api/client/axios";
 import { CreatePageDto, CreatePageResponse } from "@/api/types/album/page.types";
-import { useError } from "@/common/hooks/auth/useErrors";
+import { useError } from "@/common/hooks/auth/use_errors.hook";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 

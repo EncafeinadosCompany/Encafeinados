@@ -42,12 +42,9 @@ import FilterIndicator from "@/common/molecules/map/filter_indicator.molecule";
 import MapLoadingOverlay from "@/common/molecules/map/map_loading_overlay.molecule";
 
 import { containerVariants, pulseVariants } from "./map_animations.widget";
-import { useAppData } from "@/common/context/AppDataContext";
-import { Coffee } from "@/common/ui/icons";
 
-// ==============================
-// MAIN COMPONENT
-// ==============================
+import { Coffee } from "@/common/ui/icons";
+import { useAppData } from "@/common/context/app_data.context";
 
 export interface MapViewProps {
   view?: boolean;
@@ -130,17 +127,9 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     return cafes;
   }, [apiCafes, cafes, apiHasActiveFilters]);
 
-  const {
-    activeCafe,
-    setActiveCafe,
-    activeCafeData,
-    shouldResetMapOnClose,
-    setShouldResetMapOnClose,
-    copied,
-    handleCloseDetails,
-    copyToClipboard
-  } = useCafeDetails(sortedCafes, mapInstance, showRouteControls, searchParams);
-  
+  // Declare state variables that are shared across hooks
+  const [activeCafe, setActiveCafe] = useState<number | null>(null);
+
   const {
     searchInputValue,
     setSearchInputValue,
@@ -201,6 +190,23 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     apiHasActiveFilters,
     apiCafes,
     clearFiltersForNavigation
+  );
+
+  const {
+    activeCafeData,
+    shouldResetMapOnClose,
+    setShouldResetMapOnClose,
+    copied,
+    handleCloseDetails,
+    copyToClipboard
+  } = useCafeDetails(
+    sortedCafes,
+    mapInstance,
+    showRouteControls,
+    searchParams,
+    setProcessedCafeIds,
+    activeCafe,
+    setActiveCafe
   );
 
   const toggleFilterModal = useCallback(() => {
@@ -429,7 +435,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
             <div></div>
           )}
           
-          {/* Search Bar */}
           <MapSearchBar 
             searchInputValue={searchInputValue}
             setSearchInputValue={setSearchInputValue}
@@ -646,7 +651,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
         )}
       </AnimatePresence>
       
-      {/* Active cafe marker animation */}
       {activeCafe && (
         <motion.div
           className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"

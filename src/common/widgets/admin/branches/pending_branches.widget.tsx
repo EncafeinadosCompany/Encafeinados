@@ -6,14 +6,14 @@ import { Coffee, RefreshCw, Search, AlertTriangle }  from "@/common/ui/icons"
 import { AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/common/ui/tooltip";
 
-import { StatusBadge } from "@/common/atoms/StatusBadge";
+import { StatusBadge } from "@/common/atoms/common/status_badge.atom";
 import { BranchSearchBar } from "@/common/molecules/admin/branch/branch_search_bar.molecule";
 import { BranchPagination } from "@/common/molecules/admin/branch/branch_pagination.molecule";
 import { BranchCard } from "@/common/molecules/admin/branch/branch_card.molecule";
 import { BranchApprovalDialog } from "@/common/molecules/admin/branch/branch_approval_dialog.molecule";
 import { BranchApproveDialog } from "@/common/molecules/admin/branch/branch_approve_dialog.molecule";
 import { BranchRejectDialog } from "@/common/molecules/admin/branch/branch_reject_dialog.molecule";
-import { usePendingBranchesWidget } from "@/common/hooks/branches/usePendingBranchesWidget";
+import { usePendingBranchesWidget } from "@/common/hooks/branches/use_pending_branches.hook";
 import { BranchApprovalDetails } from '@/api/types/branches/branches_approval.types';
 import { useBranchApprovalDetails } from '@/api/queries/branches/branch.query';
 

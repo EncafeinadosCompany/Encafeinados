@@ -17,6 +17,8 @@ export const useMapSearch = (
   const [searchFocused, setSearchFocused] = useState<boolean>(false);
   const lastToastRef = useRef("");
   const [searchTerm, setSearchTermLocal] = useState<string>("");
+  const lastProcessedSearchRef = useRef<string>("");
+  const currentSearchRef = useRef<string>("");
   
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -36,6 +38,8 @@ export const useMapSearch = (
       if (debouncedSearchValue === "") {
         setSearchTermLocal("");
         setApiSearchTerm("");
+        lastProcessedSearchRef.current = "";
+        currentSearchRef.current = "";
       }
       return;
     }
@@ -44,90 +48,120 @@ export const useMapSearch = (
     setIsTyping(false);
 
     const currentSearch = debouncedSearchValue.trim();
+    currentSearchRef.current = currentSearch;
 
     const filterTimer = setTimeout(() => {
+      if (currentSearchRef.current !== currentSearch) {
+        setIsSearchProcessing(false);
+        return;
+      }
+
       setSearchTermLocal(currentSearch);
       setApiSearchTerm(currentSearch);
-
-      const resultTimer = setTimeout(() => {
-        const searchHash = `${currentSearch}-${sortedCafes.length}`;
-        const shouldShowToast = lastToastRef.current !== searchHash;
-
-        if (sortedCafes.length > 0) {
-          if (userLocation) {
-            const closestCafe = sortedCafes[0];
-            if (shouldShowToast) {
-              setActiveCafe(closestCafe.id);
-
-              if (mapInstance) {
-                mapInstance.flyTo(
-                  [closestCafe.latitude, closestCafe.longitude],
-                  16,
-                  { duration: 1.5, animate: true }
-                );
-              }
-            }
-          } else {
-            const firstResult = sortedCafes[0];
-            if (shouldShowToast) {
-              setActiveCafe(firstResult.id);
-
-              if (mapInstance) {
-                mapInstance.flyTo(
-                  [firstResult.latitude, firstResult.longitude],
-                  16,
-                  { duration: 1.5, animate: true }
-                );
-              }
-            }
-          }
-
-          if (window.innerWidth < 768) {
-            setShowSidebar(false);
-            setViewMode("map");
-          }
-
-          if (shouldShowToast) {
-            lastToastRef.current = searchHash;
-
-            if (sortedCafes.length === 1) {
-              toast.success(`¡Encontrada "${sortedCafes[0].name}"!`, {
-                icon: "🎯",
-                duration: 2000,
-                id: searchHash,
-              });
-            } else {
-              toast.success(
-                `Mostrando el más cercano de ${sortedCafes.length} resultados`,
-                {
-                  icon: "📍",
-                  duration: 2000,
-                  id: searchHash,
-                }
-              );
-            }
-          }
-        } else if (shouldShowToast) {
-          lastToastRef.current = searchHash;
-          toast.error("No se encontraron cafeterías con ese nombre", {
-            duration: 2000,
-            id: searchHash,
-          });
-        }
-
-        setIsSearchProcessing(false);
-      }, 400);
-
-      return () => clearTimeout(resultTimer);
     }, 200);
 
     return () => clearTimeout(filterTimer);
-  }, [debouncedSearchValue, userLocation, mapInstance, sortedCafes.length, setActiveCafe, setApiSearchTerm, setShowSidebar, setViewMode]);
+  }, [debouncedSearchValue, setApiSearchTerm]);
+
+  useEffect(() => {
+    const currentSearch = currentSearchRef.current;
+    
+    if (!currentSearch || currentSearch.length < 3 || lastProcessedSearchRef.current === currentSearch) {
+      return;
+    }
+
+    if (searchTerm !== currentSearch) {
+      return;
+    }
+
+    const resultTimer = setTimeout(() => {
+      if (currentSearchRef.current !== currentSearch || lastProcessedSearchRef.current === currentSearch) {
+        setIsSearchProcessing(false);
+        return;
+      }
+
+      lastProcessedSearchRef.current = currentSearch;
+      
+      const searchHash = `${currentSearch}-${sortedCafes.length}`;
+      const shouldShowToast = lastToastRef.current !== searchHash;
+
+      if (sortedCafes.length > 0) {
+        if (userLocation) {
+          const closestCafe = sortedCafes[0];
+          if (shouldShowToast) {
+            setActiveCafe(closestCafe.id);
+
+            if (mapInstance) {
+              mapInstance.flyTo(
+                [closestCafe.latitude, closestCafe.longitude],
+                16,
+                { duration: 1.5, animate: true }
+              );
+            }
+          }
+        } else {
+          const firstResult = sortedCafes[0];
+          if (shouldShowToast) {
+            setActiveCafe(firstResult.id);
+
+            if (mapInstance) {
+              mapInstance.flyTo(
+                [firstResult.latitude, firstResult.longitude],
+                16,
+                { duration: 1.5, animate: true }
+              );
+            }
+          }
+        }
+
+        if (window.innerWidth < 768) {
+          setShowSidebar(false);
+          setViewMode("map");
+        }
+
+        if (shouldShowToast) {
+          lastToastRef.current = searchHash;
+
+          if (sortedCafes.length === 1) {
+            toast.success(`¡Encontrada "${sortedCafes[0].name}"!`, {
+              icon: "🎯",
+              duration: 2000,
+              id: searchHash,
+            });
+          } else {
+            toast.success(
+              `Mostrando el más cercano de ${sortedCafes.length} resultados`,
+              {
+                icon: "📍",
+                duration: 2000,
+                id: searchHash,
+              }
+            );
+          }
+        }
+      } else if (shouldShowToast) {
+        lastToastRef.current = searchHash;
+        toast.error("No se encontraron cafeterías con ese nombre", {
+          duration: 2000,
+          id: searchHash,
+        });
+      }
+
+      setIsSearchProcessing(false);
+    }, 400);
+
+    return () => clearTimeout(resultTimer);
+  }, [sortedCafes, userLocation, mapInstance, searchTerm, setActiveCafe, setShowSidebar, setViewMode]);
   
   const handleSearchChange = useCallback((value: string) => {
     setSearchInputValue(value);
     setIsTyping(true);
-  }, []);
+    
+    if (value !== searchInputValue) {
+      lastProcessedSearchRef.current = "";
+      currentSearchRef.current = value.trim();
+    }
+  }, [searchInputValue]);
   
   const clearSearch = useCallback(() => {
     setSearchInputValue("");
@@ -137,6 +171,8 @@ export const useMapSearch = (
     setIsSearchProcessing(false);
     setIsTyping(false);
     lastToastRef.current = "";
+    lastProcessedSearchRef.current = "";
+    currentSearchRef.current = "";
   }, [setApiSearchTerm]);
   
   return {

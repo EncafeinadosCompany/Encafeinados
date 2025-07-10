@@ -5,9 +5,11 @@ export const useCafeDetails = (
   cafes: any[],
   mapInstance: L.Map | null,
   showRouteControls: boolean,
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
+  setProcessedCafeIds: (callback: (prev: Set<number>) => Set<number>) => void,
+  activeCafe: number | null,
+  setActiveCafe: (cafe: number | null) => void
 ) => {
-  const [activeCafe, setActiveCafe] = useState<number | null>(null);
   const [activeCafeData, setActiveCafeData] = useState<any | null>(null);
   const [shouldResetMapOnClose, setShouldResetMapOnClose] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -25,6 +27,11 @@ export const useCafeDetails = (
   
   const handleCloseDetails = useCallback(() => {
     if (activeCafe) {
+      setProcessedCafeIds(prev => {
+        const newSet = new Set(prev);
+        newSet.add(activeCafe);
+        return newSet;
+      });
     }
 
     setActiveCafe(null);
@@ -41,7 +48,7 @@ export const useCafeDetails = (
     if (shouldResetMapOnClose && !showRouteControls) {
       mapInstance?.setZoom(13, { animate: true });
     }
-  }, [shouldResetMapOnClose, showRouteControls, mapInstance, searchParams, activeCafe]);
+  }, [shouldResetMapOnClose, showRouteControls, mapInstance, searchParams, activeCafe, setProcessedCafeIds, setActiveCafe]);
   
   const copyToClipboard = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
@@ -50,8 +57,6 @@ export const useCafeDetails = (
   }, []);
   
   return {
-    activeCafe,
-    setActiveCafe,
     activeCafeData,
     setActiveCafeData,
     shouldResetMapOnClose,

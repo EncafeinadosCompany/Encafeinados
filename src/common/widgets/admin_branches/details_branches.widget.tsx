@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-import { ScrollIndicator } from "@/common/atoms/indicator";
+import { ScrollIndicator } from "@/common/atoms/common/indicator.atom";
 import BranchStatusModal from "@/common/molecules/admin_branch/branch/branch_status_modal";
 import { LeftCardBranch } from "@/common/molecules/admin_branch/branch/left_card.molecule";
 import { MessageBranches } from "@/common/molecules/admin_branch/branch/message_branches.molecule";

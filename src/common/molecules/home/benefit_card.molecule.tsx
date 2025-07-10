@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from '@/common/atoms/Text';
+import { Text } from '@/common/atoms/common/text.atom';
 import { Card, CardContent } from '@/common/ui/card';
 import { motion } from 'framer-motion';
 
