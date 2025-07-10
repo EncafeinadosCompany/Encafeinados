@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, ChevronDown, ChevronUp, X, Coffee, Linkedin, Twitter, Globe } from'@/common/ui/icons'
+import { User, ChevronDown, ChevronUp, X, Coffee, Linkedin, Twitter, Globe, Instagram } from'@/common/ui/icons'
 
 interface Member {
   name: string;
   role: string;
   imagenUrl?: string;
   bio?: string;
-  // Enlaces a redes sociales (opcionales)
   linkedin?: string;
   twitter?: string;
   website?: string;
-  coffee?: string; // Perfil especializado de café o sitio personal
+  coffee?: string;
+  instagram?: string;
 }
 
 interface TeamCardProps {
@@ -146,10 +146,9 @@ export const TeamCard: React.FC<TeamCardProps> = ({ members, variant = 'develope
                   </p>
                 )}
                 
-                {/* Reemplaza la sección actual de botones sociales */}
                 {/* Sección de redes sociales dinámica */}
                 <div className="mt-6">
-                  {(selectedMember.linkedin || selectedMember.twitter || selectedMember.website || selectedMember.coffee) ? (
+                  {(selectedMember.linkedin || selectedMember.twitter || selectedMember.website || selectedMember.coffee || selectedMember.instagram) ? (
                     <div className="flex justify-center gap-3">
                       {selectedMember.linkedin && (
                         <SocialButton 
@@ -165,6 +164,14 @@ export const TeamCard: React.FC<TeamCardProps> = ({ members, variant = 'develope
                           color="#1DA1F2" 
                           href={selectedMember.twitter} 
                           label={`Twitter de ${selectedMember.name}`}
+                        />
+                      )}
+                       {selectedMember.instagram && (
+                        <SocialButton 
+                          icon={<Instagram size={18} />} 
+                          color="#1DA1F2" 
+                          href={selectedMember.instagram} 
+                          label={`Instagram de ${selectedMember.name}`}
                         />
                       )}
                       {selectedMember.website && (
