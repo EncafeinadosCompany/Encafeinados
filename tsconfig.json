@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "types": ["jest", "@testing-library/jest-dom"], // Agrega "cypress" aquí
+    "types": ["jest", "@testing-library/jest-dom"], 
     "module": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "skipLibCheck": true,
@@ -22,7 +22,7 @@
     "src",
     "tests",
     "src/tests/setupTests.ts",
-    "src/tests/custom.d.ts",
+    "src/tests/custom.d.ts", "cypress/support/mocks/auth/criteria.mock.ts",
   ],
   "exclude": ["node_modules"]
 }

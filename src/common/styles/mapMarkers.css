@@ -1,0 +1,975 @@
+.custom-cafe-marker {
+  background: none !important;
+  border: none !important;
+}
+
+.cafe-marker {
+  position: relative;
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%;
+  overflow: visible;
+  transform-origin: center bottom;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cafe-marker .marker-content {
+  width: 102%;
+  height: 100%;
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  border: 0.7px solid white;
+  background-color: white;
+  
+}
+
+.cafe-marker.active .marker-content {
+  border-color: #6F4E37;
+  box-shadow: 0 5px 15px rgba(111, 78, 55, 0.4);
+}
+
+.cafe-marker:hover,
+.cafe-marker.hovered {
+  transform: scale(1.1) translateY(-5px);
+  z-index: 100;
+}
+
+.cafe-marker img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.cafe-marker:hover img {
+  transform: scale(1.1);
+}
+
+.cafe-label {
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border: 1px solid rgba(111, 78, 55, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 4px 10px; 
+  white-space: nowrap;
+  font-size: 12px; 
+  color: #6F4E37;
+  font-weight: 500;
+  text-align: center;
+  min-width: 110px; 
+  z-index: 1000;
+  animation: fadeIn 0.2s forwards;
+}
+
+.cafe-label .rating {
+  color: #FFB800;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.pulse-ring {
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  border-radius: 50%;
+  background-color: rgba(111, 78, 55, 0.3);
+  top: -25%;
+  left: -25%;
+  z-index: -1;
+  animation: pulse-animation 2s infinite;
+}
+
+.cafe-marker.has-nearby:not(.active):not(.hovered)::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  background-color: #e74c3c;
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+@keyframes pulse-animation {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.custom-user-marker {
+  background: none !important;
+  border: none !important;
+}
+
+.user-marker {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.user-marker-shadow {
+  position: absolute;
+  width: 32px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  bottom: -4px;
+  border-radius: 50%;
+  filter: blur(3px);
+  z-index: -1;
+}
+
+.user-marker-outer {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(111, 78, 55, 0.2), rgba(111, 78, 55, 0.3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.user-marker-middle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(111, 78, 55, 0.4), rgba(111, 78, 55, 0.5));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-marker-inner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #6F4E37;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.user-marker-core {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.user-marker-pulse {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(111, 78, 55, 0.5);
+  animation: user-marker-pulse 2s infinite cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: -1;
+}
+
+.user-marker-accuracy {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(
+    rgba(111, 78, 55, 0.15) 0%,
+    rgba(111, 78, 55, 0.1) 50%,
+    rgba(111, 78, 55, 0) 70%
+  );
+  z-index: -1;
+}
+
+.user-marker.pulsing .user-marker-accuracy {
+  animation: breathe 4s infinite ease-in-out;
+}
+
+.user-location-tooltip .leaflet-tooltip {
+  background: white !important;
+  border: 1px solid #6F4E37 !important;
+  color: #6F4E37 !important;
+  font-weight: 500 !important;
+  padding: 4px 10px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.user-location-tooltip .leaflet-tooltip:before {
+  border-right-color: white !important;
+}
+
+@keyframes user-marker-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  
+  70% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.cluster-marker-container {
+  background: none !important;
+  border: none !important;
+}
+
+.cluster-marker {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #6F4E37, #8D6E63);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  border: 3px solid white;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cluster-marker:hover {
+  transform: scale(1.1);
+}
+
+.leaflet-tooltip {
+  background-color: white !important;
+  border: 1px solid rgba(111, 78, 55, 0.3) !important;
+  color: #6F4E37 !important;
+  font-size: 11px !important;
+  padding: 4px 8px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.leaflet-tooltip-top:before {
+  border-top-color: white !important;
+}
+
+.cafe-tooltip {
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6F4E37;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cafe-tooltip::before {
+  border-top-color: white;
+}
+
+.leaflet-tooltip-top:before {
+  border-top-color: white;
+}
+
+.cafe-marker.closed {
+  opacity: 0.85; 
+  filter: grayscale(60%) saturate(40%); 
+  transform: scale(0.95); 
+}
+
+.cafe-marker .closed-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: linear-gradient(45deg, #ff4d4d, #ff6b6b);
+  color: white;
+  font-size: 9px;
+  padding: 3px 5px;
+  border-radius: 4px;
+  transform: rotate(0deg); 
+  font-weight: bold;
+  z-index: 10; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cafe-marker.closed:hover {
+  opacity: 1;
+  filter: grayscale(30%);
+  transform: scale(1.05);
+}
+
+@keyframes pulseWalking {
+  0% { stroke-opacity: 0.7; }
+  50% { stroke-opacity: 1; }
+  100% { stroke-opacity: 0.7; }
+}
+
+@keyframes pulseCycling {
+  0% { stroke-opacity: 0.7; stroke-dashoffset: 0; }
+  50% { stroke-opacity: 1; }
+  100% { stroke-opacity: 0.7; stroke-dashoffset: 20; }
+}
+
+@keyframes pulseDriving {
+  0% { stroke-width: 5; }
+  50% { stroke-width: 6.5; }
+  100% { stroke-width: 5; }
+}
+
+.pulse-walking {
+  animation: pulseWalking 2s infinite;
+}
+
+.pulse-cycling {
+  animation: pulseCycling 3s infinite linear;
+}
+
+.pulse-driving {
+  animation: pulseDriving 1.5s infinite;
+}
+
+.pulse-default {
+  animation: pulseWalking 2s infinite;
+}
+
+.coffee-user-marker {
+  background: none !important;
+  border: none !important;
+}
+
+
+
+.coffee-marker-container {
+  width: 100%;
+  height: 80%;
+  position: relative;
+  animation: coffee-bounce 2s ease-in-out infinite alternate;
+   border-radius: 50%;
+  overflow: hidden;
+  background-color: white;
+  transform-origin: bottom center;
+}
+
+.coffee-marker-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%; 
+  height: 120%; 
+  background: radial-gradient(circle, 
+    rgba(241, 139, 66, 0.7) 0%, 
+    rgba(0, 102, 204, 0) 70%);
+  z-index: -1;
+  border-radius: 50%;
+  animation: pulse-glow 2s infinite alternate;
+  pointer-events: none; 
+}
+
+@keyframes pulse-glow {
+  0% {
+    opacity: 0.6; 
+    transform: translateX(-50%) scale(0.9);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateX(-50%) scale(1.2);
+  }
+}
+
+.coffee-marker-img {
+  width: 120%;
+  height: auto;
+  object-fit: contain;
+}
+
+@keyframes coffee-bounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-3px);
+  }
+}
+
+.marker-bounce {
+  animation: cafe-bounce 2s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+@keyframes cafe-bounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-3px);
+  }
+}
+
+.cafe-marker.marker-bounce {
+  animation: cafe-bounce 2s ease-in-out infinite alternate !important;
+  transform-origin: bottom center !important;
+}
+
+.cafe-marker.marker-bounce:hover,
+.cafe-marker.marker-bounce.hovered {
+  animation: cafe-bounce-hover 2s ease-in-out infinite alternate !important;
+}
+
+@keyframes cafe-bounce-hover {
+  0% {
+    transform: scale(1.1) translateY(0);
+  }
+  100% {
+    transform: scale(1.1) translateY(-5px);
+  }
+}
+
+.cafe-marker .coffee-steam {
+  pointer-events: none;
+  z-index: 15 !important; 
+}
+
+.cafe-marker .coffee-steam {
+  pointer-events: none;
+  z-index: 10;
+}
+
+.steam-path {
+  stroke-dasharray: 12;
+  stroke-dashoffset: 12;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
+}
+
+.steam-1 {
+  animation: steam-rise 2s 0s infinite;
+}
+
+.steam-2 {
+  animation: steam-rise 2s 0.5s infinite;
+}
+
+.steam-3 {
+  animation: steam-rise 2s 1s infinite;
+}
+
+@keyframes steam-rise {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 12;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0.5;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -12;
+    transform: translateY(-8px);
+  }
+}
+
+.user-location-tooltip {
+  background-color: #F98B3E !important;
+  border: none !important;
+  border-radius: 20px !important;
+  padding: 4px 8px !important;
+  color: white !important;
+  font-weight: 500 !important;
+  font-size: 11px !important;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2) !important;
+  white-space: nowrap !important;
+}
+
+.user-location-tooltip::before {
+  border-top-color: #F98B3E !important;
+}
+
+.coffee-steam {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 24px;
+  pointer-events: none;
+}
+
+.coffee-steam svg {
+  width: 100%;
+  height: 100%;
+}
+
+.coffee-steam .steam-path {
+  stroke: white;
+  stroke-width: 2.5;
+  opacity: 0.9;
+  stroke-linecap: round;
+  filter: url(#glow);
+}
+
+.coffee-steam .steam-1 {
+  animation: steam-rise 2s 0s infinite;
+}
+
+.coffee-steam .steam-2 {
+  animation: steam-rise 2s 0.6s infinite;
+}
+
+.coffee-steam .steam-3 {
+  animation: steam-rise 2s 1.2s infinite;
+}
+
+@keyframes steam-rise {
+  0% {
+    stroke-dashoffset: 10;
+    opacity: 0;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.3;
+    stroke-dashoffset: -10;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+    stroke-dashoffset: -20;
+  }
+}
+
+.coffee-marker-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  height: 130%;
+  background-color: white; 
+  border: 3px solid #0066CC; 
+  border-radius: 50%;
+  z-index: 1;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.coffee-marker-ping {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(0, 102, 204, 0.4); 
+  z-index: 0;
+  animation: ping-animation 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes ping-animation {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+.cafe-bounce-wrapper {
+  animation: coffee-bounce 2s ease-in-out infinite alternate;
+  transform-origin: center bottom;
+  display: block;
+}
+
+.cafe-steam {
+  position: absolute !important;
+  top: -8px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 24px !important;
+  height: 20px !important;
+  z-index: 20 !important;
+  pointer-events: none !important;
+}
+
+/* Mejorar la visibilidad del vapor */
+.cafe-steam .steam-path {
+  stroke: white !important;
+  stroke-width: 2.5 !important;
+  opacity: 0.9 !important;
+  stroke-linecap: round !important;
+  filter: drop-shadow(0 0 3px rgba(255,255,255,0.7)) !important;
+}
+
+.cafe-marker {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.cafe-bounce-wrapper .cafe-marker {
+  transition: none !important;
+}
+
+.cafe-bounce-wrapper:hover .cafe-marker,
+.cafe-bounce-wrapper .cafe-marker:hover,
+.cafe-bounce-wrapper .cafe-marker.hovered {
+  transform: scale(1.1) !important;
+}
+
+.closed-dot {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  width: 8px;
+  height: 8px;
+  background-color: #e74c3c;
+  border: 2px solid white;
+  border-radius: 50%;
+  z-index: 100 !important; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  animation: pulse-dot 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse-dot {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.cafe-marker.closed img {
+  filter: grayscale(70%);
+}
+
+.cafe-marker.closed .closed-overlay {
+  display: none;
+}
+
+.custom-marker-cluster {
+  background: none !important;
+  border: none !important;
+}
+
+.cluster-marker {
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid #6F4E37;
+  color: #6F4E37;
+  font-weight: bold;
+  font-size: 14px;
+  position: relative;
+}
+
+.cluster-marker::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(111, 78, 55, 0.15);
+  animation: cluster-pulse 2s infinite;
+  z-index: -1;
+}
+
+@keyframes cluster-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+.cluster-small {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.cluster-medium {
+  background-color: rgba(212, 167, 106, 0.9);
+  color: white;
+}
+
+.cluster-large {
+  background-color: rgba(111, 78, 55, 0.9);
+  color: white;
+}
+
+/* Estilos para marcadores expandidos (spider) */
+.leaflet-marker-icon.leaflet-marker-icon-spider {
+  transition: all 0.3s ease-out;
+}
+
+/* Agregar estos estilos al final del archivo */
+
+/* Mejoras para los clusters */
+.cluster-indicator {
+  font-size: 10px;
+  margin-top: 2px;
+  display: inline-block;
+  line-height: 1;
+}
+
+.open-indicator {
+  width: 6px;
+  height: 6px;
+  background-color: #34a853;
+  border-radius: 50%;
+  margin: 3px auto 0;
+}
+
+.rating-indicator {
+  color: #f9a825;
+  margin-top: 1px;
+  vertical-align: middle;
+}
+
+/* Mejorar apariencia general de clusters */
+.cluster-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* Mejorar apariencia y feedback de los clusters */
+.cluster-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.25);
+  border: 1.5px solid #6F4E37;
+  color: #6F4E37;
+  font-weight: 700;
+  font-size: 15px;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: visible;
+}
+
+.cluster-marker:hover {
+  transform: scale(1.05);
+  z-index: 1000;
+}
+
+.cluster-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.cluster-count {
+  display: block;
+  line-height: 1;
+}
+
+/* Clusters con cafeterías abiertas */
+.cluster-marker.has-open {
+  box-shadow: 0 3px 14px rgba(36, 148, 77, 0.3);
+  border-color: #34a853;
+}
+
+.cluster-marker.has-open::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background-color: #34a853;
+  border-radius: 50%;
+  border: 1.5px solid white;
+}
+
+/* Clusters con cafeterías de alta calificación */
+.cluster-marker.has-high-rated {
+  background: linear-gradient(to bottom, white 60%, #ffefc3 100%);
+}
+
+.cluster-marker.has-high-rated .rating-indicator {
+  color: #f9a825;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+/* Tamaños de clusters */
+.cluster-small {
+  font-size: 13px;
+}
+
+.cluster-medium {
+  font-size: 15px;
+  background-color: rgba(212, 167, 106, 0.9);
+  color: white;
+}
+
+.cluster-large {
+  font-size: 18px;
+  background-color: rgba(111, 78, 55, 0.9);
+  color: white;
+}
+
+/* Efecto de onda/ripple para feedback visual */
+.cluster-ripple {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  animation: cluster-ripple 1.5s infinite ease-out;
+  border: 2px solid rgba(111, 78, 55, 0.3);
+  z-index: -1;
+}
+
+@keyframes cluster-ripple {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* Estilo para marcador con clic */
+.custom-cafe-marker.clicked .cafe-marker {
+  transform: scale(1.2);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+
+.cluster-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  transition: transform 0.2s ease-out;
+  position: relative;
+}
+
+.cluster-marker:hover {
+  transform: scale(1.05);
+  z-index: 1000;
+}
+
+.cluster-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.cluster-count {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+}
+
+.cluster-indicators {
+  display: flex;
+  gap: 4px;
+  margin-top: 3px;
+  height: 6px;
+}
+
+.cluster-open-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+.cluster-rating-star {
+  font-size: 10px;
+  line-height: 10px;
+  height: 10px;
+  margin-top: -2px;
+  color: #F9A825;
+}
+
+/* Animación smooth para transiciones de cluster */
+.leaflet-cluster-anim .leaflet-marker-icon {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+.leaflet-cluster-spider-leg {
+  stroke-dashoffset: 0;
+  stroke-opacity: 0.7;
+  stroke-width: 2;
+  stroke: #6F4E37;
+  transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
+}

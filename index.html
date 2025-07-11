@@ -2,12 +2,55 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <link rel="icon" type="image/x-icon" href="/src/assets/images/logo.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Encafeinados</title>
+    <style>
+      body {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: none;
+      }
+      
+      /* Previene pull-to-refresh en iOS */
+      html, body {
+        position: fixed;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+      
+      /* Your additional styles */
+      #root {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Fix for iOS scroll */
+      * {
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      /* Configuration for mobile devices */
+      @media (max-width: 768px) {
+        body {
+          touch-action: manipulation;
+          -webkit-overflow-scrolling: touch;
+        }
+        
+        /* This is critical for iOS scroll */
+        .overflow-y-auto, .overflow-y-scroll {
+          -webkit-overflow-scrolling: touch !important; 
+          overscroll-behavior-y: contain !important;
+          overflow-scrolling: touch !important;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

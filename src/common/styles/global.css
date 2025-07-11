@@ -1,0 +1,166 @@
+.hide-scrollbar {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;  
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  
+}
+
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-center {
+  scroll-snap-align: center;
+}
+
+.snap-mandatory {
+  scroll-snap-stop: always;
+}
+
+.mobile-nav-spacing {
+  padding-bottom: 64px; 
+}
+
+.mobile-screen-height {
+  height: calc(100vh - 64px); 
+}
+
+@media (max-width: 767px) {
+  .has-mobile-nav {
+    padding-bottom: 64px;
+  }
+  
+  .has-mobile-nav-screen {
+    height: calc(100vh - 64px);
+    max-height: calc(100vh - 64px);
+  }
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .mb-safe {
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+.has-mobile-nav {
+  padding-bottom: 64px; 
+}
+
+@media (max-width: 767px) {
+  .has-mobile-nav {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+:root {
+  --z-navbar-mobile: 40;
+  --z-modal-backdrop: 50;
+  --z-modal-content: 51;
+  --z-popover: 52;
+  --z-tooltip: 53;
+  --z-toast: 60;
+}
+
+[data-radix-dialog-overlay],
+[data-radix-alert-dialog-overlay] {
+  z-index: var(--z-modal-backdrop) !important;
+}
+
+[data-radix-dialog-content],
+[data-radix-alert-dialog-content] {
+  z-index: var(--z-modal-content) !important;
+}
+
+[data-radix-popover-content] {
+  z-index: var(--z-popover) !important;
+}
+
+.mobile-navbar {
+  z-index: var(--z-navbar-mobile);
+}
+
+.toast-container {
+  z-index: 60 !important;
+}
+
+.mobile-navbar {
+  z-index: 40;
+}
+
+.modal-backdrop {
+  z-index: 50;
+}
+
+.modal-dialog {
+  z-index: 51;
+}
+
+.popover {
+  z-index: 52;
+}
+
+.tooltip {
+  z-index: 53;
+}
+
+.toast {
+  z-index: 60;
+}
+
+/* Scroll areas for branch widgets */
+.pending-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pending-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pending-scroll-area::-webkit-scrollbar-thumb {
+  background: #F3D19E;
+  border-radius: 2px;
+}
+
+.pending-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: #E6C085;
+}
+
+.approved-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+
+.approved-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.approved-scroll-area::-webkit-scrollbar-thumb {
+  background: #86EFAC;
+  border-radius: 2px;
+}
+
+.approved-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: #6EE7B7;
+}
+
+.rejected-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+
+.rejected-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rejected-scroll-area::-webkit-scrollbar-thumb {
+  background: #FCA5A5;
+  border-radius: 2px;
+}
+
+.rejected-scroll-area::-webkit-scrollbar-thumb:hover {
+  background: #F87171;
+}

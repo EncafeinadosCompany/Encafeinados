@@ -7,6 +7,14 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+.env
+.env.local
+.env.[mode]
+.env.[mode].local
+.env.development
+.env.testing
+.env.production
+
 node_modules
 dist
 dist-ssr
@@ -23,3 +31,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+coverage
+.nyc_output
