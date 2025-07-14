@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useBranchAttributes } from '@/api/queries/branches/branch.query';
 import { GoToButton } from '@/common/atoms/map/GoToButton';
+import { generateBranchDescription, generateFallbackDescription, getLoadingDescription } from '@/common/utils/branches/description_generator.utils';
 
 interface BranchCardProps {
   id: number;
@@ -38,7 +39,8 @@ export const BranchCard = memo(({
   const [isHovered, setIsHovered] = useState(false);
   const [shouldLoadAttributes, setShouldLoadAttributes] = useState(false);
 
-  const { data: attributesData, isLoading: attributesLoading, error: attributesError } = useBranchAttributes(
+  // Solo cargar atributos cuando se haga hover (más eficiente)
+  const { data: attributesData, isLoading: attributesLoading } = useBranchAttributes(
     shouldLoadAttributes ? id : undefined
   );
 
@@ -49,6 +51,7 @@ export const BranchCard = memo(({
     }
   };
 
+  // Combinar atributos de props con los cargados dinámicamente, priorizando los dinámicos
   const allAttributes = (attributesData?.attributes && attributesData.attributes.length > 0) 
     ? attributesData.attributes // Mostrar todos los atributos, independientemente del valor
     : attributes; 
@@ -56,6 +59,28 @@ export const BranchCard = memo(({
   const displayedAttributes = allAttributes.slice(0, 3);
   const totalAttributesCount = allAttributes.length;
 
+  // Helper para obtener la descripción generada dinámicamente
+  const getDescription = () => {
+    // Si se están cargando los atributos, mostrar estado de carga
+    if (attributesLoading && shouldLoadAttributes) {
+      return getLoadingDescription();
+    }
+    
+    // Si tenemos atributos, generar descripción dinámica
+    if (attributesData?.attributes && attributesData.attributes.length > 0) {
+      return generateBranchDescription({
+        name,
+        attributes: attributesData.attributes,
+        isOpen,
+        average_rating: rating
+      });
+    }
+    
+    // Fallback genérico con información básica disponible
+    return generateFallbackDescription();
+  };
+
+  // Helper para obtener el tooltip de un atributo
   const getAttributeTooltip = (attribute: any) => {
     const category = attribute.category || 'Atributo';
     const value = attribute.value;
@@ -147,7 +172,7 @@ export const BranchCard = memo(({
                 ${isHovered ? 'opacity-100 max-h-48' : 'opacity-0 max-h-0'}`}
             >
               <Text variant="small" className="text-[#6F4E37] text-xs mb-3 line-clamp-2">
-                {description}
+                {getDescription()}
               </Text>
 
               {(displayedAttributes.length > 0 || (attributesLoading && shouldLoadAttributes)) && (
