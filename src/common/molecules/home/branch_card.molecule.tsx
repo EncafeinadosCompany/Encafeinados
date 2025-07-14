@@ -1,7 +1,7 @@
 import React, { useState, memo, useEffect } from 'react';
 import { Card, CardContent } from '@/common/ui/card';
 import { Text } from '@/common/atoms/common/text.atom';
-import { Coffee, MapPin, Heart, Phone, Star, Clock } from '@/common/ui/icons';
+import { Coffee, MapPin, Phone, Star, Clock } from '@/common/ui/icons';
 import { motion } from 'framer-motion';  
 import { Link } from 'react-router-dom';
 import { useBranchAttributes } from '@/api/queries/branches/branch.query';
@@ -16,7 +16,12 @@ interface BranchCardProps {
   description?: string;
   rating?: string;
   isOpen?: boolean;
-  attributes?: Array<{ attributeName: string; value: string }>;
+  attributes?: Array<{ 
+    attributeId?: number;
+    category?: string;
+    attributeName: string; 
+    value: string | null;
+  }>;
   distance?: number;
 }
 
@@ -31,34 +36,31 @@ export const BranchCard = memo(({
   rating, isOpen = true, attributes = [], distance
 }: BranchCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
   const [shouldLoadAttributes, setShouldLoadAttributes] = useState(false);
 
-  // Cargar atributos cuando se haga hover por primera vez
-  const { data: attributesData, isLoading: attributesLoading } = useBranchAttributes(
+  const { data: attributesData, isLoading: attributesLoading, error: attributesError } = useBranchAttributes(
     shouldLoadAttributes ? id : undefined
   );
 
   const handleMouseEnter = () => {
     setIsHovered(true);
-    // Siempre cargar atributos al hacer hover, independientemente de si ya hay atributos en props
     if (!shouldLoadAttributes) {
       setShouldLoadAttributes(true);
     }
   };
 
-  const handleFavoriteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsFavorite(prev => !prev);
-  };
-
-  // Combinar atributos de props con los cargados dinámicamente, priorizando los dinámicos
   const allAttributes = (attributesData?.attributes && attributesData.attributes.length > 0) 
-    ? attributesData.attributes 
-    : attributes;
+    ? attributesData.attributes // Mostrar todos los atributos, independientemente del valor
+    : attributes; 
   
   const displayedAttributes = allAttributes.slice(0, 3);
   const totalAttributesCount = allAttributes.length;
+
+  const getAttributeTooltip = (attribute: any) => {
+    const category = attribute.category || 'Atributo';
+    const value = attribute.value;
+    return `${category}: ${attribute.attributeName}${value ? ` - ${value}` : ''}`;
+  };
 
   return (
     <motion.div
@@ -77,7 +79,6 @@ export const BranchCard = memo(({
           <div className="relative h-48 sm:h-52 overflow-hidden rounded-t-2xl">
             <div className="absolute top-0 left-0 w-full h-16 bg-gradient-to-b from-black/40 to-transparent z-10"></div>
 
-            {/* Badge de estado (abierto/cerrado) */}
             <div className="absolute top-3 right-3 z-20">
               <div className={`px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${
                 isOpen 
@@ -89,7 +90,6 @@ export const BranchCard = memo(({
               </div>
             </div>
 
-            {/* Rating si está disponible */}
             {rating && (
               <div className="absolute bottom-3 right-3 z-20 bg-white/80 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
                 <Star className="w-3 h-3 text-yellow-500 fill-current" />
@@ -109,16 +109,7 @@ export const BranchCard = memo(({
               }}
             />
 
-            <button
-              className="absolute top-3 left-3 z-20 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm
-                transition-transform duration-150 hover:scale-110 active:scale-90"
-              onClick={handleFavoriteClick}
-              aria-label={isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
-            >
-              <Heart
-                className={`w-4 h-4 transition-colors ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'}`}
-              />
-            </button>
+
           </div>
 
           <div className="p-4 flex-grow flex flex-col">
@@ -159,29 +150,28 @@ export const BranchCard = memo(({
                 {description}
               </Text>
 
-              {/* Mostrar atributos de la sucursal */}
-              {(displayedAttributes.length > 0 || attributesLoading) && (
+              {(displayedAttributes.length > 0 || (attributesLoading && shouldLoadAttributes)) && (
                 <div className="mb-3">
                   <div className="flex items-center mb-1">
                     <Coffee className="w-4 h-4 mr-2 text-[#A67C52]" />
                     <Text variant="small" className="text-[#2C1810] font-medium">Características:</Text>
                   </div>
                   <div className="flex flex-wrap gap-1 mt-1 pl-6">
-                    {attributesLoading ? (
+                    {attributesLoading && shouldLoadAttributes ? (
                       <>
                         <div className="px-2 py-1 bg-gray-200 animate-pulse text-xs rounded-full w-16 h-6"></div>
                         <div className="px-2 py-1 bg-gray-200 animate-pulse text-xs rounded-full w-20 h-6"></div>
                         <div className="px-2 py-1 bg-gray-200 animate-pulse text-xs rounded-full w-14 h-6"></div>
                       </>
-                    ) : (
+                    ) : displayedAttributes.length > 0 ? (
                       <>
                         {displayedAttributes.map((attribute, index) => (
                           <span
                             key={index}
                             className="px-2 py-1 bg-[#FAF3E0] text-[#6F4E37] text-xs rounded-full"
-                            title={`${attribute.attributeName}: ${attribute.value}`}
+                            title={getAttributeTooltip(attribute)}
                           >
-                            {attribute.value}
+                            {attribute.attributeName}
                           </span>
                         ))}
                         {totalAttributesCount > 3 && (
@@ -190,7 +180,7 @@ export const BranchCard = memo(({
                           </span>
                         )}
                       </>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               )}
@@ -205,10 +195,11 @@ export const BranchCard = memo(({
                   text="Cafetería"
                   branchId={id}
                   mapRoute="public"
-                  className={`w-full py-2.5 px-4 text-sm ${
+                  className={`w-full py-2.5 px-4 text-sm font-medium rounded-lg shadow-sm transition-all duration-200 
+                    relative overflow-hidden hover:shadow-md active:scale-[0.98] ${
                     isOpen 
-                      ? 'bg-[#6F4E37] hover:bg-[#5D4130]' 
-                      : 'bg-gray-400 hover:bg-gray-500'
+                      ? 'bg-[#6F4E37] hover:bg-[#5D4130] text-white border-0' 
+                      : 'bg-gray-400 hover:bg-gray-500 text-white border-0'
                   }`}
                 />
               </div>

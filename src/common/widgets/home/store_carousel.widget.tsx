@@ -23,7 +23,6 @@ interface BranchCardProps {
 const AUTOPLAY_DELAY = 4000;
 const INTERACTION_PAUSE = 5000;
 
-// Simplificado a solo las animaciones que realmente necesitan Framer Motion
 const animations = {
   item: {
     hidden: { opacity: 0, y: 20 },
@@ -190,7 +189,7 @@ export const StoreCarousel = () => {
         description: GENERIC_DESCRIPTIONS[Math.floor(Math.random() * GENERIC_DESCRIPTIONS.length)],
         rating: branch.average_rating,
         isOpen: branch.isOpen,
-        attributes: [], // Se cargarán bajo demanda o se pueden obtener de un endpoint que incluya todo
+        attributes: [], // Los atributos se cargarán dinámicamente desde la API
         distance: userLocation ? calculateDistance(
           userLocation.lat, 
           userLocation.lng, 
