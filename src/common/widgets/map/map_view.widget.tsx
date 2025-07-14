@@ -302,8 +302,11 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   const handleCloseRouteControls = useCallback(() => {
     setShowRouteControls(false);
     setLocalActiveCafeData(null);
+    // Limpiar explícitamente las coordenadas de ruta
+    setRouteOrigin(null);
+    setRouteDestination(null);
     clearRoute();
-  }, [clearRoute, setShowRouteControls]);
+  }, [clearRoute, setShowRouteControls, setRouteOrigin, setRouteDestination]);
 
   useEffect(() => {
     getUserLocation();
@@ -515,8 +518,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
               to={routeDestination}
               routeCoordinates={routeCoordinates}
               color="#6F4E37"
-              weight={4}
-              opacity={0.7}
+              weight={6}
+              opacity={0.9}
               transportMode={transportMode}
             />
           )}
