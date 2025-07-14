@@ -122,13 +122,9 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   } = useBranchSearch(userLocation || undefined);
   
   const sortedCafes = useMemo(() => {
-    if (apiHasActiveFilters) {
-      return apiCafes;
-    }
-    return cafes;
-  }, [apiCafes, cafes, apiHasActiveFilters]);
+    return apiCafes.length > 0 ? apiCafes : cafes;
+  }, [apiCafes, cafes]);
 
-  // Declare state variables that are shared across hooks
   const [activeCafe, setActiveCafe] = useState<number | null>(null);
 
   const {

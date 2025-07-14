@@ -49,13 +49,6 @@ const WeeklySchedule: React.FC<WeeklyScheduleProps> = ({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600">Estado actual:</span>
-          <span className={`text-sm font-medium px-2 py-1 rounded-full ${
-            isCurrentlyOpen 
-              ? "bg-green-100 text-green-700" 
-              : "bg-red-100 text-red-700"
-          }`}>
-            {isCurrentlyOpen ? "Abierto" : "Cerrado"}
-          </span>
         </div>
 
         {todaySchedule && (
