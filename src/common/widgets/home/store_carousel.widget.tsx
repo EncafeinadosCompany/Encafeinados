@@ -6,7 +6,7 @@ import {Carousel,CarouselContent,CarouselItem} from "@/common/ui/carousel";
 import { motion, useInView } from "framer-motion"; 
 import type { CarouselApi } from "@/common/ui/carousel";
 import { Coffee } from "@/common/ui/icons";
-import { useSearchBranches, BranchSearchParams, useBranchAttributes, useBranchesID } from "@/api/queries/branches/branch.query";
+import { useSearchBranches, BranchSearchParams, useBranchAttributes } from "@/api/queries/branches/branch.query";
 
 interface BranchCardProps {
   id: number;
@@ -33,6 +33,13 @@ const animations = {
     },
   },
 };
+
+const GENERIC_DESCRIPTIONS = [
+  "Café de especialidad con granos seleccionados de las mejores regiones productoras.",
+  "Experiencia única con métodos de preparación artesanales y ambiente acogedor.",
+  "Del grano a la taza, cuidamos cada detalle para ofrecerte el mejor sabor.",
+  "Sabores auténticos de Colombia, con un compromiso por la calidad y sostenibilidad."
+];
 
 // Función para obtener la ubicación del usuario
 const getUserLocation = (): Promise<{ lat: number; lng: number } | null> => {
@@ -179,11 +186,10 @@ export const StoreCarousel = () => {
         name: branch.name,
         imageUrl: branch.store_logo || "https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg",
         address: branch.address,
-        // La descripción se generará dinámicamente basada en atributos
-        description: undefined,
+        description: GENERIC_DESCRIPTIONS[Math.floor(Math.random() * GENERIC_DESCRIPTIONS.length)],
         rating: branch.average_rating,
         isOpen: branch.isOpen,
-        attributes: [], // Los atributos se cargarán dinámicamente desde la API al hacer hover
+        attributes: [], // Se cargarán bajo demanda o se pueden obtener de un endpoint que incluya todo
         distance: userLocation ? calculateDistance(
           userLocation.lat, 
           userLocation.lng, 
