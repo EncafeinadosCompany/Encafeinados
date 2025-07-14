@@ -60,6 +60,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   const [viewMode, setViewMode] = useState<"map" | "list">("map");
   const [selectedStore, setSelectedStore] = useState<number | undefined>(undefined);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [localActiveCafeData, setLocalActiveCafeData] = useState<any>(null);
 
   const { mapLoaded, setMapLoaded, tilesLoaded, setTilesLoaded, totalTiles, setTotalTiles, loadingProgress, setLoadingProgress } = useMapLoading();
   const { favorites, toggleFavorite } = useFavorites();
@@ -268,6 +269,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
         setTimeout(() => {
           setRouteOrigin(userLocation);
           setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
+          setLocalActiveCafeData(selectedCafe);
           setShowRouteControls(true);
 
           if (mapInstance) {
@@ -299,6 +301,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
 
   const handleCloseRouteControls = useCallback(() => {
     setShowRouteControls(false);
+    setLocalActiveCafeData(null);
     clearRoute();
   }, [clearRoute, setShowRouteControls]);
 
@@ -307,12 +310,14 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   }, [getUserLocation]);
 
   useEffect(() => {
-    if (activeCafeData && userLocation && showRouteControls) {
+    const cafeData = localActiveCafeData || activeCafeData;
+    if (cafeData && userLocation && showRouteControls) {
       setRouteOrigin(userLocation);
-      setRouteDestination([activeCafeData.latitude, activeCafeData.longitude]);
+      setRouteDestination([cafeData.latitude, cafeData.longitude]);
     }
   }, [
     activeCafeData,
+    localActiveCafeData,
     userLocation,
     showRouteControls,
     setRouteOrigin,
@@ -667,7 +672,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
       
       {/* Route controls */}
       <AnimatePresence>
-        {showRouteControls && activeCafeData && (
+        {showRouteControls && (activeCafeData || localActiveCafeData) && (
           <RouteControls
             isActive={showRouteControls}
             transportMode={transportMode}
@@ -676,7 +681,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
             duration={routeInfo?.time || null}
             isCalculating={isRouteLoading}
             onClose={handleCloseRouteControls}
-            cafeName={activeCafeData.name}
+            cafeName={(localActiveCafeData || activeCafeData)?.name || ""}
             origin={routeOrigin}
             destination={routeDestination}
             routeInfo={routeInfo}
