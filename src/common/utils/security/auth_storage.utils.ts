@@ -1,14 +1,9 @@
 import { CoffeeLoverProfileType } from "@/api/types/coffelovers/coffelovers.type";
 
 
-export const setAuthStorageGoogle = (token: string, user: any) => {
+export const setAuthStorageGoogle = (token: string) => {
   localStorage.setItem('token', token);
 
-  const data = {
-    email: user.email,
-    role: user.role.name,
-  };
-  localStorage.setItem('user', JSON.stringify(data));
 }
 
 export const clearAuthStorage = () => {

@@ -11,21 +11,22 @@ const GoogleCallback = () => {
     const fetchToken = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const tokenResponse = urlParams.get("accessToken");
-      const userDataParam = urlParams.get("user");
 
-      if (!tokenResponse || !userDataParam) {
+      if (!tokenResponse) {
         toast.error("Error en la autenticación.");
         navigate("/login");
         return;
       }
 
-      console.log(tokenResponse);
-
 
       try {
-        const userData = JSON.parse(decodeURIComponent(userDataParam));
+ 
         
-        setAuthStorageGoogle(tokenResponse, userData);
+        setAuthStorageGoogle(tokenResponse);
+
+        
+      console.log(tokenResponse);
+
         toast.success("Inicio de sesión exitoso");
         navigate("/coffeelover");
       } catch (error) {

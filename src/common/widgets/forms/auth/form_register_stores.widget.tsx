@@ -18,10 +18,13 @@ import { RegisterStoreDto } from "@/api/types/stores/stores.type"
 
 const FormRegisterStores = () => {
     const [direction, setDirection] = useState(0);
+
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({});
     const { mutateAsync: useRegiterStore, status } = useRegisterStoreMutation();
     const navigate = useNavigate();
+
+
 
     // Get current time for greeting
     const getGreeting = () => {
