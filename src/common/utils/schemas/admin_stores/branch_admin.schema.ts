@@ -28,7 +28,6 @@ export const BranchAdminSchema = z.object({
     .nonempty({ message: "El tipo de documento es obligatorio" }),
   number_document: z
     .string()
-    .nonempty({ message: "El número de documento es obligatorio" })
     .min(6, { message: "El número de documento debe tener al menos 6 caracteres" })
     .max(15, { message: "El número de documento es demasiado largo" })
     .regex(/^[\d-]+$/, { message: "Solo se permiten números y guiones" }),

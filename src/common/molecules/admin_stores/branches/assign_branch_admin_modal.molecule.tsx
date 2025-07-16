@@ -323,7 +323,7 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
 
                   <div className="space-y-2">
                     <Label htmlFor="number_document" className="text-sm font-medium text-[#6F4E37]">
-                      Número de Documento *
+                      Número de Documento 
                     </Label>
                     <div className="relative">
                       <IdCard className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#A67C52]" />
