@@ -28,13 +28,23 @@ export const useRegisterCoffeloverMutation = () => {
   
     onSuccess: (data, variable: RegisterCoffelover) => {
 
-      // if(variable.userData.id_google){
-        
-      // }
-      useLonginMutation.mutate({
+      // Si es usuario de Google, no hacer login tradicional
+      if (variable.userData.id_google) {
+        toast.success("Perfil completado correctamente. ¡Bienvenido!");
+        // Redirigir al flujo de Google OAuth para completar la autenticación
+        window.open(`${import.meta.env.VITE_API_URL}/auth/google`, "_self");
+        return;
+      }
+
+      // Solo para usuarios con password (registro tradicional)
+      const user = {
         email: data.client.person.user_email,
         password: variable.userData.password
-      })
+      }
+
+      console.log('Traditional login for registered user:', user);
+
+      useLonginMutation.mutate(user)
 
       toast.success("Perfil completado correctamente. ¡Bienvenido!");
       queryClient.invalidateQueries({ queryKey: ['user'] });

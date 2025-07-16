@@ -15,6 +15,9 @@ export interface LoginResponse {
   storeId?: number
   branchId?: number,
   storeOrBranchId?:number
+  personData?: {
+    full_name: string
+  }
 }
 
 export interface User_Data {
