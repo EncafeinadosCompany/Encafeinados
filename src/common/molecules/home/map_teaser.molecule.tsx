@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { MapPin, Coffee, Navigation } from "@/common/ui/icons";
 import { useNavigate } from "react-router-dom";
+import { useCoffeloversCount } from "@/api/queries/coffelovers/coffelovers_count.query";
+import SafeNumericDisplay from "@/common/atoms/common/safe_numeric_display.atom";
 
 interface MapTeaserProps {
   totalCafes: number;
@@ -13,6 +15,7 @@ export const MapTeaser = ({
   city = "Medellín",
 }: MapTeaserProps) => {
   const navigate = useNavigate();
+  const { data: coffeloversData } = useCoffeloversCount();
 
   const handleOpenMap = () => {
     navigate("/map");
@@ -100,8 +103,8 @@ export const MapTeaser = ({
               Descubre las mejores cafeterías cercanas, lee reseñas y encuentra
               tu próxima parada para un café excepcional.{" "}
               <span className="text-[#2C1810] font-semibold">
-                Únete a nuestra comunidad de más de 5,000 coffelovers
-              </span>{""}
+                Únete a nuestra comunidad de más de <SafeNumericDisplay value={coffeloversData?.totalClients} defaultValue="1,000" /> coffelovers 
+              </span>{" "}
               que comparten la pasión por el buen café.
             </motion.p>
 
