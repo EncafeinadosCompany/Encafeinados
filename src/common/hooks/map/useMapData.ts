@@ -85,12 +85,11 @@ export const useMapData = (
     [cafes]
   );
 
+  // Note: Removed automatic sorting as the API already returns data sorted by distance
+  // When using API search, the data comes pre-sorted and we shouldn't override that order
   const sortedCafes = useMemo(() => {
-    if (!userLocation) return cafes;
-    return [...cafes].sort((a, b) =>
-      (a.distanceValue || 999) - (b.distanceValue || 999)
-    );
-  }, [cafes, userLocation]);
+    return cafes; // Return cafes as-is to preserve API ordering
+  }, [cafes]);
 
   const activeCafeData = useMemo(
     () => activeCafe ? cafes.find((cafe) => cafe.id === activeCafe) : null,

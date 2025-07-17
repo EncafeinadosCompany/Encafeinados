@@ -130,17 +130,7 @@ const CafeCard: React.FC<CafeCardProps> = ({
           >
             Ver detalles
           </motion.button>
-          <motion.button
-            className="w-10 h-10 flex items-center justify-center border border-[#6F4E37] text-[#6F4E37] rounded-lg hover:bg-[#6F4E37] hover:text-white transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onNavigate(cafe.id);
-            }}
-          >
-            <Route size={18} />
-          </motion.button>
+         
         </div>
       </div>
     </motion.div>

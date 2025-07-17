@@ -23,9 +23,9 @@ const CafeMarker: React.FC<CafeMarkerProps> = ({
   
   const getMarkerSize = () => {
     const zoom = map.getZoom();
-    if (zoom < 13) return isActive ? 32 : 28;
-    if (zoom < 15) return isActive ? 38 : 34;
-    return isActive ? 44 : 40;
+    if (zoom < 13) return isActive ? 55 : 50;
+    if (zoom < 15) return isActive ? 62 : 56;
+    return isActive ? 70 : 65;
   };
   
   const customIcon = useMemo(() => {

@@ -21,9 +21,9 @@ export default function NavbarGeneral({ navItems, coffeecoins, isloading}: NavIt
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768)
       if (window.innerWidth >= 768) {
-        setIsExpanded(false)
-      } else {
         setIsExpanded(true)
+      } else {
+        setIsExpanded(false)
       }
     }
 

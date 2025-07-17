@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useSearchBranches, BranchSearchParams } from '@/api/queries/branches/branch.query';
 import { SearchBranch } from '@/api/types/branches/branches.types';
+import { calculateDistance } from '@/common/utils/map/map_utils';
 
 export interface FilterOptions {
   minRating: number;
@@ -69,25 +70,41 @@ export const useBranchSearch = (userLocation?: [number, number]) => {
   }, []);
 
   const mapToCafeFormat = useCallback((branches: SearchBranch[]) => {
-    return branches.map(branch => ({
-      id: branch.id,
-      name: branch.name,
-      rating: parseFloat(branch.average_rating),
-      reviewCount: 0, 
-      openTime: "", 
-      image: branch.store_logo,
-      isOpen: branch.isOpen,
-      latitude: branch.latitude,
-      longitude: branch.longitude,
-      address: branch.address,
-      status: "APPROVED",
-      storeId: 0, 
-      storeName: "", 
-      distanceValue: 0,
-      distanceText: "",
-      tags: [] 
-    }));
-  }, []);
+    return branches.map(branch => {
+      let distance = "Unknown distance";
+      let distanceValue = 999;
+
+      if (userLocation) {
+        const distanceKm = calculateDistance(
+          userLocation[0],
+          userLocation[1],
+          branch.latitude,
+          branch.longitude
+        );
+        distance = `${distanceKm} km`;
+        distanceValue = parseFloat(distanceKm);
+      }
+
+      return {
+        id: branch.id,
+        name: branch.name,
+        rating: parseFloat(branch.average_rating),
+        reviewCount: 0, 
+        openTime: "", 
+        image: branch.store_logo,
+        isOpen: branch.isOpen,
+        latitude: branch.latitude,
+        longitude: branch.longitude,
+        address: branch.address,
+        status: "APPROVED",
+        storeId: 0, 
+        storeName: "", 
+        distance,
+        distanceValue,
+        tags: [] 
+      };
+    });
+  }, [userLocation]);
 
   return {
     searchTerm,

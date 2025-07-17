@@ -8,7 +8,8 @@ interface FormHeaderProps {
     getStepIcon: () => React.ReactNode;
     totalSteps?: number;
     steps?: number;
-    color?: string;
+    color?: string ;
+    colorProccessBar?: string;
 }
 
 export const FormHeader: React.FC<FormHeaderProps> = ({
@@ -18,6 +19,7 @@ export const FormHeader: React.FC<FormHeaderProps> = ({
     getStepIcon,
     totalSteps = 0,
     steps = 0,
+    colorProccessBar,
     color
 }) => {
     return (
@@ -58,6 +60,7 @@ export const FormHeader: React.FC<FormHeaderProps> = ({
                     <p className="text-sm text-gray-500">{steps + 1} de {totalSteps}</p>
                 </div>
                 < SimpleProgressBar
+                    color={colorProccessBar}
                     currentStep={steps + 1}
                     totalSteps={totalSteps}
                 ></SimpleProgressBar>

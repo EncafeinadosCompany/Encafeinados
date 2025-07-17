@@ -3,19 +3,25 @@ import { Text } from "@/common/atoms/common/text.atom";
 import { motion } from "framer-motion";
 import { ArrowRightIcon, ChevronDownIcon } from "@/common/ui/icons";
 import { Link } from "react-router-dom";
+import { useScrollNavigation } from "@/common/hooks/useScrollNavigation";
 
 export const HeroSection: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
+  const { scrollToSection } = useScrollNavigation(['map']);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrollPosition(window.scrollY);
-      
     };
     window.addEventListener("scroll", handleScroll);
     
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleScrollToMap = (e: React.MouseEvent) => {
+    e.preventDefault();
+    scrollToSection('map', { offset: -80 });
+  };
 
   return (
     <section className="relative w-full h-screen overflow-hidden bg-[#0F0F0F]">
@@ -35,7 +41,6 @@ export const HeroSection: React.FC = () => {
       <div className="absolute inset-0 bg-[url('/api/placeholder/100/100')] bg-repeat opacity-5" />
 
 
-      {/* HeroSection Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 md:px-8">
 
 
@@ -45,7 +50,6 @@ export const HeroSection: React.FC = () => {
           transition={{ duration: 0.9, delay: 0.2 }}
           className="max-w-4xl text-center"
         >
-          {/* Título principal animado */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -60,7 +64,6 @@ export const HeroSection: React.FC = () => {
               café perfecto
             </Text>
 
-            {/* Línea decorativa */}
             <div className="mx-auto w-16 h-1 bg-[#D4A76A] rounded-full my-6" />
 
             <Text
@@ -100,14 +103,19 @@ export const HeroSection: React.FC = () => {
           transition={{ delay: 1.2, duration: 1.5, repeat: Infinity }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
         >
-          <a href="#descubre-section" className="text-white/70 text-sm mb-2 block cursor-pointer hover:text-white transition">
+          <button 
+            onClick={handleScrollToMap}
+            className="text-white/70 text-sm mb-2 block cursor-pointer hover:text-white transition"
+          >
             Descubre más
-          </a>
+          </button>
           <motion.div
             animate={{ y: [0, 5, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
+            onClick={handleScrollToMap}
+            className="cursor-pointer"
           >
-            <ChevronDownIcon className="h-6 w-6 text-white/70" />
+            <ChevronDownIcon className="h-6 w-6 text-white/70 hover:text-white transition" />
           </motion.div>
         </motion.div>
 

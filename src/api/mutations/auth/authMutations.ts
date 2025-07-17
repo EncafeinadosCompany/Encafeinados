@@ -29,7 +29,7 @@ export const useLoginMutation = () => {
 
   return useMutation<LoginResponse, Error, User_Data>({
     mutationFn: async (formData: User_Data) => {
-
+       console.log('Google callback user data:', formData);
       try {
         const response = await authClient.post<LoginResponse>('/auth/login', formData);
         return response as LoginResponse;
@@ -37,7 +37,11 @@ export const useLoginMutation = () => {
       } catch (error: any) {
         throw handleApiError(error)
       }
+
+         
     },
+
+
     onSuccess: (data) => {
 
       updateQueryCache(queryClient, data)
@@ -140,11 +144,13 @@ function saveUserData(data: LoginResponse) {
 
   data.user.id && saveEncryptedItem('userId', data.user.id);
 
+  data.personData?.full_name && localStorage.setItem('fullName', data.personData.full_name);
+
   data.accessToken && localStorage.setItem('token', data.accessToken);
 
 }
 
-async function GetCoffeeLoverData(userId: string) {
+export async function GetCoffeeLoverData(userId: string) {
   try {
     const profileData = await authClient.get<CoffeeLoverProfileType>(`/clients/user/${userId}`);
     saveCoffeeLoverProfileToStorage(profileData as CoffeeLoverProfileType);

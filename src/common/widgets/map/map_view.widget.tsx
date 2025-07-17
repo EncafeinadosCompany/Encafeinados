@@ -55,11 +55,12 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   const [searchParams] = useSearchParams();
 
   const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
-  const [showSidebar, setShowSidebar] = useState<boolean>(false);
+  const [showSidebar, setShowSidebar] = useState<boolean>(!isMobile);
   const [showRouteControls, setShowRouteControls] = useState<boolean>(false);
-  const [viewMode, setViewMode] = useState<"map" | "list">("map");
+  const [viewMode, setViewMode] = useState<"map" | "list">(!isMobile ? "list" : "map");
   const [selectedStore, setSelectedStore] = useState<number | undefined>(undefined);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [localActiveCafeData, setLocalActiveCafeData] = useState<any>(null);
 
   const { mapLoaded, setMapLoaded, tilesLoaded, setTilesLoaded, totalTiles, setTotalTiles, loadingProgress, setLoadingProgress } = useMapLoading();
   const { favorites, toggleFavorite } = useFavorites();
@@ -121,13 +122,9 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   } = useBranchSearch(userLocation || undefined);
   
   const sortedCafes = useMemo(() => {
-    if (apiHasActiveFilters) {
-      return apiCafes;
-    }
-    return cafes;
-  }, [apiCafes, cafes, apiHasActiveFilters]);
+    return apiCafes.length > 0 ? apiCafes : cafes;
+  }, [apiCafes, cafes]);
 
-  // Declare state variables that are shared across hooks
   const [activeCafe, setActiveCafe] = useState<number | null>(null);
 
   const {
@@ -268,6 +265,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
         setTimeout(() => {
           setRouteOrigin(userLocation);
           setRouteDestination([selectedCafe.latitude, selectedCafe.longitude]);
+          setLocalActiveCafeData(selectedCafe);
           setShowRouteControls(true);
 
           if (mapInstance) {
@@ -299,20 +297,26 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
 
   const handleCloseRouteControls = useCallback(() => {
     setShowRouteControls(false);
+    setLocalActiveCafeData(null);
+    // Limpiar explícitamente las coordenadas de ruta
+    setRouteOrigin(null);
+    setRouteDestination(null);
     clearRoute();
-  }, [clearRoute, setShowRouteControls]);
+  }, [clearRoute, setShowRouteControls, setRouteOrigin, setRouteDestination]);
 
   useEffect(() => {
     getUserLocation();
   }, [getUserLocation]);
 
   useEffect(() => {
-    if (activeCafeData && userLocation && showRouteControls) {
+    const cafeData = localActiveCafeData || activeCafeData;
+    if (cafeData && userLocation && showRouteControls) {
       setRouteOrigin(userLocation);
-      setRouteDestination([activeCafeData.latitude, activeCafeData.longitude]);
+      setRouteDestination([cafeData.latitude, cafeData.longitude]);
     }
   }, [
     activeCafeData,
+    localActiveCafeData,
     userLocation,
     showRouteControls,
     setRouteOrigin,
@@ -493,9 +497,9 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
           zoomControl={false}
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
+  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+  url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+/>
           <UserMarker position={userLocation} pulsing={true} />
           <SmartClusterGroup
             cafes={sortedCafes}
@@ -510,8 +514,8 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
               to={routeDestination}
               routeCoordinates={routeCoordinates}
               color="#6F4E37"
-              weight={4}
-              opacity={0.7}
+              weight={6}
+              opacity={0.9}
               transportMode={transportMode}
             />
           )}
@@ -667,7 +671,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
       
       {/* Route controls */}
       <AnimatePresence>
-        {showRouteControls && activeCafeData && (
+        {showRouteControls && (activeCafeData || localActiveCafeData) && (
           <RouteControls
             isActive={showRouteControls}
             transportMode={transportMode}
@@ -676,7 +680,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
             duration={routeInfo?.time || null}
             isCalculating={isRouteLoading}
             onClose={handleCloseRouteControls}
-            cafeName={activeCafeData.name}
+            cafeName={(localActiveCafeData || activeCafeData)?.name || ""}
             origin={routeOrigin}
             destination={routeDestination}
             routeInfo={routeInfo}

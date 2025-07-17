@@ -6,7 +6,7 @@ import { clearAuthStorage } from "@/common/utils/security/auth_storage.utils";
 import { LogOutIcon, Coffee, ChevronDown, ChevronUp } from "@/common/ui/icons";
 import logoImage from "@/assets/images/logonav.jpg";
 import { ROLES } from "@/common/utils/lists/roles.utils";
-import { useState } from "react";
+import { useState, memo, useMemo, useCallback } from "react";
 import { AdminBranchesItems } from "@/common/utils/lists/nav/admin_branches.utils";
 
 
@@ -27,7 +27,7 @@ const cn = (...classes: string[]) => {
   return classes.filter(Boolean).join(" ");
 };
 
-export const NavGeneral = ({
+const NavGeneralComponent = ({
   isMobile,
   isExpanded,
   navItems,
@@ -35,12 +35,23 @@ export const NavGeneral = ({
   coffeecoins,
   role,
   name,
- logoPath  = logoImage,
+  logoPath = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
-  const [isMenuExpanded, setIsMenuExpanded] = useState(false);
+  const [isMenuExpanded, setIsMenuExpanded] = useState(true);
+  
+  // Obtener el nombre completo del usuario
+  const fullName = useMemo(() => {
+    const storedFullName = localStorage.getItem("userFullName");
+    return storedFullName || name || "Usuario";
+  }, [name]);
 
-  const isRouteActive = (href: string) => {
+  const firstName = useMemo(() => {
+    if (fullName === "Usuario") return fullName;
+    return fullName.split(' ')[0];
+  }, [fullName]);
+
+  const isRouteActive = useCallback((href: string) => {
     if (href === '/coffeelover' && location.pathname === '/coffeelover') {
       return true;
     }
@@ -57,7 +68,17 @@ export const NavGeneral = ({
     }
 
     return false;
-  };
+  }, [location.pathname, navItems]);
+
+
+  const isCoffeeLover = useMemo(() => 
+    role?.includes(ROLES.COFFEE_LOVER), [role]
+  );
+  const isAdminBranch = useMemo(() => 
+    role?.includes(ROLES.ADMIN_SUCURSAL) && role.includes(ROLES.STORE), [role]
+  );
+
+  console.log('NavGeneral rendered with fullName:', fullName, 'firstName:', firstName);
 
   return (
     <div className="flex h-screen bg-gray-100 w-full overflow-hidden">
@@ -98,9 +119,9 @@ export const NavGeneral = ({
                     />
                   ) : (
                     <div className="flex items-center justify-center h-full w-full bg-[#6F4E37] rounded-full shadow-sm">
-                      {name ? (
+                      {firstName ? (
                         <span className="text-[#F5E6C9] font-medium text-sm">
-                          {name.charAt(0).toUpperCase()}
+                          {firstName.charAt(0).toUpperCase()}
                         </span>
                       ) : (
                         <Coffee className="h-4 w-4 text-[#F5E6C9]" />
@@ -113,15 +134,9 @@ export const NavGeneral = ({
                 <div className="flex-grow min-w-0 overflow-hidden">
                   <h1 className="font-medium text-[#6F4E37] leading-tight truncate max-w-[120px]">
                     <span className="text-sm">
-                      {name ? `Bienvenido, ${name.split('@')[0]}` : 'Encafeinados'}
+                      {firstName ? `¡Hola, ${firstName}!` : 'Encafeinados'}
                     </span>
                   </h1>
-                  {role?.includes(ROLES.COFFEE_LOVER) && coffeecoins !== undefined && (
-                    <div className="flex items-center mt-1 text-[#8B593C]">
-                      <img className="w-4 h-4 mr-1 opacity-80" src="/coins.png" alt="Coffee Coins" />
-                      <span className="text-xs">{coffeecoins} granos</span>
-                    </div>
-                  )}
                 </div>
               )}
 
@@ -137,6 +152,27 @@ export const NavGeneral = ({
                 </Button>
               )}
             </div>
+
+            {/* CoffeeCoins section - moved below header */}
+            {isExpanded && isCoffeeLover && coffeecoins !== undefined && (
+              <div className="mx-4 mt-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-100 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <img className="w-6 h-6 drop-shadow-sm" src="/coins.png" alt="Coffee Coins" />
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-amber-800 leading-none">{coffeecoins}</span>
+                      <span className="text-xs text-amber-600 font-medium leading-none">CoffeeCoins</span>
+                    </div>
+                  </div>
+                  <div className="text-amber-500">
+                    <Coffee className="w-4 h-4" />
+                  </div>
+                </div>
+              </div>
+            )}
 
             {!isExpanded && (
               <Button
@@ -191,8 +227,7 @@ export const NavGeneral = ({
               </Link>
             ))}
 
-
-            {role?.includes(ROLES.ADMIN_SUCURSAL) && role.includes(ROLES.STORE) && (
+            {isAdminBranch && (
               AdminBranchesItems.map((item) => (
                 <Link
                   key={item.href}
@@ -234,26 +269,6 @@ export const NavGeneral = ({
 
           <div className="mt-auto border-t border-gray-100">
             <div className="px-2 py-3">
-              {role?.includes(ROLES.COFFEE_LOVER) && (
-                <Link
-                  to="/coffeelover"
-                  className={cn(
-                    "flex items-center gap-1  py-2.5 rounded-lg transition-all duration-300",
-                    "text-gray-600 hover:bg-amber-100/50 hover:text-amber-800",
-                    isExpanded ? "" : "justify-center"
-                  )}
-                >
-                  <img className=" w-8" src="/coins.png" />
-                  <span
-                    className={cn(
-                      "font-medium whitespace-nowrap transition-opacity duration-300",
-                      isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-                    )}
-                  >
-                    <p className="text-sm">{coffeecoins}</p>
-                  </span>
-                </Link>
-              )}
               <Link
                 to="/"
                 className={cn(
@@ -291,7 +306,6 @@ export const NavGeneral = ({
               <div className="absolute bottom-full w-full bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] rounded-t-2xl border-t border-gray-100 transition-all duration-300">
                 <nav className="grid grid-cols-4 gap-2 p-4">
                   {navItems.slice(3).map((item) => (
-
                     <Link
                       key={item.href}
                       to={item.href}
@@ -313,7 +327,6 @@ export const NavGeneral = ({
                         {item.title}
                       </span>
                     </Link>
-
                   ))}
                   <Link
                     to="/"
@@ -325,28 +338,30 @@ export const NavGeneral = ({
                     </div>
                     <span className="text-[10px] font-medium mt-0.5">Salir</span>
                   </Link>
-
                 </nav>
               </div>
             )}
 
             <nav className="flex justify-around items-center h-16 px-2 bg-white shadow-[0_-4px_30px_-1px_rgba(0,0,0,0.08)] border-t border-gray-100">
-              {role?.includes(ROLES.COFFEE_LOVER) && (
+              {isCoffeeLover && (
                 <Link
                   to="/coffeelover"
-                  className="flex flex-col items-center justify-center px-2 py-1 rounded-xl transition-all duration-300 text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
+                  className="flex flex-col items-center justify-center px-2 py-1 rounded-xl transition-all duration-300 group hover:bg-gradient-to-t hover:from-amber-50 hover:to-orange-50"
                 >
-                  <div className="relative">
-                    <img className="h-8 w-8" src="/coins.png" alt="Coffee Coins" />
-                    <span className="absolute -top-1 -right-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[20px] flex items-center justify-center">
+                  <div className="relative p-1">
+                    <div className="relative bg-gradient-to-br from-amber-100 to-orange-100 rounded-full p-1.5 shadow-sm group-hover:shadow-md transition-shadow">
+                      <img className="h-5 w-5 drop-shadow-sm" src="/coins.png" alt="Coffee Coins" />
+                      <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></div>
+                    </div>
+                    <span className="absolute -top-1 -right-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] flex items-center justify-center shadow-sm">
                       {coffeecoins || 0}
                     </span>
                   </div>
-                  <span className="text-[10px] font-medium mt-0.5">Coins</span>
+                  <span className="text-[9px] font-semibold mt-0.5 text-amber-700 group-hover:text-amber-800 transition-colors">
+                    CoffeeCoins
+                  </span>
                 </Link>
               )}
-
-
 
               {navItems.slice(0, 3).map((item) => (
                 <Link
@@ -407,3 +422,6 @@ export const NavGeneral = ({
     </div>
   );
 };
+
+// Exportar el componente memoizado
+export const NavGeneral = memo(NavGeneralComponent);

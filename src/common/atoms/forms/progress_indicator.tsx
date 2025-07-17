@@ -87,14 +87,15 @@ export const SimpleProgressBar: React.FC<{
   currentStep: number;
   totalSteps: number;
   className?: string;
-}> = ({ currentStep, totalSteps, className = "" }) => {
+  color?: string;
+}> = ({ currentStep, totalSteps, className = "", color }) => {
   return (
     <div className={`w-full h-2 bg-gray-100 rounded-full overflow-hidden ${className}`}>
       <motion.div
         initial={{ width: `${((currentStep - 1) / totalSteps) * 100}%` }}
         animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
-        className="h-full bg-gradient-to-r from-amber-500 to-orange-400 rounded-full"
+        className={`h-full rounded-full ${color ? color : 'bg-gradient-to-r from-amber-500 to-orange-400'}`}
       />
     </div>
   );

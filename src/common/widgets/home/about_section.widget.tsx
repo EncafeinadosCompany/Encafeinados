@@ -8,7 +8,7 @@ export const AboutSection = () => {
   return (
     <section 
       id="about" 
-      className="relative py-16 md:py-24 px-4 scroll-mt-20 bg-[#FAF3E0]"
+      className="relative py-24 md:py-24 px-4 scroll-mt-20 bg-[#FAF3E0]"
     >
       <div 
         className="absolute inset-0 opacity-[0.03] z-0 pointer-events-none"
@@ -19,7 +19,6 @@ export const AboutSection = () => {
         }}
       />
 
-      {/* Elemento decorativo - ahora con z-index bajo y pointer-events-none */}
       <div className="absolute top-10 right-10 text-[#D4A76A]/20 hidden md:block z-0 pointer-events-none">
         <Coffee size={120} />
       </div>
