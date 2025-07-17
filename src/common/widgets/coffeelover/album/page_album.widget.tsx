@@ -90,9 +90,9 @@ export default function PageAlbum() {
                     setStampsPerPage(4);
                 }
             } else {
-                // DESKTOP: OCUPAR PRACTICAMENTE TODA LA PANTALLA
+                // DESKTOP: OCUPAR PRACTICAMENTE TODA LA PANTALLA COMPLETA
                 const headerHeight = 0; // Sin header visible en desktop
-                const footerHeight = 80; // Solo navegación desktop
+                const footerHeight = 0; // Sin footer fijo en desktop (navegación flotante)
                 const padding = 4; // Padding súper mínimo
                 
                 const availableHeight = height - headerHeight - footerHeight - padding;
@@ -301,7 +301,6 @@ export default function PageAlbum() {
                                         ☕ {p.title}
                                     </button>
                                 ))}
-                                
                                 <button
                                     onClick={() => goToPage(page.length + 1)}
                                     className={`w-full text-left p-3 rounded-xl transition-colors ${
@@ -311,6 +310,7 @@ export default function PageAlbum() {
                                 >
                                     📕 Contraportada
                                 </button>
+                                
                             </div>
 
                             <button
@@ -326,9 +326,9 @@ export default function PageAlbum() {
                 </div>
             )}
 
-            {/* CORREGIDO: Contenedor del libro ocupando TODA la pantalla */}
+            {/* CORREGIDO: Contenedor del libro ocupando TODA la pantalla sin espacio inferior */}
             <div className={`fixed inset-0 bg-gradient-to-br from-[#2D1B0E] to-[#1A0F0A] ${
-                isMobile ? 'pt-16 pb-20' : 'pt-0 pb-20'
+                isMobile ? 'pt-16 pb-20' : 'pt-0 pb-0'
             }`}>
                
               {/* CORREGIDO: Contenedor del Swiper sin padding y ocupando todo */}
@@ -370,7 +370,6 @@ export default function PageAlbum() {
                                 </div>
                             </SwiperSlide>
 
-                            {/* CORREGIDO: Páginas del álbum con mejor aprovechamiento */}
                             {page.map((pageData, pageIndex) => (
                                 <SwiperSlide key={pageData.id}>
                                     <div className="w-full h-full bg-gradient-to-br from-amber-50 to-amber-100 flex flex-col relative overflow-hidden">
@@ -453,7 +452,6 @@ export default function PageAlbum() {
                         <div className="flex items-center justify-between">
                             <button
                                 onClick={() => {
-                                    console.log('=== CLICK ANTERIOR ===');
                                     goPrev();
                                 }}
                                 disabled={currentPage === 0}
@@ -473,7 +471,6 @@ export default function PageAlbum() {
                                     <button
                                         key={i}
                                         onClick={() => {
-                                            console.log(`=== CLICK PÁGINA ${i} ===`);
                                             goToPage(i);
                                         }}
                                         className={`w-3 h-3 rounded-full transition-colors ${
@@ -487,7 +484,6 @@ export default function PageAlbum() {
 
                             <button
                                 onClick={() => {
-                                    console.log('=== CLICK SIGUIENTE ===');
                                     goNext();
                                 }}
                                 disabled={currentPage === totalPages - 1}
@@ -512,7 +508,6 @@ export default function PageAlbum() {
                     <div className="flex items-center gap-6">
                         <button
                             onClick={() => {
-                                console.log('=== CLICK ANTERIOR DESKTOP ===');
                                 goPrev();
                             }}
                             disabled={currentPage === 0}
@@ -536,7 +531,7 @@ export default function PageAlbum() {
 
                         <button
                             onClick={() => {
-                                console.log('=== CLICK SIGUIENTE DESKTOP ===');
+                              
                                 goNext();
                             }}
                             disabled={currentPage === totalPages - 1}

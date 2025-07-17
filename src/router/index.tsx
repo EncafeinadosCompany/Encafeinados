@@ -18,10 +18,10 @@ const AboutPage = lazy(() => import("@/modules/home/views/landing/about_page"));
 // AUTH
 const LoginPage = lazy(() => import("@/modules/home/views/Login/login_page"));
 const PasswordResetPage = lazy(() => import("@/modules/auth/views/password_reset.view"));
-const CuestionCard = lazy(() => import("@/common/molecules/auth/login/cuestion_card.molecule"));
+const CuestionCardView = lazy(() => import("@/modules/auth/views/cuestions_card.view"));
 const GoogleCallback = lazy(() => import("@/common/hooks/auth/use_google.hook"));
-const RegisterCoffeloverPage = lazy(() => import("@/modules/home/views/Login/register_coffelover_page"));
-const RegisterStorePage = lazy(() => import("@/modules/home/views/Login/register_stores_page"));
+const RegisterCoffeloverPage = lazy(() => import("@/modules/auth/views/register_coffelover.view"));
+const RegisterStorePage = lazy(() => import("@/modules/auth/views/register_stores.view"));
 const RegisterStoreBranches = lazy(() => import("@/common/widgets/forms/auth/form_register_stores_branches.widget"));
 const FinishAdminRegistration = lazy(() => import("@/modules/admin/views/finish_admin_registration_page"));
 
@@ -90,7 +90,7 @@ const AuthRoutes = () => {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/reset-password" element={<PasswordResetPage />} />
-            <Route path="/register" element={<CuestionCard />} />
+            <Route path="/register" element={<CuestionCardView/>} />
             <Route path="/google/callback" element={<GoogleCallback />} />
             <Route path="/coffee-lover-registration" element={<RegisterCoffeloverPage />} />
             <Route path="/store-registration" element={<RegisterStorePage />} />
