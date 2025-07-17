@@ -12,6 +12,7 @@ import { useState } from "react"
 import { Eye, EyeOff }  from'@/common/ui/icons'
 import { User } from "@/api/types/auth/auth.types"
 import { InputEmail } from "@/common/atoms/forms/Input_email.atom"
+import { ButtonGoogle } from "@/common/atoms/forms/button_google.atom"
 
 
 type LoginCardProps = {
@@ -125,10 +126,13 @@ export const LoginCard = (
                 {errors.password && <TextError>{errors.password.message}</TextError>}
 
               </div>
+
               <Button type="submit" className="w-full  shadow rounded-full bg-[#D4A76A]  hover:bg-[#bb9765]  hover:text-white/80  border-amber-800 text-amber-950 font-medium transition-all duration-200 hover:shadow-lg" disabled={isLoading}>
                 {isLoading ? "Cargando..." : t("Ingresar")}
               </Button>
-
+              <ButtonGoogle onClick={onGoogleSignIn}>
+                    Iniciar sesión con Google
+              </ButtonGoogle>
               <div className="text-center text-sm text-amber-800 space-y-2">
                 <div>
                   ¿No tienes una cuenta?{" "}

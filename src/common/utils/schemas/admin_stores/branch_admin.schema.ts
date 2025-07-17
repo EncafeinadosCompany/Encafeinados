@@ -4,7 +4,6 @@ import { z } from "zod";
 
 
 export const BranchAdminSchema = z.object({
-  // Información de cuenta
   email: z
     .string()
     .min(1, { message: "El correo electrónico es obligatorio" })
@@ -39,7 +38,6 @@ export const BranchAdminSchema = z.object({
     .max(15, { message: "El número de teléfono es demasiado largo" })
     .regex(/^\d+$/, { message: "El número de teléfono solo debe contener dígitos" }),
   
-  // Datos de la sucursal (se incluirán en la solicitud)
   branch_id: z
     .number()
     .int()

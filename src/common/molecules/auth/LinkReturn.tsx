@@ -8,22 +8,22 @@ interface LinkReturnProps {
 export const LinkReturn = ({link, className}:LinkReturnProps) => {
     return (
         <div className="w-full max-w-2xl mb-6 px-4 sm:px-0">
-            <Link 
-                to={link} 
-                className={`
-                    inline-flex items-center 
-                    text-brown-600 hover:text-amber-800
-                    text-base sm:text-sm font-light
-                    transition-all duration-300 ease-in-out
-                    border-b border-transparent hover:border-amber-800
-                    focus:outline-none focus:ring-2 focus:ring-amber-800 focus:ring-opacity-50
-                    rounded-md p-1
-                    ${className}
-                `}
-                aria-label="Go back"
+            <Link
+            to={link}
+            className={`
+                inline-flex items-center gap-2
+                text-brown-700 hover:text-amber-900
+                text-base sm:text-sm font-medium
+                transition-colors duration-200
+                border-b-2 border-transparent hover:border-amber-900
+                focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-900 focus-visible:ring-opacity-60
+                rounded p-1
+                ${className ?? ""}
+            `}
+            aria-label="Volver"
             >
-                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2 opacity-70" />
-                Volver
+            <ArrowLeft className="w-5 h-5 opacity-80" />
+            <span>Volver</span>
             </Link>
         </div>
     )
