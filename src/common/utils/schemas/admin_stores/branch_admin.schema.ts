@@ -4,7 +4,6 @@ import { z } from "zod";
 
 
 export const BranchAdminSchema = z.object({
-  // Información de cuenta
   email: z
     .string()
     .min(1, { message: "El correo electrónico es obligatorio" })
@@ -28,6 +27,7 @@ export const BranchAdminSchema = z.object({
     .nonempty({ message: "El tipo de documento es obligatorio" }),
   number_document: z
     .string()
+    .nonempty({ message: "El número de documento es obligatorio" })
     .min(6, { message: "El número de documento debe tener al menos 6 caracteres" })
     .max(15, { message: "El número de documento es demasiado largo" })
     .regex(/^[\d-]+$/, { message: "Solo se permiten números y guiones" }),
@@ -38,7 +38,6 @@ export const BranchAdminSchema = z.object({
     .max(15, { message: "El número de teléfono es demasiado largo" })
     .regex(/^\d+$/, { message: "El número de teléfono solo debe contener dígitos" }),
   
-  // Datos de la sucursal (se incluirán en la solicitud)
   branch_id: z
     .number()
     .int()
