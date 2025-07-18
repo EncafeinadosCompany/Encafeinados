@@ -137,11 +137,25 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
                   <div className="group relative overflow-hidden rounded-xl bg-white/80 backdrop-blur-sm p-4 transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1">
                     <div className="relative flex items-start gap-4">
                       <div className="rounded-full bg-[#DB8935]/10 p-2.5">
-                        <div className={`h-5 w-5 rounded-full ${branch.status === 'active' ? 'bg-green-500' : 'bg-red-800'}`} />
+                        <div className={`h-5 w-5 rounded-full ${
+                          branch.status === 'APPROVED' || branch.status === 'active' ? 'bg-green-500' : 
+                          branch.status === 'PENDING' ? 'bg-yellow-500' : 
+                          branch.status === 'REJECTED' ? 'bg-red-500' : 'bg-gray-500'
+                        }`} />
                       </div>
                       <div className="space-y-1.5">
                         <span className="block font-medium text-[#5F4B32]">Estado</span>
-                        <p className="text-sm text-gray-600/90 leading-relaxed capitalize">{branch.status}</p>
+                        <p className={`text-sm leading-relaxed font-medium ${
+                          branch.status === 'APPROVED' || branch.status === 'active' ? 'text-green-600' : 
+                          branch.status === 'PENDING' ? 'text-yellow-600' : 
+                          branch.status === 'REJECTED' ? 'text-red-600' : 'text-gray-600'
+                        }`}>
+                          {branch.status === 'PENDING' ? 'Pendiente' :
+                           branch.status === 'APPROVED' ? 'Aprobado' :
+                           branch.status === 'REJECTED' ? 'Rechazado' :
+                           branch.status === 'active' ? 'Activo' :
+                           branch.status}
+                        </p>
                       </div>
                     </div>
                   </div>
