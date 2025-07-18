@@ -36,7 +36,7 @@ const Formlogin = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      window.open(`${import.meta.env.VITE_API_URL}/auth/google`, "_self");
+      window.open(`${import.meta.env.VITE_API_URL}/auth/google`, "_blank");
     } catch (error) {
       console.error("Error during Google authentication:", error);
       toast.error("No se pudo conectar con Google. Intenta nuevamente.");
