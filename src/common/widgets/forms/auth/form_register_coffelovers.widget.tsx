@@ -333,7 +333,9 @@ const FormRegisterCoffeelover = () => {
                           data-testid="next-button"
                           className="text-xs sm:text-sm rounded-lg sm:rounded-xl px-4 sm:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-amber-500 to-orange-400 hover:from-amber-600 hover:to-orange-500 text-white"
                         >
-                          {step === 0 ? "Continuar registro" : "Siguiente"}
+                          {step === 0 ? "Continuar registro" : 
+                           step === 1 ? (methods.watch("number_document") ? "Siguiente" : "Seguir sin documentos") : 
+                           "Siguiente"}
                           <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
                         </Button>
                       </motion.div>
