@@ -47,15 +47,17 @@ export default function BranchManagement() {
   const [hoveredCardId, setHoveredCardId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (branchesList) {
+    if (branchesList && branchesList.branches && Array.isArray(branchesList.branches)) {
       setLoading(false);
-      const data = branchesList?.branches.filter(
+      const data = branchesList.branches.filter(
         (branch) =>
           branch.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           branch.address?.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
       setFilteredBranches(data);
+    } else {
+      setFilteredBranches([]);
     }
   }, [branchesList, searchQuery]);
 

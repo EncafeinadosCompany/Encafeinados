@@ -16,8 +16,6 @@ const AlbumManager = () => {
       const regex = new RegExp(`[?&]${name}=([^?&]+)`);
       const matches = urlString.match(regex);
       param = matches ? decodeURIComponent(matches[1]) : null;
-
-      console.log(`Param ${name} extracted manually:`, param);
     }
 
     return param;
@@ -30,9 +28,7 @@ const AlbumManager = () => {
   const [autoOpenModal, setAutoOpenModal] = useState(false);
 
   useEffect(() => {
-    console.log("Checking params:", { eventId, start_time, end_time });
     if (eventId && start_time && end_time) {
-      console.log("Opening modal automatically");
       setAutoOpenModal(true);
     }
   }, [eventId, start_time, end_time]);

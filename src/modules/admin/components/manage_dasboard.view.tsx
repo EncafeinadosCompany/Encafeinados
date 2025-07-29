@@ -84,9 +84,6 @@ export default function PruebaDashboard() {
         });
     }, [invoices, searchTerm, statusFilter]);
 
-
-    console.log('branch seleccionada', visitsData, selectedBranch);
-
     // Crear factura - CORREGIDO
     const handleCreateInvoice = async () => {
         if (!newInvoiceStart || !newInvoiceEnd) {

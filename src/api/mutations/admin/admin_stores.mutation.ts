@@ -43,7 +43,7 @@ export const useRegisterAdminMutation = () => {
 
 export const useCreateBranchAdminMutation = () => {
   const queryClient = useQueryClient()
-  const useErrors = useError("createBranchAdmin")
+  const useErrors = useError("RegisterAdminBranch")
 
   return useMutation<any, Error, RegisterAdminData>({
     mutationFn: async (formData: RegisterAdminData): Promise<any> => {

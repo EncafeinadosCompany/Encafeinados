@@ -29,7 +29,6 @@ export const useLoginMutation = () => {
 
   return useMutation<LoginResponse, Error, User_Data>({
     mutationFn: async (formData: User_Data) => {
-       console.log('Google callback user data:', formData);
       try {
         const response = await authClient.post<LoginResponse>('/auth/login', formData);
         return response as LoginResponse;

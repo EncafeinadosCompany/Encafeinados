@@ -68,12 +68,6 @@ const ValidateVisitPage = () => {
     requestLocation();
   };
 
-  useEffect(() => {
-    if (responseData) {
-      console.log("Datos de respuesta:", responseData);
-    }
-  }, [responseData]);
-
   const coffeecoinsEarned = responseData?.data?.coffeecoins_earned || 0;
   const stampInfo = responseData?.data?.stamp || null;
 

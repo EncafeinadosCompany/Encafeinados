@@ -82,7 +82,7 @@ const RegisterCoffeloverStep2 = ({ toggleInfo, showInfo, register, errors, contr
                     {errors?.type_document && <TextError>{errors.type_document.message}</TextError>}
                     <div className="space-y-2">
 
-                    <Label htmlFor="number_document" className={`flex items-center text-xs transition-colors ${focusedField === "number_document" ? "text-[#DB8935] " : "text-gray-600" }`}>Número de documendo</Label>
+                    <Label htmlFor="number_document" className={`flex items-center text-xs transition-colors ${focusedField === "number_document" ? "text-[#DB8935] " : "text-gray-600" }`}>Número de documento</Label>
                         <InputForm
                             id="number_document"
                             type="number"

@@ -8,6 +8,7 @@ import logoImage from "@/assets/images/logonav.jpg";
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import { useState, memo, useMemo, useCallback } from "react";
 import { AdminBranchesItems } from "@/common/utils/lists/nav/admin_branches.utils";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 
 interface NavGeneralProps {
@@ -38,7 +39,8 @@ const NavGeneralComponent = ({
   logoPath = logoImage,
 }: NavGeneralProps) => {
   const location = useLocation();
-  const [isMenuExpanded, setIsMenuExpanded] = useState(true);
+  const [isMenuExpanded, setIsMenuExpanded] = useState(false);
+
   
   // Obtener el nombre completo del usuario
   const fullName = useMemo(() => {
@@ -77,8 +79,6 @@ const NavGeneralComponent = ({
   const isAdminBranch = useMemo(() => 
     role?.includes(ROLES.ADMIN_SUCURSAL) && role.includes(ROLES.STORE), [role]
   );
-
-  console.log('NavGeneral rendered with fullName:', fullName, 'firstName:', firstName);
 
   return (
     <div className="flex h-screen bg-gray-100 w-full overflow-hidden">
