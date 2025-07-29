@@ -1,6 +1,6 @@
 import { Button } from "@/common/ui/button";
 import { Card, CardContent } from "@/common/ui/card";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Label } from "@/common/ui/label";
 import { Controller, UseFormRegister } from "react-hook-form";
 
@@ -8,16 +8,14 @@ import { useTranslation } from "react-i18next";
 import { useRegisterFocus } from "@/common/hooks/auth/use_register_focus.hook";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/common/ui/input-otp";
 import { TextError } from "@/common/atoms/forms/text_error.atom";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Eye, EyeOff } from "@/common/ui/icons";
-import { User, UserData } from "@/api/types/auth/auth.types";
+import { User} from "@/api/types/auth/auth.types";
 import { InputEmail } from "@/common/atoms/forms/Input_email.atom";
 import { ButtonGoogle } from "@/common/atoms/forms/button_google.atom";
-import { set } from "cypress/types/lodash";
+
 
 type LoginCardProps = {
-  // isUser:boolean;
-  user: UserData | null;
   register: UseFormRegister<User>;
   isLoading: boolean;
   errors: any;
@@ -27,8 +25,6 @@ type LoginCardProps = {
 };
 export const LoginCard = ({
   register,
-  // isUser,
-  user,
   isLoading,
   errors,
   onSubmit,
@@ -40,12 +36,10 @@ export const LoginCard = ({
   const { registerWithFocus, focusedField } = useRegisterFocus();
   const [isVisible, setIsVisible] = useState(false);
 
-  const navigate = useNavigate();
-
   return (
     <div className="flex flex-col gap-5">
       <Card className="overflow-hidden rounded-xl border-none sm:border border-amber-200/50 sm:shadow-lg  sm:bg-white/90">
-        <CardContent className="grid p-0 md:grid-cols-2">
+        <CardContent className="grid p-0 md:grid-cols-2 min-h-[60vh]">
           <form className="p-6 md:p-8" onSubmit={onSubmit}>
             <div className="relative sm:hidden h-36 w-full overflow-hidden">
               <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
@@ -72,11 +66,11 @@ export const LoginCard = ({
                   <div className="w-full border-t border-gray-900"></div>
                 </div>
                 <div className="relative px-4 text-sm  bg-white text-gray-500">
-                  Opciones de registro
+                   Opciones de registro
                 </div>
               </div>
-              {!user ? (
-                <>
+            
+           
                   <div className="grid gap-2">
                     <Label
                       htmlFor="email"
@@ -153,52 +147,41 @@ export const LoginCard = ({
                       <TextError>{errors.password.message}</TextError>
                     )}
                   </div>
-                </>
-              ) : (
-                <div></div>
-              )}
+             
 
-              {user ? (
-                <Button
-                  type="button"
-                  onClick={() => navigate("/coffeelover")}
-                  className="w-full shadow rounded-full bg-[#D4A76A] hover:bg-[#bb9765] hover:text-white/80 border-amber-800 text-amber-950 font-medium transition-all duration-200 hover:shadow-lg"
-                >
-                  {`Hola, ${user?.name}`}
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  className="w-full shadow rounded-full bg-[#D4A76A] hover:bg-[#bb9765] hover:text-white/80 border-amber-800 text-amber-950 font-medium transition-all duration-200 hover:shadow-lg"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Cargando..." : t("Ingresar")}
-                </Button>
-              )}
-
-              <ButtonGoogle onClick={onGoogleSignIn}>
-                Iniciar sesión con Google
-              </ButtonGoogle>
-              <div className="text-center text-sm text-amber-800 space-y-2">
-                <div>
-                  ¿No tienes una cuenta?{" "}
-                  <Link
-                    to="/register"
-                    data-testid="register-link"
-                    className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
+       
+                  <Button
+                    type="submit"
+                    className="w-full shadow rounded-full bg-[#D4A76A] hover:bg-[#bb9765] hover:text-white/80 border-amber-800 text-amber-950 font-medium transition-all duration-200 hover:shadow-lg"
+                    disabled={isLoading}
                   >
-                    Registrate
-                  </Link>
-                </div>
-                <div>
-                  <Link
-                    to="/reset-password"
-                    className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
-                  >
-                    ¿Olvidaste tu contraseña?
-                  </Link>
-                </div>
-              </div>
+                    {isLoading ? "Cargando..." : t("Ingresar")}
+                  </Button>
+                  <ButtonGoogle onClick={onGoogleSignIn}>
+                    Iniciar sesión con Google
+                  </ButtonGoogle>
+                  <div className="text-center text-sm text-amber-800 space-y-2">
+                    <div>
+                      ¿No tienes una cuenta?{" "}
+                      <Link
+                        to="/register"
+                        data-testid="register-link"
+                        className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
+                      >
+                        Registrate
+                      </Link>
+                    </div>
+                    <div>
+                      <Link
+                        to="/reset-password"
+                        className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
+                      >
+                        ¿Olvidaste tu contraseña?
+                      </Link>
+                    </div>
+                  </div>
+    
+              
             </div>
           </form>
 

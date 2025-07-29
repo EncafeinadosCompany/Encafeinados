@@ -5,21 +5,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { LoginCard } from "@/common/molecules/auth/login/login_card.molecule";
 import { useLoginMutation } from "@/api/mutations/auth/authMutations";
-import { User, User_Data, UserData } from "@/api/types/auth/auth.types";
-import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
-import { useNavigate } from "react-router-dom";
+import { User, User_Data } from "@/api/types/auth/auth.types";
+
 
 const Formlogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const useLogin = useLoginMutation();
-  const navigate = useNavigate();
-  const user = getEncryptedItem("user");
+
 
   const {
     register,
     handleSubmit,
     control,
-    trigger,
     formState: { errors },
     reset
   } = useForm({
@@ -56,7 +53,6 @@ const Formlogin = () => {
 
   return (
     <LoginCard
-      user={(user as UserData) || null}
       register={register}
       errors={errors}
       control={control}
