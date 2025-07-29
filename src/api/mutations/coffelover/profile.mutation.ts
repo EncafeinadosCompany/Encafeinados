@@ -20,12 +20,10 @@ export const useUpdateProfileMutation = () => {
     mutationFn: async (updateData: UpdateProfileRequest) => {
       if (!userId) throw new Error("Usuario no autenticado");
       
-      console.log('Datos enviados a la API:', updateData);
-      console.log('URL:', `/clients/${userId}`);
+    
       
       try {
         const response = await authClient.patch(`/clients/${userId}`, updateData);
-        console.log('Respuesta de la API:', response);
         return response;
       } catch (error: any) {
         console.error('Error en la API:', error.response?.data || error);

@@ -6,6 +6,7 @@ export interface User {
 export interface UserData {
       id?: 0
     email: string;
+    name?:string;
     roles:string[];
 }
 

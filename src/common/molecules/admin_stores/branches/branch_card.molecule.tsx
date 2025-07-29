@@ -1,5 +1,5 @@
 "use client";
-import {MapPin,Phone,Star,ArrowRight,Globe,QrCodeIcon,UserPlus} from'@/common/ui/icons';
+import {MapPin,Phone,Star,ArrowRight,Globe,QrCodeIcon,UserPlus, Mail} from'@/common/ui/icons';
 import { Card, CardContent, CardFooter } from "@/common/ui/card";
 import { motion } from "framer-motion";
 import { Button } from "@/common/ui/button";
@@ -29,24 +29,24 @@ export function BranchCard({
 
   if (branch.status === "PENDING") {
     statusConfig = {
-      text: "Pendiente",
-      dotColor: "bg-[#DB8935]",
-      bgColor: "bg-[#F5E4D2]",
-      textColor: "text-[#A67C52]",
+      dotColor: "bg-yellow-400",
+      bgColor: "bg-yellow-50",
+      textColor: "text-yellow-700",
+      showQr: false
     };
   } else if (branch.status === "APPROVED") {
     statusConfig = {
-      text: "Aprobado",
-      dotColor: "bg-[#DB8935]",
-      bgColor: "bg-[#F5E4D2]",
-      textColor: "text-[#A67C52]",
+      dotColor: "bg-green-500",
+      bgColor: "bg-green-50",
+      textColor: "text-green-700",
+      showQr: true
     };
   } else if (branch.status === "REJECTED") {
     statusConfig = {
-      text: "",
-      dotColor: "bg-[#AAAAAA]",
-      bgColor: "bg-gray-100",
+      dotColor: "bg-gray-400",
+      bgColor: "bg-gray-50",
       textColor: "text-gray-500",
+      showQr: false
     };
   }
 
@@ -59,37 +59,33 @@ export function BranchCard({
       className="w-full h-full"
     >
       <Card className="overflow-hidden border-none shadow-md hover:shadow-lg transition-all duration-300 bg-white h-full flex flex-col relative rounded-lg">
-        {/* Status indicator as a floating badge */}
         <div className="absolute top-3 right-3 z-10">
-          <div
-            onClick={onGenerateQrCode}
-            className={`flex items-center gap-1.5 px-2 py-1 rounded-full ${statusConfig?.bgColor} ${statusConfig?.textColor} text-xs font-medium shadow-sm`}
-          >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 text-[#DB8935] hover:bg-[#F5E4D2]/50"
-              
+          {statusConfig?.showQr ? (
+            <div
+              onClick={onGenerateQrCode}
+              className={`flex items-center gap-1.5 px-2 py-1 rounded-full ${statusConfig?.bgColor} ${statusConfig?.textColor} text-xs font-medium shadow-sm`}
             >
-              <QrCodeIcon className="h-4 w-4 text-[#DB8935]" />
-            
-            </Button>
-
-            <span
-              className={`w-2 h-2 rounded-full ${statusConfig?.dotColor}`}
-            ></span>
-            {statusConfig?.text}
-          </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-[#DB8935] hover:bg-[#F5E4D2]/50"
+              >
+                <QrCodeIcon className="h-4 w-4 text-[#DB8935]" />
+              </Button>
+              <span className={`w-2 h-2 rounded-full ${statusConfig?.dotColor}`}></span>
+            </div>
+          ) : (
+            <div className={`flex items-center gap-1.5 px-2 py-1 rounded-full ${statusConfig?.bgColor} ${statusConfig?.textColor} text-xs font-medium shadow-sm opacity-70`}>
+              <span className={`w-2 h-2 rounded-full ${statusConfig?.dotColor}`}></span>
+            </div>
+          )}
         </div>
 
-        {/* Header with branch name and rating */}
         <div className="p-4 border-b border-[#F5E4D2]">
-          {/* Branch name - more prominent */}
           <h3 className="font-semibold text-[#A67C52] text-lg mb-2">
             {branch.name}
           </h3>
 
-          {/* Rating */}
           {branch.average_rating && (
             <div className="flex items-center gap-1.5 mb-3">
               <Star className="h-4 w-4 fill-[#DB8935] text-[#DB8935]" />
@@ -108,16 +104,14 @@ export function BranchCard({
         </div>
 
         <CardContent className="p-4 flex-grow space-y-4">
-          {/* Contact information */}
           <div className="flex items-center gap-2 text-[#A67C52]">
             <Phone className="h-4 w-4 text-[#DB8935]" />
             <span className="text-sm">
               {branch.phone_number || "No disponible"}
             </span>
           </div>
-
-          {/* Social media links in a horizontal row */}
-          {branch.social_branches && branch.social_branches.length > 0 && (
+          
+            {branch.social_branches && branch.social_branches.length > 0 && (
             <div className="border-t border-[#F5E4D2] pt-3">
               <p className="text-xs font-medium text-[#DB8935] mb-2">
                 Redes Sociales
@@ -138,10 +132,10 @@ export function BranchCard({
               </div>
             </div>
           )}
-        </CardContent>        {/* Footer with buttons */}
+        </CardContent>        
+        
         <CardFooter className="p-3 border-t border-[#F5E4D2] bg-white flex gap-2">
-          {/* Solo mostrar botón de asignar admin si la sucursal está aprobada */}
-          {branch.status === "APPROVED" && (
+            {branch.status === "APPROVED" && (
             <Button
               onClick={onAssignAdmin}
               variant="outline"
@@ -153,10 +147,11 @@ export function BranchCard({
             </Button>
           )}
 
-
           <Button
             onClick={onViewDetails}
-            className="flex-1 bg-gradient-to-r from-[#DB8935] to-[#C87000] hover:from-[#C87000] hover:to-[#A65C00] text-white transition-all group shadow-sm text-xs py-2 h-auto rounded-full"
+            className={`flex-1 ${branch.status === "APPROVED" 
+              ? "bg-gradient-to-r from-[#DB8935] to-[#C87000] hover:from-[#C87000] hover:to-[#A65C00] text-white" 
+              : "bg-gray-100 text-gray-500 hover:bg-gray-200"} transition-all group shadow-sm text-xs py-2 h-auto rounded-full`}
             size="sm"
           >
             Ver Detalles

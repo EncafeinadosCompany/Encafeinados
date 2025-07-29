@@ -18,6 +18,9 @@ export const errorMessages: Record<number, string> = {
     registeCoffelover: {
         409: "El correo eléctronico ya se encuentra registrado"
     },
+    RegisterAdminBranch:{
+        409: "El correo eléctronico o el documento ya se encuentra registrado"
+    },
     stores: {
         409: "Ya existe una tienda con esa información"
     },

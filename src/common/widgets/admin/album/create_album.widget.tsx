@@ -50,7 +50,6 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
   useEffect(() => {
     if (autoOpen && !open) {
       setOpen(true);
-      console.log("Modal abierto automáticamente");
       
       if (onAfterOpen) {
         onAfterOpen();
@@ -103,7 +102,6 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
   };
 
   const handleOpenChange = (newOpen: boolean) => {
-    console.log("handleOpenChange llamado con:", { newOpen, eventId, formStarted: formStarted.current, success });
     
     if (!newOpen) {
       // No mostrar advertencia si estamos en estado de error o éxito
@@ -191,8 +189,6 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
         setShowDateError(true);
         return;
       }
-
-      console.log("Datos enviados al backend:", albumData);
       
       await UseCreateAlbumMutation(albumData);
       

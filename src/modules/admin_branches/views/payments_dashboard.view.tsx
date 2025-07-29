@@ -118,7 +118,6 @@ export default function PaymentsDashboard() {
                         <PaymentsByBranchWidget 
                             branchId={branchId}
                             onPaymentSuccess={(invoiceId) => {
-                                console.log('✅ Pago exitoso para factura:', invoiceId);
                             }}
                         />
                     ) : (
