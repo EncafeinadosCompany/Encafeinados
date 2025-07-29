@@ -5,9 +5,12 @@ import { ArrowRightIcon, ChevronDownIcon } from "@/common/ui/icons";
 import { Link } from "react-router-dom";
 import { useScrollNavigation } from "@/common/hooks/useScrollNavigation";
 
+
 export const HeroSection: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
+
   const { scrollToSection } = useScrollNavigation(['map']);
+
 
   useEffect(() => {
     const handleScroll = () => {

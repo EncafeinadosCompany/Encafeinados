@@ -3,8 +3,6 @@ import { ROLES } from '@/common/utils/lists/roles.utils';
 export const useAuth = () => {
 
   const pagesPermissions = (roles: string[], navigate: (path: string) => void) => {
-
-    console.log("Roles del usuario:", roles);
  
     if (roles.includes(ROLES.STORE)) {
       return navigate("/stores");

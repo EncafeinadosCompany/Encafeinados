@@ -19,7 +19,6 @@ export const useQuantityStampByPeriod = ( startDate:Date, endDate:Date, id?: num
             }
           
             const response = await authClient.get<StampByPeriod[]>(`/stamp-clients/all-branches/quantity?${params.toString()}`);
-            console.log('response', response);
             return response;
         },
         staleTime: 1 * 60 * 1000, 

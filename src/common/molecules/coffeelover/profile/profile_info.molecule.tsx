@@ -29,9 +29,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
       updateData.phone_number = formData.phone_number;
     }
     
-    if (Object.keys(updateData).length > 0) {
-      console.log('Datos a enviar:', updateData);
-      
+    if (Object.keys(updateData).length > 0) {  
       Object.entries(updateData).forEach(([field, value]) => {
         onUpdateField(field, value as string);
       });

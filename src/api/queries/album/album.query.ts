@@ -35,10 +35,6 @@ export const useAlbumsClientQuery = () => {
     queryFn: async () => {
       try {
         const response = await authClient.get<AlbumsListResponse>('/albums/client');
-
-
-        console.log("🚀 ~ file: album.query.ts:20 ~ useAlbumsClientQuery ~ response:", response);
-        
         const albumsData = response.albums || [];
         
         if (!Array.isArray(albumsData)) {

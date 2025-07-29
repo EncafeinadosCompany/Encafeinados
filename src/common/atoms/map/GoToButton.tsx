@@ -25,7 +25,6 @@ export const GoToButton = ({
     
     if (branchId) {
       const baseRoute = mapRoute === 'public' ? '/map' : '/coffeelover/map-coffelover';
-      console.log(baseRoute,branchId)
       navigate(`${baseRoute}?cafeId=${branchId}`);
     }
   };

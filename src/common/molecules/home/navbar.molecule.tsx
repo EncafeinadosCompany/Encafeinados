@@ -3,19 +3,27 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserIcon, HomeIcon, InfoIcon, MenuIcon, XIcon } from '@/common/ui/icons';
 import logoIcon from "@/assets/images/logo.ico";
+import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 
 
 export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const user = getEncryptedItem("user")
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+
+
+
   const navLinks = [
     { href: '/', label: 'Inicio', icon: <HomeIcon className="w-5 h-5" /> },
     { href: '/about', label: 'Acerca de', icon: <InfoIcon className="w-5 h-5" /> },
-    { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-5 h-5" /> }
+    user ? 
+      { href: '/coffeelover', label: 'Perfil', icon: <UserIcon className="w-5 h-5" /> } :
+      { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-5 h-5" /> }
   ];
 
   const mobileMenuVariants = {

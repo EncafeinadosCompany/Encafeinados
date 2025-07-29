@@ -138,7 +138,6 @@ const FormRegisterCoffeelover = () => {
     };
 
     try {
-      console.log("Enviando datos de CoffeeLover:", dataCoffeelover);
       await useRegisterCoffeelover(dataCoffeelover);
       reset();
     } catch (error) {

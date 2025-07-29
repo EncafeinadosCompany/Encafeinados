@@ -23,8 +23,6 @@ const GoogleCallback = () => {
       const tokenResponse = urlParams.get("accessToken");
       const { pagesPermissions } = useAuth();
 
-      console.log("Token de Google:", tokenResponse);
-
       if (!tokenResponse) {
         toast.error("Error en la autenticación.");
         navigate("/login");
