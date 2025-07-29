@@ -35,7 +35,6 @@ export function EventList() {
     
 
     const hadleClient = async (eventId: number) => {
-        console.log(eventId);
         await clientEvent(eventId);
     }
 

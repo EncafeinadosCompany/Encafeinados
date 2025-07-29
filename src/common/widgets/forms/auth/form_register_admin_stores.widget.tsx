@@ -72,8 +72,6 @@ export default function RegisterAdminStore({ ref, storeId, branchId }: RegisteAd
     const onSubmit = async (data: any) => {
 
         const finalData = { ...formData, ...data };
-
-        console.log("Final Data:", finalData);
         const register: RegisterAdminData = {
             userData: {
                 email: finalData.email,
@@ -94,8 +92,6 @@ export default function RegisterAdminStore({ ref, storeId, branchId }: RegisteAd
         }
 
         try {
-            console.log("Register Data prueba:", register);
-
             await useRegisterAdminMutations.mutateAsync(register);
             navigate("/login");
         } catch (error) {

@@ -44,7 +44,6 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   resetFilters,
   updateFilterOptions
 }) => {const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const { isMobile } = useAppData();
 
   useEffect(() => {
     const handleResize = () => {

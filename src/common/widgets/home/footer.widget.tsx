@@ -89,10 +89,6 @@ export const Footer = ({ sections }: FooterProps) => {
     }
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const toggleInstagramMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -171,23 +167,27 @@ export const Footer = ({ sections }: FooterProps) => {
             key={i}
             className="absolute text-[#D4A76A]/10"
             style={{
-              top: `${Math.random() * 90}%`,
-              left: `${Math.random() * 90}%`,
-              fontSize: `${Math.random() * 2 + 1}rem`,
-              rotate: `${Math.random() * 360}deg`
+              top: `${20 + (i % 3) * 30}%`,
+              left: `${10 + (i % 4) * 25}%`,
+              fontSize: `${1.5 + (i % 2) * 0.5}rem`,
+            }}
+            initial={{
+              rotate: i * 45,
+              y: 0
             }}
             animate={{
               y: [0, -15, 0],
-              rotate: [`${Math.random() * 360}deg`, `${Math.random() * 360 + 40}deg`]
+              rotate: [i * 45, i * 45 + 15, i * 45]
             }}
             transition={{
-              duration: Math.random() * 5 + 3,
+              duration: 6 + (i % 3) * 2,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: Math.random() * 2
+              delay: i * 0.8,
+              repeatType: "reverse"
             }}
           >
-            <Coffee size={Math.random() * 24 + 16} />
+            <Coffee size={20 + (i % 2) * 4} />
           </motion.div>
         ))}
       </div>

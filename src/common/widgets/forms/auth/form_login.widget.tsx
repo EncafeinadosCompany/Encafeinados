@@ -1,4 +1,3 @@
-
 import { loginSchema } from "@/common/utils/schemas/auth/login.shema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -8,31 +7,40 @@ import { LoginCard } from "@/common/molecules/auth/login/login_card.molecule";
 import { useLoginMutation } from "@/api/mutations/auth/authMutations";
 import { User, User_Data } from "@/api/types/auth/auth.types";
 
-const Formlogin = () => {
-  
-  const [isLoading, setIsLoading] = useState(false)
-  const useLogin = useLoginMutation()
 
-  const { register, handleSubmit, control, formState: { errors }, reset } = useForm({
+const Formlogin = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const useLogin = useLoginMutation();
+
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset
+  } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: ''
-    }
-  })
+      email: "",
+      password: "",
+    },
+  });
 
   const onSubmit = async (data: User) => {
     try {
       setIsLoading(true);
 
-      await useLogin.mutateAsync(data as User_Data)
-      useLogin.reset()
+        
+   
+        await useLogin.mutateAsync(data as User_Data);
+        useLogin.reset();
       
     } finally {
       setIsLoading(false);
       reset();
     }
-  }
+  };
 
   const handleGoogleSignIn = async () => {
     try {
@@ -50,9 +58,9 @@ const Formlogin = () => {
       control={control}
       isLoading={isLoading}
       onSubmit={handleSubmit(onSubmit)}
-      onGoogleSignIn={handleGoogleSignIn}>
-    </LoginCard>
-  )
-}
+      onGoogleSignIn={handleGoogleSignIn}
+    ></LoginCard>
+  );
+};
 
 export default Formlogin;

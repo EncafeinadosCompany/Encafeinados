@@ -21,23 +21,17 @@ export const useStampsByPageQuery = (id: number) => {
     queryKey: ['page-stamps', id],
     queryFn: async (): Promise<StampsResponse> => {
       try {
-        // Log the request for debugging
-        // console.log(`🔍 Fetching stamps for page ID: ${id}`);
-
+      
         const response = await authClient.get<StampsResponse>(`/pages-stamps/${id}`);
 
         if (!response || typeof response !== 'object') {
-          // console.warn(`⚠️ Invalid response for page ${id}:`, response);
           return { pageId: id, stamps: [] };
         }
 
 
         if (!Array.isArray(response.stamps)) {
-          // console.warn(`⚠️ No stamps array found for page ${id}:`, response);
           return { pageId: id, stamps: [] };
         }
-
-        // console.log(`✅ Retrieved ${response.stamps.length} stamps for page ${id}`);
 
         return {
           pageId: id,
@@ -45,16 +39,12 @@ export const useStampsByPageQuery = (id: number) => {
         };
 
       } catch (error) {
-        // console.error(`❌ Error fetching stamps for page ${id}:`, error);
-
         return { pageId: id, stamps: [] };
       }
     },
 
     enabled: !!id && id > 0,
-    // Avoid unnecessary refetching
     staleTime: 5 * 60 * 1000, // 5 minutes
-    // Ensure query cache is properly scoped to the page ID
 
   });
 };
@@ -65,9 +55,6 @@ export const useMockStampsByPageQuery = (id: number, useMock = false) => {
     queryKey: ['mock-page-stampss', id],
     queryFn: async (): Promise<StampsResponse> => {
       if (useMock) {
-        console.log(`🔍 Generating 50 mock stamps for page ID: ${id}`);
-        
-        // Generate 50 mock stamps
         const mockStamps = Array.from({ length: 50 }, (_, index) => ({
           id: index + 1,
           title: `Stamp ${index + 1}`,

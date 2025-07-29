@@ -25,7 +25,7 @@ export const useApproveBranchMutation = () => {
         );
       }
 
-      console.log("Aprobando sucursal con ID:", userId, approvalId);
+    
 
       return await authClient.patch(`/branch-approvals/${approvalId}`, {
         status: true,
@@ -184,7 +184,7 @@ export const useUpdateImagenBrandMutation = () => {
             }
           ]
         };
-        console.log(payload);
+    
         const response: AxiosResponse<image> = await authClient.post('/images', payload);
         return response.data;
 
@@ -256,7 +256,7 @@ export const useReApproveBranchMutation = () => {
         );
       }
 
-      console.log("Re-aprobando sucursal con ID:", userId, approvalId);
+     
 
       return await authClient.patch(`/branch-approvals/${approvalId}`, {
         status: true,
@@ -291,8 +291,6 @@ export const useReRejectBranchMutation = () => {
           "No se encontró ID de usuario en el sistema. Por favor, inicia sesión nuevamente."
         );
       }
-
-      console.log("Re-rechazando sucursal con ID:", userId, approvalId);
 
       return await authClient.patch(`/branch-approvals/${approvalId}`, {
         status: false,
