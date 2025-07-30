@@ -104,7 +104,7 @@ export const HeroSection: React.FC = () => {
                 transition-all duration-300 font-medium flex items-center justify-center gap-2 
                 shadow-lg shadow-[#D4A76A]/20 hover:shadow-[#D4A76A]/30 overflow-hidden"
             >
-              <span className="relative z-10">{user?`${user.name}`:"Comenzar"}</span>
+              <span className="relative z-10">{!user?"Comenzar": user.name? `${user.name}`: "Bienvenido de nuevo"}</span>
               <ArrowRightIcon className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
               <span className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
             </button>

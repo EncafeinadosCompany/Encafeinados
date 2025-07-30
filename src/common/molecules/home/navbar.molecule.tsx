@@ -36,7 +36,7 @@ export const Navbar: React.FC = () => {
     { href: '/', label: 'Inicio', icon: <HomeIcon className="w-5 h-5" />, isAction: false },
     { href: '/about', label: 'Acerca de', icon: <InfoIcon className="w-5 h-5" />, isAction: false },
     user ? 
-      { href: '#', label: user.name, icon: <UserIcon className="w-5 h-5" />, isAction: true, action: handleUserNavigation } :
+      { href: '#', label: user.name? user.name: "Cuenta", icon: <UserIcon className="w-5 h-5" />, isAction: true, action: handleUserNavigation } :
       { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-5 h-5" />, isAction: false }
   ];
 
