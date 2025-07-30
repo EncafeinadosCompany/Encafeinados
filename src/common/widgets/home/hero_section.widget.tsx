@@ -2,15 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Text } from "@/common/atoms/common/text.atom";
 import { motion } from "framer-motion";
 import { ArrowRightIcon, ChevronDownIcon } from "@/common/ui/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useScrollNavigation } from "@/common/hooks/useScrollNavigation";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 import { UserData } from "@/api/types/auth/auth.types";
+import { useAuth } from "@/common/hooks/auth/use_auth.hook";
+
 
 export const HeroSection: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const user = getEncryptedItem("user") as UserData;
-  const { scrollToSection } = useScrollNavigation(["map"]);
+  const navigate = useNavigate();
+  const { scrollToSection } = useScrollNavigation(['map']);
+  const { pagesPermissions } = useAuth();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,6 +25,14 @@ export const HeroSection: React.FC = () => {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleNavigation = () => {
+    if (user && user.roles) {
+      pagesPermissions(user.roles, navigate);
+    } else {
+      navigate("/login");
+    }
+  };
 
   const handleScrollToMap = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -83,18 +96,17 @@ export const HeroSection: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
           >
-            <Link
-              to={user ? "/coffeelover" : "login"}
+            <button
+              onClick={handleNavigation}
               className="group relative px-6 py-3 bg-[#D4A76A] hover:bg-[#C19559] text-[#0F0F0F] rounded-full 
                 transition-all duration-300 font-medium flex items-center justify-center gap-2 
                 shadow-lg shadow-[#D4A76A]/20 hover:shadow-[#D4A76A]/30 overflow-hidden"
             >
-              <span className="relative z-10">
-                {user ? `${user.name}` : "Comenzar"}
-              </span>
+              <span className="relative z-10">{!user?"Comenzar": user.name? `${user.name}`: "Bienvenido de nuevo"}</span>
               <ArrowRightIcon className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
               <span className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
-            </Link>
+            </button>
+
           </motion.div>
         </motion.div>
 
