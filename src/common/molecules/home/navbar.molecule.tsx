@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserIcon, HomeIcon, InfoIcon, MenuIcon, XIcon } from '@/common/ui/icons';
 import logoIcon from "@/assets/images/logo.ico";
 import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 import { UserData } from '@/api/types/auth/auth.types';
+import { useAuth } from '@/common/hooks/auth/use_auth.hook';
+
 
 
 export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const user = getEncryptedItem("user") as UserData
+  const user = getEncryptedItem("user") as UserData;
+  const navigate = useNavigate();
+  const { pagesPermissions } = useAuth();
+
+  const handleUserNavigation = () => {
+    if (user && user.roles) {
+      pagesPermissions(user.roles, navigate);
+    } else {
+      navigate("/login");
+    }
+  };
+  
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -20,11 +33,11 @@ export const Navbar: React.FC = () => {
 
 
   const navLinks = [
-    { href: '/', label: 'Inicio', icon: <HomeIcon className="w-5 h-5" /> },
-    { href: '/about', label: 'Acerca de', icon: <InfoIcon className="w-5 h-5" /> },
+    { href: '/', label: 'Inicio', icon: <HomeIcon className="w-5 h-5" />, isAction: false },
+    { href: '/about', label: 'Acerca de', icon: <InfoIcon className="w-5 h-5" />, isAction: false },
     user ? 
-      { href: '/coffeelover', label:user.name , icon: <UserIcon className="w-5 h-5" /> } :
-      { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-5 h-5" /> }
+      { href: '#', label: user.name, icon: <UserIcon className="w-5 h-5" />, isAction: true, action: handleUserNavigation } :
+      { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-5 h-5" />, isAction: false }
   ];
 
   const mobileMenuVariants = {
@@ -111,24 +124,47 @@ export const Navbar: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Link
-                to={link.href}
-                className="text-white/80 hover:text-[#D4A76A] 
-                transition-colors flex items-center space-x-2 
-                group relative overflow-hidden py-1"
-              >
-
-                <motion.span
-                  className="absolute bottom-0 left-0 w-full h-0.5 bg-[#D4A76A]"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-                {link.icon}
-                <span className="group-hover:text-[#D4A76A] transition-colors">
-                  {link.label}
-                </span>
-              </Link>
+              {link.isAction ? (
+                <button
+                  onClick={() => {
+                    if (link.action) {
+                      link.action();
+                    }
+                  }}
+                  className="text-white/80 hover:text-[#D4A76A] 
+                  transition-colors flex items-center space-x-2 
+                  group relative overflow-hidden py-1"
+                >
+                  <motion.span
+                    className="absolute bottom-0 left-0 w-full h-0.5 bg-[#D4A76A]"
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  {link.icon}
+                  <span className="group-hover:text-[#D4A76A] transition-colors">
+                    {link.label}
+                  </span>
+                </button>
+              ) : (
+                <Link
+                  to={link.href}
+                  className="text-white/80 hover:text-[#D4A76A] 
+                  transition-colors flex items-center space-x-2 
+                  group relative overflow-hidden py-1"
+                >
+                  <motion.span
+                    className="absolute bottom-0 left-0 w-full h-0.5 bg-[#D4A76A]"
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  {link.icon}
+                  <span className="group-hover:text-[#D4A76A] transition-colors">
+                    {link.label}
+                  </span>
+                </Link>
+              )}
             </motion.div>
           ))}
         </div>
@@ -180,19 +216,39 @@ export const Navbar: React.FC = () => {
                   variants={mobileItemVariants}
                   className="w-full text-center"
                 >
-                  <Link
-                    to={link.href}
-                    onClick={toggleMobileMenu}
-                    className="text-white/90 hover:text-[#D4A76A] 
-                    transition-colors flex items-center justify-center 
-                    space-x-3 py-3 w-full group"
-                  >
-                    {link.icon}
-                    <span className="group-hover:text-[#D4A76A] 
-                    transition-colors text-lg tracking-wider">
-                      {link.label}
-                    </span>
-                  </Link>
+                  {link.isAction ? (
+                    <button
+                      onClick={() => {
+                        if (link.action) {
+                          link.action();
+                        }
+                        toggleMobileMenu();
+                      }}
+                      className="text-white/90 hover:text-[#D4A76A] 
+                      transition-colors flex items-center justify-center 
+                      space-x-3 py-3 w-full group"
+                    >
+                      {link.icon}
+                      <span className="group-hover:text-[#D4A76A] 
+                      transition-colors text-lg tracking-wider">
+                        {link.label}
+                      </span>
+                    </button>
+                  ) : (
+                    <Link
+                      to={link.href}
+                      onClick={toggleMobileMenu}
+                      className="text-white/90 hover:text-[#D4A76A] 
+                      transition-colors flex items-center justify-center 
+                      space-x-3 py-3 w-full group"
+                    >
+                      {link.icon}
+                      <span className="group-hover:text-[#D4A76A] 
+                      transition-colors text-lg tracking-wider">
+                        {link.label}
+                      </span>
+                    </Link>
+                  )}
                 </motion.div>
               ))}
             </div>
