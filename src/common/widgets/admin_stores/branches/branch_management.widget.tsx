@@ -181,7 +181,7 @@ export default function BranchManagement() {
 
         {filteredBranches.length > 0 && (
           <div className="text-xs text-gray-500 mb-4">
-            Mostrando {Math.min(indexOfLastItem, filteredBranches.length) - indexOfFirstItem} de {filteredBranches.length} sucursales
+            Mostrando {filteredBranches.length} sucursales
           </div>
         )}
 
@@ -189,44 +189,47 @@ export default function BranchManagement() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {renderSkeletons()}
           </div>
-        ) : currentBranches.length === 0 ? (
+        ) : filteredBranches.length === 0 ? (
           renderEmptyState({ searchQuery, setSearchQuery, setIsAddModalOpen })
         ) : (
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
-            initial={{ opacity: 0.8 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >            
-            <AnimatePresence mode="popLayout">
-              {currentBranches.map((branch, index) => (
-                <motion.div
-                  key={branch.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ 
-                    opacity: 1, 
-                    y: 0,
-                    scale: hoveredCardId === branch.id ? 1.02 : 1,
-                    transition: { 
-                      delay: index * 0.05,
-                      duration: 0.3
-                    }
-                  }}
-                  exit={{ opacity: 0, y: -10 }}
-                  onHoverStart={() => setHoveredCardId(branch.id)}
-                  onHoverEnd={() => setHoveredCardId(null)}
-                >                  <BranchCard
-                    branch={branch}
-                    onViewDetails={() => viewBranchDetails(branch)}
-                    onEdit={() => handleEditClick(branch)}
-                    onGenerateQrCode={() => handleQrCodeClick(branch)}
-                    onAssignAdmin={() => handleAssignAdminClick(branch)}
-                    index={index}
-                  />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          <div className="max-h-[70vh] overflow-y-auto pr-2 pb-2 custom-scrollbar">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+              initial={{ opacity: 0.8 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >            
+              <AnimatePresence mode="popLayout">
+                {filteredBranches.map((branch, index) => (
+                  <motion.div
+                    key={branch.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ 
+                      opacity: 1, 
+                      y: 0,
+                      scale: hoveredCardId === branch.id ? 1.02 : 1,
+                      transition: { 
+                        delay: index * 0.05,
+                        duration: 0.3
+                      }
+                    }}
+                    exit={{ opacity: 0, y: -10 }}
+                    onHoverStart={() => setHoveredCardId(branch.id)}
+                    onHoverEnd={() => setHoveredCardId(null)}
+                  >
+                    <BranchCard
+                      branch={branch}
+                      onViewDetails={() => viewBranchDetails(branch)}
+                      onEdit={() => handleEditClick(branch)}
+                      onGenerateQrCode={() => handleQrCodeClick(branch)}
+                      onAssignAdmin={() => handleAssignAdminClick(branch)}
+                      index={index}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          </div>
         )}
       </CardContent>
       
