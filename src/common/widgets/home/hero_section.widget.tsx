@@ -2,16 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Text } from "@/common/atoms/common/text.atom";
 import { motion } from "framer-motion";
 import { ArrowRightIcon, ChevronDownIcon } from "@/common/ui/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useScrollNavigation } from "@/common/hooks/useScrollNavigation";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 import { UserData } from "@/api/types/auth/auth.types";
+import { useAuth } from "@/common/hooks/auth/use_auth.hook";
 
 
 export const HeroSection: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
-  const user = getEncryptedItem("user") as UserData
+  const user = getEncryptedItem("user") as UserData;
+  const navigate = useNavigate();
   const { scrollToSection } = useScrollNavigation(['map']);
+  const { pagesPermissions } = useAuth();
 
 
   useEffect(() => {
@@ -19,13 +22,21 @@ export const HeroSection: React.FC = () => {
       setScrollPosition(window.scrollY);
     };
     window.addEventListener("scroll", handleScroll);
-    
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleNavigation = () => {
+    if (user && user.roles) {
+      pagesPermissions(user.roles, navigate);
+    } else {
+      navigate("/login");
+    }
+  };
+
   const handleScrollToMap = (e: React.MouseEvent) => {
     e.preventDefault();
-    scrollToSection('map', { offset: -80 });
+    scrollToSection("map", { offset: -80 });
   };
 
   return (
@@ -45,10 +56,7 @@ export const HeroSection: React.FC = () => {
 
       <div className="absolute inset-0 bg-[url('/api/placeholder/100/100')] bg-repeat opacity-5" />
 
-
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 md:px-8">
-
-
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -61,14 +69,15 @@ export const HeroSection: React.FC = () => {
             transition={{ duration: 0.7, delay: 0.5 }}
             className="mb-6"
           >
-            <Text
-              variant="h1"
-              className="text-white font-black tracking-tight leading-tight mb-2"
-            >
-              Encuentra tu <span className="text-[#D4A76A]">momento</span> de
-              café perfecto
-            </Text>
-
+           <Text
+  variant="h1"
+  className="text-white font-black tracking-tight leading-tight mb-2 
+    text-[calc(theme(fontSize.5xl)-4px)] 
+    md:text-[calc(theme(fontSize.5xl)-8px)]"
+>
+  Te mostramos tu próxima parada de{" "}
+  <span className="text-[#D4A76A]">cafés de especialidad</span>
+</Text>
             <div className="mx-auto w-16 h-1 bg-[#D4A76A] rounded-full my-6" />
 
             <Text
@@ -87,17 +96,16 @@ export const HeroSection: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
           >
-            <Link
-              to={user? "/coffeelover":"login"}
-
+            <button
+              onClick={handleNavigation}
               className="group relative px-6 py-3 bg-[#D4A76A] hover:bg-[#C19559] text-[#0F0F0F] rounded-full 
                 transition-all duration-300 font-medium flex items-center justify-center gap-2 
                 shadow-lg shadow-[#D4A76A]/20 hover:shadow-[#D4A76A]/30 overflow-hidden"
             >
-              <span className="relative z-10">{user?`${user.name}`:"Comenzar"}</span>
+              <span className="relative z-10">{!user?"Comenzar": user.name? `${user.name}`: "Bienvenido de nuevo"}</span>
               <ArrowRightIcon className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
               <span className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
-            </Link>
+            </button>
 
           </motion.div>
         </motion.div>
@@ -108,7 +116,7 @@ export const HeroSection: React.FC = () => {
           transition={{ delay: 1.2, duration: 1.5, repeat: Infinity }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
         >
-          <button 
+          <button
             onClick={handleScrollToMap}
             className="text-white/70 text-sm mb-2 block cursor-pointer hover:text-white transition"
           >
@@ -148,7 +156,6 @@ export const HeroSection: React.FC = () => {
           </div>
         </motion.div>
       </div>
-
     </section>
   );
 };
