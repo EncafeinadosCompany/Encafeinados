@@ -493,13 +493,24 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
         <MapContainer
           center={defaultCenter}
           zoom={13}
+          maxZoom={18}
           style={{ height: "100%", width: "100%" }}
           zoomControl={false}
         >
           <TileLayer
-  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-  url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-/>
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            maxZoom={45}
+            maxNativeZoom={18}
+          />
+          
+          <TileLayer
+             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            minZoom={17}
+            maxZoom={45}
+            maxNativeZoom={18}
+          />
           <UserMarker position={userLocation} pulsing={true} />
           <SmartClusterGroup
             cafes={sortedCafes}
