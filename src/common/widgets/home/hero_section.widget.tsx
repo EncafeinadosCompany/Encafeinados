@@ -105,7 +105,7 @@ export const HeroSection: React.FC = () => {
                   ? "Comenzar"
                   : user.name || fullName
                   ? `${user.name || fullName}`
-                  : "Bienvenido de nuevo"}
+                  : "¡Bienvenido de nuevo!"}
               </span>
               <ArrowRightIcon className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
               <span className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
