@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { UserIcon, HomeIcon, InfoIcon, MenuIcon, XIcon } from '@/common/ui/icons';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  UserIcon,
+  HomeIcon,
+  InfoIcon,
+  MenuIcon,
+  XIcon,
+} from "@/common/ui/icons";
 import logoIcon from "@/assets/images/logo.ico";
-import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
-import { UserData } from '@/api/types/auth/auth.types';
-import { useAuth } from '@/common/hooks/auth/use_auth.hook';
-
-
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
+import { UserData } from "@/api/types/auth/auth.types";
+import { useAuth } from "@/common/hooks/auth/use_auth.hook";
 
 export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const user = getEncryptedItem("user") as UserData;
+  const fullName = localStorage.getItem("userFullName");
   const navigate = useNavigate();
   const { pagesPermissions } = useAuth();
 
@@ -23,21 +28,38 @@ export const Navbar: React.FC = () => {
       navigate("/login");
     }
   };
-  
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-
-
-
   const navLinks = [
-    { href: '/', label: 'Inicio', icon: <HomeIcon className="w-5 h-5" />, isAction: false },
-    { href: '/about', label: 'Acerca de', icon: <InfoIcon className="w-5 h-5" />, isAction: false },
-    user ? 
-      { href: '#', label: user.name? user.name: "Cuenta", icon: <UserIcon className="w-5 h-5" />, isAction: true, action: handleUserNavigation } :
-      { href: '/login', label: 'Iniciar Sesión', icon: <UserIcon className="w-5 h-5" />, isAction: false }
+    {
+      href: "/",
+      label: "Inicio",
+      icon: <HomeIcon className="w-5 h-5" />,
+      isAction: false,
+    },
+    {
+      href: "/about",
+      label: "Acerca de",
+      icon: <InfoIcon className="w-5 h-5" />,
+      isAction: false,
+    },
+    user
+      ? {
+          href: "#",
+          label: user.name || fullName ? user.name || fullName : "Cuenta",
+          icon: <UserIcon className="w-5 h-5" />,
+          isAction: true,
+          action: handleUserNavigation,
+        }
+      : {
+          href: "/login",
+          label: "Iniciar Sesión",
+          icon: <UserIcon className="w-5 h-5" />,
+          isAction: false,
+        },
   ];
 
   const mobileMenuVariants = {
@@ -45,24 +67,23 @@ export const Navbar: React.FC = () => {
       opacity: 0,
       y: -50,
       transition: {
-        when: "afterChildren"
-      }
+        when: "afterChildren",
+      },
     },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
+        delayChildren: 0.2,
+      },
+    },
   };
 
   const mobileItemVariants = {
     hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0 }
+    visible: { opacity: 1, x: 0 },
   };
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,29 +95,29 @@ export const Navbar: React.FC = () => {
         setScrolled(false);
       }
     };
-  
+
     // Call handleScroll immediately to set initial state
     handleScroll();
-    
+
     // Add event listener
-    window.addEventListener('scroll', handleScroll);
-  
+    window.addEventListener("scroll", handleScroll);
+
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out
-      ${scrolled 
-        ? 'bg-[#2C1810]/90 backdrop-blur-md shadow-lg' 
-        : 'bg-[#2C1810]/90'}`}>
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out
+      ${
+        scrolled
+          ? "bg-[#2C1810]/90 backdrop-blur-md shadow-lg"
+          : "bg-[#2C1810]/90"
+      }`}
+    >
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <Link
-          to="/"
-          className="flex items-center space-x-3 group"
-        >
+        <Link to="/" className="flex items-center space-x-3 group">
           <motion.img
             src={logoIcon}
             alt="Encafeinados logo"
@@ -229,8 +250,10 @@ export const Navbar: React.FC = () => {
                       space-x-3 py-3 w-full group"
                     >
                       {link.icon}
-                      <span className="group-hover:text-[#D4A76A] 
-                      transition-colors text-lg tracking-wider">
+                      <span
+                        className="group-hover:text-[#D4A76A] 
+                      transition-colors text-lg tracking-wider"
+                      >
                         {link.label}
                       </span>
                     </button>
@@ -243,8 +266,10 @@ export const Navbar: React.FC = () => {
                       space-x-3 py-3 w-full group"
                     >
                       {link.icon}
-                      <span className="group-hover:text-[#D4A76A] 
-                      transition-colors text-lg tracking-wider">
+                      <span
+                        className="group-hover:text-[#D4A76A] 
+                      transition-colors text-lg tracking-wider"
+                      >
                         {link.label}
                       </span>
                     </Link>

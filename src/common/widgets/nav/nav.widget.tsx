@@ -16,6 +16,7 @@ export default function NavbarGeneral({ navItems, coffeecoins, isloading}: NavIt
   const [isExpanded, setIsExpanded] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
   const user = getEncryptedItem("user") as UserData| null;
+  
 
   useEffect(() => {
     const checkIfMobile = () => {
