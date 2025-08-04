@@ -8,21 +8,20 @@ import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.util
 import { UserData } from "@/api/types/auth/auth.types";
 import { useAuth } from "@/common/hooks/auth/use_auth.hook";
 
-
 export const HeroSection: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const user = getEncryptedItem("user") as UserData;
+  const fullName = localStorage.getItem("userFullName");
   const navigate = useNavigate();
-  const { scrollToSection } = useScrollNavigation(['map']);
+  const { scrollToSection } = useScrollNavigation(["map"]);
   const { pagesPermissions } = useAuth();
-
 
   useEffect(() => {
     const handleScroll = () => {
       setScrollPosition(window.scrollY);
     };
     window.addEventListener("scroll", handleScroll);
-    
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -36,7 +35,7 @@ export const HeroSection: React.FC = () => {
 
   const handleScrollToMap = (e: React.MouseEvent) => {
     e.preventDefault();
-    scrollToSection('map', { offset: -80 });
+    scrollToSection("map", { offset: -80 });
   };
 
   return (
@@ -56,10 +55,7 @@ export const HeroSection: React.FC = () => {
 
       <div className="absolute inset-0 bg-[url('/api/placeholder/100/100')] bg-repeat opacity-5" />
 
-
       <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 md:px-8">
-
-
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -104,11 +100,16 @@ export const HeroSection: React.FC = () => {
                 transition-all duration-300 font-medium flex items-center justify-center gap-2 
                 shadow-lg shadow-[#D4A76A]/20 hover:shadow-[#D4A76A]/30 overflow-hidden"
             >
-              <span className="relative z-10">{!user?"Comenzar": user.name? `${user.name}`: "Bienvenido de nuevo"}</span>
+              <span className="relative z-10">
+                {!user
+                  ? "Comenzar"
+                  : user.name || fullName
+                  ? `${user.name || fullName}`
+                  : "Bienvenido de nuevo"}
+              </span>
               <ArrowRightIcon className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
               <span className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
             </button>
-
           </motion.div>
         </motion.div>
 
@@ -118,7 +119,7 @@ export const HeroSection: React.FC = () => {
           transition={{ delay: 1.2, duration: 1.5, repeat: Infinity }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
         >
-          <button 
+          <button
             onClick={handleScrollToMap}
             className="text-white/70 text-sm mb-2 block cursor-pointer hover:text-white transition"
           >
@@ -158,7 +159,6 @@ export const HeroSection: React.FC = () => {
           </div>
         </motion.div>
       </div>
-
     </section>
   );
 };
