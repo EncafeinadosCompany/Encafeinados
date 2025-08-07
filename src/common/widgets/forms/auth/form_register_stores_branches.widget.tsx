@@ -77,13 +77,6 @@ export default function RegisterStoreBranches() {
     const handleSubmit = async (data: any) => {
         const finalData = { ...formData, ...data };
 
-        const social = finalData.social_networks || [];
-
-        if (!social.length) {
-            toast.error("Debes agregar al menos una red social.");
-            return;
-        }
-
         try {
             storeId ? storeId : toast.error('no cuenta con el id')
 
@@ -101,7 +94,7 @@ export default function RegisterStoreBranches() {
                 latitude: finalData.latitude,
                 longitude: finalData.longitude,
                 address: finalData.address,
-                social_branches: finalData.social_networks,
+                social_branches: finalData.social_networks || [], // Make sure this handles empty social networks
                 criteria: finalData.criteria,
                 details,
             }
@@ -402,11 +395,10 @@ export default function RegisterStoreBranches() {
                                                         onClick={methods.handleSubmit(handleSubmit)}
                                                         disabled={
                                                             !methods.formState.isValid || 
-                                                            !methods.getValues("social_networks")?.length || 
                                                             status === "pending"
                                                         }
                                                         className={`text-xs sm:text-sm rounded-lg sm:rounded-xl px-4 sm:px-6 py-1.5 sm:py-2 ${
-                                                            !methods.formState.isValid || !methods.getValues("social_networks")?.length
+                                                            !methods.formState.isValid 
                                                                 ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                                                                 : "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
                                                         }`}

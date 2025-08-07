@@ -24,8 +24,6 @@ interface DynamicSocialNetworksFormProps {
 }
 
 export default function SocialNetworksForm({ availableSocialNetworks, register, control, error }: DynamicSocialNetworksFormProps) {
-
-
     const { fields, append, remove } = useFieldArray({ control, name: "social_networks", })
     const [currentSelection, setCurrentSelection] = useState<string>("")
 
@@ -51,10 +49,10 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
             <CardHeader className="bg-gradient-to-r from-amber-50 to-amber-100 pb-6">
                 <CardTitle className="flex items-center gap-2 text-xl text-amber-900">
                     <Globe className="h-5 w-5 text-amber-600" />
-                    Redes Sociales
+                    Redes Sociales (Opcional)
                 </CardTitle>
                 <CardDescription className="text-amber-700">
-                    Agrega tus redes sociales favoritas para que los coffeelovers puedan conocer más sobre ti
+                    Puedes agregar tus redes sociales para que los coffeelovers puedan conocer más sobre ti. Este paso es opcional.
                 </CardDescription>
             </CardHeader>
 
@@ -81,7 +79,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                                     placeholder={
                                         availableNetworks?.length === 0
                                             ? "No hay más redes disponibles"
-                                            : "Selecciona  una red social"
+                                            : "Selecciona una red social"
                                     }
                                 />
                             </SelectTrigger>
@@ -118,7 +116,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                             <Globe className="h-12 w-12 mx-auto text-gray-400 mb-3" />
                             <p className="text-gray-600 font-medium"> Aún no has agregado redes sociales </p>
                             <p className="text-sm text-gray-500 mt-1">
-                                Agregá tu primera red usando el selector de arriba
+                                Puedes continuar sin agregar redes sociales o agregar una usando el selector de arriba
                             </p>
                         </motion.div>
                     )}
@@ -128,7 +126,6 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                 <AnimatePresence>
                     <div className="space-y-4">
                         {fields.map((field, index) => {
-
                             const inputConfig = UseNetworkInputConfig((field as any).name);
                             return (
                                 <motion.div
