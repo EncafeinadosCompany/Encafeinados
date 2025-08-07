@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -11,8 +11,6 @@ import { InputEmail } from "@/common/atoms/forms/Input_email.atom";
 import { InputPin } from "@/common/atoms/forms/Input_pin.atom";
 import { TextError } from "@/common/atoms/forms/text_error.atom";
 import { Card, CardContent } from "@/common/ui/card";
-import { ArrowLeft } from "@/common/ui/icons";
-import toast from "react-hot-toast";
 
 export default function PasswordResetPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -65,10 +63,6 @@ export default function PasswordResetPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleBackToLogin = () => {
-    navigate("/login");
   };
 
   if (isSuccess && !isChangePasswordMode) {
