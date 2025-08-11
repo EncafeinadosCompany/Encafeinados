@@ -135,6 +135,7 @@ export const CardMapStore = ({
                 : "Usar mi ubicación actual"}
             </span>
           </button>
+        </div>
 
           {/* Suggestions */}
           {showSuggestions && (
@@ -354,6 +355,5 @@ export const CardMapStore = ({
           </div>
         </div>
       </div>
-    </div>
   );
 };
