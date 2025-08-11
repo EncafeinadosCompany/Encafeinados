@@ -123,7 +123,7 @@ export default function FormEditBranch() {
                     <div className="grid gap-6 md:grid-cols-1">
 
                         <form onSubmit={handleSubmit(onSubmit, (errors) => {
-                            console.error("Errores del formulario:", errors);
+                          
                         })} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>

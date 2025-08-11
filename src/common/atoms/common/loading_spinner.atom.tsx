@@ -145,6 +145,7 @@ const LoadingSpinner = ({
               <stop
                 offset="0%"
                 style={{ stopColor: highlightColor, stopOpacity: 1 }}
+                style={{ stopColor: highlightColor, stopOpacity: 1 }}
               />
               <stop
                 offset={`${loadingProgress}%`}

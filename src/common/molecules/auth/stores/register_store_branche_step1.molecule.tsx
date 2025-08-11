@@ -20,10 +20,10 @@ export default function RegisterStoreBrancheStep1({ register, control, error }: 
 
     return (
         <>
-            <div className="sm:space-y-2 grid p-0 md:grid-cols-2 h-full md:min-h-[300px]">
+            <div className="md:space-y-2 grid p-0 md:grid-cols-2 h-full">
                 {/* hidden */}
 
-                <div className="relative md:flex items-center  justify-center w-full h-full rounded-xl overflow-hidden">
+                <div className="relative md:flex items-center justify-center w-full h-[30vh]  md:h-full rounded-xl overflow-hidden">
                     <div className="w-full h-full flex items-center justify-center ">
                         <img
                             src="/cafeino.png"
@@ -32,7 +32,7 @@ export default function RegisterStoreBrancheStep1({ register, control, error }: 
                         />
                     </div>
                 </div>
-                <div className="flex flex-col justify-center sm:p-5 gap-8 py-4">
+                <div className="flex flex-col justify-center sm:p-5 gap-4 py-2 ">
                     <div className="grid gap-2 relative">
                         <Label className={`flex items-center text-xs transition-colors ${focusedField === "name" ? "text-[#DB8935] " : "text-gray-600"
                             }`}>Nombre de la sucursal</Label>

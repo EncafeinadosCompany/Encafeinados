@@ -22,7 +22,7 @@ export function AddBranchModal({ isOpen, onClose, initialData, mode }: AddBranch
           id="branch-dialog"
           aria-labelledby="branch-dialog-title"
           aria-describedby="branch-dialog-description"
-          className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[95vw] 2xl:w-[45vw] max-h-[70vh] sm:max-h-[90vh] max-w-[90vh] bg-white shadow-xl border-none rounded-lg">
+          className="w-[95vw] sm:w-[85vw] md:w-[75vw] lg:w-[65vw] xl:w-[95vw] 2xl:w-[45vw] max-h-[70vh] sm:max-h-[90vh] max-w-4xl bg-white shadow-xl border-none rounded-lg">
 
           <div className="p-4 relative">
             <div className="absolute opacity-5 -right-7 -top-6">

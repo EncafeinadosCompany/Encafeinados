@@ -215,7 +215,7 @@ const FormRegisterCoffeelover = () => {
             ></FormHeader>
 
             {/* Contenido del formulario */}
-            <div className="max-h-[65vh] md:max-h-[70vh] lg:max-h-[75vh]overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-transparent">
+            <div className="max-h-[65vh] md:max-h-[70vh] lg:max-h-[75vh] overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-transparent">
               <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <CardContent className="p-3 sm:p-4 md:p-5">
                   <AnimatePresence

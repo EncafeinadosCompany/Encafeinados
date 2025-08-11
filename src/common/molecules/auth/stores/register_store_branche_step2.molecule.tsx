@@ -156,7 +156,7 @@ export default function RegisterStoreBrancheStep2({ methods, criteria }: Registe
                               <img
                                 src={field.value.preview}
                                 alt="Preview"
-                                className="w-full h-48 object-cover"
+                                className="w-full max-h-48 object-contain bg-gray-50 rounded-lg"
                               />
                               <button
                                 onClick={() => field.onChange(null)}
