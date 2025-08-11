@@ -95,19 +95,19 @@ const LoadingSpinner = ({
             >
               <stop
                 offset="0%"
-                style={{ stopColor: "#D9D9D9", stopOpacity: 1 }}
+                style={{ stopColor:  primaryColor, stopOpacity: 1 }}
               />
               <stop
                 offset={`${loadingProgress}%`}
-                style={{ stopColor: "#D9D9D9", stopOpacity: 1 }}
+                style={{ stopColor:  primaryColor, stopOpacity: 1 }}
               />
               <stop
                 offset={`${loadingProgress}%`}
-                style={{ stopColor: primaryColor, stopOpacity: 1 }}
+                style={{ stopColor:  "#D9D9D9", stopOpacity: 1 }}
               />
               <stop
                 offset="100%"
-                style={{ stopColor: primaryColor, stopOpacity: 1 }}
+                style={{ stopColor:  "#D9D9D9", stopOpacity: 1 }}
               />
             </linearGradient>
 
@@ -120,19 +120,19 @@ const LoadingSpinner = ({
             >
               <stop
                 offset="0%"
-                style={{ stopColor: "#D9D9D9", stopOpacity: 1 }}
+                style={{ stopColor:  accentColor, stopOpacity: 1 }}
               />
               <stop
                 offset={`${loadingProgress}%`}
-                style={{ stopColor: "#D9D9D9", stopOpacity: 1 }}
+                style={{ stopColor:  accentColor, stopOpacity: 1 }}
               />
               <stop
                 offset={`${loadingProgress}%`}
-                style={{ stopColor: accentColor, stopOpacity: 1 }}
+                style={{ stopColor:"#D9D9D9", stopOpacity: 1 }}
               />
               <stop
                 offset="100%"
-                style={{ stopColor: accentColor, stopOpacity: 1 }}
+                style={{ stopColor: "#D9D9D9", stopOpacity: 1 }}
               />
             </linearGradient>
 
@@ -145,19 +145,19 @@ const LoadingSpinner = ({
             >
               <stop
                 offset="0%"
-                style={{ stopColor: "#D9D9D9", stopOpacity: 1 }}
-              />
-              <stop
-                offset={`${loadingProgress}%`}
-                style={{ stopColor: "#D9D9D9", stopOpacity: 1 }}
+                style={{ stopColor: highlightColor, stopOpacity: 1 }}
               />
               <stop
                 offset={`${loadingProgress}%`}
                 style={{ stopColor: highlightColor, stopOpacity: 1 }}
+              />
+              <stop
+                offset={`${loadingProgress}%`}
+                style={{ stopColor: "#D9D9D9", stopOpacity: 1 }}
               />
               <stop
                 offset="100%"
-                style={{ stopColor: highlightColor, stopOpacity: 1 }}
+                style={{ stopColor:  "#D9D9D9", stopOpacity: 1 }}
               />
             </linearGradient>
           </defs>

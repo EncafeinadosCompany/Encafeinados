@@ -40,9 +40,9 @@ interface RegisteAdminProps {
 
 export default function RegisterAdminStore({ ref, storeId, branchId }: RegisteAdminProps) {
 
+    const [step, setStep] = useState(0)
     const [direction, setDirection] = useState(0);
     const [formData, setFormData] = useState({})
-    const [step, setStep] = useState(0)
     const useRegisterAdminMutations = useRegisterAdminMutation();
     const navigate = useNavigate();
 

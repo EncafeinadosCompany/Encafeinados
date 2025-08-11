@@ -24,6 +24,7 @@ import {
 } from "@/common/utils/schemas/auth/register_store_shema";
 import { uploadImage } from "@/api/mutations/image/image.mutations";
 import { RegisterStoreDto } from "@/api/types/stores/stores.type";
+import { getGreeting } from "@/common/utils/get_greeting.utils";
 
 const FormRegisterStores = () => {
   const [direction, setDirection] = useState(0);
@@ -33,13 +34,6 @@ const FormRegisterStores = () => {
   const { mutateAsync: useRegiterStore, status } = useRegisterStoreMutation();
   const navigate = useNavigate();
 
-  // Get current time for greeting
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "¡Buenos días";
-    if (hour < 18) return "¡Buenas tardes";
-    return "¡Buenas noches";
-  };
 
   const methods = useForm<CurrentSchema>({
     resolver: zodResolver(RegisterStoreSchema[step] as any),

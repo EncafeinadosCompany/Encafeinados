@@ -40,7 +40,8 @@ export const RegisterStoreBrancheSchema = [
     addressDetails: z
       .string()
       .nonempty({ message: 'La dirección es importante, como la ruta para llegar a un buen café' })
-      .min(3, { message: 'La dirección debe tener al menos 3 caracteres, como el nombre de una calle' }),
+      .min(3, { message: 'La dirección debe tener al menos 3 caracteres, como el nombre de una calle' })
+      .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s#-]+$/, { message: "La dirección solo puede contener letras, números, espacios, # y -" }),
     nearbyReference: z.string().nullable(),
     additionalNotes: z.string().nullable(),
   }),

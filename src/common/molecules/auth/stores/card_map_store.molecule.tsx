@@ -2,7 +2,15 @@ import { currentLocationIcon } from "@/common/atoms/map/Icons/currentLocationIco
 import { customIcon } from "@/common/atoms/map/Icons/customIcon";
 import { formatAddress } from "@/common/utils/map/format_address.utils";
 import { MapController } from "@/common/utils/map/map_controller.utils";
-import { Loader2, MapPin, Navigation, Search, X } from "@/common/ui/icons";
+import {
+  Loader2,
+  MapPin,
+  Navigation,
+  Search,
+  X,
+  Clock,
+  Info,
+} from "@/common/ui/icons";
 import { MapContainer, Marker, TileLayer, ZoomControl } from "react-leaflet";
 import { Button } from "@/common/ui/button";
 
@@ -12,6 +20,7 @@ interface SearchProps {
   isSearching: boolean;
   searchQuery: string;
   suggestions: any[];
+  isLargeSize?: boolean;
   searchInputRef: React.RefObject<HTMLInputElement | null>;
   recentSearches: { display_name: string; lat: string; lon: string }[];
   currentPosition: [number, number] | null;
@@ -30,6 +39,7 @@ interface SearchProps {
 export const CardMapStore = ({
   mapRef,
   isLocating,
+  isLargeSize = false,
   isSearching,
   searchQuery,
   searchInputRef,
@@ -48,15 +58,20 @@ export const CardMapStore = ({
   handleSelectAddress,
 }: SearchProps) => {
   return (
-    <div className="w-full max-w-8xl bg-[#FFFFFF] rounded-xl space-y-4 [container-type:inline-size]">
-      <div className="map-grid">
-
-        {/* Search input */}
-        <div>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-[#546F75]" />
+    <div id="card-top" className="w-full max-w-5xl rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+      <div
+        className={`${
+          isLargeSize ? "grid grid-cols-1 lg:grid-cols-5 gap-6 " : ""
+        } p-2`}
+      >
+        {/* Search Section */}
+        <div  className="lg:col-span-2 space-y-5">
+          {/* Enhanced Search Input */}
+          <div   className="relative group ">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+              <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#DB8935] transition-colors duration-200" />
             </div>
+
             <input
               ref={searchInputRef}
               type="text"
@@ -65,181 +80,277 @@ export const CardMapStore = ({
               onChange={(e) => HandleSearch(e.target.value)}
               onFocus={handleSearchFocus}
               placeholder="Busca una dirección o lugar..."
-              className="pl-10 pr-10 w-full p-3 border rounded-full border-[#D4D4D4]  shadow-sm focus:outline-none focus:ring-[#DB8935] focus:border-[#DB8935] transition placeholder-slate-400 sm:text-sm"
+              className="
+                w-full pl-13 pr-12 py-4 
+                border-2 border-gray-200 rounded-xl
+                bg-gray-50/50 focus:bg-white
+                text-gray-900 placeholder-gray-400
+                focus:outline-none focus:ring-2 focus:ring-[#DB8935]/20 focus:border-[#DB8935]
+                transition-all duration-300
+                text-sm font-medium
+                shadow-sm hover:shadow-md
+              "
             />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 space-x-2">
               {searchQuery && (
                 <button
                   onClick={clearSearch}
-                  className="p-2 text-[#546F75] hover:text-[#2B2B2B]"
+                  type="button"
+                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-4 w-4" />
                 </button>
               )}
               {isSearching && (
-                <Loader2 className="h-5 w-5 text-[#546F75] animate-spin ml-2" />
+                <div className="p-1">
+                  <Loader2 className="h-5 w-5 text-[#DB8935] animate-spin" />
+                </div>
               )}
             </div>
           </div>
 
-          {/* Current location button */}
+          {/* Current Location Button */}
           <button
             onClick={UseCurrentLocation}
             type="button"
-            className="flex mt-2 items-center text-[#61708D] hover:text-[#020F17] text-sm"
+            className="
+              w-full flex items-center justify-center space-x-3 p-2
+              bg-gradient-to-r from-blue-50 to-indigo-50
+              border border-blue-200 rounded-xl text-xs
+              text-blue-700 hover:text-blue-800
+              hover:from-blue-100 hover:to-indigo-100
+              transition-all duration-200
+              group
+            "
           >
-            <Navigation className="h-4 w-4 mr-2" />
-            {isLocating ? "Obteniendo ubicación..." : "Usar mi ubicación actual"}
-            {isLocating && <Loader2 className="h-4 w-4 ml-2 animate-spin" />}
+            {isLocating ? (
+              <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+            ) : (
+              <Navigation className="h-4 w-4 text-blue-600 group-hover:scale-110 transition-transform duration-200" />
+            )}
+            <span className="font-medium">
+              {isLocating
+                ? "Obteniendo ubicación..."
+                : "Usar mi ubicación actual"}
+            </span>
           </button>
 
           {/* Suggestions */}
           {showSuggestions && (
-            <div className="bg-white border border-[#D4D4D4] rounded-lg shadow-sm max-h-80 overflow-y-auto scrollbar-subtle scrollbar-track-transparent">
-              {searchQuery.length < 2 && recentSearches.length > 0 && (
-                <div className="p-2">
-                  <div className="text-xs font-medium text-[#546F75] mb-2">
-                    Búsquedas recientes
-                  </div>
-                  {recentSearches.map((item, index) => (
-                    <div
-                      key={`recent-${index}`}
-                      onClick={() =>
-                        handleSelectAddress(item.lat, item.lon, item.display_name)
-                      }
-                      className="p-2 hover:bg-[#F5E4D2] cursor-pointer flex items-start rounded"
-                    >
-                      <MapPin className="h-4 w-4 text-[#DB8935] mr-2 mt-1" />
-                      <span className="text-sm text-[#2B2B2B]">{item.display_name}</span>
+            <div className="bg-white border border-gray-200 rounded-xl shadow-lg max-h-80 overflow-hidden">
+              <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+                {searchQuery.length < 2 && recentSearches.length > 0 && (
+                  <div className="p-4 border-b border-gray-100">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <Clock className="h-4 w-4 text-gray-500" />
+                      <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        Búsquedas recientes
+                      </span>
                     </div>
-                  ))}
-                </div>
-              )}
 
-              {suggestions.length > 0 ? (
-                suggestions.map((item, index) => (
-                  <div
-                    key={index}
-                    onClick={() =>
-                      handleSelectAddress(item.lat, item.lon, item.display_name)
-                    }
-                    className="p-2 hover:bg-[#F5E4D2] cursor-pointer flex items-start border-t border-[#D4D4D4]"
-                  >
-                    <MapPin className="h-4 w-4 text-[#DB8935] mr-2 mt-1" />
-                    <span className="text-sm text-[#2B2B2B]">{item.display_name}</span>
+                    <div className="space-y-1">
+                      {recentSearches.map((item, index) => (
+                        <div
+                          key={`recent-${index}`}
+                          onClick={() =>
+                            handleSelectAddress(
+                              item.lat,
+                              item.lon,
+                              item.display_name
+                            )
+                          }
+                          className="p-3 hover:bg-amber-50 cursor-pointer flex items-start space-x-3 rounded-lg transition-colors duration-200 group"
+                        >
+                          <MapPin className="h-4 w-4 text-amber-600 mt-0.5 group-hover:scale-110 transition-transform duration-200" />
+                          <span className="text-sm text-gray-900 line-clamp-2">
+                            {item.display_name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))
-              ) : searchQuery.length >= 2 && !isSearching ? (
-                <div className="p-4 text-center text-[#546F75] text-sm">
-                  No se encontraron resultados para "{searchQuery}"
-                </div>
-              ) : null}
+                )}
 
-              <Button
-                type="button"
-                onClick={UseCurrentLocation}
-                className="p-2 hover:bg-[#F5E4D2] cursor-pointer flex items-center border-none w-full justify-start"
-              >
-                <Navigation className="h-4 w-4 text-[#61708D] mr-2" />
-                <span className="text-sm text-[#61708D]">Usar mi ubicación actual</span>
-              </Button>
+                {suggestions.length > 0 ? (
+                  <div className="divide-y divide-gray-100">
+                    {suggestions.map((item, index) => (
+                      <div
+                        key={index}
+                        onClick={() =>
+                          handleSelectAddress(
+                            item.lat,
+                            item.lon,
+                            item.display_name
+                          )
+                        }
+                        className="p-4 hover:bg-amber-50 cursor-pointer flex items-start space-x-3 transition-colors duration-200 group"
+                      >
+                        <MapPin className="h-4 w-4 text-amber-600 mt-1 group-hover:scale-110 transition-transform duration-200" />
+                        <span className="text-sm text-gray-900 line-clamp-2 leading-relaxed">
+                          {item.display_name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : searchQuery.length >= 2 && !isSearching ? (
+                  <div className="p-6 text-center">
+                    <MapPin className="h-8 w-8 text-gray-300 mx-auto mb-2" />
+                    <div className="text-sm text-gray-500 mb-1">
+                      No se encontraron resultados
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      para "{searchQuery}"
+                    </div>
+                  </div>
+                ) : null}
+
+                {searchQuery.length < 2 && (
+                  <Button
+                    type="button"
+                    onClick={UseCurrentLocation}
+                    className="w-full p-4 hover:bg-blue-50 cursor-pointer flex items-center justify-start border-none bg-transparent text-blue-600 hover:text-blue-700 transition-colors duration-200"
+                  >
+                    <Navigation className="h-4 w-4 mr-3" />
+                    <span className="text-sm font-medium">
+                      Usar mi ubicación actual
+                    </span>
+                  </Button>
+                )}
+              </div>
             </div>
           )}
-        </div>
+          {/* Map Instructions */}
+          <div className="hidden md:block bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-3">
+            <div className="flex items-center space-x-2 mb-3">
+              <Info className="h-4 w-4 text-amber-600" />
+              <span className="text-sm font-semibold text-amber-800">
+                Instrucciones del mapa
+              </span>
+            </div>
 
-        <div>
-          {/* Responsive map */}
-          <div className="h-[250px] md:h-[250px] w-full rounded-lg overflow-hidden shadow-sm border border-[#D4D4D4] relative">
-            <MapContainer
-              center={selectedPosition || currentPosition || [4.6097, -74.0817]}
-              zoom={selectedPosition || currentPosition ? 17 : 12}
-              style={{ height: "100%", width: "100%" }}
-              zoomControl={false}
-              ref={mapRef}
-              className="z-0" // Ensure map container has lowest z-index
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://locationiq.com/">LocationIQ</a>'
-               url={`https://tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=${import.meta.env.VITE_LOCATIONIQ_API_KEY}`}
-              />
-              <div className="z-[400]"> {/* Wrapper to ensure controls appear above other elements */}
-                <ZoomControl position="bottomright" />
+            <div className="space-y-2.5 text-sm text-amber-700">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 bg-[#DB8935] rounded-full shadow-sm"></div>
+                <span>Marcador naranja: ubicación seleccionada</span>
               </div>
-
-              {selectedPosition && (
-                <Marker
-                  position={selectedPosition}
-                  icon={customIcon}
-                  draggable={true}
-                  eventHandlers={{
-                    dragend: async (e) => {
-                      const marker = e.target;
-                      const position = marker.getLatLng();
-                      const newPos: [number, number] = [position.lat, position.lng];
-                      setSelectedPosition(newPos);
-                      try {
-                        const response = await fetch(
-                          `https://us1.locationiq.com/v1/reverse?key=${import.meta.env.VITE_LOCATIONIQ_API_KEY}&lat=${position.lat}&lon=${position.lng}&format=json`
-                        );
-                        const data = await response.json();
-                        const formattedAddress = formatAddress(data);
-                        setSearchQuery(formattedAddress);
-                        onLocationSelect(position.lat, position.lng, formattedAddress);
-                      } catch (error) {
-                        console.error("Error fetching address after drag:", error);
-                      }
-                    },
-                  }}
-                />
-              )}
 
               {currentPosition &&
                 selectedPosition &&
                 (currentPosition[0] !== selectedPosition[0] ||
                   currentPosition[1] !== selectedPosition[1]) && (
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full shadow-sm"></div>
+                    <span>Marcador azul: tu ubicación actual</span>
+                  </div>
+                )}
+
+              <div className="flex items-start space-x-3">
+                <div className="w-3 h-3 border-2 border-amber-600 rounded-full mt-1 flex-shrink-0"></div>
+                <span>Arrastra el marcador para ajustar la posición.</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Selected Address Display */}
+          {searchQuery && (
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4">
+              <div className="flex items-start space-x-3">
+                <MapPin className="h-5 w-5 text-amber-600 mt-0.5" />
+                <div className="flex-1">
+                  <div className="text-xs font-semibold text-amber-800 mb-1">
+                    Dirección seleccionada
+                  </div>
+                  <div className="text-sm text-gray-900 font-medium leading-relaxed">
+                    {searchQuery}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Map Section */}
+        <div className="lg:col-span-3 space-y-4 ">
+          {/* Map Container */}
+          <div className="relative">
+            <div className="h-[400px] lg:h-[450px] w-full rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-gray-100">
+              <MapContainer
+                center={
+                  selectedPosition || currentPosition || [4.6097, -74.0817]
+                }
+                zoom={selectedPosition || currentPosition ? 17 : 12}
+                style={{ height: "100%", width: "100%" }}
+                zoomControl={false}
+                ref={mapRef}
+                className="z-0"
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://locationiq.com/">LocationIQ</a>'
+                  url={`https://tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=${
+                    import.meta.env.VITE_LOCATIONIQ_API_KEY
+                  }`}
+                />
+
+                <div className="z-[400]">
+                  <ZoomControl position="bottomright" />
+                </div>
+
+                {selectedPosition && (
                   <Marker
-                    position={currentPosition}
-                    icon={currentLocationIcon}
-                    title="Mi ubicación actual"
+                    position={selectedPosition}
+                    icon={customIcon}
+                    draggable={true}
+                    eventHandlers={{
+                      dragend: async (e) => {
+                        const marker = e.target;
+                        const position = marker.getLatLng();
+                        const newPos: [number, number] = [
+                          position.lat,
+                          position.lng,
+                        ];
+                        setSelectedPosition(newPos);
+                        try {
+                          const response = await fetch(
+                            `https://us1.locationiq.com/v1/reverse?key=${
+                              import.meta.env.VITE_LOCATIONIQ_API_KEY
+                            }&lat=${position.lat}&lon=${
+                              position.lng
+                            }&format=json`
+                          );
+                          const data = await response.json();
+                          const formattedAddress = formatAddress(data);
+                          setSearchQuery(formattedAddress);
+                          onLocationSelect(
+                            position.lat,
+                            position.lng,
+                            formattedAddress
+                          );
+                        } catch (error) {
+                          console.error(
+                            "Error fetching address after drag:",
+                            error
+                          );
+                        }
+                      },
+                    }}
                   />
                 )}
 
-              <MapController position={selectedPosition || currentPosition} />
-            </MapContainer>
-          </div>
+                {currentPosition &&
+                  selectedPosition &&
+                  (currentPosition[0] !== selectedPosition[0] ||
+                    currentPosition[1] !== selectedPosition[1]) && (
+                    <Marker
+                      position={currentPosition}
+                      icon={currentLocationIcon}
+                      title="Mi ubicación actual"
+                    />
+                  )}
 
-          {/* Selected address */}
-          {searchQuery && (
-            <div className="p-3 rounded-md border-none border-[#D4D4D4] text-sm mt-3">
-              <div className="text-xs text-[#546F75] mb-1">Dirección seleccionada:</div>
-              <div className="font-medium text-[#2B2B2B]">{searchQuery}</div>
+                <MapController position={selectedPosition || currentPosition} />
+              </MapContainer>
             </div>
-          )}
-
-          {/* Instructions */}
-          <div className="mt-3 text-xs text-[#546F75] space-y-1">
-            <p className="flex items-center">
-              <MapPin className="h-4 w-4 text-[#DB8935] mr-2" />
-              Marcador naranja: ubicación seleccionada
-            </p>
-            {currentPosition &&
-              selectedPosition &&
-              (currentPosition[0] !== selectedPosition[0] ||
-                currentPosition[1] !== selectedPosition[1]) && (
-                <p className="flex items-center">
-                  <MapPin className="h-4 w-4 text-[#61708D] mr-2" />
-                  Marcador azul: tu ubicación actual
-                </p>
-              )}
-            <p className="flex items-start">
-              <span className="h-4 w-4 mr-2 flex-shrink-0 mt-0.5">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="10" stroke="#546F75" strokeWidth="1.5" fill="none" />
-                  <path d="M12 8v4M12 16h.01" stroke="#546F75" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
-              </span>
-              <span>Arrastra el marcador para ajustar la posición.</span>
-            </p>
           </div>
         </div>
       </div>

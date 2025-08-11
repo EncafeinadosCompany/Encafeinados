@@ -7,7 +7,7 @@ const RegisterCoffeloverPage = () => {
       className="min-h-screen bg-gradient-to-b from-orange-50 to-orange-200"
       translate="no"
     >
-      <LinkReturn link="/register" className="m-2 xl:m-4" />
+        <LinkReturn link="/register" className=" xl:m-4" />
       <div className="h-full p-2 flex flex-col items-center justify-center">
         <FormRegisterCoffeelover />
       </div>

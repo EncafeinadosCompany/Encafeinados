@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -10,15 +10,29 @@ interface MapSearchProps {
   initialLat?: number;
   initialLng?: number;
   initialAddress?: string;
+  isLargeSize?: boolean;
 }
-const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat, 
-  initialLng, 
-  initialAddress = ""  }) => {
+
+const MapSearch: React.FC<MapSearchProps> = ({
+  onLocationSelect,
+  initialLat,
+  isLargeSize,
+  initialLng,
+  initialAddress = "",
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<{ display_name: string; lat: string; lon: string; address: any }[]>([]);
-  const [recentSearches, setRecentSearches] = useState<{ display_name: string; lat: string; lon: string }[]>([]);
-  const [selectedPosition, setSelectedPosition] = useState<[number, number] | null>(null);
-  const [currentPosition, setCurrentPosition] = useState<[number, number] | null>(null);
+  const [suggestions, setSuggestions] = useState<
+    { display_name: string; lat: string; lon: string; address: any }[]
+  >([]);
+  const [recentSearches, setRecentSearches] = useState<
+    { display_name: string; lat: string; lon: string }[]
+  >([]);
+  const [selectedPosition, setSelectedPosition] = useState<
+    [number, number] | null
+  >(null);
+  const [currentPosition, setCurrentPosition] = useState<
+    [number, number] | null
+  >(null);
   const [isSearching, setIsSearching] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const [currentAddress, setCurrentAddress] = useState("");
@@ -26,23 +40,24 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat,
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const { getCurrentLocation, handleSearch, saveRecentSearch } = MapSettings
-  const [initialPositionSet, setInitialPositionSet] = useState(Boolean(initialLat && initialLng));
+  const { getCurrentLocation, handleSearch, saveRecentSearch } = MapSettings;
+  const [initialPositionSet, setInitialPositionSet] = useState(
+    Boolean(initialLat && initialLng)
+  );
   // Buscar direcciones con debounce
   const HandleSearch = (searchQuery: string) => {
-    handleSearch(searchQuery,
-      {
-        setSearchQuery,
-        setSuggestions,
-        setShowSuggestions,
-        setIsSearching,
-        onLocationSelect,
-        searchTimeoutRef
-      })
-  }
+    handleSearch(searchQuery, {
+      setSearchQuery,
+      setSuggestions,
+      setShowSuggestions,
+      setIsSearching,
+      onLocationSelect,
+      searchTimeoutRef,
+    });
+  };
 
   useEffect(() => {
-    const savedSearches = localStorage.getItem('recentMapSearches');
+    const savedSearches = localStorage.getItem("recentMapSearches");
     if (savedSearches) {
       try {
         setRecentSearches(JSON.parse(savedSearches).slice(0, 5));
@@ -52,44 +67,47 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat,
     }
   }, []);
 
-
-  const SaveRecentSearch = (search: { display_name: string; lat: string; lon: string }) => {
-    saveRecentSearch({ display_name: search.display_name, lat: search.lat, lon: search.lon }, { recentSearches, setRecentSearches });
-  }
+  const SaveRecentSearch = (search: {
+    display_name: string;
+    lat: string;
+    lon: string;
+  }) => {
+    saveRecentSearch(
+      { display_name: search.display_name, lat: search.lat, lon: search.lon },
+      { recentSearches, setRecentSearches }
+    );
+  };
 
   useEffect(() => {
-    if (initialLat && initialLng) {    
-    
-        setSelectedPosition([initialLat, initialLng]);
+    if (initialLat && initialLng) {
+      setSelectedPosition([initialLat, initialLng]);
       if (initialAddress) {
         setSearchQuery(initialAddress);
       }
 
-      onLocationSelect(initialLat, initialLng, initialAddress || "Selected location");
+      onLocationSelect(
+        initialLat,
+        initialLng,
+        initialAddress || "Selected location"
+      );
       setInitialPositionSet(true);
-
-    } else{
+    } else {
       GetCurrenLocation();
     }
   }, [initialLat, initialLng, initialAddress]);
 
-
-  
   const GetCurrenLocation = () => {
-      getCurrentLocation({
-        onLocationSelect,
-        setCurrentAddress,
-        setIsLocating,
-        setCurrentPosition,
-        setSelectedPosition,
-        setSearchQuery,
-        setSuggestions,
-        setShowSuggestions
-      });
-    
-  }
-
- 
+    getCurrentLocation({
+      onLocationSelect,
+      setCurrentAddress,
+      setIsLocating,
+      setCurrentPosition,
+      setSelectedPosition,
+      setSearchQuery,
+      setSuggestions,
+      setShowSuggestions,
+    });
+  };
 
   // Seleccionar dirección
   const handleSelectAddress = (lat: string, lon: string, name: string) => {
@@ -141,6 +159,7 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat,
     <CardMapStore
       mapRef={mapRef}
       isLocating={isLocating}
+      isLargeSize={isLargeSize}
       isSearching={isSearching}
       searchQuery={searchQuery}
       searchInputRef={searchInputRef}
@@ -157,7 +176,7 @@ const MapSearch: React.FC<MapSearchProps> = ({ onLocationSelect, initialLat,
       setSelectedPosition={setSelectedPosition}
       handleSelectAddress={handleSelectAddress}
       onLocationSelect={onLocationSelect}
-    ></CardMapStore>
+    />
   );
 };
 
