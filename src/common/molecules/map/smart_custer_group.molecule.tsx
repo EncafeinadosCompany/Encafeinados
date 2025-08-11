@@ -97,66 +97,39 @@ const SmartClusterGroup: React.FC<SmartClusterGroupProps> = ({
     const markers = cluster.getAllChildMarkers();
     const count = markers.length;
     
-    let size, mainColor, textColor, borderColor;
+    let size, bgColor, textColor;
     
     if (count < 5) {
-      size = 42;
-      mainColor = '#FFFFFF';
-      textColor = '#6F4E37';
-      borderColor = '#6F4E37';
-    } else if (count < 15) {
-      size = 48;
-      mainColor = '#F5EDE4';
-      textColor = '#5D4037';
-      borderColor = '#8B6D51';
-    } else if (count < 30) {
-      size = 54;
-      mainColor = '#E6D2BA';
-      textColor = '#5D4037';
-      borderColor = '#5D4037';
-    } else {
-      size = 60;
-      mainColor = '#C4A484';
+      size = 36;
+      bgColor = 'rgba(111, 78, 55, 0.95)'; // Café principal con transparencia
       textColor = '#FFFFFF';
-      borderColor = '#5D4037';
+    } else if (count < 15) {
+      size = 42;
+      bgColor = 'rgba(93, 64, 55, 0.95)'; // Café más oscuro
+      textColor = '#FFFFFF';
+    } else if (count < 30) {
+      size = 48;
+      bgColor = 'rgba(76, 52, 44, 0.95)'; // Café aún más oscuro
+      textColor = '#FFFFFF';
+    } else {
+      size = 54;
+      bgColor = 'rgba(60, 41, 34, 0.95)'; // Café muy oscuro
+      textColor = '#FFFFFF';
     }
-    
-    const openCount = markers.filter(m => {
-      const cafeId = m.options.alt;
-      if (!cafeId) return false;
-      const cafe = cafes.find(c => c.id.toString() === cafeId);
-      return cafe?.isOpen;
-    }).length;
-    
-    const hasHighRated = markers.some(m => {
-      const cafeId = m.options.alt;
-      if (!cafeId) return false;
-      const cafe = cafes.find(c => c.id.toString() === cafeId);
-      return cafe?.rating && cafe.rating >= 4.5;
-    });
-    
-    const openIndicator = openCount > 0 
-      ? `<div class="cluster-open-dot" style="background-color: #34a853;"></div>` 
-      : '';
-    
-    const ratingIndicator = hasHighRated 
-      ? `<div class="cluster-rating-star">★</div>` 
-      : '';
     
     return L.divIcon({
       html: `
-        <div class="cluster-marker" 
-             style="width:${size}px; height:${size}px; background-color:${mainColor}; color:${textColor}; border:2.5px solid ${borderColor};">
-          <div class="cluster-inner">
-            <span class="cluster-count">${count}</span>
-            <div class="cluster-indicators">
-              ${openIndicator}
-              ${ratingIndicator}
-            </div>
-          </div>
+        <div class="clean-cluster-marker" 
+             style="
+               width: ${size}px; 
+               height: ${size}px; 
+               background-color: ${bgColor}; 
+               color: ${textColor};
+             ">
+          <span class="cluster-text">${count}</span>
         </div>
       `,
-      className: 'custom-marker-cluster',
+      className: 'custom-clean-cluster',
       iconSize: L.point(size, size),
       iconAnchor: [size/2, size/2]
     });
