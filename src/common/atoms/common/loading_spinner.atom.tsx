@@ -84,7 +84,6 @@ const LoadingSpinner = ({
           viewBox="0 0 864.000000 864.000000"
           preserveAspectRatio="xMidYMid meet"
         >
-          {/* Necesitamos invertir los gradientes debido a la transformación del SVG */}
           <defs>
             <linearGradient
               id={loadingGradientId}
@@ -102,7 +101,7 @@ const LoadingSpinner = ({
                 style={{ stopColor: primaryColor, stopOpacity: 1 }}
               />
               <stop
-                offset={`${loadingProgress}%`}
+                offset={`${loadingProgress + 0.1}%`}
                 style={{ stopColor: emptyColor, stopOpacity: 1 }}
               />
               <stop
@@ -127,7 +126,7 @@ const LoadingSpinner = ({
                 style={{ stopColor: accentColor, stopOpacity: 1 }}
               />
               <stop
-                offset={`${loadingProgress}%`}
+                offset={`${loadingProgress + 0.1}%`}
                 style={{ stopColor: emptyColor, stopOpacity: 1 }}
               />
               <stop
@@ -152,7 +151,7 @@ const LoadingSpinner = ({
                 style={{ stopColor: highlightColor, stopOpacity: 1 }}
               />
               <stop
-                offset={`${loadingProgress}%`}
+                offset={`${loadingProgress + 0.1}%`}
                 style={{ stopColor: emptyColor, stopOpacity: 1 }}
               />
               <stop
@@ -183,9 +182,10 @@ const LoadingSpinner = ({
             <path
               d="M430,100 Q450,50 470,100"
               fill="none"
-              stroke={loadingProgress > 70 ? "#FFFFFF" : emptyColor}
-              strokeWidth="8"
+              stroke={loadingProgress > 70 ? "#E8E8E8" : "transparent"}
+              strokeWidth="4"
               strokeLinecap="round"
+              opacity={loadingProgress > 70 ? "0.9" : "0"}
             >
               <animate
                 attributeName="d"
@@ -199,10 +199,10 @@ const LoadingSpinner = ({
             <path
               d="M400,100 Q420,30 440,100"
               fill="none"
-              stroke={loadingProgress > 80 ? "#FFFFFF" : emptyColor}
-              strokeWidth="8"
+              stroke={loadingProgress > 80 ? "#E8E8E8" : "transparent"}
+              strokeWidth="4"
               strokeLinecap="round"
-              opacity="0.7"
+              opacity={loadingProgress > 80 ? "0.8" : "0"}
             >
               <animate
                 attributeName="d"
@@ -216,10 +216,10 @@ const LoadingSpinner = ({
             <path
               d="M460,100 Q480,40 500,100"
               fill="none"
-              stroke={loadingProgress > 90 ? "#FFFFFF" : emptyColor}
-              strokeWidth="8"
+              stroke={loadingProgress > 90 ? "#E8E8E8" : "transparent"}
+              strokeWidth="4"
               strokeLinecap="round"
-              opacity="0.8"
+              opacity={loadingProgress > 90 ? "0.7" : "0"}
             >
               <animate
                 attributeName="d"
@@ -233,7 +233,6 @@ const LoadingSpinner = ({
           </g>
         </svg>
 
-        {/* Barra de progreso moderna */}
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[110%] overflow-hidden rounded-full h-1.5 bg-[#F5E6D3]/50 shadow-sm">
           <div
             className="h-full rounded-full transition-all duration-300 ease-out"
