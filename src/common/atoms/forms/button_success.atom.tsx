@@ -1,5 +1,6 @@
 import { Button } from "@/common/ui/button";
 import { cn } from "@/lib/utils";
+import { BadgeCheck } from "lucide-react";
 import React from "react";
 
 interface ButtonSuccessProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -16,7 +17,7 @@ export function ButtonSuccess({
   disabled,
   ...props
 }: ButtonSuccessProps) {
-  const baseStyles = "text-xs sm:text-sm rounded-lg sm:rounded-xl px-4 sm:px-6 py-1.5 sm:py-2 transition-all duration-200";
+  const baseStyles = "text-xs sm:text-sm rounded-lg sm:rounded-xl px-4 sm:px-6 py-1.5 sm:py-2 transition-all duration-200 cursor-pointer";
   
   const variantStyles = {
     default: "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white",
@@ -38,6 +39,8 @@ export function ButtonSuccess({
       )}
       {...props}
     >
+      <BadgeCheck className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+      
       {children}
     </Button>
   );
