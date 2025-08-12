@@ -57,10 +57,7 @@ export const FormHeader: React.FC<FormHeaderProps> = ({
 
       {/* Indicador de progreso */}
       <div className="mt-2 md:mt-5">
-        <div className="flex items-center justify-between mb-1">
-          <p className="text-sm font-medium text-gray-700">
-            Progreso del registro
-          </p>
+        <div className="flex items-center justify-end mb-1">
           <p className="text-sm text-gray-500">
             {steps + 1} de {totalSteps}
           </p>
