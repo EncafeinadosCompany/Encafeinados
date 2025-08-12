@@ -13,6 +13,8 @@ import RoleRoute from "@/router/role-route";
 import RouteLoadingIndicator from "./route_loading_indicador.router";
 import Dashboard_Branch from "@/modules/admin_branches/views/manage_dashboard.view";
 import { ErrorBoundary } from "@/common/utils/error_boundary";
+import LayoutRegister from "@/modules/layouts/layouts_register";
+import FormRegisterCoffeelover from "@/common/widgets/forms/auth/form_register_coffelovers.widget";
 
 const PruebaDashboard = lazy(
   () => import("@/modules/admin/components/manage_dasboard.view")
@@ -29,14 +31,12 @@ const CuestionCardView = lazy(
 const GoogleCallback = lazy(
   () => import("@/common/hooks/auth/use_google.hook")
 );
-const RegisterCoffeloverPage = lazy(
-  () => import("@/modules/auth/views/register_coffelover.view")
-);
+
 const RegisterStorePage = lazy(
-  () => import("@/modules/auth/views/register_stores.view")
+  () => import("@/common/widgets/forms/auth/form_register_stores.widget")
 );
 const RegisterStoreBranches = lazy(
-  () => import("@/modules/auth/views/register_store_branches.view")
+  () => import("@/common/widgets/forms/auth/form_register_branches.widget")
 );
 const FinishAdminRegistration = lazy(
   () => import("@/modules/admin/views/finish_admin_registration_page")
@@ -161,32 +161,24 @@ const AuthRoutes = () => {
             }
           >
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<HomePage/>} />
               <Route path="/map" element={<MapView view={true} />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/reset-password" element={<PasswordResetPage />} />
               <Route path="/payment/result" element={<PaymentResultView />} />
-              <Route path="/register" element={<CuestionCardView />} />
               <Route path="/google/callback" element={<GoogleCallback />} />
-              <Route
-                path="/coffee-lover-registration"
-                element={<RegisterCoffeloverPage />}
-              />
-              <Route
-                path="/store-registration"
-                element={<RegisterStorePage />}
-              />
-              <Route
-                path="/stores-registration/branches/:storeId"
-                element={<RegisterStoreBranches />}
-              />
-              <Route
-                index
-                path="/finish-admin-registration"
-                element={<FinishAdminRegistration />}
-              />
-              <Route path="/404" element={<NotFound />} />
+
+              <Route path="/cuestion" element={<CuestionCardView />} />
+
+              <Route path="/register" element ={<LayoutRegister/>}>
+                <Route path="coffeeLover" element={<FormRegisterCoffeelover />}/>
+                <Route path="store" element={<RegisterStorePage />}/>
+                <Route path="branch/:storeId" element={<RegisterStoreBranches />}/>
+                <Route index path="admin" element={<FinishAdminRegistration />}/>
+              </Route>
+             
+         
 
               {/* PRIVATE ROUTES  */}
               <Route element={<PrivateRoute />}>
@@ -249,6 +241,7 @@ const AuthRoutes = () => {
                   </Route>
                 </Route>
               </Route>
+              <Route path="/404" element={<NotFound />} />
               <Route path="*" element={<Navigate to="/404" replace />} />
               <Route path="unauthorized" element={<UnauthorizedPage />} />
             </Routes>

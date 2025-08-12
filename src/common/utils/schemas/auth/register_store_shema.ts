@@ -37,6 +37,11 @@ export const RegisterStoreSchema = [
         conditions: z.literal(true, {
             errorMap: () => ({ message: "Debes aceptar los términos y condiciones" }),
           })
+    }),
+       z.object({
+        hasMultipleBranches: z.boolean({
+            errorMap: () => ({ message: "Esta información es importante para nosotros" }),
+          })
     })
 ]
 

@@ -58,16 +58,19 @@ export const CardMapStore = ({
   handleSelectAddress,
 }: SearchProps) => {
   return (
-    <div id="card-top" className="w-full max-w-5xl rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+    <div
+      id="card-top"
+      className="w-full max-w-5xl rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
+    >
       <div
         className={`${
           isLargeSize ? "grid grid-cols-1 lg:grid-cols-5 gap-6 " : ""
         } p-2`}
       >
         {/* Search Section */}
-        <div  className="lg:col-span-2 space-y-5">
+        <div className="lg:col-span-2 space-y-5">
           {/* Enhanced Search Input */}
-          <div   className="relative group ">
+          <div className="relative group ">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
               <Search className="h-5 w-5 text-gray-400 group-focus-within:text-[#DB8935] transition-colors duration-200" />
             </div>
@@ -135,7 +138,6 @@ export const CardMapStore = ({
                 : "Usar mi ubicación actual"}
             </span>
           </button>
-        </div>
 
           {/* Suggestions */}
           {showSuggestions && (
@@ -270,90 +272,87 @@ export const CardMapStore = ({
             </div>
           )}
         </div>
+      {/* Map Section */}
+      <div className="lg:col-span-3 space-y-4 ">
+        {/* Map Container */}
+        <div className="relative">
+          <div className="h-[400px] lg:h-[450px] w-full rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-gray-100">
+            <MapContainer
+              center={selectedPosition || currentPosition || [4.6097, -74.0817]}
+              zoom={selectedPosition || currentPosition ? 17 : 12}
+              style={{ height: "100%", width: "100%" }}
+              zoomControl={false}
+              ref={mapRef}
+              className="z-0"
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://locationiq.com/">LocationIQ</a>'
+                url={`https://tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=${
+                  import.meta.env.VITE_LOCATIONIQ_API_KEY
+                }`}
+              />
 
-        {/* Map Section */}
-        <div className="lg:col-span-3 space-y-4 ">
-          {/* Map Container */}
-          <div className="relative">
-            <div className="h-[400px] lg:h-[450px] w-full rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-gray-100">
-              <MapContainer
-                center={
-                  selectedPosition || currentPosition || [4.6097, -74.0817]
-                }
-                zoom={selectedPosition || currentPosition ? 17 : 12}
-                style={{ height: "100%", width: "100%" }}
-                zoomControl={false}
-                ref={mapRef}
-                className="z-0"
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://locationiq.com/">LocationIQ</a>'
-                  url={`https://tiles.locationiq.com/v3/streets/r/{z}/{x}/{y}.png?key=${
-                    import.meta.env.VITE_LOCATIONIQ_API_KEY
-                  }`}
-                />
+              <div className="z-[400]">
+                <ZoomControl position="bottomright" />
+              </div>
 
-                <div className="z-[400]">
-                  <ZoomControl position="bottomright" />
-                </div>
-
-                {selectedPosition && (
-                  <Marker
-                    position={selectedPosition}
-                    icon={customIcon}
-                    draggable={true}
-                    eventHandlers={{
-                      dragend: async (e) => {
-                        const marker = e.target;
-                        const position = marker.getLatLng();
-                        const newPos: [number, number] = [
+              {selectedPosition && (
+                <Marker
+                  position={selectedPosition}
+                  icon={customIcon}
+                  draggable={true}
+                  eventHandlers={{
+                    dragend: async (e) => {
+                      const marker = e.target;
+                      const position = marker.getLatLng();
+                      const newPos: [number, number] = [
+                        position.lat,
+                        position.lng,
+                      ];
+                      setSelectedPosition(newPos);
+                      try {
+                        const response = await fetch(
+                          `https://us1.locationiq.com/v1/reverse?key=${
+                            import.meta.env.VITE_LOCATIONIQ_API_KEY
+                          }&lat=${position.lat}&lon=${position.lng}&format=json`
+                        );
+                        const data = await response.json();
+                        const formattedAddress = formatAddress(data);
+                        setSearchQuery(formattedAddress);
+                        onLocationSelect(
                           position.lat,
                           position.lng,
-                        ];
-                        setSelectedPosition(newPos);
-                        try {
-                          const response = await fetch(
-                            `https://us1.locationiq.com/v1/reverse?key=${
-                              import.meta.env.VITE_LOCATIONIQ_API_KEY
-                            }&lat=${position.lat}&lon=${
-                              position.lng
-                            }&format=json`
-                          );
-                          const data = await response.json();
-                          const formattedAddress = formatAddress(data);
-                          setSearchQuery(formattedAddress);
-                          onLocationSelect(
-                            position.lat,
-                            position.lng,
-                            formattedAddress
-                          );
-                        } catch (error) {
-                          console.error(
-                            "Error fetching address after drag:",
-                            error
-                          );
-                        }
-                      },
-                    }}
+                          formattedAddress
+                        );
+                      } catch (error) {
+                        console.error(
+                          "Error fetching address after drag:",
+                          error
+                        );
+                      }
+                    },
+                  }}
+                />
+              )}
+
+              {currentPosition &&
+                selectedPosition &&
+                (currentPosition[0] !== selectedPosition[0] ||
+                  currentPosition[1] !== selectedPosition[1]) && (
+                  <Marker
+                    position={currentPosition}
+                    icon={currentLocationIcon}
+                    title="Mi ubicación actual"
                   />
                 )}
 
-                {currentPosition &&
-                  selectedPosition &&
-                  (currentPosition[0] !== selectedPosition[0] ||
-                    currentPosition[1] !== selectedPosition[1]) && (
-                    <Marker
-                      position={currentPosition}
-                      icon={currentLocationIcon}
-                      title="Mi ubicación actual"
-                    />
-                  )}
-
-                <MapController position={selectedPosition || currentPosition} />
-              </MapContainer>
-            </div>
+              <MapController position={selectedPosition || currentPosition} />
+            </MapContainer>
           </div>
         </div>
       </div>
+      </div>
+
+    </div>
   );
 };

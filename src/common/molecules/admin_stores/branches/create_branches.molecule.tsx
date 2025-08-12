@@ -1,6 +1,6 @@
 "use client"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog"
-import FormRegisterBrands from "@/common/widgets/forms/auth/form_register_branches.widget"
+import FormRegisterBrands from "@/common/widgets/admin_stores/branches/form_register_branches.widget"
 import { Branch } from "@/api/types/branches/branches.types"
 import { Description } from "@radix-ui/react-dialog"
 import { Coffee }  from'@/common/ui/icons'
