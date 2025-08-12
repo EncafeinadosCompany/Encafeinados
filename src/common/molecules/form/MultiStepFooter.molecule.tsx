@@ -58,6 +58,7 @@ export function MultiStepFooter({
         >
           <Button
             type="button"
+            data-testid="next-button"
             onClick={nextStep}
             className="text-xs sm:text-sm rounded-lg sm:rounded-xl px-4 sm:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-orange-500 to-amber-400 hover:from-orange-600 hover:to-amber-500 text-white"
           >
@@ -83,6 +84,7 @@ export function MultiStepFooter({
         >
           <ButtonSuccess
             type="button"
+            data-testid="submit-button"
             onClick={onSubmit}
             disabled={isSubmitting || !isValid}
           >

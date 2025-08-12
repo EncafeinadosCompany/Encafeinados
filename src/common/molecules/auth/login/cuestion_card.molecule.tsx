@@ -33,14 +33,15 @@ export default function CuestionCard() {
 
         <CardRegister
           icon={<User className="w-8 h-8 text-amber-600" />}
-          link="/Register/coffeeLover"
+          link="/register/coffeeLover"
           title="CoffeeLover"
           subtitle="Inicia esta nueva aventura como CoffeeLover"
           description="Descubre las mejores cafeterías de especialidad y los mejores planes para los amantes del café."
         ></CardRegister>
 
         <CardRegister
-          link="/Register/store"
+          link="/register/store"
+          data-testid="card-link-tienda"
           title="Tienda"
           subtitle="Cafetería de Especialidad"
           description="Únete al club exclusivo de cafeterías que celebran el arte del café de especialidad. 

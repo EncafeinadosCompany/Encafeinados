@@ -27,6 +27,7 @@ export default function RegisterBranchStep4({ methods }: RegisterBranchProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-2xl mx-auto">
         {/* ✅ OPCIÓN: UNA SUCURSAL */}
         <motion.button
+          data-testid="oneBrach-checkbox"
           type="button"
           onClick={() => {
             methods.setValue("hasMultipleBranches", false);
