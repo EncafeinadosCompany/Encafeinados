@@ -31,6 +31,9 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ['react', 'react-dom'],
+          vendorUI: ['@radix-ui/react-dialog', '@radix-ui/react-popover', '@radix-ui/react-select'],
+          vendorForms: ['zod'],
+          vendorScanner: ['html5-qrcode'],
           lodash: ['lodash'],
           jsPDF: ['jspdf'],
           html2canvas: ['html2canvas'],
@@ -39,7 +42,6 @@ export default defineConfig({
           reactHookForm: ['react-hook-form'],
           lucideReact: ['lucide-react'],
           reactRouterDom: ['react-router-dom'],
-          Html5Qrcode: ['html5-qrcode'],
           dateFns: ['date-fns'],
           reactSelect: ['react-select'],
           toast: ['react-hot-toast'],
@@ -52,5 +54,15 @@ export default defineConfig({
         },
       },
     },
-  },
+     // Aumentar el límite de advertencia temporalmente
+    chunkSizeWarningLimit: 600,
+    // Optimizaciones adicionales
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remover console.logs en producción
+        drop_debugger: true,
+      },
+    }
+  }
 });

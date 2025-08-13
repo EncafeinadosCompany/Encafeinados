@@ -8,6 +8,7 @@ interface FormHeaderProps {
   totalSteps?: number;
   steps?: number;
   color?: string;
+  isLoaginBar?: boolean;
   colorProccessBar?: string;
 }
 
@@ -19,6 +20,7 @@ export const FormHeader: React.FC<FormHeaderProps> = ({
   totalSteps = 0,
   steps = 0,
   colorProccessBar,
+  isLoaginBar = true,
   color,
 }) => {
   return (
@@ -56,18 +58,22 @@ export const FormHeader: React.FC<FormHeaderProps> = ({
       </div>
 
       {/* Indicador de progreso */}
-      <div className="mt-2 md:mt-5">
-        <div className="flex items-center justify-end mb-1">
-          <p className="text-sm text-gray-500">
-            {steps + 1} de {totalSteps}
-          </p>
+      {isLoaginBar ? (
+        <div className="mt-2 md:mt-5">
+          <div className="flex items-center justify-end mb-1">
+            <p className="text-sm text-gray-500">
+              {steps + 1} de {totalSteps}
+            </p>
+          </div>
+          <SimpleProgressBar
+            color={colorProccessBar}
+            currentStep={steps + 1}
+            totalSteps={totalSteps}
+          ></SimpleProgressBar>
         </div>
-        <SimpleProgressBar
-          color={colorProccessBar}
-          currentStep={steps + 1}
-          totalSteps={totalSteps}
-        ></SimpleProgressBar>
-      </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 };

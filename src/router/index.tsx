@@ -42,6 +42,8 @@ const FinishAdminRegistration = lazy(
   () => import("@/modules/admin/views/finish_admin_registration_page")
 );
 
+const RegisterCriteria = lazy (()=> import("@/modules/auth/views/registerCriteria.views"))
+
 //ADMIN
 const Menubar_admin = lazy(
   () => import("@/modules/admin/views/menubar_admin_nav")
@@ -174,6 +176,7 @@ const AuthRoutes = () => {
               <Route path="/register" element ={<LayoutRegister/>}>
                 <Route path="coffeeLover" element={<FormRegisterCoffeelover />}/>
                 <Route path="store" element={<RegisterStorePage />}/>
+                <Route path="criteria" element={<RegisterCriteria />}/>
                 <Route path="branch/:storeId" element={<RegisterStoreBranches />}/>
                 <Route index path="admin" element={<FinishAdminRegistration />}/>
               </Route>

@@ -3,12 +3,13 @@ import { Label } from "@/common/ui/label";
 import { Controller } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import { renderRadioGroup } from "@/common/atoms/criteria/render_radio.atom";
-import { criteriaResponseData } from "@/api/types/criteria/criteria.types";
+import {criteriaResponseData, GetcriteriaByBranch } from "@/api/types/criteria/criteria.types";
 import { Image as ImageIcon, Check } from "lucide-react";
 
 interface RegisterStoreBrancheStep2Props {
   methods: any;
   criteria: criteriaResponseData[];
+  responseCriteria?:GetcriteriaByBranch; 
 }
 
 export default function RegisterStoreBrancheStep2({ methods, criteria }: RegisterStoreBrancheStep2Props) {
@@ -18,7 +19,7 @@ export default function RegisterStoreBrancheStep2({ methods, criteria }: Registe
     <div className="space-y-5">
       {criteria.map((criterion) => {
         const criteriaId = criterion.id.toString();
-        const selectedValue = watchedCriteria?.[criteriaId]?.response_text;
+        const selectedValue = watchedCriteria?.[criteriaId]?.response_text || "";
         const isCompleted = !!selectedValue;
 
         return (
@@ -76,7 +77,8 @@ export default function RegisterStoreBrancheStep2({ methods, criteria }: Registe
                 <Controller
                   control={methods.control}
                   name={`criteria.${criteriaId}.response_text`}
-                  render={({ field }) => renderRadioGroup(criteriaId, field)}
+                  render={({ field }) => renderRadioGroup(criteriaId, {...field, value:field.value || ""}
+                  )}
                 />
               </div>
 
@@ -98,7 +100,7 @@ export default function RegisterStoreBrancheStep2({ methods, criteria }: Registe
                         <Input
                           placeholder="Escribe tu respuesta personalizada"
                           data-testid={`criteria-${criteriaId}-other-text`}
-                          value={field.value ?? ""}
+                          value={field.value || ""}
                           onChange={field.onChange}
                           className="border-amber-200 focus-visible:ring-amber-400"
                         />

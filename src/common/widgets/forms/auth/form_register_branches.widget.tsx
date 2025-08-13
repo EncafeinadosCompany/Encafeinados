@@ -36,7 +36,6 @@ import { FormHeader } from "@/common/molecules/form/form_header.molecule";
 import { getGreeting } from "@/common/utils/get_greeting.utils";
 import { ButtonSuccess } from "@/common/atoms/forms/button_success.atom";
 import { useRegisterCriteriaMutation } from "@/api/mutations/criteria/criteria.mutation";
-import { ChevronsUp, ChevronUp } from "lucide-react";
 import StepTransition from "@/common/atoms/forms/step_transition.atom";
 import ButtonChevronUp from "@/common/atoms/forms/buttonChevronUp.atom";
 import { useStepMetaBranch } from "@/common/hooks/branches/use_step_meta.hook";

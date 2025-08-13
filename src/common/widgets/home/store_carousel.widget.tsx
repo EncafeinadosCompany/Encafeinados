@@ -376,7 +376,7 @@ export const StoreCarousel = () => {
         )}
 
         {/* Estado de error */}
-        {error && (
+        {!isLoading && error && (
           <div className="flex flex-col items-center justify-center py-16 text-red-600">
             <p className="font-medium">Error al cargar las sucursales</p>
             <p className="text-sm mt-2">Por favor, intenta nuevamente más tarde</p>
