@@ -23,7 +23,7 @@ const HomePage = () => {
   }
 
   return (
-    <main className="min-h-screen bg-[#FAF3E0] relative overflow-x-hidden">
+    <main className="h-full bg-[#FAF3E0] relative overflow-x-hidden scrollbar-subtle ">
       <Navbar />
       <div className="relative">
         <section id="home" className="scroll-mt-20 min-h-screen">

@@ -7,7 +7,7 @@ import {checkCriteriosFlow} from "cypress/support/flows/auth/checkCriteriosFlow"
 describe('template spec', () => {
   
     beforeEach(() => {
-      cy.visit('/stores-registration/branches/123');
+      cy.visit('/register/branch/123');
       mockGetCriteria(); 
       mockGetSocialNetwork();
     })

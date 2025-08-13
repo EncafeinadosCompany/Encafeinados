@@ -164,7 +164,7 @@ export const LoginCard = ({
                     <div>
                       ¿No tienes una cuenta?{" "}
                       <Link
-                        to="/register"
+                        to="/cuestion"
                         data-testid="register-link"
                         className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
                       >

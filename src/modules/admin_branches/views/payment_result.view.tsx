@@ -13,7 +13,6 @@ export default function PaymentResultView() {
   const status = searchParams.get('status');
   const paymentId = searchParams.get('payment_id');
   const merchantOrderId = searchParams.get('merchant_order_id');
-  const preferenceId = searchParams.get('preference_id');
   const collection_status = searchParams.get('collection_status');
 
   // Determinar el estado del pago

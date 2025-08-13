@@ -68,15 +68,15 @@ export const HeroSection: React.FC = () => {
             transition={{ duration: 0.7, delay: 0.5 }}
             className="mb-6"
           >
-           <Text
-  variant="h1"
-  className="text-white font-black tracking-tight leading-tight mb-2 
+            <Text
+              variant="h1"
+              className="text-white font-black tracking-tight leading-tight mb-2 
     text-[calc(theme(fontSize.5xl)-4px)] 
     md:text-[calc(theme(fontSize.5xl)-8px)]"
->
-  Te mostramos tu próxima parada de{" "}
-  <span className="text-[#D4A76A]">cafés de especialidad</span>
-</Text>
+            >
+              Te mostramos tu próxima parada de{" "}
+              <span className="text-[#D4A76A]">cafés de especialidad</span>
+            </Text>
             <div className="mx-auto w-16 h-1 bg-[#D4A76A] rounded-full my-6" />
 
             <Text
