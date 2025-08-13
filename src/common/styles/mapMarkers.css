@@ -777,13 +777,6 @@
   margin: 3px auto 0;
 }
 
-.rating-indicator {
-  color: #f9a825;
-  margin-top: 1px;
-  vertical-align: middle;
-}
-
-/* Mejorar apariencia general de clusters */
 .cluster-content {
   display: flex;
   flex-direction: column;
@@ -793,7 +786,6 @@
   width: 100%;
 }
 
-/* Mejorar apariencia y feedback de los clusters */
 .cluster-marker {
   display: flex;
   justify-content: center;
@@ -848,17 +840,6 @@
   border: 1.5px solid white;
 }
 
-/* Clusters con cafeterías de alta calificación */
-.cluster-marker.has-high-rated {
-  background: linear-gradient(to bottom, white 60%, #ffefc3 100%);
-}
-
-.cluster-marker.has-high-rated .rating-indicator {
-  color: #f9a825;
-  font-size: 10px;
-  margin-top: 2px;
-}
-
 /* Tamaños de clusters */
 .cluster-small {
   font-size: 13px;
@@ -907,6 +888,173 @@
 }
 
 
+/* === CLEAN MODERN CLUSTER STYLES === */
+.clean-cluster-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-weight: 600;
+  transition: all 0.2s ease-out;
+  position: relative;
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.clean-cluster-marker:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    0 2px 6px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  z-index: 1000;
+}
+
+.cluster-text {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.3px;
+}
+
+/* Tamaños responsivos para diferentes clusters */
+.clean-cluster-marker[style*="width: 36px"] .cluster-text {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.clean-cluster-marker[style*="width: 42px"] .cluster-text {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.clean-cluster-marker[style*="width: 48px"] .cluster-text {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.clean-cluster-marker[style*="width: 54px"] .cluster-text {
+  font-size: 19px;
+  font-weight: 800;
+}
+
+/* Transiciones suaves para spiderfy */
+.leaflet-cluster-anim .leaflet-marker-icon {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Líneas de spiderfy minimalistas */
+.leaflet-cluster-spider-leg {
+  stroke-dashoffset: 0;
+  stroke-opacity: 0.6;
+  stroke-width: 2;
+  stroke: rgba(111, 78, 55, 0.8);
+  stroke-linecap: round;
+  transition: all 0.3s ease;
+}
+
+/* === LEGACY STYLES MANTENIDOS === */
+/* Estilos legacy mantenidos para compatibilidad */
+.modern-cluster-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.modern-cluster-marker:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(111, 78, 55, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  z-index: 1000;
+}
+
+.modern-cluster-marker::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cluster-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.cluster-number {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.5px;
+}
+
+.cluster-open-indicator {
+  position: absolute;
+  top: 8%;
+  right: 8%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Adaptaciones para diferentes tamaños de cluster */
+.modern-cluster-marker[style*="width: 44px"] .cluster-number {
+  font-size: 15px;
+}
+
+.modern-cluster-marker[style*="width: 50px"] .cluster-number {
+  font-size: 17px;
+}
+
+.modern-cluster-marker[style*="width: 56px"] .cluster-number {
+  font-size: 19px;
+}
+
+.modern-cluster-marker[style*="width: 62px"] .cluster-number {
+  font-size: 21px;
+}
+
 .cluster-marker {
   display: flex;
   justify-content: center;
@@ -951,14 +1099,6 @@
   height: 6px;
   border-radius: 50%;
   opacity: 0.9;
-}
-
-.cluster-rating-star {
-  font-size: 10px;
-  line-height: 10px;
-  height: 10px;
-  margin-top: -2px;
-  color: #F9A825;
 }
 
 /* Animación smooth para transiciones de cluster */
