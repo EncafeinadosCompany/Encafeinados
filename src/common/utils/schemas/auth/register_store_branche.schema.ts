@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { RegisterCriteriaSchema } from "../criteria/register_criteria.schemas";
 
 export const RegisterStoreBrancheSchema = [
   z.object({
@@ -14,23 +15,7 @@ export const RegisterStoreBrancheSchema = [
       .max(15, { message: "Este número es demasiado largo" })
       .regex(/^\+?[1-9]\d{6,14}$/, { message: "El número de teléfono debe ser válido, con o sin prefijo internacional" })
   }),
-  z.object({
-    criteria: z.record(
-      z.object({
-        response_text: z.string().min(1, "Requerido"),
-        image_url: z.union([
-          z.object({
-            file: z.instanceof(File),
-            preview: z.string().url(),
-          }),
-          z.string().url(), 
-          z.literal(undefined),
-          z.null(),
-        ]).optional(),
-        other_text: z.string().optional(),
-      })
-    )
-  }),
+  RegisterCriteriaSchema,
   z.object({
     latitude: z.number(),
     longitude: z.number(),
@@ -40,7 +25,8 @@ export const RegisterStoreBrancheSchema = [
     addressDetails: z
       .string()
       .nonempty({ message: 'La dirección es importante, como la ruta para llegar a un buen café' })
-      .min(3, { message: 'La dirección debe tener al menos 3 caracteres, como el nombre de una calle' }),
+      .min(3, { message: 'La dirección debe tener al menos 3 caracteres, como el nombre de una calle' })
+      .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s#-]+$/, { message: "La dirección solo puede contener letras, números, espacios, # y -" }),
     nearbyReference: z.string().nullable(),
     additionalNotes: z.string().nullable(),
   }),

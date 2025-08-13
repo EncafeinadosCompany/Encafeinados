@@ -1,6 +1,6 @@
 import React from 'react'
 import App from './App'
-import './index.css'
+ import './index.css'
 import i18n from './common/utils/i18n/i18n'
 import { Toaster } from 'react-hot-toast'
 import ReactDOM from 'react-dom/client'

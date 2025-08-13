@@ -18,17 +18,10 @@ import { Switch } from "@/common/ui/switch";
 
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import { RegisterAdminData } from "@/api/types/admin_stores/admin_stores.type";
-import { SimpleProgressBar } from "@/common/atoms/forms/progress_indicator";
 
-import {
-
-    User,
-    Shield,
-    Settings,
-    BadgeCheck
-} from "@/common/ui/icons";
-import { FormHeader } from "@/common/atoms/forms/form_header.atom";
-import { ButtonGeneric } from "@/common/atoms/forms/button.atom";
+import { FormHeader } from "@/common/molecules/form/form_header.molecule";
+import { useStepMetaAdmin } from "@/common/hooks/admin/use_step_meta.hook";
+import { getGreeting } from "@/common/utils/get_greeting.utils";
 
 
 interface RegisteAdminProps {
@@ -39,11 +32,13 @@ interface RegisteAdminProps {
 
 
 export default function RegisterAdminStore({ ref, storeId, branchId }: RegisteAdminProps) {
+    
 
+    const [step, setStep] = useState(0)
     const [direction, setDirection] = useState(0);
     const [formData, setFormData] = useState({})
-    const [step, setStep] = useState(0)
     const useRegisterAdminMutations = useRegisterAdminMutation();
+    const {title, description, icon} = useStepMetaAdmin(step);
     const navigate = useNavigate();
 
     const methods = useForm<CurrentAdminSchema>({
@@ -99,58 +94,7 @@ export default function RegisterAdminStore({ ref, storeId, branchId }: RegisteAd
         }
     };
 
-
-    // Calculate which icon to show based on current step
-    const getStepIcon = () => {
-        switch (step) {
-            case 0:
-                return <User className="w-12 h-12 text-amber-600" />;
-            case 1:
-                return <Shield className="w-12 h-12 text-blue-600" />;
-            case 2:
-                return <Settings className="w-12 h-12 text-purple-600" />;
-            default:
-                return <BadgeCheck className="w-12 h-12 text-emerald-600" />;
-        }
-    };
-
-
-    // Get current time for greeting
-    const getGreeting = () => {
-        const hour = new Date().getHours();
-        if (hour < 12) return "¡Buenos días";
-        if (hour < 18) return "¡Buenas tardes";
-        return "¡Buenas noches";
-    };
-
-    const getStepTitle = () => {
-        switch (step) {
-            case 0:
-                return "Información personal";
-            case 1:
-                return "Credenciales de acceso";
-            case 2:
-                return "Configuración final";
-            default:
-                return "Registro de administrador";
-        }
-    };
-
-    const getStepDescription = () => {
-        switch (step) {
-            case 0:
-                return "Ingresa los datos personales del administrador";
-            case 1:
-                return "Establece las credenciales de acceso seguras";
-            case 2:
-                return "Configura los permisos y términos finales";
-            default:
-                return "";
-        }
-    };
-
     return (
-
         <Card className="overflow-hidden border-0 rounded-2xl sm:rounded-3xl shadow-2xl bg-white">
             <FormProvider {...methods}>
                 <motion.div
@@ -161,9 +105,9 @@ export default function RegisterAdminStore({ ref, storeId, branchId }: RegisteAd
                     {/* Header mejorado */}
                     <FormHeader
                         getGreeting={getGreeting}
-                        getStepTitle={getStepTitle}
-                        getStepDescription={getStepDescription}
-                        getStepIcon={getStepIcon}
+                        getStepTitle={title}
+                        getStepDescription={description}
+                        getStepIcon={icon}
                         totalSteps={RegisterAdminStoreSchema.length}
                         steps={step}
                     ></FormHeader>

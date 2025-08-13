@@ -1,13 +1,6 @@
 import { useState } from "react";
-import { Button } from "@/common/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Coffee,
-  Store,
-  BadgeCheck,
-} from "@/common/ui/icons";
+import {  Coffee, Store } from "@/common/ui/icons";
 import { FormProvider, useForm } from "react-hook-form";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -24,6 +17,11 @@ import {
 } from "@/common/utils/schemas/auth/register_store_shema";
 import { uploadImage } from "@/api/mutations/image/image.mutations";
 import { RegisterStoreDto } from "@/api/types/stores/stores.type";
+import { getGreeting } from "@/common/utils/get_greeting.utils";
+
+import RegisterBranchStep4 from "@/common/molecules/auth/branches/register_branch_step4.molecule";
+import { MultiStepFooter } from "@/common/molecules/form/MultiStepFooter.molecule";
+import StepTransition from "@/common/atoms/forms/step_transition.atom";
 
 const FormRegisterStores = () => {
   const [direction, setDirection] = useState(0);
@@ -32,14 +30,6 @@ const FormRegisterStores = () => {
   const [formData, setFormData] = useState({});
   const { mutateAsync: useRegiterStore, status } = useRegisterStoreMutation();
   const navigate = useNavigate();
-
-  // Get current time for greeting
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "¡Buenos días";
-    if (hour < 18) return "¡Buenas tardes";
-    return "¡Buenas noches";
-  };
 
   const methods = useForm<CurrentSchema>({
     resolver: zodResolver(RegisterStoreSchema[step] as any),
@@ -63,6 +53,13 @@ const FormRegisterStores = () => {
     });
   };
 
+  const prevStep = () => {
+    if (step > 0) {
+      setDirection(-1);
+      setStep(step - 1);
+    }
+  };
+
   const prepareFormData = async (
     data: RegisterStoreDto
   ): Promise<RegisterStoreDto> => {
@@ -81,9 +78,16 @@ const FormRegisterStores = () => {
 
     try {
       const preparedData = await prepareFormData(finalData);
+
+      if (!finalData.hasMultipleBranches) {
+        localStorage.setItem("store", finalData.name);
+        localStorage.setItem("tel", finalData.phone_number);
+      }
+
+      console.log(finalData, "hola");
       const response = await useRegiterStore(preparedData);
       methods.reset();
-      navigate(`/stores-registration/branches/${response.store.id}`);
+      navigate(`/register/branch/${response.store.id}`);
     } catch (error) {}
   };
 
@@ -95,7 +99,6 @@ const FormRegisterStores = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-        
           <div className="relative bg-gradient-to-r from-orange-50 to-purple-50 p-8 overflow-hidden">
             {/* Abstract shapes - background decorations */}
             <div className="absolute -top-10 right-10 w-40 h-40 rounded-full bg-amber-100 opacity-40 blur-2xl"></div>
@@ -166,12 +169,8 @@ const FormRegisterStores = () => {
               <CardContent className="p-2 xl:p-8">
                 <AnimatePresence initial={false} custom={direction} mode="wait">
                   {step === 0 && (
-                    <motion.div
-                      key="step1"
-                      initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
-                      transition={{ duration: 0.3 }}
+                    <StepTransition
+                      step="step1"
                       className="p-4 bg-indigo-50/40 rounded-2xl border border-indigo-100"
                     >
                       <RegisterStoreStep1
@@ -180,16 +179,12 @@ const FormRegisterStores = () => {
                         control={methods.control}
                         errors={methods.formState.errors}
                       />
-                    </motion.div>
+                    </StepTransition>
                   )}
 
                   {step === 1 && (
-                    <motion.div
-                      key="step2"
-                      initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
-                      transition={{ duration: 0.3 }}
+                    <StepTransition
+                      step="step2"
                       className="p-4 bg-amber-50/40 rounded-2xl border border-amber-100"
                     >
                       <RegisterStoreStep2
@@ -205,112 +200,35 @@ const FormRegisterStores = () => {
                           errors={methods.formState.errors}
                         />
                       </div>
-                    </motion.div>
+                    </StepTransition>
+                  )}
+                  {step === 2 && (
+                    <StepTransition
+                      step="step3"
+                      className="p-4 sm:p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100"
+                    >
+                      <RegisterBranchStep4 methods={methods} />
+                    </StepTransition>
                   )}
                 </AnimatePresence>
               </CardContent>
 
               <CardFooter className="px-8 py-6 border-t border-gray-100 bg-gray-50">
-                <div className="flex justify-between w-full">
-                  {step > 0 ? (
-                    <motion.div
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => {
-                          setStep(step - 1);
-                          setDirection(-1);
-                        }}
-                        className="border-gray-200 hover:bg-gray-100 hover:text-gray-700"
-                      >
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        Anterior
-                      </Button>
-                    </motion.div>
-                  ) : (
-                    <div />
-                  )}
-
-                  {step < RegisterStoreSchema.length - 1 ? (
-                    <motion.div
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      className={step === 0 ? "ml-auto" : ""}
-                    >
-                      <Button
-                        type="button"
-                        onClick={onNext}
-                        data-testid="next-button"
-                        className="rounded-xl px-6 py-2 bg-gradient-to-r from-orange-500 to-orange-300 hover:from-orange-600 hover:to-orange-500 text-white"
-                      >
-                        Siguiente
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <Button
-                        type="button"
-                        onClick={methods.handleSubmit(onSubmit)}
-                        disabled={
-                          !methods.formState.isValid || status === "pending"
-                        }
-                        data-testid="submit-button"
-                        className={`rounded-xl px-6 py-2 ${
-                          !methods.formState.isValid
-                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                            : "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
-                        }`}
-                      >
-                        {status === "pending" ? (
-                          <div className="flex items-center">
-                            <svg
-                              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              ></path>
-                            </svg>
-                            Procesando...
-                          </div>
-                        ) : (
-                          <>
-                            <BadgeCheck className="w-4 h-4 mr-2" />
-                            Completar registro
-                          </>
-                        )}
-                      </Button>
-                    </motion.div>
-                  )}
-                </div>
+                <MultiStepFooter
+                  step={step}
+                  methods={methods}
+                  totalSteps={RegisterStoreSchema.length}
+                  prevStep={prevStep}
+                  nextStep={onNext}
+                  onSubmit={methods.handleSubmit(onSubmit)}
+                  isSubmitting={status === "pending"}
+                  isValid={methods.formState.isValid}
+                ></MultiStepFooter>
               </CardFooter>
             </form>
           </FormProvider>
         </motion.div>
       </Card>
-
-      {/* Floating decoration */}
-      <div className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-indigo-100/30 blur-3xl -z-10"></div>
-      <div className="absolute top-40 -right-20 w-60 h-60 rounded-full bg-amber-100/30 blur-3xl -z-10"></div>
     </div>
   );
 };

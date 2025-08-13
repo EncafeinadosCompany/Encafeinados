@@ -392,7 +392,7 @@ export default function ImagesGallery() {
             <Card className="w-full h-full  grid place-items-center relative overflow-hidden border-[#D4A76A]/20">
                 {renderDialog()}
                 {/* Decorative coffee-themed background elements */}
-                <div className="absolute inset-0 bg-[url('/coffee-pattern.png')] opacity-5" />
+                {/* <div className="absolute inset-0 bg-[url('/coffee-pattern.png')] opacity-5" /> */}
 
 
 

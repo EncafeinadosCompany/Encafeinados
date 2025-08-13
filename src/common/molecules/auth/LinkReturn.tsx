@@ -7,7 +7,7 @@ interface LinkReturnProps {
 }
 export const LinkReturn = ({link, className}:LinkReturnProps) => {
     return (
-        <div className="w-full max-w-2xl mb-6 px-4 sm:px-0">
+        <div className="w-full max-w-2xl mb-2 px-4 sm:px-0">
             <Link
             to={link}
             className={`

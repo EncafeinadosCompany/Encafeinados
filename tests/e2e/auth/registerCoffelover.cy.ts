@@ -13,7 +13,7 @@ describe("Coffee Lover Registration", () => {
         roles: ["Cliente"]
       }
      )
-    cy.visit("/coffee-lover-registration");
+    cy.visit("/register/coffeeLover");
 
   });
 
