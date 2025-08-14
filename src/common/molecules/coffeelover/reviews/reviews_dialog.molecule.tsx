@@ -17,50 +17,23 @@ export const ReviewsDialog: React.FC<ReviewsDialogProps> = ({
   isOpen, 
   onClose 
 }) => {
-  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+  // Función de cierre estable
+  const handleClose = React.useCallback(() => {
+    onClose();
+  }, [onClose]);
 
-  useEffect(() => {
-    const checkImageViewer = () => {
-      const isActive = document.body.classList.contains('image-viewer-active');
-      setIsImageViewerOpen(isActive);
-    };
-    
-    checkImageViewer();
-    
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          checkImageViewer();
-        }
-      });
-    });
-    
-    observer.observe(document.body, { attributes: true });
-    
-    return () => observer.disconnect();
-  }, []);
-
-  const handleOpenChange = (open: boolean) => {
-    if (!open && !isImageViewerOpen) {
-      onClose();
+  // Control de apertura/cierre más simple
+  const handleOpenChange = React.useCallback((open: boolean) => {
+    if (!open) {
+      handleClose();
     }
-  };
+  }, [handleClose]);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent 
         className="max-w-4xl w-[95vw] max-h-[90vh] overflow-hidden p-0 gap-0 z-[20000]"
         style={{ position: 'fixed', background: 'white' }}
-        onInteractOutside={(e) => {
-          if (isImageViewerOpen) {
-            e.preventDefault();
-          }
-        }}
-        onEscapeKeyDown={(e) => {
-          if (isImageViewerOpen) {
-            e.preventDefault();
-          }
-        }}
       >
         <DialogHeader className="bg-gradient-to-r from-amber-700 to-amber-600 text-white sticky top-0 z-10 p-4 sm:p-6">
           <div className="flex items-center justify-between">
@@ -79,7 +52,7 @@ export const ReviewsDialog: React.FC<ReviewsDialogProps> = ({
             <Button 
               variant="ghost" 
               size="icon" 
-              onClick={() => !isImageViewerOpen && onClose()}  // Solo cerrar si no hay imagen abierta
+              onClick={handleClose}
               className="rounded-full h-8 w-8 text-white hover:bg-white/20 hover:text-white"
             >
               <X className="h-4 w-4" />

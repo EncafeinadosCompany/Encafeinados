@@ -48,7 +48,9 @@ export const ListReviews = ({ reviews }: ReviewProps) => {
               </p>
               
               {/* Componente para mostrar imágenes */}
-              <ReviewImages images={review.imageUrls} />
+              {review.imageUrls && review.imageUrls.length > 0 && (
+                <ReviewImages images={review.imageUrls} />
+              )}
             </div>
           </div>
         ))}
@@ -57,7 +59,6 @@ export const ListReviews = ({ reviews }: ReviewProps) => {
   );
 };
 
-// Componente para formatear la fecha
 const FormatDate = ({ dateString }: { dateString: string }) => {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);

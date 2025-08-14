@@ -92,7 +92,6 @@ export const useApprovedBranches = () => {
     queryKey: ['branches', 'APPROVED'],
     queryFn: async () => {
       const response = await authClient.get<ApprovedBranchesResponse>('/branches/status/APPROVED')
-      console.log(response, "Approved Branches")
       return response
     },
     
@@ -139,7 +138,7 @@ export interface BranchSearchParams {
   lat?: number;
   lng?: number;
   sortBy?: 'distance' | 'rating';
-  attributes?: string; // Lista de IDs separados por comas
+  attributes?: string; 
 }
 
 export const useSearchBranches = (params: BranchSearchParams) => {
