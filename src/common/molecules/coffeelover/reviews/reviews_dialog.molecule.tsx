@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/common/ui/dialog";
-import { X, Coffee, MessageSquare } from'@/common/ui/icons'
+import React from 'react';
+import { Dialog, DialogContent, DialogTitle } from "@/common/ui/dialog";
+import { MessageSquare } from '@/common/ui/icons';
 import ReviewsWidget from '@/common/widgets/coffeelover/reviews/reviews_widget';
-import { Button } from '@/common/ui/button';
 
 interface ReviewsDialogProps {
   branchId: number;
@@ -32,37 +31,29 @@ export const ReviewsDialog: React.FC<ReviewsDialogProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent 
-        className="max-w-4xl w-[95vw] max-h-[90vh] overflow-hidden p-0 gap-0 z-[20000]"
-        style={{ position: 'fixed', background: 'white' }}
+        className="w-[95vw] sm:w-[85vw] md:w-[65vw] lg:w-[55vw] xl:w-[50vw] 
+        max-h-[85vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden flex flex-col z-[20000]"
       >
-        <DialogHeader className="bg-gradient-to-r from-amber-700 to-amber-600 text-white sticky top-0 z-10 p-4 sm:p-6">
+        <DialogTitle className="sr-only">
+          Reseñas de {branchName}
+        </DialogTitle>
+
+        <div className="p-4 sm:p-6 border-b border-[#E6D7C3]/50 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="bg-white/20 rounded-full p-1.5">
-                <MessageSquare className="h-5 w-5" />
+            <div className="flex items-center gap-2">
+              <div className="bg-[#DB8935]/10 p-1.5 rounded-full">
+                <MessageSquare className="h-5 w-5 text-[#DB8935]" />
               </div>
-              <div>
-                <DialogTitle className="text-lg sm:text-xl font-medium">Reseñas</DialogTitle>
-                <p className="text-white/80 text-xs sm:text-sm mt-0.5 flex items-center">
-                  <Coffee className="h-3 w-3 mr-1" />
-                  {branchName}
-                </p>
-              </div>
+              <h2 className="font-medium text-[#5F4B32] text-lg truncate">
+                Reseñas de{" "}
+                <span className="font-semibold">{branchName}</span>
+              </h2>
             </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={handleClose}
-              className="rounded-full h-8 w-8 text-white hover:bg-white/20 hover:text-white"
-            >
-              <X className="h-4 w-4" />
-            </Button>
           </div>
-        </DialogHeader>
-        <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
-          <div className="p-4 sm:p-6">
-            <ReviewsWidget branchId={branchId} />
-          </div>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-amber-400/30 scrollbar-track-transparent p-4 sm:p-6">
+          <ReviewsWidget branchId={branchId} />
         </div>
       </DialogContent>
     </Dialog>
