@@ -17,6 +17,7 @@ export const CoffeloverItems: NavItemType[] = [
     {
       title: "Mapa",
       href: "/coffeelover/map-coffelover",
+      focus: true,
       icon: <Map className="h-4 w-4" />
     },
     {
