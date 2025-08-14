@@ -31,8 +31,10 @@ export const ReviewsDialog: React.FC<ReviewsDialogProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent 
-        className="w-[95vw] sm:w-[85vw] md:w-[65vw] lg:w-[55vw] xl:w-[50vw] 
-        max-h-[85vh] bg-[#FBF7F4] shadow-xl border-none rounded-2xl p-0 overflow-hidden flex flex-col z-[20000]"
+        className="w-[100vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] xl:w-[75vw] 2xl:w-[70vw]
+        max-w-none sm:max-w-7xl h-[calc(100vh-30px)] sm:h-[96vh] max-h-[calc(100vh-20px)] sm:max-h-[96vh] 
+        bg-[#FBF7F4] shadow-xl border-none rounded-t-2xl sm:rounded-2xl p-0 overflow-hidden flex flex-col z-[20000]
+        mt-[20px] sm:mt-0"
       >
         <DialogTitle className="sr-only">
           Reseñas de {branchName}

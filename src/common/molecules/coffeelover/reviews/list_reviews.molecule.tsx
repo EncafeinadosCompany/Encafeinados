@@ -47,7 +47,6 @@ export const ListReviews = ({ reviews }: ReviewProps) => {
                 {review.comment}
               </p>
               
-              {/* Componente para mostrar imágenes */}
               {review.imageUrls && review.imageUrls.length > 0 && (
                 <ReviewImages images={review.imageUrls} />
               )}
