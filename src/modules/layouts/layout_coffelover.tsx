@@ -3,7 +3,7 @@ import { CoffeloverItems } from "@/common/utils/lists/nav/coffeelover_items.util
 import NavbarGeneral from "@/common/widgets/nav/nav.widget";
 import { useEffect, useState } from "react";
 
-const HomeCoffeelover = () => {
+const LayoutCoffeelover = () => {
     const { data, isLoading } = useCoffeeCoinsQuery();
     const [coffeecoins, setCoffeecoins] = useState<number | null>(null)
 
@@ -16,7 +16,6 @@ const HomeCoffeelover = () => {
     }, [data])
     return (
         <div className="bg-gray-200/40">
-
             <NavbarGeneral
                 navItems={CoffeloverItems}
                 coffeecoins={coffeecoins}
@@ -27,4 +26,4 @@ const HomeCoffeelover = () => {
     )
 }
 
-export default HomeCoffeelover;
+export default LayoutCoffeelover;

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent } from "@/common/ui/card";
 import { motion } from "framer-motion";
 import { CreditCard, Clock, CheckCircle, DollarSign } from "lucide-react";
-import { PaymentsByBranchWidget } from '@/common/widgets/admin_branches/mercadoPago/payment.widget';
+import { PaymentsByBranchWidget } from '@/common/widgets/admin_branches/payment.widget';
 import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 import { useInvoicesByBranch } from '@/api/queries/dashboard/list_invoices_by_branch.query';
 
@@ -10,7 +10,7 @@ export default function PaymentsDashboard() {
     const branchId = getEncryptedItem("branchId") as number | null;
 
     // Query para obtener datos y estadísticas
-    const { data: invoicesData, isLoading } = useInvoicesByBranch(branchId || 0);
+    const { data: invoicesData, isLoading, error } = useInvoicesByBranch(branchId || 0);
 
     // Calcular estadísticas
     const totalInvoices = invoicesData?.invoices?.length || 0;
@@ -75,6 +75,22 @@ export default function PaymentsDashboard() {
                     </div>
                 </motion.div>
 
+                {!isLoading || error ? (
+                     <Card className="border border-gray-200">
+                            <CardContent className="p-8 text-center">
+                                <CreditCard className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                    Aún no hay pagos disponibles
+                                </h3>
+                                <p className="text-gray-600">
+                                    No te preocupes por el momento no tienes pagos disponibles
+                                </p>
+                            </CardContent>
+                        </Card>
+                ):(
+                    
+                <>
+                
                 {/* Cards de estadísticas minimalistas */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                     <StatCard
@@ -164,6 +180,8 @@ export default function PaymentsDashboard() {
                         </div>
                     </motion.div>
                 )}
+                
+                </>)}
             </div>
         </div>
     );

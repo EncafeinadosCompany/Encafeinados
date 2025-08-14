@@ -97,6 +97,7 @@ export interface ApprovedBranch {
   status: string;
   store_logo: string;
   store_email: string;
+  average_rating?: string;
 }
 
 export interface ValidateVisitInput {

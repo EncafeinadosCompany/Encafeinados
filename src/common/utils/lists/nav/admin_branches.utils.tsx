@@ -5,37 +5,37 @@ import { Wallet } from "lucide-react"
 export const AdminBranchesItems: NavItemType[] = [
     {
     title: "Dashboard",
-    href: "/sucursal/dashboard",
+    href: "/branch",
     icon: <LayoutDashboard className="h-4 w-4" />,
   },
     {
     title: "Pagos",
-    href: "/sucursal/pagos",
+    href: "/branch/payments",
     icon: <Wallet className="h-4 w-4" />,
   },
   {
-    title: "Inicio",
-    href: "/sucursal",
+    title: "Sucursal",
+    href: "/branch/details",
     icon: <Home className="h-4 w-4" />,
   },
     {
     title: "Valoraciones",
-    href: "/sucursal/valoraciones",
+    href: "/branch/raitings",
     icon: <MessageSquare className="h-4 w-4" />,
   },
   {
     title: "Galería",
-    href: "/sucursal/images",
+    href: "/branch/images",
     icon: <Images className="h-4 w-4" />,
   },
   {
     title: "Atributos",
-    href: "/sucursal/attributes",
+    href: "/branch/attributes",
     icon: <Star className="h-4 w-4" />,
   },
   {
     title: "Perfil",
-    href: "/sucursal/perfil",
+    href: "/branch/profile",
     icon: <Store className="h-4 w-4" />,
   }
 ]

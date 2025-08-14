@@ -1,24 +1,29 @@
-import { FeaturedStoresWidget } from '@/common/widgets/coffeelover/stores/feature_stores.widget'
-import SearchCoffee from '@/common/atoms/common/search.atom';
-import { useState, useCallback, useEffect } from 'react';
+import { FeaturedStoresWidget } from "@/common/widgets/coffeelover/stores/feature_stores.widget";
+import SearchCoffee from "@/common/atoms/common/search.atom";
+import { useState, useCallback, useEffect } from "react";
 import { QrCode, Filter, MapPin } from "@/common/ui/icons";
-import { CoffeeBackground } from '@/common/widgets/coffee_background.widget';
-import QRScannerDialog from '@/common/molecules/coffeelover/stores/QR_scanner_dialog.molecule';
-import { Button } from '@/common/ui/button';
-import { EventList } from '@/common/widgets/coffeelover/events/event_list.widget';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/common/ui/tooltip';
-import FilterModal from '@/common/molecules/map/filter_modal.molecule';
-import { useBranchSearch } from '@/common/hooks/map/useBranchSearch';
-import { useNavigate } from 'react-router-dom';
+import { CoffeeBackground } from "@/common/widgets/coffee_background.widget";
+import QRScannerDialog from "@/common/molecules/coffeelover/stores/QR_scanner_dialog.molecule";
+import { Button } from "@/common/ui/button";
+import { EventList } from "@/common/widgets/coffeelover/events/event_list.widget";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/common/ui/tooltip";
+import FilterModal from "@/common/molecules/map/filter_modal.molecule";
+import { useBranchSearch } from "@/common/hooks/map/useBranchSearch";
+import { useNavigate } from "react-router-dom";
 
-export default function PrincipalCoffeelover () {
+export default function PrincipalCoffeelover() {
   const [globalSearchTerm, setGlobalSearchTerm] = useState("");
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  
+
   const navigate = useNavigate();
-  
+
   const {
     searchTerm: apiSearchTerm,
     setSearchTerm: setApiSearchTerm,
@@ -28,9 +33,9 @@ export default function PrincipalCoffeelover () {
     hasActiveFilters: apiHasActiveFilters,
     branches: apiBranches,
     isLoading: apiIsLoading,
-    totalBranches
+    totalBranches,
   } = useBranchSearch();
-  
+
   useEffect(() => {
     setApiSearchTerm(globalSearchTerm);
   }, [globalSearchTerm, setApiSearchTerm]);
@@ -41,32 +46,35 @@ export default function PrincipalCoffeelover () {
     };
 
     checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
+    window.addEventListener("resize", checkIsMobile);
 
     return () => {
-      window.removeEventListener('resize', checkIsMobile);
+      window.removeEventListener("resize", checkIsMobile);
     };
   }, []);
 
   const toggleFilterModal = useCallback(() => {
-    setIsFilterModalOpen(prev => !prev);
+    setIsFilterModalOpen((prev) => !prev);
   }, []);
 
   const handleMapNavigation = useCallback(() => {
-    navigate('/coffeelover/map-coffelover');
+    navigate("/coffeelover/map-coffelover");
   }, [navigate]);
 
-  const handleGlobalSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setGlobalSearchTerm(e.target.value);
-  }, []);
+  const handleGlobalSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setGlobalSearchTerm(e.target.value);
+    },
+    []
+  );
 
   const handleScanSuccess = useCallback((result: string) => {
     setIsScannerOpen(false);
 
-    if (result && result.startsWith('http')) {
+    if (result && result.startsWith("http")) {
       window.location.href = result;
     } else {
-      console.log('Código QR escaneado:', result);
+      console.log("Código QR escaneado:", result);
     }
   }, []);
 
@@ -74,17 +82,18 @@ export default function PrincipalCoffeelover () {
     {
       icon: <Filter size={16} className="text-[#6F4E37]" />,
       onClick: toggleFilterModal,
-      ariaLabel: "Abrir filtros"
+      ariaLabel: "Abrir filtros",
     },
     {
       icon: <MapPin size={16} className="text-blue-500" />,
       onClick: handleMapNavigation,
-      ariaLabel: "Ir al mapa"
-    }
+      ariaLabel: "Ir al mapa",
+    },
   ];
 
+  
   return (
-    <div className='flex flex-col max-w-full  overflow-x-hidden h-full relative'>
+    <div className="flex flex-col max-w-full  overflow-x-hidden h-full relative">
       <CoffeeBackground
         coffeeCount={10}
         circleCount={6}
@@ -105,19 +114,28 @@ export default function PrincipalCoffeelover () {
         </div>
       </div>
 
-      <div className={`flex flex-col p-4 gap-6 max-h-[85vh] xl:w-7xl mx-auto w-full overflow-auto relative z-10 pb-4 ${isMobile ? 'pb-24' : ''}`}>
-        <FeaturedStoresWidget
+      <div
+        className={`flex flex-col gap-6 max-h-[85vh] xl:w-7xl mx-auto w-full overflow-auto relative z-10 pb-4 ${
+          isMobile ? "pb-24" : ""
+        }`}
+      >
+       <div>
+         <FeaturedStoresWidget
           globalSearchTerm={globalSearchTerm}
           setGlobalSearchTerm={setGlobalSearchTerm}
           apiFilteredBranches={apiBranches}
           apiIsLoading={apiIsLoading}
           hasActiveFilters={apiHasActiveFilters}
         />
-        <EventList>
-        </EventList>
+       </div>
+        <div className="p-4">
+          <EventList/>
+        </div>
       </div>
 
-<div className={`fixed ${isMobile ? 'bottom-20' : 'bottom-6'} right-6 z-20`}>
+      <div
+        className={`fixed ${isMobile ? "bottom-20" : "bottom-6"} right-6 z-20`}
+      >
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -128,7 +146,9 @@ export default function PrincipalCoffeelover () {
                   aria-label="Registrar visita con QR"
                 >
                   <QrCode className="h-5 w-5 text-white flex-shrink-0" />
-                  <span className="text-white text-sm font-medium whitespace-nowrap">Registrar visita</span>
+                  <span className="text-white text-sm font-medium whitespace-nowrap">
+                    Registrar visita
+                  </span>
                 </Button>
               ) : (
                 <div className="relative">
@@ -142,8 +162,13 @@ export default function PrincipalCoffeelover () {
                 </div>
               )}
             </TooltipTrigger>
-            <TooltipContent side="left" className="bg-amber-50 border border-amber-200">
-              <p className="text-amber-800 font-medium">Escanea el QR para registrar tu visita</p>
+            <TooltipContent
+              side="left"
+              className="bg-amber-50 border border-amber-200"
+            >
+              <p className="text-amber-800 font-medium">
+                Escanea el QR para registrar tu visita
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -166,6 +191,5 @@ export default function PrincipalCoffeelover () {
         isLoading={apiIsLoading}
       />
     </div>
-  )
+  );
 }
-

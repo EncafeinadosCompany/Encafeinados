@@ -70,7 +70,7 @@ export default function Dashboard_Branch() {
                             Dashboard de Estampas ☕
                         </h1>
                         <p className="text-gray-600 mt-1">
-                            {branchData ? `Sucursal: ${branchData.branchName}` : 'Cargando información de la sucursal...'}
+                            {branchData ? `Sucursal: ${branchData.branchName}` : ''}
                         </p>
                     </div>
                 </motion.div>
@@ -199,7 +199,7 @@ export default function Dashboard_Branch() {
                 </motion.div>
 
                 {/* Resumen adicional */}
-                <motion.div
+                {/* <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
@@ -230,7 +230,7 @@ export default function Dashboard_Branch() {
                             </div>
                         </div>
                     )}
-                </motion.div>
+                </motion.div> */}
             </div>
         </div>
     );

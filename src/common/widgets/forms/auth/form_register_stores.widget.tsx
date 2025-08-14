@@ -22,6 +22,8 @@ import { getGreeting } from "@/common/utils/get_greeting.utils";
 import RegisterBranchStep4 from "@/common/molecules/auth/branches/register_branch_step4.molecule";
 import { MultiStepFooter } from "@/common/molecules/form/MultiStepFooter.molecule";
 import StepTransition from "@/common/atoms/forms/step_transition.atom";
+import { FormHeader } from "@/common/molecules/form/form_header.molecule";
+import { useStepMetaStore } from "@/common/hooks/stores/use_step_meta.hook";
 
 const FormRegisterStores = () => {
   const [direction, setDirection] = useState(0);
@@ -30,6 +32,7 @@ const FormRegisterStores = () => {
   const [formData, setFormData] = useState({});
   const { mutateAsync: useRegiterStore, status } = useRegisterStoreMutation();
   const navigate = useNavigate();
+  const {title, icon, description} =  useStepMetaStore(step);
 
   const methods = useForm<CurrentSchema>({
     resolver: zodResolver(RegisterStoreSchema[step] as any),
@@ -84,7 +87,6 @@ const FormRegisterStores = () => {
         localStorage.setItem("tel", finalData.phone_number);
       }
 
-      console.log(finalData, "hola");
       const response = await useRegiterStore(preparedData);
       methods.reset();
       navigate(`/register/branch/${response.store.id}`);
@@ -99,69 +101,15 @@ const FormRegisterStores = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="relative bg-gradient-to-r from-orange-50 to-purple-50 p-8 overflow-hidden">
-            {/* Abstract shapes - background decorations */}
-            <div className="absolute -top-10 right-10 w-40 h-40 rounded-full bg-amber-100 opacity-40 blur-2xl"></div>
-            <div className="absolute top-5 left-5 w-10 h-10 rounded-full bg-green-200 opacity-60"></div>
-            <div className="absolute bottom-5 right-20 w-16 h-16 rounded-full bg-rose-100 opacity-50"></div>
-
-            <div className="relative flex justify-between items-center mb-6">
-              {/* Logo and greeting */}
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-2xl">👋</span>
-                  <h3 className="text-indigo-700 font-medium">
-                    {getGreeting()}!
-                  </h3>
-                </div>
-                <h1 className="text-3xl font-bold text-gray-900">
-                  {step === 0 ? "Registra tu cafetería" : "Ya casi terminamos"}
-                </h1>
-                <p className="text-gray-600 mt-2 max-w-md">
-                  {step === 0
-                    ? "Cuéntanos sobre tu cafetería para darla a conocer al mundo"
-                    : "Es importante para nosotros identificar tu café de especialidad"}
-                </p>
-              </div>
-
-              {/* Header Illustration */}
-              <div className="hidden md:block">
-                <div className="flex items-center justify-center w-24 h-24 bg-white rounded-2xl shadow-sm">
-                  {step === 0 ? (
-                    <Store className="w-12 h-12 text-indigo-600" />
-                  ) : (
-                    <Coffee className="w-12 h-12 text-amber-600" />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Progress indicator */}
-            <div className="mt-8">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-medium text-gray-700">Progreso</p>
-                <p className="text-sm text-gray-500">
-                  {step + 1}/{RegisterStoreSchema.length}
-                </p>
-              </div>
-              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{
-                    width: `${
-                      step * (100 / (RegisterStoreSchema.length - 1))
-                    }%`,
-                  }}
-                  animate={{
-                    width: `${
-                      (step + 1) * (100 / RegisterStoreSchema.length)
-                    }%`,
-                  }}
-                  transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="h-full bg-gradient-to-r from-orange-500 to-orange-300 rounded-full"
-                />
-              </div>
-            </div>
-          </div>
+         <FormHeader
+              getGreeting={getGreeting}
+              getStepTitle={title}
+              getStepDescription={description}
+              getStepIcon={icon}
+              totalSteps={RegisterStoreSchema.length}
+              steps={step}
+              colorProccessBar={"bg-gradient-to-r from-amber-400 to-orange-400"}
+          ></FormHeader>
 
           {/* Form content */}
           <FormProvider {...methods}>

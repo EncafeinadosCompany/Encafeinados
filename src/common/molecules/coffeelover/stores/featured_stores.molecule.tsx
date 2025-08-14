@@ -111,7 +111,7 @@ export const FeaturedCarouselStores = ({
 
   return (
     <>
-      <div className="w-full relative mb-2 px-2 md:px-0">
+      <div className="w-full relative mb-2  md:px-0">
         {filteredBranches.length === 0 ? (
           <div className="w-full py-8 text-center border-none">
             <p className="text-gray-500">
@@ -132,10 +132,8 @@ export const FeaturedCarouselStores = ({
           </div>
         ) : (
           <div className="py-2 h-full">
-            <div className="flex justify-between mb-2">
-              <h2 className="text-3xl font-light text-gray-700">
-                Cafés Destacados
-              </h2>
+            <div className="flex p-2 justify-self-start mb-2">
+               <h2 className="text-lg font-bold">Cafés Destacados</h2>
             </div>
             <Carousel
               ref={carouselRef}
@@ -166,7 +164,7 @@ export const FeaturedCarouselStores = ({
                 {branches.map((branch, index) => (
                   <CarouselItem
                     key={branch.id}
-                    className="basis-[85%] sm:basis-[80%] md:basis-1/2 lg:basis-1/3 flex justify-center pl-2 md:pl-4"
+                    className="cursor-pointer basis-[98%] sm:basis-[80%] md:basis-1/2 lg:basis-1/3 flex justify-center pl-2 md:pl-4"
                   >
                     <FeaturedCard
                       branches={branch}
@@ -208,11 +206,6 @@ export const FeaturedCarouselStores = ({
                 />
               ))}
             </div>
-
-            <span className="text-xs text-gray-400">
-              Mostrando <span className="font-semibold">{current}</span> de{" "}
-              <span className="font-semibold">{count}</span> tiendas destacadas
-            </span>
           </div>
         )}
       </div>
