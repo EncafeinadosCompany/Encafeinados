@@ -7,7 +7,7 @@ import {
 } from "@/common/molecules/branch/branch_table_view.molecule";
 
 interface UseBranchListProps {
-  branches: Branch[];
+  branches: Branch[] | null | undefined;
   initialPageSize?: number;
 }
 
@@ -22,12 +22,17 @@ export const useBranchList = ({
   const [sortField, setSortField] = useState<SortField>("name");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
+  // Asegurar que branches sea siempre un array válido
+  const safeBranches = useMemo(() => {
+    return Array.isArray(branches) ? branches : [];
+  }, [branches]);
+
   // Filtrar sucursales basado en la búsqueda
   const filteredBranches = useMemo(() => {
-    if (!searchTerm) return branches;
+    if (!searchTerm) return safeBranches;
 
     const searchLower = searchTerm.toLowerCase();
-    return branches.filter(
+    return safeBranches.filter(
       (branch) =>
         branch.name.toLowerCase().includes(searchLower) ||
         branch.address?.toLowerCase().includes(searchLower) ||
@@ -35,10 +40,15 @@ export const useBranchList = ({
         branch.store?.store_name?.toLowerCase().includes(searchLower) ||
         branch.details?.toLowerCase().includes(searchLower)
     );
-  }, [branches, searchTerm]);
+  }, [safeBranches, searchTerm]);
 
   // Ordenar sucursales
   const sortedBranches = useMemo(() => {
+    // Verificar que filteredBranches sea un array antes de intentar operaciones
+    if (!Array.isArray(filteredBranches) || filteredBranches.length === 0) {
+      return [];
+    }
+
     const sorted = [...filteredBranches].sort((a, b) => {
       let aValue: string | number = "";
       let bValue: string | number = "";
@@ -79,12 +89,11 @@ export const useBranchList = ({
   }, [filteredBranches, sortField, sortDirection]);
 
   // Calcular paginación
-  const totalPages = Math.ceil(sortedBranches.length / pageSize);
+  const totalPages = Math.ceil((sortedBranches?.length || 0) / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
-  const paginatedBranches = sortedBranches.slice(
-    startIndex,
-    startIndex + pageSize
-  );
+  const paginatedBranches = Array.isArray(sortedBranches)
+    ? sortedBranches.slice(startIndex, startIndex + pageSize)
+    : [];
 
   // Funciones de control
   const handleSearch = (term: string) => {
@@ -118,7 +127,7 @@ export const useBranchList = ({
   return {
     // Data
     branches: paginatedBranches,
-    totalBranches: sortedBranches.length,
+    totalBranches: sortedBranches?.length || 0,
     totalPages,
 
     // State
