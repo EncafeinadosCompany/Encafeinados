@@ -65,8 +65,6 @@ export const BranchCard = ({
     }
   };
 
-  console.log(onVisit)
-
   return (
     <Card className="h-full bg-white border-green-100 hover:shadow-xl hover:border-green-200 transition-all duration-300 transform hover:-translate-y-1">
       <CardHeader className="pb-4 bg-gradient-to-r from-white to-white-50 rounded-t-lg">
@@ -104,7 +102,7 @@ export const BranchCard = ({
 
         {/* Botones de acción principales */}
         <div className="flex gap-2 mt-4">
-          {onQr && (
+          {onQr && branch.status === "APPROVED" && (
             <Button
               onClick={() => onQr({ isOpen: true, code: branch.id })}
               size="sm"
@@ -115,7 +113,7 @@ export const BranchCard = ({
             </Button>
           )}
 
-          {onVisit && (
+          {onVisit  && branch.status === "APPROVED"  && (
             <Button
               onClick={() => onVisit(branch)}
               size="sm"

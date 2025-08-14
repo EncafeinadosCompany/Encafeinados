@@ -1,7 +1,7 @@
 import RegisterAdminStore from "@/common/widgets/forms/auth/form_register_admin_stores.widget"
 import { useSearchParams } from "react-router-dom";
 
-const FinishAdminRegistration = () => {
+export default function RegisterAdmin () {
 
     const [searchParams] = useSearchParams();
     const storeId = searchParams.get('store');
@@ -16,4 +16,3 @@ const FinishAdminRegistration = () => {
 }
 
 
-export default FinishAdminRegistration
