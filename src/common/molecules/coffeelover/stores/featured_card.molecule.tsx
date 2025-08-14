@@ -35,7 +35,6 @@ export default function FeaturedCard({
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 
-  console.log("RAITING", branches)
 
   const getStatusConfig = (status: string) => {
     switch (status) {
@@ -62,7 +61,6 @@ export default function FeaturedCard({
 
   const statusConfig = getStatusConfig(branches.status);
 
-  // Generar rating falso para demostración (en producción vendría de la API)
   const rating = branches.average_rating
     ? parseFloat(branches.average_rating)
     : 4.2;
@@ -86,9 +84,7 @@ export default function FeaturedCard({
           navigate(`/coffeelover/details?branch=${branches.id}`);
         }}
       >
-        {/* Contenedor de imagen con efecto de gradiente */}
         <div className="relative w-full h-full group">
-          {/* Overlay de carga mejorado */}
           <div
             className={`absolute inset-0 bg-gradient-to-br from-amber-50 to-orange-50 backdrop-blur-sm flex items-center justify-center transition-all duration-500 z-10 ${
               imageLoaded ? "opacity-0 pointer-events-none" : "opacity-100"
