@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import { Card, CardContent } from "@/common/ui/card";
 import { motion } from "framer-motion";
 import { CreditCard, Clock, CheckCircle, DollarSign } from "lucide-react";

@@ -99,7 +99,7 @@ export const HeroSection: React.FC = () => {
               onClick={handleNavigation}
               className="group relative px-6 py-3 bg-[#D4A76A] hover:bg-[#C19559] text-[#0F0F0F] rounded-full 
                 transition-all duration-300 font-medium flex items-center justify-center gap-2 
-                shadow-lg shadow-[#D4A76A]/20 hover:shadow-[#D4A76A]/30 overflow-hidden"
+                shadow-lg shadow-[#D4A76A]/20 hover:shadow-[#D4A76A]/30 overflow-hidden cursor-pointer"
             >
               <span className="relative z-10">
                 {!user

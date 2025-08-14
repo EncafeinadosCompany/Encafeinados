@@ -1,5 +1,6 @@
 import { useBranchByStore } from "@/api/queries/stores/stores.query";
 import { Branch } from "@/api/types/branches/branches.types";
+import { AssignBranchAdminModal } from "@/common/molecules/admin_stores/branches/assign_branch_admin_modal.molecule";
 import { BranchDetails } from "@/common/molecules/admin_stores/branches/branch_details.molecule";
 import { QRCodeBranchModal } from "@/common/molecules/admin_stores/branches/qr_code_branches_modal.molecule";
 import { Card, CardContent } from "@/common/ui/card";
@@ -10,6 +11,7 @@ import { useState } from "react";
 export default function BranchManagementView() {
   const [isQrCode, setIsQrCode] = useState({ isOpen: false, code: 0 });
   const [onViewDetails, setViewDetails] = useState<Branch>();
+  const [onAssingBranch, setOnAssingBranch] = useState<Branch>();
   const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
   
   const storeId = getEncryptedItem("storeId") as string | null;
@@ -35,6 +37,7 @@ export default function BranchManagementView() {
             showActions
             onVisit={handleVisit}
             onViewDetails={setViewDetails}
+            onAssingBranch={setOnAssingBranch}
             initialPageSize={5}
             onQR={setIsQrCode}
           ></BranchListWidget>
@@ -55,6 +58,20 @@ export default function BranchManagementView() {
             onClose={() => setViewDetails(undefined)}
           />
         )}
+
+
+        {
+          onAssingBranch && (
+            <AssignBranchAdminModal
+              isOpen={onAssingBranch? true:false}
+              onClose={()=>setOnAssingBranch(undefined)}
+              branch={onAssingBranch}
+            ></AssignBranchAdminModal>
+
+          )
+        }
+
+        
       </CardContent>
     </Card>
   );

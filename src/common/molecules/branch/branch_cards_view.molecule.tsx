@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction } from "react";
 interface BranchCardsViewProps {
   branches: Branch[];
   onViewDetails?: (branch: Branch) => void;
-  onEdit?: (branch: Branch) => void;
+  onAssingBranch?: (branch: Branch) => void;
   onQr?: Dispatch<SetStateAction<{ isOpen: boolean; code: number }>>;
   onVisit?: (branch: Branch) => void;
   showActions?: boolean;
@@ -16,7 +16,7 @@ interface BranchCardsViewProps {
 export const BranchCardsView = ({
   branches,
   onViewDetails,
-  onEdit,
+  onAssingBranch,
   onQr,
   onVisit,
   showActions = true,
@@ -61,7 +61,7 @@ export const BranchCardsView = ({
           <BranchCard
             branch={branch}
             onViewDetails={onViewDetails}
-            onEdit={onEdit}
+            onAssingBranch={ onAssingBranch}
             onQr={onQr}
             onVisit={onVisit}
             showActions={showActions}

@@ -133,7 +133,10 @@ const AuthRoutes = () => {
                   </Route>
                 </Route>
 
-                <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL, ROLES.STORE]}/>}>
+                <Route element={
+                  <ErrorBoundary>
+                    <RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL, ROLES.STORE]}/>
+                  </ErrorBoundary>}>
                   <Route path="/branch" element={<Layout_branch />}>
                     <Route index element={<Dashboard_branch />} />
                     <Route path="details" element={<Details_branch/>} />

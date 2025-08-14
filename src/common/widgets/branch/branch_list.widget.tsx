@@ -11,9 +11,10 @@ interface BranchListWidgetProps {
   branches: Branch[];
   isLoading?: boolean;
   onViewDetails?: (branch: Branch) => void;
+  onAssingBranch?: (branch: Branch) => void;
+  onVisit?: (branch: Branch) => void;
   onEdit?: (branch: Branch) => void;
   onQR?: Dispatch<SetStateAction<{ isOpen: boolean; code: number }>>;
-  onVisit?: (branch: Branch) => void;
   showActions?: boolean;
   title?: string;
   subtitle?: string;
@@ -25,6 +26,7 @@ export const BranchListWidget = ({
   branches,
   isLoading = false,
   onViewDetails,
+  onAssingBranch,
   onEdit,
   onQR,
   onVisit,
@@ -88,7 +90,7 @@ export const BranchListWidget = ({
           <BranchCardsView
             branches={paginatedBranches}
             onViewDetails={onViewDetails}
-            onEdit={onEdit}
+            onAssingBranch={onAssingBranch}
             onQr={onQR}
             onVisit={onVisit}
             showActions={showActions}
@@ -98,11 +100,13 @@ export const BranchListWidget = ({
           <BranchTableView
             branches={paginatedBranches}
             onViewDetails={onViewDetails}
-            onEdit={onEdit}
+            onAssingBranch={onAssingBranch}
+            onVisit={onVisit}
             showActions={showActions}
             isLoading={isLoading}
             sortField={sortField}
             sortDirection={sortDirection}
+            onQr={onQR}
             onSort={handleSort}
           />
         )}
