@@ -23,7 +23,6 @@ import {
   ExternalLink
 } from "@/common/ui/icons";
 
-// Fix para los iconos de Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -106,14 +105,14 @@ export const BranchDetailsModal: React.FC<BranchDetailsModalProps> = ({ branch, 
                 </div>
               </div>
               
-              <Button 
+              {/* <Button 
                 variant="ghost" 
                 size="icon" 
                 onClick={onClose}
                 className="hover:bg-white/50 rounded-full cursor-pointer"
               >
                 <X className="h-5 w-5" />
-              </Button>
+              </Button> */}
             </div>
           </DialogHeader>
         </div>

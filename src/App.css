@@ -69,6 +69,55 @@ input[type="number"] {
   scrollbar-color: rgba(243, 209, 158, 0.3) transparent; /* Visible when interacting */
 }
 
+/* Branch widgets scroll areas */
+.approved-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+
+.approved-scroll-area::-webkit-scrollbar-track {
+  background: rgba(187, 247, 208, 0.1);
+  border-radius: 8px;
+}
+
+.approved-scroll-area::-webkit-scrollbar-thumb {
+  background-color: rgba(74, 222, 128, 0.3);
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.approved-scroll-area::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(74, 222, 128, 0.5);
+}
+
+.approved-scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(74, 222, 128, 0.3) rgba(187, 247, 208, 0.1);
+}
+
+.rejected-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+
+.rejected-scroll-area::-webkit-scrollbar-track {
+  background: rgba(254, 202, 202, 0.1);
+  border-radius: 8px;
+}
+
+.rejected-scroll-area::-webkit-scrollbar-thumb {
+  background-color: rgba(248, 113, 113, 0.3);
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.rejected-scroll-area::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(248, 113, 113, 0.5);
+}
+
+.rejected-scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(248, 113, 113, 0.3) rgba(254, 202, 202, 0.1);
+}
+
 /* Rest of your existing styles */
 ::-webkit-scrollbar {
   width: 5px;
