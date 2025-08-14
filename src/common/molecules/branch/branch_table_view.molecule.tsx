@@ -1,17 +1,38 @@
-import { useState } from "react";
-import { ArrowUpDown, ArrowUp, ArrowDown, MapPin, Phone, Star, Eye, Edit } from "lucide-react";
+import { Dispatch, SetStateAction, useState } from "react";
+import {
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  MapPin,
+  Phone,
+  Star,
+  Eye,
+  Edit,
+  QrCode,
+  User,
+  DoorOpen,
+} from "lucide-react";
 import { Button } from "@/common/ui/button";
 import { Badge } from "@/common/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/common/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/common/ui/table";
 import { Branch } from "@/api/types/branches/branches.types";
 
-export type SortField = 'name' | 'status' | 'average_rating' | 'store_name';
-export type SortDirection = 'asc' | 'desc';
+export type SortField = "name" | "status" | "average_rating" | "store_name";
+export type SortDirection = "asc" | "desc";
 
 interface BranchTableViewProps {
   branches: Branch[];
   onViewDetails?: (branch: Branch) => void;
-  onEdit?: (branch: Branch) => void;
+  onAssingBranch?: (branch: Branch) => void;
+  onVisit?: (branch: Branch) => void;
+  onQr?: Dispatch<SetStateAction<{ isOpen: boolean; code: number }>>;
   showActions?: boolean;
   isLoading?: boolean;
   sortField?: SortField;
@@ -22,37 +43,39 @@ interface BranchTableViewProps {
 export const BranchTableView = ({
   branches,
   onViewDetails,
-  onEdit,
+  onVisit,
+  onAssingBranch,
+  onQr,
   showActions = true,
   isLoading = false,
   sortField,
   sortDirection,
-  onSort
+  onSort,
 }: BranchTableViewProps) => {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'active':
-      case 'activo':
-        return 'bg-green-100 text-green-800';
-      case 'inactive':
-      case 'inactivo':
-        return 'bg-red-100 text-red-800';
-      case 'pending':
-      case 'pendiente':
-        return 'bg-yellow-100 text-yellow-800';
+      case "approved":
+      case "aprobada":
+        return "bg-green-100 text-green-800";
+      case "rejected":
+      case "Rechazada":
+        return "bg-red-100 text-red-800";
+      case "pending":
+      case "pendiente":
+        return "bg-yellow-100 text-yellow-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'active':
-        return 'Activo';
-      case 'inactive':
-        return 'Inactivo';
-      case 'pending':
-        return 'Pendiente';
+      case "approved":
+        return "Aprobada";
+      case "rejected":
+        return "Rechazada";
+      case "pending":
+        return "Pendiente";
       default:
         return status;
     }
@@ -62,9 +85,11 @@ export const BranchTableView = ({
     if (sortField !== field) {
       return <ArrowUpDown className="h-4 w-4" />;
     }
-    return sortDirection === 'asc' ? 
-      <ArrowUp className="h-4 w-4" /> : 
-      <ArrowDown className="h-4 w-4" />;
+    return sortDirection === "asc" ? (
+      <ArrowUp className="h-4 w-4" />
+    ) : (
+      <ArrowDown className="h-4 w-4" />
+    );
   };
 
   const handleSort = (field: SortField) => {
@@ -91,14 +116,28 @@ export const BranchTableView = ({
           <TableBody>
             {Array.from({ length: 5 }).map((_, index) => (
               <TableRow key={index}>
-                <TableCell><div className="h-4 bg-gray-200 rounded animate-pulse"></div></TableCell>
-                <TableCell><div className="h-4 bg-gray-200 rounded animate-pulse"></div></TableCell>
-                <TableCell><div className="h-4 bg-gray-200 rounded animate-pulse"></div></TableCell>
-                <TableCell><div className="h-4 bg-gray-200 rounded animate-pulse"></div></TableCell>
-                <TableCell><div className="h-4 bg-gray-200 rounded animate-pulse"></div></TableCell>
-                <TableCell><div className="h-4 bg-gray-200 rounded animate-pulse"></div></TableCell>
+                <TableCell>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                </TableCell>
+                <TableCell>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                </TableCell>
                 {showActions && (
-                  <TableCell><div className="h-4 bg-gray-200 rounded animate-pulse"></div></TableCell>
+                  <TableCell>
+                    <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                  </TableCell>
                 )}
               </TableRow>
             ))}
@@ -145,44 +184,44 @@ export const BranchTableView = ({
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleSort('name')}
+                onClick={() => handleSort("name")}
                 className="h-auto p-0 font-semibold text-left justify-start"
               >
                 Nombre
-                {getSortIcon('name')}
+                {getSortIcon("name")}
               </Button>
             </TableHead>
             <TableHead>
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleSort('store_name')}
+                onClick={() => handleSort("store_name")}
                 className="h-auto p-0 font-semibold text-left justify-start"
               >
                 Tienda
-                {getSortIcon('store_name')}
+                {getSortIcon("store_name")}
               </Button>
             </TableHead>
             <TableHead>
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleSort('status')}
+                onClick={() => handleSort("status")}
                 className="h-auto p-0 font-semibold text-left justify-start"
               >
                 Estado
-                {getSortIcon('status')}
+                {getSortIcon("status")}
               </Button>
             </TableHead>
             <TableHead>
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleSort('average_rating')}
+                onClick={() => handleSort("average_rating")}
                 className="h-auto p-0 font-semibold text-left justify-start"
               >
                 Calificación
-                {getSortIcon('average_rating')}
+                {getSortIcon("average_rating")}
               </Button>
             </TableHead>
             <TableHead>Dirección</TableHead>
@@ -198,14 +237,12 @@ export const BranchTableView = ({
                   <div className="font-semibold">{branch.name}</div>
                   {branch.is_open !== undefined && (
                     <div className="text-xs text-gray-500">
-                      {branch.is_open ? '🟢 Abierto' : '🔴 Cerrado'}
+                      {branch.is_open ? "🟢 Abierto" : "🔴 Cerrado"}
                     </div>
                   )}
                 </div>
               </TableCell>
-              <TableCell>
-                {branch.store?.store_name || '-'}
-              </TableCell>
+              <TableCell>{branch.store?.store_name || "-"}</TableCell>
               <TableCell>
                 <Badge className={getStatusColor(branch.status)}>
                   {getStatusText(branch.status)}
@@ -218,7 +255,7 @@ export const BranchTableView = ({
                     <span>{parseFloat(branch.average_rating).toFixed(1)}</span>
                   </div>
                 ) : (
-                  '-'
+                  "-"
                 )}
               </TableCell>
               <TableCell>
@@ -230,7 +267,7 @@ export const BranchTableView = ({
                     </span>
                   </div>
                 ) : (
-                  '-'
+                  "-"
                 )}
               </TableCell>
               <TableCell>
@@ -240,7 +277,7 @@ export const BranchTableView = ({
                     <span className="text-sm">{branch.phone_number}</span>
                   </div>
                 ) : (
-                  '-'
+                  "-"
                 )}
               </TableCell>
               {showActions && (
@@ -256,15 +293,41 @@ export const BranchTableView = ({
                         <Eye className="h-3 w-3" />
                       </Button>
                     )}
-                    {onEdit && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onEdit(branch)}
-                        title="Editar"
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
+                    {branch.status === "APPROVED" && (
+                      <>
+                        {onVisit && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onVisit(branch)}
+                            title="Entrar"
+                          >
+                            <DoorOpen className="h-3 w-3" />
+                          </Button>
+                        )}
+                        {onQr && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                              onQr({ isOpen: true, code: branch.id })
+                            }
+                            title="QR"
+                          >
+                            <QrCode className="h-3 w-3" />
+                          </Button>
+                        )}
+                        {onAssingBranch && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onAssingBranch(branch)}
+                            title="Admin"
+                          >
+                            <User className="h-3 w-3" />
+                          </Button>
+                        )}
+                      </>
                     )}
                   </div>
                 </TableCell>
