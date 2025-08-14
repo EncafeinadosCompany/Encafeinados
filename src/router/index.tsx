@@ -15,6 +15,7 @@ import Dashboard_Branch from "@/modules/admin_branches/views/manage_dashboard.vi
 import { ErrorBoundary } from "@/common/utils/error_boundary";
 import LayoutRegister from "@/modules/layouts/layouts_register";
 import FormRegisterCoffeelover from "@/common/widgets/forms/auth/form_register_coffelovers.widget";
+import BranchManagementView from "@/modules/admin_stores/views/branch/branch_management.view";
 
 const PruebaDashboard = lazy(
   () => import("@/modules/admin/components/manage_dasboard.view")
@@ -66,12 +67,9 @@ const Register_events = lazy(
 
 // STORES
 const Menubar_store = lazy(
-  () => import("@/modules/admin_stores/views/menubar_store")
+  () => import("@/modules/admin_stores/components/menubar_store")
 );
-const BranchManagement = lazy(
-  () =>
-    import("@/common/widgets/admin_stores/branches/branch_management.widget")
-);
+
 const StoreDetailsCard = lazy(
   () =>
     import(
@@ -206,31 +204,19 @@ const AuthRoutes = () => {
 
                 <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
                   <Route path="/stores" element={<Menubar_store />}>
-                    <Route index element={<BranchManagement />} />
+                    <Route index element={< BranchManagementView />} />
                   </Route>
                 </Route>
 
-                <Route
-                  element={
-                    <RoleRoute
-                      allowedRoles={[ROLES.ADMIN_SUCURSAL, ROLES.STORE]}
-                    />
-                  }
-                >
-                  <Route path="/sucursal" element={<Menubar_branch />}>
-                    <Route index element={<DetailsBranches />} />
-                    <Route
-                      path="valoraciones"
-                      element={<BranchReviewsView />}
-                    />
+                <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL, ROLES.STORE]}/>}>
+                  <Route path="/branch" element={<Menubar_branch />}>
+                    <Route index  element={<Dashboard_Branch />} />
+                    <Route path="details" element={<DetailsBranches />} />
+                    <Route path="raitings" element={<BranchReviewsView />}/>
                     <Route path="images" element={<ImagesGallery />} />
-                    <Route path="perfil" element={<Form_edit_branch />} />
-                    <Route
-                      path="attributes"
-                      element={<AttributesDashboard />}
-                    />
-                    <Route path="dashboard" element={<Dashboard_Branch />} />
-                    <Route path="pagos" element={<PaymentsDashboard />} />
+                    <Route path="profile" element={<Form_edit_branch />} />
+                    <Route path="attributes" element={<AttributesDashboard />}/>
+                    <Route path="payments" element={<PaymentsDashboard />} />
                   </Route>
                 </Route>
 
