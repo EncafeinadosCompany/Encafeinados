@@ -57,12 +57,12 @@ export default function RegisterBranchesWidget() {
 
   const [formData, setFormData] = useState({});
 
-  const name = localStorage.getItem("store");
+  const nameStore = localStorage.getItem("store");
   const tel = localStorage.getItem("tel");
   const methods = useForm<RegisterStoreBrancheSchemaType>({
     resolver: zodResolver(RegisterStoreBrancheSchema[step] as any),
     defaultValues: {
-      name: name ? name : "",
+      name: nameStore ? nameStore : "",
       phone_number: tel ? tel : "",
 
       criteria: {},
@@ -137,7 +137,10 @@ export default function RegisterBranchesWidget() {
         criteriaResponseData: data.criteria,
       });
 
-      console.log(data, "datoss")
+      if(tel || nameStore){
+        localStorage.removeItem("tel")
+        localStorage.removeItem("store")
+      }
 
       methods.reset();
       const name = localStorage.getItem("nameStore");

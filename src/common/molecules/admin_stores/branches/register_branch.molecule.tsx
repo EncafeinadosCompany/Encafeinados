@@ -4,12 +4,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FormHeader } from "../../form/form_header.molecule";
 import { getGreeting } from "@/common/utils/get_greeting.utils";
 import {
-  ArrowLeft,
   BadgeCheck,
   StoreIcon,
-  Building2,
   MapPin,
-  Globe,
   Settings,
 } from "lucide-react";
 import { useState } from "react";
@@ -89,19 +86,6 @@ export default function RegisterBranch({
                         transition={{ delay: 0.1 }}
                         className=" rounded-xl border border-transparent "
                       >
-                        {/* <div className="flex items-center gap-3 mb-4">
-                          <div className="p-2 bg-blue-100 rounded-lg">
-                            <Building2 className="h-5 w-5 text-blue-600" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-blue-900">
-                              Información Básica
-                            </h3>
-                            <p className="text-sm text-blue-600">
-                              Datos esenciales de la sucursal
-                            </p>
-                          </div>
-                        </div> */}
 
                         <RegisterStoreBrancheStep1
                           register={methods.register}
