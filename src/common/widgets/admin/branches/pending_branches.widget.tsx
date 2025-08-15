@@ -85,12 +85,10 @@ export const PendingBranchesWidget = () => {
     setIsSubmitting(true);
     
     try {
-      // Intentar obtener de la cache primero
       let branchDetails = queryClient.getQueryData<BranchApprovalDetails>(
         ['branch-approvals', 'detail', branchId]
       );
       
-      // Si no está en cache, obtenerlo de la API
       if (!branchDetails?.approvalId) {
         console.log("Obteniendo detalles de la sucursal desde la API...");
         const response = await queryClient.fetchQuery({
@@ -138,12 +136,10 @@ export const PendingBranchesWidget = () => {
     setIsSubmitting(true);
     
     try {
-      // Intentar obtener de la cache primero
       let branchDetails = queryClient.getQueryData<BranchApprovalDetails>(
         ['branch-approvals', 'detail', branchId]
       );
       
-      // Si no está en cache, obtenerlo de la API
       if (!branchDetails?.approvalId) {
         console.log("Obteniendo detalles de la sucursal desde la API...");
         const response = await queryClient.fetchQuery({
