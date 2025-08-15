@@ -10,19 +10,19 @@ import { UseFormRegister } from "react-hook-form"
 interface RegisterStoreBranchesProps {
     register: UseFormRegister<RegisterStoreBrancheSchemaType>
     error: any
-    control: any
+    isImage?: boolean
 }
 
 
-export default function RegisterStoreBrancheStep1({ register, control, error }: RegisterStoreBranchesProps) {
+export default function RegisterStoreBrancheStep1({ register, error, isImage = true}: RegisterStoreBranchesProps) {
 
     const { focusedField, registerWithFocus } = useRegisterFocus()
 
     return (
         <>
-            <div className="md:space-y-2 grid p-0 md:grid-cols-2 h-full">
+            <div className={`md:space-y-2 grid p-0 md:${isImage? "grid-cols-2 ":"grid-cols-1"}h-full`}>
                 {/* hidden */}
-
+                {isImage && (
                 <div className="relative md:flex items-center justify-center w-full h-[30vh]  md:h-full rounded-xl overflow-hidden">
                     <div className="w-full h-full flex items-center justify-center ">
                         <img
@@ -32,6 +32,7 @@ export default function RegisterStoreBrancheStep1({ register, control, error }: 
                         />
                     </div>
                 </div>
+                )}
                 <div className="flex flex-col justify-center sm:p-5 gap-4 py-2 ">
                     <div className="grid gap-2 relative">
                         <Label className={`flex items-center text-xs transition-colors ${focusedField === "name" ? "text-[#DB8935] " : "text-gray-600"

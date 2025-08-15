@@ -230,7 +230,6 @@ export default function RegisterBranchesWidget() {
                         <RegisterStoreBrancheStep1
                           register={methods.register}
                           error={methods.formState.errors}
-                          control={methods.control}
                         />
                       </StepTransition>
                     )}
