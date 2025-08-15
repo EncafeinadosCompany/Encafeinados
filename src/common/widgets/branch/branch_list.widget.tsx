@@ -56,7 +56,6 @@ export const BranchListWidget = ({
 
   return (
     <div className="space-y-4 p-1">
-      {/* Compact Header with integrated controls */}
       <div className="bg-gradient-to-r from-[#F5E4D2]/30 to-[#EAD7C1]/30 rounded-xl p-4 border border-[#E6D7C3]/30 backdrop-blur-sm">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
           <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -78,7 +77,6 @@ export const BranchListWidget = ({
               </div>
             </div>
             
-            {/* Search takes remaining space */}
             <div className="flex-1 max-w-lg ml-4">
               <SearchInput
                 value={searchTerm}
@@ -97,7 +95,6 @@ export const BranchListWidget = ({
         </div>
       </div>
 
-      {/* Content Area */}
       <div className="min-h-[300px] bg-white/30 backdrop-blur-sm rounded-xl border border-[#E6D7C3]/20 overflow-hidden">
         {viewMode === "card" ? (
           <BranchCardsView
@@ -125,8 +122,8 @@ export const BranchListWidget = ({
         )}
       </div>
 
-      {/* Pagination */}
-      {!isLoading && totalBranches > 0 && (
+      {/* Pagination - show when there are multiple pages or items */}
+      {!isLoading && totalBranches > 0 && totalPages > 1 && (
         <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
