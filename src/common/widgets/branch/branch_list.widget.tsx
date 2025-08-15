@@ -6,10 +6,14 @@ import { PaginationControls } from "@/common/atoms/pagination/pagination_control
 import { BranchCardsView } from "@/common/molecules/branch/branch_cards_view.molecule";
 import { BranchTableView } from "@/common/molecules/branch/branch_table_view.molecule";
 import { useBranchList } from "@/common/hooks/useBranchList.hook";
-import { Coffee, MapPin } from "lucide-react";
+import { Coffee, MapPin, Plus } from "lucide-react";
 import { Button } from "@/common/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/common/ui/tooltip";
 import { useNavigate } from "react-router-dom";
-
 
 interface BranchListWidgetProps {
   branches: Branch[];
@@ -73,7 +77,6 @@ export const BranchListWidget = ({
                 <span className="text-[#8B5A2B]/80 truncate">
                   {isLoading ? "Cargando..." : `${totalBranches} sucursales`}
                 </span>
-             
               </div>
             </div>
             
@@ -87,13 +90,34 @@ export const BranchListWidget = ({
           </div>
           
           <div className="flex items-center gap-3 lg:flex-shrink-0">
-            <ViewToggle
-              currentView={viewMode}
-              onViewChange={handleViewModeChange}
-            />
-            <Button onClick={()=> navigate("/stores/register/branch")} className="bg-[#2E7D32] text-white">
-              Registar sucursal
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => navigate("/stores/register/branch")}
+                  className="bg-[#4ea171] hover:bg-green-700 cursor-pointer text-white font-semibold px-4 py-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 flex items-center gap-2 whitespace-nowrap"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span className="hidden sm:inline">Registrar</span>
+                  <span className="hidden lg:inline">Sucursal</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Agregar una nueva sucursal al sistema</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <ViewToggle
+                    currentView={viewMode}
+                    onViewChange={handleViewModeChange}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Cambiar entre vista de tarjetas y lista</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </div>
