@@ -6,6 +6,7 @@ import RegisterBranch from "@/common/molecules/admin_stores/branches/register_br
 import { Button } from "@/common/ui/button";
 import { RegisterBranchFlatSchemaType, RegisterStoreBrancheSchemaFlat } from "@/common/utils/schemas/admin_stores/register_branch.schema";
 import { RegisterStoreBrancheSchema,  } from "@/common/utils/schemas/auth/register_store_branche.schema";
+import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -70,11 +71,9 @@ import { useNavigate } from "react-router-dom";
 
 
     try {
-    //   if (!storeId) {
-    //     toast.error("No cuenta con el id de la tienda");
-    //     return;
-    //   }
 
+
+    const storeId = getEncryptedItem("storeId")
       const detailsParts = [];
       if (data.addressDetails)
         detailsParts.push(`Detalles: ${data.addressDetails}`);
@@ -85,7 +84,7 @@ import { useNavigate } from "react-router-dom";
       const details = detailsParts.join(" | ");
 
       const submitData = {
-        store_id: 1,
+        store_id: Number(storeId),
         name: data.name,
         phone_number: data.phone_number,
         latitude: data.latitude,
@@ -96,24 +95,19 @@ import { useNavigate } from "react-router-dom";
         details,
       };
 
-    //   const branchResponse = await registerBranchMutation.mutateAsync(
-    //     submitData
-    //   );
+      const branchResponse = await registerBranchMutation.mutateAsync(
+        submitData
+      );
 
-    //   await registerCriteriaMutation.mutateAsync({
-    //     branchId: branchResponse.branch.id,
-    //     criteriaResponseData: data.criteria,
-    //   });
+      await registerCriteriaMutation.mutateAsync({
+        branchId: branchResponse.branch.id,
+        criteriaResponseData: data.criteria,
+      });
 
       console.log(data, "datoss")
 
       methods.reset();
-      const name = localStorage.getItem("nameStore");
-    //   showSuccessToast(name);
 
-      setTimeout(() => {
-        navigate("/");
-      }, 100);
     } catch (err) {
       console.error("Error during submission:", err);
       // El error ya se maneja en la mutación
