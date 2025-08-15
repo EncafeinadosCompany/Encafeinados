@@ -8,22 +8,24 @@ import { UseFormRegister } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/common/ui/card";
 import { MapPin, FileText, Navigation, Plus } from "lucide-react";
 
-
 interface RegisterBrancheStep3Props {
     baseAddress?: string;
     register: UseFormRegister<RegisterStoreBrancheSchemaType>;
     control?: any;
     errors?: any;
+    isHead?:boolean
   }
 
-export default function RegisterStoreBrancheStep3  ({ baseAddress, register, errors }: RegisterBrancheStep3Props)  {
+export default function RegisterStoreBrancheStep3  ({ baseAddress, register, errors, isHead=false }: RegisterBrancheStep3Props)  {
 
     const {registerWithFocus, focusedField} = useRegisterFocus()
 
     return(
         <div className="w-full space-y-8">
-            <Card className="border-0 shadow-xl rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
-                <CardHeader className="bg-gradient-to-br from-[#DB8935]/5 via-white to-[#8B5A2B]/5 pb-6 pt-8 relative">
+            <Card className="border-0  rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
+               {
+                isHead && (
+                   <CardHeader className="bg-gradient-to-br from-[#DB8935]/5 via-white to-[#8B5A2B]/5 pb-6 pt-8 relative">
                     {/* Decorative elements */}
                     <div className="absolute top-0 right-0 w-24 h-24 bg-[#DB8935]/5 rounded-full -translate-y-4 translate-x-4"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-[#8B5A2B]/5 rounded-full translate-y-2 -translate-x-2"></div>
@@ -41,11 +43,13 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                     </div>
                 </CardHeader>
 
+                )
+               }
                 <CardContent className="space-y-8 px-4 py-8 md:px-6 lg:px-8 bg-white">
                     {/* Dirección base */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-2 mb-4">
-                            <div className="h-1 w-8 bg-[#DB8935] rounded-full"></div>
+                            <div className="h-1 w-4 bg-[#DB8935] rounded-full"></div>
                             <Label className="text-lg font-semibold text-gray-800">
                                 Dirección Principal
                             </Label>
@@ -54,9 +58,7 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                         <div className="bg-gradient-to-r from-blue-50/50 to-blue-50/30 p-6 rounded-2xl border border-blue-100">
                             <Label 
                                 htmlFor="baseAddress"
-                                className={`flex items-center gap-2 text-sm font-medium mb-3 transition-colors ${
-                                    focusedField === "address" ? "text-[#DB8935]" : "text-gray-700"
-                                }`}
+                                className={`flex items-center gap-2 text-sm font-medium mb-3 transition-color text-gray-700`}
                             >
                                 <MapPin className="h-4 w-4 text-blue-500" />
                                 Dirección seleccionada del mapa
@@ -64,7 +66,6 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                             <Textarea
                                 id="baseAddress"
                                 {...register("address")}
-                                {...registerWithFocus("address")}
                                 defaultValue={baseAddress}
                                 readOnly
                                 rows={2}
@@ -81,7 +82,7 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                     {/* Detalles de dirección */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-2 mb-4">
-                            <div className="h-1 w-8 bg-[#8B5A2B] rounded-full"></div>
+                            <div className="h-1 w-4 bg-[#8B5A2B] rounded-full"></div>
                             <Label className="text-lg font-semibold text-gray-800">
                                 Detalles Específicos
                             </Label>
@@ -92,9 +93,7 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                             <div className="space-y-3">
                                 <Label 
                                     htmlFor="addressDetails" 
-                                    className={`flex items-center gap-2 text-sm font-medium transition-colors ${
-                                        focusedField === "addressDetails" ? "text-[#DB8935]" : "text-gray-700"
-                                    }`}
+                                    className={`flex items-center gap-2 text-sm font-medium transition-colors text-gray-700`}
                                 >
                                     <Navigation className="h-4 w-4 text-[#8B5A2B]" />
                                     Número y detalles adicionales
@@ -103,7 +102,6 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                                 <InputForm
                                     id="addressDetails"
                                     {...register("addressDetails")}
-                                    {...registerWithFocus("addressDetails")}
                                     placeholder="Ej. Calle 123 #45-67, Piso 2, Local 3"
                                     className="h-12 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-[#DB8935]/10 focus:border-[#DB8935] transition-all duration-200 bg-gray-50/50 focus:bg-white"
                                 />
@@ -118,9 +116,7 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                             <div className="space-y-3">
                                 <Label 
                                     htmlFor="nearbyReference"  
-                                    className={`flex items-center gap-2 text-sm font-medium transition-colors ${
-                                        focusedField === "nearbyReference" ? "text-[#DB8935]" : "text-gray-700"
-                                    }`}
+                                    className={`flex items-center gap-2 text-sm font-medium transition-colors text-gray-700`}
                                 >
                                     <Plus className="h-4 w-4 text-gray-500" />
                                     Referencia cercana
@@ -129,7 +125,6 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                                 <Input
                                     id="nearbyReference"
                                     {...register("nearbyReference")}
-                                    {...registerWithFocus("nearbyReference")}
                                     placeholder="Ej. Frente a la panadería San Juan, al lado del banco"
                                     className="h-12 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-[#DB8935]/10 focus:border-[#DB8935] transition-all duration-200 bg-gray-50/50 focus:bg-white"
                                 />
@@ -140,7 +135,7 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                     {/* Notas adicionales */}
                     <div className="space-y-4">
                         <div className="flex items-center gap-2 mb-4">
-                            <div className="h-1 w-8 bg-gray-400 rounded-full"></div>
+                            <div className="h-1 w-4 bg-gray-400 rounded-full"></div>
                             <Label className="text-lg font-semibold text-gray-800">
                                 Información Adicional
                             </Label>
@@ -149,9 +144,7 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                         <div className="bg-gradient-to-r from-gray-50/50 to-gray-50/30 p-6 rounded-2xl border border-gray-100">
                             <Label 
                                 htmlFor="additionalNotes"
-                                className={`flex items-center gap-2 text-sm font-medium mb-3 transition-colors ${
-                                    focusedField === "additionalNotes" ? "text-[#DB8935]" : "text-gray-700"
-                                }`}
+                                className={`flex items-center gap-2 text-sm font-medium mb-3 transition-colors text-gray-700`}
                             >
                                 <FileText className="h-4 w-4 text-gray-500" />
                                 Notas adicionales
@@ -160,7 +153,6 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
                             <Textarea
                                 id="additionalNotes"
                                 {...register("additionalNotes")}
-                                {...registerWithFocus("additionalNotes")}
                                 placeholder="Instrucciones especiales para entregas, puntos de referencia únicos, horarios de acceso, etc."
                                 className="w-full min-h-[100px] border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-[#DB8935]/10 focus:border-[#DB8935] transition-all duration-200 bg-gray-50/50 focus:bg-white resize-none"
                                 rows={3}

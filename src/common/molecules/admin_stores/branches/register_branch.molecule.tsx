@@ -175,6 +175,7 @@ export default function RegisterBranch({
                           </div>
 
                           <RegisterStoreBrancheStep3
+                            isHead={true}
                             baseAddress={baseAddress}
                             errors={methods.formState.errors}
                             register={methods.register}
@@ -189,21 +190,8 @@ export default function RegisterBranch({
                         transition={{ delay: 0.4 }}
                         className=" rounded-xl border border-transparent shadow-sm"
                       >
-                        {/* <div className="flex items-center gap-3 mb-4">
-                          <div className="p-2 bg-purple-100 rounded-lg">
-                            <Globe className="h-5 w-5 text-purple-600" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-semibold text-purple-900">
-                              Redes Sociales
-                            </h3>
-                            <p className="text-sm text-purple-600">
-                              Enlaces a perfiles sociales (opcional)
-                            </p>
-                          </div>
-                        </div> */}
-
                         <SocialNetworksForm
+                          isHead={true}
                           register={methods.register}
                           control={methods.control}
                           error={methods.formState.errors}
