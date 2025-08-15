@@ -26,6 +26,11 @@ export default defineConfig({
     host: true,
     port: 5173,
   },
+  preview: {
+      host: '0.0.0.0',
+      port,
+      allowedHosts: ['filtrando.encafeinados.club', 'encafeinados.club'],
+    },
   build: {
     rollupOptions: {
       output: {
