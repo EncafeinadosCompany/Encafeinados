@@ -22,9 +22,8 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
 
     return(
         <div className="w-full space-y-8">
-            <Card className="border-0 shadow-xl rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
+            <Card className="border-0  rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
                 <CardHeader className="bg-gradient-to-br from-[#DB8935]/5 via-white to-[#8B5A2B]/5 pb-6 pt-8 relative">
-                    {/* Decorative elements */}
                     <div className="absolute top-0 right-0 w-24 h-24 bg-[#DB8935]/5 rounded-full -translate-y-4 translate-x-4"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-[#8B5A2B]/5 rounded-full translate-y-2 -translate-x-2"></div>
                     
