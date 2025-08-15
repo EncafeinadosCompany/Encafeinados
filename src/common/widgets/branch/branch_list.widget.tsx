@@ -6,6 +6,7 @@ import { PaginationControls } from "@/common/atoms/pagination/pagination_control
 import { BranchCardsView } from "@/common/molecules/branch/branch_cards_view.molecule";
 import { BranchTableView } from "@/common/molecules/branch/branch_table_view.molecule";
 import { useBranchList } from "@/common/hooks/useBranchList.hook";
+import { Coffee, MapPin } from "lucide-react";
 
 interface BranchListWidgetProps {
   branches: Branch[];
@@ -54,38 +55,50 @@ export const BranchListWidget = ({
   } = useBranchList({ branches, initialPageSize });
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-          {subtitle && <p className="text-gray-600 text-sm mt-1">{subtitle}</p>}
-          <p className="text-sm text-gray-500 mt-1">
-            {isLoading
-              ? "Cargando..."
-              : `${totalBranches} sucursales encontradas`}
-          </p>
+    <div className="space-y-4 p-1">
+      {/* Compact Header with integrated controls */}
+      <div className="bg-gradient-to-r from-[#F5E4D2]/30 to-[#EAD7C1]/30 rounded-xl p-4 border border-[#E6D7C3]/30 backdrop-blur-sm">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <div className="bg-[#DB8935]/10 p-2 rounded-lg flex-shrink-0">
+              <Coffee className="h-5 w-5 text-[#DB8935]" />
+            </div>
+            <div className="min-w-0 flex-shrink-0">
+              <h1 className="text-xl font-bold text-[#5F4B32] leading-tight truncate">{title}</h1>
+              <div className="flex items-center gap-2 text-sm mt-0.5">
+                <MapPin className="h-3.5 w-3.5 text-[#DB8935]/70 flex-shrink-0" />
+                <span className="text-[#8B5A2B]/80 truncate">
+                  {isLoading ? "Cargando..." : `${totalBranches} sucursales`}
+                </span>
+                {!isLoading && totalBranches > 0 && (
+                  <div className="bg-[#DB8935]/15 text-[#8B5A2B] px-2 py-0.5 rounded-md text-xs font-medium flex-shrink-0">
+                    Activas
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Search takes remaining space */}
+            <div className="flex-1 max-w-lg ml-4">
+              <SearchInput
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder={searchPlaceholder}
+              />
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3 lg:flex-shrink-0">
+            <ViewToggle
+              currentView={viewMode}
+              onViewChange={handleViewModeChange}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Controles */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex-1 max-w-md">
-          <SearchInput
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder={searchPlaceholder}
-          />
-        </div>
-
-        <ViewToggle
-          currentView={viewMode}
-          onViewChange={handleViewModeChange}
-        />
-      </div>
-
-      {/* Contenido */}
-      <div className="min-h-[400px]">
+      {/* Content Area */}
+      <div className="min-h-[300px] bg-white/30 backdrop-blur-sm rounded-xl border border-[#E6D7C3]/20 overflow-hidden">
         {viewMode === "card" ? (
           <BranchCardsView
             branches={paginatedBranches}
@@ -112,7 +125,7 @@ export const BranchListWidget = ({
         )}
       </div>
 
-      {/* Paginación */}
+      {/* Pagination */}
       {!isLoading && totalBranches > 0 && (
         <PaginationControls
           currentPage={currentPage}
