@@ -49,8 +49,7 @@ export default function RegisterBranch({
   return (
     <div className="max-w-6xl mx-auto">
       <Card
-        className={`relative overflow-hidden border-0 rounded-2xl sm:rounded-3xl shadow-lg bg-white 
-          `}
+        className={`relative overflow-hidden border-0 rounded-4xl sm:rounded-3xl shadow-lg bg-white`}
       >
         <FormProvider {...methods}>
           <motion.div
