@@ -16,6 +16,7 @@ import { CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { criteriaResponseData } from "@/api/types/criteria/criteria.types";
 import { SocialNetworksType } from "@/api/queries/social_networks/social_networks.query";
+import { NavigateFunction } from "react-router-dom";
 
 interface RegistBranchProp {
     methods:any
@@ -66,7 +67,7 @@ return(
                     <RegisterStoreBrancheStep1
                       register={methods.register}
                       error={methods.formState.errors}
-                      control={methods.control}
+                      isImage={false}
                     />
 
                     <RegisterStoreBrancheStep2

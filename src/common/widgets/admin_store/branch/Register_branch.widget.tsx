@@ -7,6 +7,7 @@ import { Button } from "@/common/ui/button";
 import { RegisterBranchFlatSchemaType, RegisterStoreBrancheSchemaFlat } from "@/common/utils/schemas/admin_stores/register_branch.schema";
 import { RegisterStoreBrancheSchema,  } from "@/common/utils/schemas/auth/register_store_branche.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -17,12 +18,12 @@ import { useNavigate } from "react-router-dom";
   const [direction, setDirection] = useState(0);
   const [baseAddress, setBaseAddress] = useState("");
 
+
   const navigate = useNavigate();
   const { data: socialNetworks } = useSocialNetworksQuery();
   const { data: criteria } = useCriteria();
-  const [invalid, setInvalid] = useState(false);
 
-  const registerBranchMutation = useRegisterBrandMutation();
+    const registerBranchMutation = useRegisterBrandMutation();
   const registerCriteriaMutation = useRegisterCriteriaMutation();
 
   const name = localStorage.getItem("store");
@@ -62,7 +63,6 @@ import { useNavigate } from "react-router-dom";
         }, {} as Record<string, { response_text: string; image_url?: string; other_text?: string }>)
       );
     }
-    setInvalid(false);
   }, [criteria, methods]);
 
   const onSubmit = async (data: any) => {
@@ -130,7 +130,9 @@ import { useNavigate } from "react-router-dom";
 
     return (
        <div className="relative h-full flex-col content-center p-2 ">
-        <Button className="absolute top-1">Volver</Button>
+        <Button onClick={()=> navigate("/stores")} className="absolute top-1 border-none shadow-none">
+            <ArrowLeft/>
+            Volver</Button>
          <RegisterBranch
         onLocationSelect={onLocationSelect}
         methods={methods}
