@@ -35,7 +35,7 @@ export default function RegisterStoreBrancheStep3  ({ baseAddress, register, err
               defaultValue={baseAddress}
               readOnly
               rows={2}
-              className="rounded-lg text-gray-400 border shadow-sm border-gray-200 bg-gray-50 focus:ring-2 focus:ring-[#DB8935]  focus:border-transparent transition-all"
+              className="rounded-lg text-gray-400 border shadow-sm border-gray-400 focus:ring-2 focus:ring-[#DB8935]  focus:border-transparent transition-all"
             />
             {errors.address && (
               <p className="text-sm text-red-500">{errors.address.message as string}</p>

@@ -3,7 +3,15 @@ import { FormProvider } from "react-hook-form";
 import { AnimatePresence, motion } from "framer-motion";
 import { FormHeader } from "../../form/form_header.molecule";
 import { getGreeting } from "@/common/utils/get_greeting.utils";
-import { ArrowLeft, BadgeCheck, StoreIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  BadgeCheck,
+  StoreIcon,
+  Building2,
+  MapPin,
+  Globe,
+  Settings,
+} from "lucide-react";
 import { useState } from "react";
 import StepTransition from "@/common/atoms/forms/step_transition.atom";
 import RegisterStoreBrancheStep1 from "../../auth/stores/register_store_branche_step1.molecule";
@@ -19,94 +27,197 @@ import { SocialNetworksType } from "@/api/queries/social_networks/social_network
 import { NavigateFunction } from "react-router-dom";
 
 interface RegistBranchProp {
-    methods:any
-    isPending: boolean
-    baseAddress:string
-    criteria:criteriaResponseData[]
-    onLocationSelect:(lat: number, lng: number, address: string) => void
-    socialNetworks:SocialNetworksType | undefined
-    onSubmit: (data:any) => void
+  methods: any;
+  isPending: boolean;
+  baseAddress: string;
+  criteria: criteriaResponseData[];
+  onLocationSelect: (lat: number, lng: number, address: string) => void;
+  socialNetworks: SocialNetworksType | undefined;
+  onSubmit: (data: any) => void;
 }
 
-
-export default function RegisterBranch({methods, isPending, baseAddress, criteria, onLocationSelect, socialNetworks, onSubmit}:RegistBranchProp) {
+export default function RegisterBranch({
+  methods,
+  isPending,
+  baseAddress,
+  criteria,
+  onLocationSelect,
+  socialNetworks,
+  onSubmit,
+}: RegistBranchProp) {
   const [direction, setDirection] = useState(0);
 
-return(
-    <div className="max-w-5xl mx-auto">
-    <Card
-      className={`relative overflow-hidden border-0 rounded-2xl sm:rounded-3xl shadow-lg bg-white 
+  return (
+    <div className="max-w-6xl mx-auto">
+      <Card
+        className={`relative overflow-hidden border-0 rounded-2xl sm:rounded-3xl shadow-lg bg-white 
           `}
-    >
-      <FormProvider {...methods}>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {/* Encabezado moderno */}
-          <FormHeader
-            getGreeting={getGreeting}
-            getStepTitle={"Registro de sucursal"}
-            getStepDescription={"Informacion esencial"}
-            getStepIcon={<StoreIcon />}
-            isLoaginBar={false}
-          ></FormHeader>
-
-          {/* Contenido del formulario con altura adaptativa */}
-          <div
-            className={` h-full min-h-[70vh] md:min-h-[65vh] max-h-[60vh] scrollbar-subtle pb-24 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-transparent`}
+      >
+        <FormProvider {...methods}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
           >
-            <form>
-              <CardContent className={`p-4 sm:p-4 md:p-5 rounded-2xl`}>
-                <AnimatePresence initial={false} custom={direction} mode="wait">
-                  <StepTransition
-                    step="step1"
-                    className="overflow-hidden border p-3 border-blue-100 shadow-inner h-full flex-grow"
+            {/* Encabezado moderno */}
+            <FormHeader
+              getGreeting={getGreeting}
+              getStepTitle={"Registro de sucursal"}
+              getStepDescription={"Informacion esencial"}
+              getStepIcon={<StoreIcon />}
+              isLoaginBar={false}
+              color="white"
+            ></FormHeader>
+
+            {/* Contenido del formulario con altura adaptativa */}
+            <div
+              className={` h-full pb-24`}
+            >
+              <form>
+                <CardContent
+                  className={`p-2 sm:p-4 md:p-5 rounded-2xl space-y-8`}
+                >
+                  <AnimatePresence
+                    initial={false}
+                    custom={direction}
+                    mode="wait"
                   >
-                    <RegisterStoreBrancheStep1
-                      register={methods.register}
-                      error={methods.formState.errors}
-                      isImage={false}
-                    />
+                    <StepTransition
+                      step="step1"
+                      className="overflow-hidden h-full flex-grow space-y-8"
+                    >
+                      {/* 📋 Sección 1: Información Básica */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100 shadow-sm"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 bg-blue-100 rounded-lg">
+                            <Building2 className="h-5 w-5 text-blue-600" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-blue-900">
+                              Información Básica
+                            </h3>
+                            <p className="text-sm text-blue-600">
+                              Datos esenciales de la sucursal
+                            </p>
+                          </div>
+                        </div>
 
-                    <RegisterStoreBrancheStep2
-                      methods={methods}
-                      criteria={criteria || []}
-                    />
-
-                      <ButtonChevronUp Id_redirect={"card-top"} />
-
-                      <MapSearch
-                        initialAddress={baseAddress}
-                        initialLat={methods.watch("latitude")}
-                        initialLng={methods.watch("longitude")}
-                        isLargeSize={true}
-                        onLocationSelect={onLocationSelect}
-                      />
-
-             
-                      <RegisterStoreBrancheStep3
-                        baseAddress={baseAddress}
-                        errors={methods.formState.errors}
-                        register={methods.register}
+                        <RegisterStoreBrancheStep1
+                          register={methods.register}
+                          error={methods.formState.errors}
+                          isImage={false}
                         />
-             
-                      <SocialNetworksForm
-                        register={methods.register}
-                        control={methods.control}
-                        error={methods.formState.errors}
-                        availableSocialNetworks={socialNetworks}
-                        />
-                        </StepTransition>
-                 
-                </AnimatePresence>
-              </CardContent>
+                      </motion.div>
 
-              {/* Footer con botones responsivos */}
-              <CardFooter className="absolute bottom-0 w-full px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 border-t border-gray-100  rounded-lg bg-gray-50">
-                <div className=" flex justify-between w-full">
-          
+                      {/* ⚙️ Sección 2: Configuración y Criterios */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-2 border border-amber-100 shadow-sm"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 bg-amber-100 rounded-lg">
+                            <Settings className="h-5 w-5 text-amber-600" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-amber-900">
+                              Criterios
+                            </h3>
+                            <p className="text-sm text-amber-600">
+                              Características y servicios disponibles
+                            </p>
+                          </div>
+                        </div>
+
+                        <RegisterStoreBrancheStep2
+                          methods={methods}
+                          criteria={criteria || []}
+                        />
+                      </motion.div>
+
+                      {/* 📍 Sección 3: Ubicación */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-2 border border-emerald-100 shadow-sm"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 bg-emerald-100 rounded-lg">
+                            <MapPin className="h-5 w-5 text-emerald-600" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-emerald-900">
+                              Ubicación de la Sucursal
+                            </h3>
+                            <p className="text-sm text-emerald-600">
+                              Dirección y localización en el mapa
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4 bg-white rounded-2xl p-2 shadow-lg">
+                          <ButtonChevronUp Id_redirect={"card-top"} />
+
+                          <div className="bg-white ">
+                            <MapSearch
+                            initialAddress={baseAddress}
+                            initialLat={methods.watch("latitude")}
+                            initialLng={methods.watch("longitude")}
+                            isLargeSize={true}
+                            onLocationSelect={onLocationSelect}
+                          />
+                          </div>
+
+                          <RegisterStoreBrancheStep3
+                            baseAddress={baseAddress}
+                            errors={methods.formState.errors}
+                            register={methods.register}
+                          />
+                        </div>
+                      </motion.div>
+
+                      {/* 🌐 Sección 4: Redes Sociales */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-2 border border-purple-100 shadow-sm"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 bg-purple-100 rounded-lg">
+                            <Globe className="h-5 w-5 text-purple-600" />
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-purple-900">
+                              Redes Sociales
+                            </h3>
+                            <p className="text-sm text-purple-600">
+                              Enlaces a perfiles sociales (opcional)
+                            </p>
+                          </div>
+                        </div>
+
+                        <SocialNetworksForm
+                          register={methods.register}
+                          control={methods.control}
+                          error={methods.formState.errors}
+                          availableSocialNetworks={socialNetworks}
+                        />
+                      </motion.div>
+                    </StepTransition>
+                  </AnimatePresence>
+                </CardContent>
+
+                {/* Footer con botones responsivos */}
+                <CardFooter className="absolute bottom-0 w-full px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 border-t border-gray-100  rounded-lg bg-gray-50">
+                  <div className=" flex justify-between w-full">
                     <motion.div
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
@@ -116,26 +227,19 @@ return(
                         type="button"
                         onClick={methods.handleSubmit(onSubmit)}
                         disabled={isPending}
-                        className={`text-xs sm:text-sm rounded-lg sm:rounded-xl px-4 sm:px-6 py-1.5 sm:py-2 ${
-                          !methods.formState.isValid
-                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                            : "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
-                        }`}
+                        className={`text-xs sm:text-sm rounded-lg sm:rounded-xl px-4 sm:px-6 py-1.5 sm:py-2  bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white`}
                       >
                         <BadgeCheck className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                        {isPending
-                          ? "Registrando..."
-                          : "Completar registro"}
+                        {isPending ? "Registrando..." : "Completar registro"}
                       </Button>
                     </motion.div>
-                  
-                </div>
-              </CardFooter>
-            </form>
-          </div>
-        </motion.div>
-      </FormProvider>
-    </Card>
-  </div>
-)
+                  </div>
+                </CardFooter>
+              </form>
+            </div>
+          </motion.div>
+        </FormProvider>
+      </Card>
+    </div>
+  );
 }
