@@ -11,17 +11,19 @@ interface RegisterStoreBranchesProps {
     register: UseFormRegister<RegisterStoreBrancheSchemaType>
     error: any
     isImage?: boolean
+    isHead?:boolean
 }
 
 
-export default function RegisterStoreBrancheStep1({ register, error, isImage = true}: RegisterStoreBranchesProps) {
+export default function RegisterStoreBrancheStep1({ register, error, isHead=false, isImage = true}: RegisterStoreBranchesProps) {
 
     const { focusedField, registerWithFocus } = useRegisterFocus()
 
     return (
         <div className="w-full space-y-6">
-            <Card className="border-0 shadow-xl rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
-                <CardHeader className="bg-gradient-to-br from-[#DB8935]/5 via-white to-[#8B5A2B]/5 pb-6 pt-8 relative">
+            <Card className="border-0  rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
+               {isHead && (
+                 <CardHeader className="bg-gradient-to-br from-[#DB8935]/5 via-white to-[#8B5A2B]/5 pb-6 pt-8 relative">
                     {/* Decorative elements */}
                     <div className="absolute top-0 right-0 w-24 h-24 bg-[#DB8935]/5 rounded-full -translate-y-4 translate-x-4"></div>
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-[#8B5A2B]/5 rounded-full translate-y-2 -translate-x-2"></div>
@@ -31,13 +33,14 @@ export default function RegisterStoreBrancheStep1({ register, error, isImage = t
                             <div className="p-2.5 bg-[#DB8935]/10 rounded-xl">
                                 <Store className="h-6 w-6 text-[#8B5A2B]" />
                             </div>
-                            Información de la Sucursal
+                            Información de la cafetería
                         </CardTitle>
                         <p className="text-gray-600 text-base leading-relaxed">
-                            Registra la información básica de tu nueva sucursal para comenzar a conectar con los coffeelovers.
+                            Registra la información básica de tu nueva cafetería para comenzar a conectar con los coffeelovers.
                         </p>
                     </div>
                 </CardHeader>
+               )}
 
                 <CardContent className="px-4 py-8 md:px-6 lg:px-8 bg-white">
                     <div className={`grid gap-8 ${isImage ? "lg:grid-cols-2" : "lg:grid-cols-1"} items-start`}>
@@ -59,7 +62,7 @@ export default function RegisterStoreBrancheStep1({ register, error, isImage = t
                                         {/* Badge decorativo */}
                                         <div className="absolute -bottom-3 -right-3 bg-[#DB8935] text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
                                             <Coffee className="h-3 w-3 inline mr-1" />
-                                            Nueva Sucursal
+                                            Nueva Cafetería
                                         </div>
                                     </div>
                                 </div>
@@ -71,7 +74,7 @@ export default function RegisterStoreBrancheStep1({ register, error, isImage = t
                             {/* Sección de información básica */}
                             <div className="space-y-6">
                                 <div className="flex items-center gap-2">
-                                    <div className="h-1 w-8 bg-[#DB8935] rounded-full"></div>
+                                    <div className="h-1 w-4 bg-[#DB8935] rounded-full"></div>
                                     <Label className="text-lg font-semibold text-gray-800">
                                         Información Básica
                                     </Label>
@@ -86,7 +89,7 @@ export default function RegisterStoreBrancheStep1({ register, error, isImage = t
                                         }`}
                                     >
                                         <Store className="h-4 w-4 text-[#8B5A2B]" />
-                                        Nombre de la sucursal
+                                        Nombre de la cafetería
                                         <span className="text-red-500 font-bold">*</span>
                                     </Label>
                                     <div className="relative">
@@ -145,7 +148,7 @@ export default function RegisterStoreBrancheStep1({ register, error, isImage = t
                                     <div>
                                         <h4 className="font-medium text-blue-900 mb-1">¡Estás muy cerca!</h4>
                                         <p className="text-sm text-blue-700 leading-relaxed">
-                                            Esta información aparecerá en el perfil de tu sucursal y ayudará a los coffeelovers a contactarte directamente.
+                                            Esta información aparecerá en el perfil de tu cafetería y ayudará a los coffeelovers a contactarte directamente.
                                         </p>
                                     </div>
                                 </div>

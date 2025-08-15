@@ -215,7 +215,7 @@ export default function RegisterBranchesWidget() {
 
             {/* Contenido del formulario con altura adaptativa */}
             <div
-              className={` h-full min-h-[70vh] md:min-h-[60vh] max-h-[60vh] scrollbar-subtle pb-24 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-transparent`}
+              className={` h-full min-h-[70vh] md:min-h-[60vh] max-h-[75vh] scrollbar-subtle pb-24 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-transparent`}
             >
               <form>
                 <CardContent className={`p-4 sm:p-4 md:p-5 rounded-2xl`}>
@@ -239,7 +239,7 @@ export default function RegisterBranchesWidget() {
                     {step === 1 && (
                       <StepTransition
                         step="step2"
-                        className="p-3 sm:p-4  bg-amber-50/40 rounded-xl sm:rounded-2xl border border-amber-100"
+                        className="p-3 sm:p-4  bg-amber-50/40 rounded-xl sm:rounded-2xl border  border-amber-100"
                       >
                         <RegisterStoreBrancheStep2
                           methods={methods}
