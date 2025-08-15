@@ -12,6 +12,7 @@ import { lazy, Suspense } from "react";
   import RoleRoute from "@/router/role-route";
   import RouteLoadingIndicator from "./route_loading_indicador.router";
   import { ErrorBoundary } from "@/common/utils/error_boundary";
+import RegisterBranchWidget from "@/common/widgets/admin_store/branch/Register_branch.widget";
   
   //LAYOUTS
   const Layout_register = lazy(()=> import("@/modules/layouts/layout_register"));
@@ -130,6 +131,7 @@ const AuthRoutes = () => {
                 <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
                   <Route path="/stores" element={<Layout_store />}>
                     <Route index element={<Branch_management_AdminStore />} />
+                    <Route path="register/branch" element={<RegisterBranchWidget></RegisterBranchWidget>}/>
                   </Route>
                 </Route>
 

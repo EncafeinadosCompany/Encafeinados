@@ -20,6 +20,7 @@ import { Card, CardContent, CardFooter } from "@/common/ui/card";
 import {
   RegisterStoreBrancheSchema,
   RegisterStoreBrancheSchemaType,
+
 } from "@/common/utils/schemas/auth/register_store_branche.schema";
 
 import RegisterStoreBrancheStep1 from "@/common/molecules/auth/stores/register_store_branche_step1.molecule";

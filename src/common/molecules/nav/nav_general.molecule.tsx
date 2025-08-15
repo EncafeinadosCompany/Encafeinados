@@ -464,6 +464,7 @@ const NavGeneralComponent = ({
                   <span className="text-[10px] font-medium mt-0.5">Más</span>
                 </button>
               ) : (
+                
                 <Link
                   to="/"
                   className="flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
