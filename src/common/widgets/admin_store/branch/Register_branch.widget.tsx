@@ -4,8 +4,10 @@ import { useCriteria } from "@/api/queries/criteria/criteria.query";
 import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query";
 import RegisterBranch from "@/common/molecules/admin_stores/branches/register_branch.molecule";
 import { Button } from "@/common/ui/button";
-import { RegisterBranchFlatSchemaType, RegisterStoreBrancheSchemaFlat } from "@/common/utils/schemas/admin_stores/register_branch.schema";
-import { RegisterStoreBrancheSchema,  } from "@/common/utils/schemas/auth/register_store_branche.schema";
+import {
+  RegisterBranchFlatSchemaType,
+  RegisterStoreBrancheSchemaFlat,
+} from "@/common/utils/schemas/admin_stores/register_branch.schema";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
@@ -14,17 +16,14 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
- export default function RegisterBranchWidget (){
-
-  const [direction, setDirection] = useState(0);
+export default function RegisterBranchWidget() {
   const [baseAddress, setBaseAddress] = useState("");
-
 
   const navigate = useNavigate();
   const { data: socialNetworks } = useSocialNetworksQuery();
   const { data: criteria } = useCriteria();
 
-    const registerBranchMutation = useRegisterBrandMutation();
+  const registerBranchMutation = useRegisterBrandMutation();
   const registerCriteriaMutation = useRegisterCriteriaMutation();
 
   const name = localStorage.getItem("store");
@@ -67,13 +66,8 @@ import { useNavigate } from "react-router-dom";
   }, [criteria, methods]);
 
   const onSubmit = async (data: any) => {
-  
-
-
     try {
-
-
-    const storeId = getEncryptedItem("storeId")
+      const storeId = getEncryptedItem("storeId");
       const detailsParts = [];
       if (data.addressDetails)
         detailsParts.push(`Detalles: ${data.addressDetails}`);
@@ -104,16 +98,24 @@ import { useNavigate } from "react-router-dom";
         criteriaResponseData: data.criteria,
       });
 
-      console.log(data, "datoss")
+
+    toast.success("¡Sucursal creada con éxito! Está en proceso de validación.", {
+      style: {
+        background: '#D4A574',
+        color: '#4A2C17',
+      },
+      duration: 5000
+    })
+
+    setTimeout(()=>{
+        navigate("/stores")
+    },100)
 
       methods.reset();
-
     } catch (err) {
       console.error("Error during submission:", err);
-      // El error ya se maneja en la mutación
     }
   };
-
 
   const onLocationSelect = (lat: number, lng: number, address: string) => {
     methods.setValue("latitude", lat, { shouldValidate: true });
@@ -122,12 +124,16 @@ import { useNavigate } from "react-router-dom";
     setBaseAddress(address);
   };
 
-    return (
-       <div className="relative h-full flex-col content-center p-2 ">
-        <Button onClick={()=> navigate("/stores")} className="absolute top-1 border-none shadow-none">
-            <ArrowLeft/>
-            Volver</Button>
-         <RegisterBranch
+  return (
+    <div className="relative h-full flex-col content-center scrollbar-subtle overflow-y-auto p-2">
+      <Button
+        onClick={() => navigate("/stores")}
+        className="border-none shadow-none z-10"
+      >
+        <ArrowLeft />
+        Volver
+      </Button>
+      <RegisterBranch
         onLocationSelect={onLocationSelect}
         methods={methods}
         onSubmit={onSubmit}
@@ -135,7 +141,7 @@ import { useNavigate } from "react-router-dom";
         criteria={criteria || []}
         socialNetworks={socialNetworks}
         isPending={registerBranchMutation.isPending}
-        ></RegisterBranch>
-       </div>
-    )
- }
+      ></RegisterBranch>
+    </div>
+  );
+}
