@@ -3,6 +3,7 @@ import { useRegisterCriteriaMutation } from "@/api/mutations/criteria/criteria.m
 import { useCriteria } from "@/api/queries/criteria/criteria.query";
 import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query";
 import RegisterBranch from "@/common/molecules/admin_stores/branches/register_branch.molecule";
+import { Button } from "@/common/ui/button";
 import { RegisterBranchFlatSchemaType, RegisterStoreBrancheSchemaFlat } from "@/common/utils/schemas/admin_stores/register_branch.schema";
 import { RegisterStoreBrancheSchema,  } from "@/common/utils/schemas/auth/register_store_branche.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -128,7 +129,9 @@ import { useNavigate } from "react-router-dom";
   };
 
     return (
-        <RegisterBranch
+       <div className="relative h-full flex-col content-center p-2 ">
+        <Button className="absolute top-1">Volver</Button>
+         <RegisterBranch
         onLocationSelect={onLocationSelect}
         methods={methods}
         onSubmit={onSubmit}
@@ -137,5 +140,6 @@ import { useNavigate } from "react-router-dom";
         socialNetworks={socialNetworks}
         isPending={registerBranchMutation.isPending}
         ></RegisterBranch>
+       </div>
     )
  }

@@ -32,7 +32,7 @@ export default function RegisterBranch({methods, isPending, baseAddress, criteri
   const [direction, setDirection] = useState(0);
 
 return(
-      <div className="w-full h-full max-w-5xl mx-auto ">
+    <div className="max-w-5xl mx-auto">
     <Card
       className={`relative overflow-hidden border-0 rounded-2xl sm:rounded-3xl shadow-lg bg-white 
           `}
@@ -49,11 +49,12 @@ return(
             getStepTitle={"Registro de sucursal"}
             getStepDescription={"Informacion esencial"}
             getStepIcon={<StoreIcon />}
+            isLoaginBar={false}
           ></FormHeader>
 
           {/* Contenido del formulario con altura adaptativa */}
           <div
-            className={` h-full min-h-[70vh] md:min-h-[60vh] max-h-[60vh] scrollbar-subtle pb-24 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-transparent`}
+            className={` h-full min-h-[70vh] md:min-h-[65vh] max-h-[60vh] scrollbar-subtle pb-24 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-transparent`}
           >
             <form>
               <CardContent className={`p-4 sm:p-4 md:p-5 rounded-2xl`}>

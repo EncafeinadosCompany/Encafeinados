@@ -7,6 +7,9 @@ import { BranchCardsView } from "@/common/molecules/branch/branch_cards_view.mol
 import { BranchTableView } from "@/common/molecules/branch/branch_table_view.molecule";
 import { useBranchList } from "@/common/hooks/useBranchList.hook";
 import { Coffee, MapPin } from "lucide-react";
+import { Button } from "@/common/ui/button";
+import { useNavigate } from "react-router-dom";
+
 
 interface BranchListWidgetProps {
   branches: Branch[];
@@ -54,6 +57,7 @@ export const BranchListWidget = ({
     handleViewModeChange,
   } = useBranchList({ branches, initialPageSize });
 
+  const navigate = useNavigate();
   return (
     <div className="space-y-4 p-1">
       <div className="bg-gradient-to-r from-[#F5E4D2]/30 to-[#EAD7C1]/30 rounded-xl p-4 border border-[#E6D7C3]/30 backdrop-blur-sm">
@@ -91,6 +95,9 @@ export const BranchListWidget = ({
               currentView={viewMode}
               onViewChange={handleViewModeChange}
             />
+            <Button onClick={()=> navigate("/stores/register/branch")} className="bg-[#2E7D32] text-white">
+              Registar sucursal
+            </Button>
           </div>
         </div>
       </div>
