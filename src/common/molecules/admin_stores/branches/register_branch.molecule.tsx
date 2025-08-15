@@ -146,7 +146,7 @@ export default function RegisterBranch({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl p-2 border border-emerald-100 shadow-sm"
+                        className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-transparent shadow-sm"
                       >
                         <div className="flex items-center gap-3 mb-4">
                           <div className="p-2 bg-emerald-100 rounded-lg">
