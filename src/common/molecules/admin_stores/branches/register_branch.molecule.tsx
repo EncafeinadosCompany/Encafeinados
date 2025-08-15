@@ -91,6 +91,7 @@ export default function RegisterBranch({
                           register={methods.register}
                           error={methods.formState.errors}
                           isImage={false}
+                          isHead={true}
                         />
                       </motion.div>
 
