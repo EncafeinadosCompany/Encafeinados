@@ -225,10 +225,7 @@ export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({
                     <h2 className="text-lg font-bold text-[#7A5A3F] opacity-90">
                       {data?.branch?.store_name || 'Tienda'}
                     </h2>
-                    <span className="text-[#7A5A3F] opacity-60">•</span>
-                    <span className="text-sm font-medium text-[#7A5A3F] opacity-70 bg-white/40 px-2 py-0.5 rounded-lg">
-                      {data?.branch?.store_email || 'Sin email'}
-                    </span>
+                   
                   </div>
                   
                   <DialogTitle className="text-2xl font-bold text-[#4A3B2F] mb-1">
@@ -311,18 +308,7 @@ export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({
                       </div>
                     </div>
 
-                    <div className="flex items-start gap-3 col-span-full sm:col-span-1">
-                      <div className="p-1.5 bg-white/60 rounded-xl mt-0.5">
-                        <svg className="h-4 w-4 text-[#7A5A3F]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="font-medium text-[#4A3B2F] text-sm">Email</p>
-                        <p className="text-[#7A5A3F] opacity-80 break-all text-sm">{data.branch.store_email}</p>
-                      </div>
-                    </div>
-                    
+               
                     <div className="flex items-start gap-3 col-span-full sm:col-span-2">
                       <div className="p-1.5 bg-white/60 rounded-xl mt-0.5">
                         <svg className="h-4 w-4 text-[#7A5A3F]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
