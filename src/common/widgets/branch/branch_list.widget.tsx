@@ -69,11 +69,7 @@ export const BranchListWidget = ({
                 <span className="text-[#8B5A2B]/80 truncate">
                   {isLoading ? "Cargando..." : `${totalBranches} sucursales`}
                 </span>
-                {!isLoading && totalBranches > 0 && (
-                  <div className="bg-[#DB8935]/15 text-[#8B5A2B] px-2 py-0.5 rounded-md text-xs font-medium flex-shrink-0">
-                    Activas
-                  </div>
-                )}
+             
               </div>
             </div>
             
@@ -122,7 +118,6 @@ export const BranchListWidget = ({
         )}
       </div>
 
-      {/* Pagination - show when there are multiple pages or items */}
       {!isLoading && totalBranches > 0 && totalPages > 1 && (
         <PaginationControls
           currentPage={currentPage}
