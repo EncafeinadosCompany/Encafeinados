@@ -49,8 +49,7 @@ export default function RegisterBranch({
   return (
     <div className="max-w-6xl mx-auto">
       <Card
-        className={`relative overflow-hidden border-0 rounded-2xl sm:rounded-3xl shadow-lg bg-white 
-          `}
+        className={`relative overflow-hidden border-0 rounded-4xl sm:rounded-3xl shadow-lg bg-white`}
       >
         <FormProvider {...methods}>
           <motion.div
@@ -58,7 +57,6 @@ export default function RegisterBranch({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            {/* Encabezado moderno */}
             <FormHeader
               getGreeting={getGreeting}
               getStepTitle={"Registro de sucursal"}
@@ -68,7 +66,6 @@ export default function RegisterBranch({
               color="white"
             ></FormHeader>
 
-            {/* Contenido del formulario con altura adaptativa */}
             <div
               className={`h-full pb-24`}
             >
@@ -90,9 +87,9 @@ export default function RegisterBranch({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100 shadow-sm"
+                        className=" rounded-xl border border-transparent "
                       >
-                        <div className="flex items-center gap-3 mb-4">
+                        {/* <div className="flex items-center gap-3 mb-4">
                           <div className="p-2 bg-blue-100 rounded-lg">
                             <Building2 className="h-5 w-5 text-blue-600" />
                           </div>
@@ -104,7 +101,7 @@ export default function RegisterBranch({
                               Datos esenciales de la sucursal
                             </p>
                           </div>
-                        </div>
+                        </div> */}
 
                         <RegisterStoreBrancheStep1
                           register={methods.register}
@@ -145,7 +142,7 @@ export default function RegisterBranch({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-transparent shadow-sm"
+                        className=" rounded-xl border border-transparent"
                       >
                         <div className="flex items-center gap-3 mb-4">
                           <div className="p-2 bg-emerald-100 rounded-lg">
@@ -188,7 +185,7 @@ export default function RegisterBranch({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
-                        className=" rounded-xl border border-transparent shadow-sm"
+                        className=" rounded-xl border border-transparent"
                       >
                         <SocialNetworksForm
                           isHead={true}

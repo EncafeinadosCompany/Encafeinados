@@ -155,23 +155,47 @@ export default function RegisterBranchWidget() {
   };
 
   return (
-    <div className="relative h-full flex-col content-center scrollbar-subtle overflow-y-auto p-2">
-      <Button
-        onClick={() => navigate("/stores")}
-        className="border-none shadow-none z-10"
-      >
-        <ArrowLeft />
-        Volver
-      </Button>
-      <RegisterBranch
-        onLocationSelect={onLocationSelect}
-        methods={methods}
-        onSubmit={onSubmit}
-        baseAddress={baseAddress}
-        criteria={criteria || []}
-        socialNetworks={socialNetworks}
-        isPending={registerBranchMutation.isPending}
-      ></RegisterBranch>
+    <div className="relative h-full flex-col content-center scrollbar-subtle overflow-y-auto">
+      <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-4 ">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => navigate("/stores")}
+              variant="ghost"
+              size="sm"
+              className="group flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-[#DB8935]/10 hover:text-[#8B5A2B] transition-all duration-200 text-gray-600 border border-gray-200 hover:border-[#DB8935]/30 shadow-sm hover:shadow-md"
+            >
+              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform duration-200" />
+              <span className="font-medium">Volver a Cafeterias</span>
+            </Button>
+            
+            <div className="hidden md:flex items-center gap-2 text-sm text-gray-500">
+              <span>Tiendas</span>
+              <span>/</span>
+              <span className="text-[#8B5A2B] font-medium">Registrar Sucursal</span>
+            </div>
+          </div>
+          
+          <div className="hidden lg:flex items-center gap-2 text-sm text-gray-600">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-[#DB8935] rounded-full"></div>
+              <span className="font-medium">Registro en progreso</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="">
+        <RegisterBranch
+          onLocationSelect={onLocationSelect}
+          methods={methods}
+          onSubmit={onSubmit}
+          baseAddress={baseAddress}
+          criteria={criteria || []}
+          socialNetworks={socialNetworks}
+          isPending={registerBranchMutation.isPending}
+        />
+      </div>
     </div>
   );
 }
