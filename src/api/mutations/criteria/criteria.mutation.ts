@@ -52,6 +52,7 @@ export const useRegisterCriteriaMutation = () => {
       }
     },
     onSuccess: () => {
+      
       queryClient.invalidateQueries({ queryKey: ['criteria'] });
     },
     onError: (error: any) => {

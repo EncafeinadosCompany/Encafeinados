@@ -22,7 +22,7 @@ export const AdminBranchesItems: NavItemType[] = [
     icon: <Wallet className="h-4 w-4" />,
   },
   {
-    title: "Sucursal",
+    title: "Cafetería",
     href: "/branch/details",
     icon: <Home className="h-4 w-4" />,
   },
@@ -42,7 +42,7 @@ export const AdminBranchesItems: NavItemType[] = [
     icon: <Star className="h-4 w-4" />,
   },
   {
-    title: "Editar sucursal",
+    title: "Editar",
     href: "/branch/profile",
     icon: <Store className="h-4 w-4" />,
   },

@@ -128,7 +128,7 @@ export default function RegisterBranchStep4({ methods }: RegisterBranchProps) {
           transition={{ duration: 0.4 }}
           className="mt-6 sm:mt-8 flex justify-center"
         >
-          <div className="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-2xl shadow-md flex items-center justify-center border border-gray-100">
+          <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl flex items-center justify-center border border-gray-100">
             {show ? (
               <img
                 src={storeSVG}
