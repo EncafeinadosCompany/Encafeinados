@@ -48,7 +48,7 @@ import RegisterBranchWidget from "@/common/widgets/admin_store/branch/Register_b
   
   //ADMIN BRANCHES
   const Dashboard_branch = lazy(() => import ("@/modules/admin_branches/views/manage_dashboard.view"));
-  const Details_branch = lazy(() => import("@/common/widgets/admin_branches/details_branches.widget"));
+  const Details_branch = lazy(() => import("@/modules/admin_branches/views/details_branch.view"));
   const Payment_result = lazy(() => import("@/modules/admin_branches/views/payment_result.view"));
   const Attributes_management= lazy(() => import("@/common/widgets/admin_branches/attributes.widget"));
   const Reviews_management = lazy(() => import("@/modules/admin_branches/views/branch_reviews.view"));

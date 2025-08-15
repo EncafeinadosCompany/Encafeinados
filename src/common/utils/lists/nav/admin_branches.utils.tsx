@@ -7,24 +7,10 @@ import {
   MessageSquare,
   LayoutDashboard,
 } from "@/common/ui/icons";
-import { DoorOpen, Wallet } from "lucide-react";
-import { getEncryptedItem } from "../../security/storage_encrypted.utils";
-import { UserData } from "@/api/types/auth/auth.types";
-import { ROLES } from "../roles.utils";
+import { Wallet } from "lucide-react";
 
-const user = getEncryptedItem("user") as UserData | null;
-
-console.log(user)
 export const AdminBranchesItems: NavItemType[] = [
-  ...(user?.roles.includes(ROLES.STORE && ROLES.ADMIN)
-    ? [
-        {
-          title: "Volver",
-          href: "/stores",
-          icon: <DoorOpen className="h-4 w-4" />,
-        },
-      ]
-    : []),
+
   {
     title: "Dashboard",
     href: "/branch",
@@ -56,7 +42,7 @@ export const AdminBranchesItems: NavItemType[] = [
     icon: <Star className="h-4 w-4" />,
   },
   {
-    title: "Perfil",
+    title: "Editar sucursal",
     href: "/branch/profile",
     icon: <Store className="h-4 w-4" />,
   },

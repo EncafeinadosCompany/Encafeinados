@@ -24,7 +24,6 @@ import { CardFooter } from "@/common/ui/card";
 import { Button } from "@/common/ui/button";
 import { criteriaResponseData } from "@/api/types/criteria/criteria.types";
 import { SocialNetworksType } from "@/api/queries/social_networks/social_networks.query";
-import { NavigateFunction } from "react-router-dom";
 
 interface RegistBranchProp {
   methods: any;
@@ -71,7 +70,7 @@ export default function RegisterBranch({
 
             {/* Contenido del formulario con altura adaptativa */}
             <div
-              className={` h-full pb-24`}
+              className={`h-full pb-24`}
             >
               <form>
                 <CardContent

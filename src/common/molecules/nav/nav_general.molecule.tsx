@@ -9,6 +9,9 @@ import { ROLES } from "@/common/utils/lists/roles.utils";
 import { useState, memo, useMemo, useCallback } from "react";
 import { AdminBranchesItems } from "@/common/utils/lists/nav/admin_branches.utils";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
+import { UserData } from "@/api/types/auth/auth.types";
+import { divIcon } from "leaflet";
+import { DoorOpen } from "lucide-react";
 
 interface NavGeneralProps {
   isMobile: boolean;
@@ -39,6 +42,7 @@ const NavGeneralComponent = ({
 }: NavGeneralProps) => {
   const location = useLocation();
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);
+  const user = getEncryptedItem("user") as UserData | null;
 
   // Obtener el nombre completo del usuario
   const fullName = useMemo(() => {
@@ -240,8 +244,44 @@ const NavGeneralComponent = ({
                 )}
               </Link>
             ))}
+{/* 
+            {user?.roles.includes(ROLES.STORE) && (
+              <Link
+                key={"volver"}
+                to={"/stores"}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 relative",
+                  isRouteActive("/stores")
+                    ? "bg-gradient-to-r from-amber-50 to-amber-100/70 text-amber-800 font-medium"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                  isExpanded ? "" : "justify-center"
+                )}
+              >
+                     <div
+                  className={cn(
+                    "flex-shrink-0",
+                    isRouteActive("/stores")
+                      ? "text-amber-600"
+                      : "text-gray-500"
+                  )}
+                >
+                  <DoorOpen></DoorOpen>
+                </div>
+                <span
+                  className={cn(
+                    "font-medium whitespace-nowrap transition-opacity duration-300",
+                    isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+                  )}
+                >
+                  volver
+                </span>
 
-            {isAdminBranch &&
+                {isRouteActive("/stores") && !isExpanded && (
+                  <div className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full"></div>
+                )}
+              </Link>
+            )} */}
+            {/* {isAdminBranch &&
               AdminBranchesItems.map((item) => (
                 <Link
                   key={item.href}
@@ -279,7 +319,7 @@ const NavGeneralComponent = ({
                     <div className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full"></div>
                   )}
                 </Link>
-              ))}
+              ))} */}
           </nav>
 
           <div className="mt-auto border-t border-gray-100">
@@ -410,9 +450,7 @@ const NavGeneralComponent = ({
                           : "bg-amber-100 text-amber-600"
                       )}
                     >
-                      <div className="[&>svg]:h-8 [&>svg]:w-8">
-                        {item.icon}
-                      </div>
+                      <div className="[&>svg]:h-8 [&>svg]:w-8">{item.icon}</div>
                     </div>
                     <span className="text-[10px] font-medium mt-0.5 truncate max-w-[60px] text-center">
                       {item.title}
@@ -464,7 +502,6 @@ const NavGeneralComponent = ({
                   <span className="text-[10px] font-medium mt-0.5">Más</span>
                 </button>
               ) : (
-                
                 <Link
                   to="/"
                   className="flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 text-gray-500 hover:text-red-600 hover:bg-red-50/30"
