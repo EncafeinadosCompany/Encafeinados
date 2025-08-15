@@ -140,7 +140,7 @@ const NavGeneralComponent = ({
                 <div className="flex-grow min-w-0 overflow-hidden">
                   <h1 className="font-medium text-[#6F4E37] leading-tight truncate max-w-[120px]">
                     <span className="text-sm">
-                      {firstName ? `¡Hola, ${firstName}!` : "Encafeinados"}
+                      {firstName ? `${firstName}` : "Encafeinados"}
                     </span>
                   </h1>
                 </div>

@@ -205,19 +205,21 @@ export const PendingBranchesWidget = () => {
     
     if (originalBranches.length > 0 && searchTerm) {
       return (
-        <div className="flex flex-col items-center justify-center py-6 text-gray-400">
-          <Search className="h-10 w-10 text-gray-300 mb-2 stroke-[1.5px]" />
-          <p className="font-medium text-sm text-gray-500">No se encontraron resultados</p>
-          <p className="text-xs mt-1 max-w-xs text-center px-4">
-            No hay sucursales que coincidan con "{searchTerm}"
+        <div className="flex flex-col items-center justify-center py-8 px-6">
+          <div className="bg-[#F5E4D2]/30 p-3 rounded-xl mb-4">
+            <Search className="h-6 w-6 text-[#DB8935]/70" />
+          </div>
+          <h3 className="font-medium text-[#5F4B32] mb-2">Sin resultados</h3>
+          <p className="text-sm text-[#8B5A2B]/70 text-center max-w-xs mb-4">
+            No hay sucursales que coincidan con <span className="font-medium text-[#6F4E37]">"{searchTerm}"</span>
           </p>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => setSearchTerm("")}
-            className="mt-3 border-gray-300 text-gray-500 hover:bg-gray-50 h-7 text-xs"
+            className="bg-white border-[#E6D7C3] text-[#8B5A2B] hover:bg-[#F5E4D2]/20 hover:border-[#DB8935]/50 text-xs h-8 px-3"
           >
-            <RefreshCw className="h-3 w-3 mr-1" />
+            <RefreshCw className="h-3 w-3 mr-1.5" />
             Limpiar búsqueda
           </Button>
         </div>
@@ -225,19 +227,21 @@ export const PendingBranchesWidget = () => {
     }
     
     return (
-      <div className="flex flex-col items-center justify-center py-6 text-gray-400">
-        <Coffee className="h-10 w-10 text-[#D4A76A]/60 mb-2" />
-        <p className="font-medium text-sm text-[#6F4E37]">No hay sucursales pendientes</p>
-        <p className="text-xs mt-1 max-w-xs text-center px-4">
-          Todas las solicitudes han sido procesadas
+      <div className="flex flex-col items-center justify-center py-8 px-6">
+        <div className="bg-[#F5E4D2]/30 p-4 rounded-xl mb-4">
+          <Coffee className="h-8 w-8 text-[#DB8935]/70" />
+        </div>
+        <h3 className="font-semibold text-[#5F4B32] mb-2">Todo al día</h3>
+        <p className="text-sm text-[#8B5A2B]/70 text-center max-w-sm mb-4">
+          No hay solicitudes pendientes. Todas las sucursales han sido procesadas.
         </p>
         <Button 
           variant="outline" 
           size="sm"
           onClick={handleRefresh}
-          className="mt-3 border-[#D4A76A] text-[#6F4E37] hover:bg-[#D4A76A]/10 h-7 text-xs"
+          className="bg-white border-[#E6D7C3] text-[#8B5A2B] hover:bg-[#F5E4D2]/20 hover:border-[#DB8935]/50 text-xs h-8 px-3"
         >
-          <RefreshCw className={`h-3 w-3 mr-1 ${refreshAnimation ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`h-3 w-3 mr-1.5 ${refreshAnimation ? 'animate-spin' : ''}`} />
           Verificar
         </Button>
       </div>
@@ -247,26 +251,25 @@ export const PendingBranchesWidget = () => {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <div className="p-3 space-y-3 w-full flex-grow flex flex-col justify-center">
-          <div className="flex items-center justify-between">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-6 rounded-full" />
+        <div className="p-4 space-y-3 w-full flex-grow flex flex-col justify-center">
+          <div className="flex items-center justify-center mb-4">
+            <div className="bg-[#F5E4D2]/30 p-3 rounded-xl">
+              <Coffee className="h-6 w-6 text-[#DB8935] animate-pulse" />
+            </div>
           </div>
           
-          <Skeleton className="h-6 w-full mb-2" />
-          
-          <div className="space-y-2">
+          <div className="space-y-3">
             {Array(3).fill(0).map((_, index) => (
-              <div key={index} className="rounded-md border p-2">
+              <div key={index} className="rounded-xl border border-[#E6D7C3]/30 p-3 bg-white/60">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Skeleton className="h-8 w-8 rounded-md flex-shrink-0" />
-                    <div className="space-y-1">
-                      <Skeleton className="h-3 w-24" />
-                      <Skeleton className="h-2 w-20" />
+                  <div className="flex items-center space-x-3">
+                    <Skeleton className="h-10 w-10 rounded-lg bg-[#F5E4D2]/40" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-3 w-28 bg-[#F5E4D2]/40" />
+                      <Skeleton className="h-2.5 w-20 bg-[#F5E4D2]/30" />
                     </div>
                   </div>
-                  <Skeleton className="h-6 w-16 rounded-md" />
+                  <Skeleton className="h-7 w-18 rounded-md bg-[#F5E4D2]/40" />
                 </div>
               </div>
             ))}
@@ -277,15 +280,21 @@ export const PendingBranchesWidget = () => {
     
     if (error) {
       return (
-        <div className="flex flex-col items-center justify-center py-8 text-red-500 flex-grow">
-          <AlertTriangle className="h-8 w-8 mb-2" />
-          <p className="font-medium text-sm">Error al cargar</p>
+        <div className="flex flex-col items-center justify-center py-8 px-6 flex-grow">
+          <div className="bg-red-50 p-3 rounded-xl mb-4">
+            <AlertTriangle className="h-6 w-6 text-red-500" />
+          </div>
+          <h3 className="font-medium text-red-600 mb-2">Error al cargar</h3>
+          <p className="text-sm text-red-500/70 text-center max-w-xs mb-4">
+            No se pudieron obtener las sucursales
+          </p>
           <Button 
             variant="outline"
-            className="mt-2 border-red-200 text-xs py-1 h-7"
+            size="sm"
             onClick={handleRefresh}
+            className="bg-white border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 text-xs h-8 px-3"
           >
-            <RefreshCw className="h-3 w-3 mr-1" />
+            <RefreshCw className="h-3 w-3 mr-1.5" />
             Reintentar
           </Button>
         </div>
@@ -338,14 +347,23 @@ export const PendingBranchesWidget = () => {
 
   return (
     <>
-      <Card className="w-full h-full shadow-sm border-gray-200 overflow-hidden flex flex-col">
-        <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50/80 py-2 px-3 flex justify-between items-center flex-shrink-0 ">
-          <div className="flex items-center space-x-2">
-            <span className="h-2 w-2 rounded-full bg-amber-500"></span>
-            <CardTitle className="text-sm font-medium text-gray-700">Sucursales Pendientes</CardTitle>
+      <Card className="w-full h-full shadow-lg border border-[#E6D7C3]/40 bg-[#FBF7F4] overflow-hidden flex flex-col">
+        <CardHeader className="bg-gradient-to-r from-[#F5E4D2]/60 to-[#EAD7C1]/60 py-3 px-4 flex justify-between items-center flex-shrink-0 border-b border-[#E6D7C3]/30">
+          <div className="flex items-center space-x-3">
+            <div className="bg-[#DB8935]/10 p-2 rounded-full">
+              <Coffee className="h-4 w-4 text-[#DB8935]" />
+            </div>
+            <div>
+              <CardTitle className="text-base font-semibold text-[#5F4B32]">
+                Sucursales Pendientes
+              </CardTitle>
+              <p className="text-xs text-[#8B5A2B]/70 mt-0.5">
+                Gestionar solicitudes
+              </p>
+            </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <StatusBadge count={filteredBranches.length} status="pending" />
             
             <TooltipProvider>
@@ -355,13 +373,13 @@ export const PendingBranchesWidget = () => {
                     variant="ghost" 
                     size="icon"
                     onClick={handleRefresh}
-                    className="h-6 w-6 rounded-full text-gray-500 hover:bg-amber-50/80 hover:text-amber-700"
+                    className="h-8 w-8 rounded-lg bg-white/70 hover:bg-white text-[#8B5A2B] hover:text-[#6F4E37] border border-[#E6D7C3]/50 hover:border-[#DB8935]/30 transition-all duration-200"
                     disabled={refreshAnimation}
                   >
-                    <RefreshCw className={`h-3 w-3 ${refreshAnimation ? 'animate-spin' : ''}`} />
+                    <RefreshCw className={`h-3.5 w-3.5 ${refreshAnimation ? 'animate-spin' : ''}`} />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs font-medium bg-amber-50 text-amber-700 border-amber-200 no-arrow">
+                <TooltipContent side="bottom" className="text-xs font-medium bg-[#FBF7F4] text-[#5F4B32] border-[#E6D7C3] shadow-sm">
                   Actualizar lista
                 </TooltipContent>
               </Tooltip>
@@ -369,7 +387,7 @@ export const PendingBranchesWidget = () => {
           </div>
         </CardHeader>
         
-        <div className="flex-shrink-0 p-2">
+        <div className="flex-shrink-0 p-3 bg-white/40">
           <BranchSearchBar value={searchTerm} onChange={setSearchTerm} />
         </div>
         

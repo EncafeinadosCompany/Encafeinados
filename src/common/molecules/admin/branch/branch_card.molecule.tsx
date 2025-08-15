@@ -21,6 +21,7 @@ interface BranchCardProps {
     phoneNumber?: string;
     store_logo?: string;
     store_email?: string;
+    store_name?: string;
     rejection_reason?: string;
     rejected_at?: string;
   };
@@ -81,13 +82,32 @@ export const BranchCard = ({
                   }}
                 />
               </div>              <div className="min-w-0 flex-1">
+                {/* Nombre de la tienda */}
+                {branch.store_name && (
+                  <div className="text-xs text-[#7A5A3F] font-medium truncate mb-0.5">
+                    🏪 {branch.store_name}
+                  </div>
+                )}
+                
+                {/* Nombre de la sucursal */}
                 <div className="font-medium text-gray-800 truncate text-sm">
                   {branch.name}
                 </div>
-                <div className="text-xs text-gray-500 truncate flex items-center">
+                
+                {/* Dirección */}
+                <div className="text-xs text-gray-500 truncate flex items-center mt-0.5">
                   <MapPin size={10} className="mr-1 flex-shrink-0" />
                   {branch.address || "Sin dirección"}
                 </div>
+                
+                {/* Email de la tienda (opcional) */}
+                {branch.store_email && (
+                  <div className="text-xs text-gray-400 truncate mt-0.5">
+                    📧 {branch.store_email}
+                  </div>
+                )}
+                
+                {/* Motivo de rechazo para sucursales rechazadas */}
                 {type === "rejected" && branch.rejection_reason && (
                   <div className="text-xs text-red-600 truncate mt-0.5">
                     Motivo: {branch.rejection_reason}

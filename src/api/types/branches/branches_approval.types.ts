@@ -78,6 +78,9 @@ export interface BranchInApproval {
   latitude: number;
   longitude: number;
   address: string;
+  store_name?: string;
+  store_logo?: string;
+  store_email?: string;
 }
 
 export interface BranchApprovalDetails {
