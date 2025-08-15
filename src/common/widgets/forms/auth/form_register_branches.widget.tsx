@@ -35,7 +35,6 @@ import { useCriteria } from "@/api/queries/criteria/criteria.query";
 import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query";
 import { FormHeader } from "@/common/molecules/form/form_header.molecule";
 import { getGreeting } from "@/common/utils/get_greeting.utils";
-import { ButtonSuccess } from "@/common/atoms/forms/button_success.atom";
 import { useRegisterCriteriaMutation } from "@/api/mutations/criteria/criteria.mutation";
 import StepTransition from "@/common/atoms/forms/step_transition.atom";
 import ButtonChevronUp from "@/common/atoms/forms/buttonChevronUp.atom";
@@ -266,7 +265,7 @@ export default function RegisterBranchesWidget() {
                     {step === 3 && (
                       <StepTransition
                         step="step4"
-                        className="p-3 sm:p-4 bg-green-50/40 rounded-xl sm:rounded-2xl border border-green-100"
+                        className="p-3 sm:p-4  rounded-xl sm:rounded-2xl border-none"
                       >
                         <RegisterStoreBrancheStep3
                           baseAddress={baseAddress}

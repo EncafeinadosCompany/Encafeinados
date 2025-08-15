@@ -21,9 +21,10 @@ interface DynamicSocialNetworksFormProps {
     control: any
     error?: any
     idSocialNetworks?: SocialBranch[]
+    isHead?: boolean
 }
 
-export default function SocialNetworksForm({ availableSocialNetworks, register, control, error }: DynamicSocialNetworksFormProps) {
+export default function SocialNetworksForm({ availableSocialNetworks, register, control, error, isHead=false }: DynamicSocialNetworksFormProps) {
     const { fields, append, remove } = useFieldArray({ control, name: "social_networks", })
     const [currentSelection, setCurrentSelection] = useState<string>("")
 
@@ -45,8 +46,10 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
     }
 
     return (
-        <Card className="w-full border-0 shadow-xl rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-br from-[#DB8935]/5 via-white to-[#8B5A2B]/5 pb-8 pt-8 relative">
+        <Card className="w-full border-0 rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
+           {
+            isHead && (
+                 <CardHeader className="bg-gradient-to-br from-[#DB8935]/5 via-white to-[#8B5A2B]/5 pb-8 pt-8 relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#DB8935]/5 rounded-full -translate-y-8 translate-x-8"></div>
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#8B5A2B]/5 rounded-full translate-y-4 -translate-x-4"></div>
                 
@@ -66,11 +69,13 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                     </CardDescription>
                 </div>
             </CardHeader>
+            )
+           }
 
             <CardContent className="space-y-8 px-4 py-8 md:px-6 lg:px-8 bg-white">
                 <div className="space-y-4">
                     <div className="flex items-center gap-2 mb-4">
-                        <div className="h-1 w-8 bg-[#DB8935] rounded-full"></div>
+                        <div className="h-1 w-4 bg-[#DB8935] rounded-full"></div>
                         <Label className="text-lg font-semibold text-gray-800">
                             Agregar Nueva Red Social
                         </Label>
@@ -180,7 +185,7 @@ export default function SocialNetworksForm({ availableSocialNetworks, register, 
                             className="space-y-1"
                         >
                             <div className="flex items-center gap-2 mb-6">
-                                <div className="h-1 w-8 bg-[#8B5A2B] rounded-full"></div>
+                                <div className="h-1 w-4 bg-[#8B5A2B] rounded-full"></div>
                                 <Label className="text-lg font-semibold text-gray-800">
                                     Tus Redes Sociales ({fields.length})
                                 </Label>
