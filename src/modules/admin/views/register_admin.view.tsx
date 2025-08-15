@@ -8,10 +8,12 @@ export default function RegisterAdmin () {
     const branchId = searchParams.get('branch');
 
     return (
-        <RegisterAdminStore 
+      <div className="w-full h-full flex flex-col ">
+          <RegisterAdminStore 
         storeId={Number(storeId) || 0} 
         branchId={Number(branchId)} 
         /> 
+      </div>
     )
 }
 

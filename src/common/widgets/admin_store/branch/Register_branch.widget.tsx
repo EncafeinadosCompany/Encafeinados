@@ -2,6 +2,7 @@ import { useRegisterBrandMutation } from "@/api/mutations/branches/branches.muta
 import { useRegisterCriteriaMutation } from "@/api/mutations/criteria/criteria.mutation";
 import { useCriteria } from "@/api/queries/criteria/criteria.query";
 import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query";
+import { validateImageRequirements } from "@/common/hooks/criteria/use_criteria.hook";
 import RegisterBranch from "@/common/molecules/admin_stores/branches/register_branch.molecule";
 import { Button } from "@/common/ui/button";
 import {
@@ -65,10 +66,37 @@ export default function RegisterBranchWidget() {
     }
   }, [criteria, methods]);
 
+
   const onSubmit = async (data: any) => {
     try {
+      console.log("🚀 Iniciando envío del formulario con data:", data);
+
+      // Validación previa al envío
+      const imageValidationError = validateImageRequirements(
+        Array.isArray(criteria) ? criteria : [],
+        data.criteria
+      );
+
+      console.log(
+        "🔍 Resultado de validación de imágenes:",
+        imageValidationError
+      );
+
+      if (imageValidationError) {
+        toast.error(imageValidationError, {
+          id: "submit-image-error",
+          style: {
+            background: "#FEE2E2",
+            color: "#DC2626",
+          },
+          duration: 4000,
+        });
+        return;
+      }
+
       const storeId = getEncryptedItem("storeId");
       const detailsParts = [];
+
       if (data.addressDetails)
         detailsParts.push(`Detalles: ${data.addressDetails}`);
       if (data.nearbyReference)
@@ -98,18 +126,20 @@ export default function RegisterBranchWidget() {
         criteriaResponseData: data.criteria,
       });
 
+      toast.success(
+        "¡Sucursal creada con éxito! Está en proceso de validación.",
+        {
+          style: {
+            background: "#D4A574",
+            color: "#4A2C17",
+          },
+          duration: 5000,
+        }
+      );
 
-    toast.success("¡Sucursal creada con éxito! Está en proceso de validación.", {
-      style: {
-        background: '#D4A574',
-        color: '#4A2C17',
-      },
-      duration: 5000
-    })
-
-    setTimeout(()=>{
-        navigate("/stores")
-    },100)
+      setTimeout(() => {
+        navigate("/stores");
+      }, 100);
 
       methods.reset();
     } catch (err) {

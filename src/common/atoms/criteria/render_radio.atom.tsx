@@ -9,7 +9,7 @@ export const renderRadioGroup = (criteriaId: string, field: any) => (
       aria-label={`Criterio ${criteriaId}: ${field.value}`}
   >
     {["yes", "no", "other"].map((value) => (
-      <div className="flex items-center space-x-2" key={value}>
+      <div className="flex items-center space-x-2 " key={value}>
         <RadioGroupItem
           data-testid={`criteria-${criteriaId}-${value}`}
           aria-label={value}
