@@ -39,7 +39,10 @@ jobs:
           NODE_ENV: test
 
       - name: Wait for frontend to be ready
-        run: npx wait-on http://localhost:5173
+        run: |
+            echo "Esperando que el frontend esté listo..."
+            timeout 120 bash -c 'until curl -f http://localhost:5173; do sleep 2; done'
+            echo "Frontend está listo!"
 
       - name: Run Cypress E2E tests
         run: npm run cy:run
