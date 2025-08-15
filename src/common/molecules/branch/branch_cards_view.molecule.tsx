@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { memo } from "react";
 import { Branch } from "@/api/types/branches/branches.types";
 import { BranchCard } from "@/common/atoms/branch/branch_card.atom";
 import { Dispatch, SetStateAction } from "react";
@@ -13,7 +13,13 @@ interface BranchCardsViewProps {
   isLoading?: boolean;
 }
 
-export const BranchCardsView = ({
+// Componente de skeleton optimizado
+const SkeletonCard = memo(() => (
+  <div className="h-64 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl animate-pulse border border-gray-100" />
+));
+
+// Componente principal memoizado para evitar re-renders innecesarios
+export const BranchCardsView = memo<BranchCardsViewProps>(({
   branches,
   onViewDetails,
   onAssingBranch,
@@ -21,15 +27,12 @@ export const BranchCardsView = ({
   onVisit,
   showActions = true,
   isLoading = false,
-}: BranchCardsViewProps) => {
+}) => {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <div
-            key={index}
-            className="h-64 bg-gray-200 rounded-lg animate-pulse"
-          />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+        {Array.from({ length: 8 }, (_, index) => (
+          <SkeletonCard key={index} />
         ))}
       </div>
     );
@@ -38,10 +41,10 @@ export const BranchCardsView = ({
   if (branches.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="text-gray-500 text-lg mb-2">
+        <div className="text-gray-600 text-lg font-medium mb-2">
           No se encontraron sucursales
         </div>
-        <p className="text-gray-400 text-sm">
+        <p className="text-gray-500 text-sm">
           Intenta ajustar los filtros de búsqueda
         </p>
       </div>
@@ -49,25 +52,21 @@ export const BranchCardsView = ({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-      {branches.map((branch, index) => (
-        <motion.div
-          key={branch.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.05, duration: 0.3 }}
-          className="h-full"
-        >
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 p-4">
+      {branches.map((branch) => (
+        <div key={branch.id} className="h-full">
           <BranchCard
             branch={branch}
             onViewDetails={onViewDetails}
-            onAssingBranch={ onAssingBranch}
+            onAssingBranch={onAssingBranch}
             onQr={onQr}
             onVisit={onVisit}
             showActions={showActions}
           />
-        </motion.div>
+        </div>
       ))}
     </div>
   );
-};
+});
+
+BranchCardsView.displayName = "BranchCardsView";

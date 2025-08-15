@@ -1,13 +1,14 @@
 import { Search, X } from "lucide-react";
 import { Input } from "@/common/ui/input";
 import { Button } from "@/common/ui/button";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
+  debounceMs?: number;
 }
 
 export const SearchInput = ({
@@ -15,14 +16,41 @@ export const SearchInput = ({
   onChange,
   placeholder = "Buscar...",
   className = "",
+  debounceMs = 300,
 }: SearchInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [localValue, setLocalValue] = useState(value);
+
+  // Efecto para sincronizar valor externo con local
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  // Debounce para optimizar búsquedas
+  useEffect(() => {
+    if (localValue === value) return;
+    
+    const timer = setTimeout(() => {
+      onChange(localValue);
+    }, debounceMs);
+
+    return () => clearTimeout(timer);
+  }, [localValue, value, onChange, debounceMs]);
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalValue(e.target.value);
+  }, []);
+
+  const handleClear = useCallback(() => {
+    setLocalValue("");
+    onChange("");
+  }, [onChange]);
 
   return (
     <div className={`relative group ${className}`}>
       <div className={`
         absolute left-3 top-1/2 transform -translate-y-1/2 transition-all duration-200
-        ${isFocused || value ? 'text-[#8B5A2B]' : 'text-gray-400'}
+        ${isFocused || localValue ? 'text-[#8B5A2B]' : 'text-gray-400'}
       `}>
         <Search className="h-4 w-4" />
       </div>
@@ -30,8 +58,8 @@ export const SearchInput = ({
       <Input
         type="text"
         placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={localValue}
+        onChange={handleInputChange}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         className={`
@@ -45,16 +73,16 @@ export const SearchInput = ({
         `}
       />
       
-      {value && (
+      {localValue && (
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => onChange("")}
+          onClick={handleClear}
           className={`
             absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 rounded-lg
             hover:bg-[#DB8935]/10 text-gray-400 hover:text-[#8B5A2B] 
             transition-all duration-200 opacity-0 group-hover:opacity-100
-            ${value ? 'opacity-100' : ''}
+            ${localValue ? 'opacity-100' : ''}
           `}
         >
           <X className="h-3.5 w-3.5" />

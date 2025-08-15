@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import {
   MapPin,
   Phone,
@@ -29,7 +30,7 @@ interface BranchCardProps {
   showActions?: boolean;
 }
 
-export const BranchCard = ({
+export const BranchCard = memo<BranchCardProps>(({
   branch,
   onViewDetails,
   onAssingBranch,
@@ -37,7 +38,8 @@ export const BranchCard = ({
   onQr,
   onVisit,
   showActions = true,
-}: BranchCardProps) => {
+}) => {
+  // Declarar funciones utilitarias primero
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "active":
@@ -73,6 +75,17 @@ export const BranchCard = ({
     }
   };
 
+  // Memoizar valores calculados para evitar recálculos
+  const statusConfig = useMemo(() => ({
+    color: getStatusColor(branch.status),
+    text: getStatusText(branch.status),
+  }), [branch.status]);
+
+  const openStatusConfig = useMemo(() => ({
+    color: branch.is_open !== undefined ? getOpenStatusColor(branch.is_open) : null,
+    text: branch.is_open ? "Abierto" : "Cerrado",
+  }), [branch.is_open]);
+
   return (
     <Card className="h-full bg-white border-green-100 hover:shadow-xl hover:border-green-200 transition-all duration-300 transform hover:-translate-y-1">
       <CardHeader className="pb-4 bg-gradient-to-r from-white to-white-50 rounded-t-lg">
@@ -89,20 +102,16 @@ export const BranchCard = ({
           {/* Badges de estado */}
           <div className="flex items-end  gap-2 ml-4">
             <Badge
-              className={`${getStatusColor(
-                branch.status
-              )} font-medium px-3 py-1 border rounded-full`}
+              className={`${statusConfig.color} font-medium px-3 py-1 border rounded-full`}
             >
-              {getStatusText(branch.status)}
+              {statusConfig.text}
             </Badge>
-            {branch.is_open !== undefined && (
+            {branch.is_open !== undefined && openStatusConfig.color && (
               <Badge
-                className={`${getOpenStatusColor(
-                  branch.is_open
-                )} font-medium px-3 py-1 border rounded-full`}
+                className={`${openStatusConfig.color} font-medium px-3 py-1 border rounded-full`}
               >
                 <Clock className="h-3 w-3 mr-1" />
-                {branch.is_open ? "Abierto" : "Cerrado"}
+                {openStatusConfig.text}
               </Badge>
             )}
           </div>
@@ -236,4 +245,6 @@ export const BranchCard = ({
       </CardContent>
     </Card>
   );
-};
+});
+
+BranchCard.displayName = "BranchCard";
