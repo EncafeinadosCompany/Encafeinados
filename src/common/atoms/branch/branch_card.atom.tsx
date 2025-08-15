@@ -11,6 +11,11 @@ import {
 import { Card, CardContent, CardHeader } from "@/common/ui/card";
 import { Badge } from "@/common/ui/badge";
 import { Button } from "@/common/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/common/ui/tooltip";
 import { Branch } from "@/api/types/branches/branches.types";
 import { Dispatch, SetStateAction } from "react";
 
@@ -106,26 +111,40 @@ export const BranchCard = ({
         {/* Botones de acción principales */}
         <div className={`flex gap-2 mt-4`}>
           {onQr && branch.status === "APPROVED" && (
-            <Button
-              onClick={() => onQr({ isOpen: true, code: branch.id })}
-              size="sm"
-              className="bg-[#4ea171] hover:bg-green-700 cursor-pointer text-white flex-1 font-semibold py-2 shadow-md hover:shadow-lg transition-all duration-200"
-            >
-              <QrCode className="h-4 w-4 mr-2" />
-              Ver QR
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => onQr({ isOpen: true, code: branch.id })}
+                  size="sm"
+                  className="bg-[#4ea171] hover:bg-green-700 cursor-pointer text-white flex-1 font-semibold py-2 shadow-md hover:shadow-lg transition-all duration-200"
+                >
+                  <QrCode className="h-4 w-4 mr-2" />
+                  Ver QR
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Generar código QR para que los coffeelovers registren visitas</p>
+              </TooltipContent>
+            </Tooltip>
           )}
 
           {onVisit  && branch.status === "APPROVED"  && (
-            <Button
-              onClick={() => onVisit(branch)}
-              size="sm"
-              variant="outline"
-              className="border-green-600 text-green-600 hover:bg-green-50 cursor-pointer flex-1 font-semibold py-2 shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <Navigation className="h-4 w-4 mr-2" />
-              Entrar
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => onVisit(branch)}
+                  size="sm"
+                  variant="outline"
+                  className="border-green-600 text-green-600 hover:bg-green-50 cursor-pointer flex-1 font-semibold py-2 shadow-sm hover:shadow-md transition-all duration-200"
+                >
+                  <Navigation className="h-4 w-4 mr-2" />
+                  Entrar
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Acceder al perfil de la sucursal para administrarla</p>
+              </TooltipContent>
+            </Tooltip>
           )}
         </div>
       </CardHeader>
@@ -177,26 +196,40 @@ export const BranchCard = ({
           <div className="flex gap-2 pt-3 border-t border-green-100">
            
             {onViewDetails && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onViewDetails(branch)}
-                className="flex-1 border-gray-300 text-gray-600 hover:bg-gray-50 font-medium cursor-pointer"
-              >
-                <ExternalLink className="h-3 w-3 mr-1" />
-                Detalles
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onViewDetails(branch)}
+                    className="flex-1 border-gray-300 text-gray-600 hover:bg-gray-50 font-medium cursor-pointer"
+                  >
+                    <ExternalLink className="h-3 w-3 mr-1" />
+                    Detalles
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Ver información detallada de la sucursal</p>
+                </TooltipContent>
+              </Tooltip>
             )}
             {onAssingBranch && branch.status === "APPROVED"  && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => onAssingBranch(branch)}
-                className="flex-1 border-emerald-600 hover:border-emerald-700 text-green-800 font-medium cursor-pointer"
-              >
-                <Plus className="h-4 w-4"></Plus>
-                Admin
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => onAssingBranch(branch)}
+                    className="flex-1 border-emerald-600 hover:border-emerald-700 text-green-800 font-medium cursor-pointer"
+                  >
+                    <Plus className="h-4 w-4"></Plus>
+                    Admin
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Asignar administrador a la sucursal</p>
+                </TooltipContent>
+              </Tooltip>
             )}
           </div>
         )}
