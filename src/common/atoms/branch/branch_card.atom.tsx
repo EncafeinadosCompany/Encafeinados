@@ -187,7 +187,7 @@ export const BranchCard = ({
                 Detalles
               </Button>
             )}
-            {onAssingBranch && (
+            {onAssingBranch && branch.status === "APPROVED"  && (
               <Button
                 size="sm"
                 variant="outline"
