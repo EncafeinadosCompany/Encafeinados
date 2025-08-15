@@ -188,9 +188,9 @@ export default function RegisterBranch({
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-2 border border-purple-100 shadow-sm"
+                        className=" rounded-xl border border-transparent shadow-sm"
                       >
-                        <div className="flex items-center gap-3 mb-4">
+                        {/* <div className="flex items-center gap-3 mb-4">
                           <div className="p-2 bg-purple-100 rounded-lg">
                             <Globe className="h-5 w-5 text-purple-600" />
                           </div>
@@ -202,7 +202,7 @@ export default function RegisterBranch({
                               Enlaces a perfiles sociales (opcional)
                             </p>
                           </div>
-                        </div>
+                        </div> */}
 
                         <SocialNetworksForm
                           register={methods.register}
