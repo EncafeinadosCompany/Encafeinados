@@ -11,8 +11,8 @@ const authClient = new AuthClient();
 
 
 export const useRegisterCriteriaMutation = () => {
-  const useErrors = useError("criteria")
-  const queryClient = useQueryClient()
+  const useErrors = useError("ReviewCriteria");
+  const queryClient = useQueryClient();
 
   return useMutation<any, Error, criteria>({
     mutationFn: async (formData: criteria): Promise<any> => {
@@ -52,6 +52,7 @@ export const useRegisterCriteriaMutation = () => {
       }
     },
     onSuccess: () => {
+      
       queryClient.invalidateQueries({ queryKey: ['criteria'] });
     },
     onError: (error: any) => {

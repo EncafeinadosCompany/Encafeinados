@@ -8,7 +8,7 @@ export const useAuth = () => {
       return navigate("/stores");
     } 
     else if (roles.includes(ROLES.ADMIN_SUCURSAL)) {
-      return navigate("/sucursal");
+      return navigate("/branch");
     } 
     else if (roles.includes(ROLES.ADMIN)) {
       return navigate("/admin");

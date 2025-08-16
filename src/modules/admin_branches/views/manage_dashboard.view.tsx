@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { Card, CardContent } from "@/common/ui/card";
 import { Input } from "@/common/ui/input";
 import { motion } from "framer-motion";
-import { Coffee, CalendarDays, TrendingUp, Clock } from "@/common/ui/icons";
+import { Coffee, CalendarDays} from "@/common/ui/icons";
 import { Label } from "@/common/ui/label";
 import { useQuantityStampByPeriod } from '@/api/queries/dashboard/stapms_by_period.query';
 import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
+import { StampIcon } from 'lucide-react';
 
 export default function Dashboard_Branch() {
   
@@ -48,7 +49,7 @@ export default function Dashboard_Branch() {
                             )}
                         </div>
                         <div className={`p-3 bg-${color}-50 rounded-lg`}>
-                            <Icon className={`h-6 w-6 text-${color}-600`} />
+                            <Icon className={`h-6 w-6 text-${color}-500`} />
                         </div>
                     </div>
                 </CardContent>
@@ -113,22 +114,14 @@ export default function Dashboard_Branch() {
                 </motion.div>
 
                 {/* Cards de estadísticas */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <StatCard
                         title="Total de Estampas"
                         value={branchData?.total.toLocaleString() || '0'}
-                        icon={Coffee}
+                        icon={StampIcon}
                         subtitle="En el período seleccionado"
                         loading={stampsLoading}
-                        color="amber"
-                    />
-                    <StatCard
-                        title="ID de Sucursal"
-                        value={`#${branchData?.branchId || '--'}`}
-                        icon={TrendingUp}
-                        subtitle="Identificador único"
-                        loading={stampsLoading}
-                        color="blue"
+                        color="indigo"
                     />
                     <StatCard
                         title="Promedio Diario"
@@ -138,14 +131,14 @@ export default function Dashboard_Branch() {
                         loading={stampsLoading}
                         color="green"
                     />
-                    <StatCard
+                    {/* <StatCard
                         title="Estado"
                         value={branchData ? "Activa" : "Sin datos"}
                         icon={Clock}
                         subtitle="En el período"
                         loading={stampsLoading}
                         color="purple"
-                    />
+                    /> */}
                 </div>
 
                 {/* Información detallada de la sucursal */}
@@ -169,13 +162,7 @@ export default function Dashboard_Branch() {
                                 <p className="text-gray-500 mt-2">Cargando información...</p>
                             </div>
                         ) : branchData ? (
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="bg-gray-50 p-4 rounded-lg">
-                                    <h4 className="font-medium text-gray-900 mb-2">Identificación</h4>
-                                    <p className="text-2xl font-bold text-amber-600">#{branchData.branchId}</p>
-                                    <p className="text-sm text-gray-500 mt-1">ID de la sucursal</p>
-                                </div>
-                                
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">                     
                                 <div className="bg-gray-50 p-4 rounded-lg">
                                     <h4 className="font-medium text-gray-900 mb-2">Nombre</h4>
                                     <p className="text-lg font-semibold text-gray-900">{branchData.branchName}</p>

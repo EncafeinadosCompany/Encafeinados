@@ -8,12 +8,11 @@ import { useTranslation } from "react-i18next";
 import { useRegisterFocus } from "@/common/hooks/auth/use_register_focus.hook";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/common/ui/input-otp";
 import { TextError } from "@/common/atoms/forms/text_error.atom";
-import {  useState } from "react";
+import { useState } from "react";
 import { Eye, EyeOff } from "@/common/ui/icons";
-import { User} from "@/api/types/auth/auth.types";
+import { User } from "@/api/types/auth/auth.types";
 import { InputEmail } from "@/common/atoms/forms/Input_email.atom";
 import { ButtonGoogle } from "@/common/atoms/forms/button_google.atom";
-
 
 type LoginCardProps = {
   register: UseFormRegister<User>;
@@ -66,122 +65,111 @@ export const LoginCard = ({
                   <div className="w-full border-t border-gray-900"></div>
                 </div>
                 <div className="relative px-4 text-sm  bg-white text-gray-500">
-                   Opciones de registro
+                  Opciones de registro
                 </div>
               </div>
-            
-           
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="email"
-                      className="text-sm text-gray-800 font-medium"
-                    >
-                      Correo
-                    </Label>
-                    <InputEmail
-                      id="email"
-                      autoComplete="email"
-                      placeholder="coffelover@gmail.com"
-                      className="border bg-white rounded-full border-gray-300 placeholder:text-xs"
-                      {...registerWithFocus("email")}
-                      {...register("email")}
-                    />
-                    {errors.email && (
-                      <TextError>{errors.email.message}</TextError>
-                    )}
-                  </div>
-                  <div className="grid gap-2">
-                    <div className="flex items-center justify-between">
-                      <Label
-                        htmlFor="password"
-                        className="text-[#3D3D3D] font-medium"
-                      >
-                        PIN
-                      </Label>
-                    </div>
-                    <Controller
-                      control={control}
-                      name="password"
-                      render={({ field }) => (
-                        <div className="relative w-fit space-x-12 mx-auto ">
-                          <InputOTP
-                            maxLength={4}
-                            value={field.value}
-                            onChange={field.onChange}
-                            {...registerWithFocus("password")}
-                            data-testid="custom-input-password"
-                          >
-                            <InputOTPGroup className="space-x-1">
-                              <InputOTPSlot index={0} isVisible={isVisible} />
-                              <InputOTPSlot index={1} isVisible={isVisible} />
-                            </InputOTPGroup>
-                            <InputOTPGroup className="space-x-1">
-                              <InputOTPSlot index={2} isVisible={isVisible} />
-                              <InputOTPSlot index={3} isVisible={isVisible} />
-                            </InputOTPGroup>
-                          </InputOTP>
 
-                          {field.value !== "" && (
-                            <button
-                              type="button"
-                              onClick={() => setIsVisible((prev) => !prev)}
-                              className="absolute top-3 right-0 text-gray-500 hover:text-gray-700 text-sm"
-                              aria-label={
-                                isVisible ? "Ocultar código" : "Mostrar código"
-                              }
-                              title={
-                                isVisible ? "Ocultar código" : "Mostrar código"
-                              }
-                            >
-                              {isVisible ? (
-                                <EyeOff size={20} />
-                              ) : (
-                                <Eye size={20} />
-                              )}
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    ></Controller>
-                    {errors.password && (
-                      <TextError>{errors.password.message}</TextError>
-                    )}
-                  </div>
-             
-
-       
-                  <Button
-                    type="submit"
-                    className="w-full shadow rounded-full bg-[#D4A76A] hover:bg-[#bb9765] hover:text-white/80 border-amber-800 text-amber-950 font-medium transition-all duration-200 hover:shadow-lg"
-                    disabled={isLoading}
+              <div className="grid gap-2">
+                <Label
+                  htmlFor="email"
+                  className="text-sm text-gray-800 font-medium"
+                >
+                  Correo
+                </Label>
+                <InputEmail
+                  id="email"
+                  autoComplete="email"
+                  placeholder="coffelover@gmail.com"
+                  className="border bg-white rounded-full border-gray-300 placeholder:text-xs"
+                  {...registerWithFocus("email")}
+                  {...register("email")}
+                />
+                {errors.email && <TextError>{errors.email.message}</TextError>}
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center justify-between">
+                  <Label
+                    htmlFor="password"
+                    className="text-[#3D3D3D] font-medium"
                   >
-                    {isLoading ? "Cargando..." : t("Ingresar")}
-                  </Button>
-                  <ButtonGoogle onClick={onGoogleSignIn}>
-                    Iniciar sesión con Google
-                  </ButtonGoogle>
-                  <div className="text-center text-sm text-amber-800 space-y-2">
-                    <div>
-                      ¿No tienes una cuenta?{" "}
-                      <Link
-                        to="/cuestion"
-                        data-testid="register-link"
-                        className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
+                    PIN
+                  </Label>
+                </div>
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field }) => (
+                    <div className="relative w-fit space-x-12 mx-auto ">
+                      <InputOTP
+                        maxLength={4}
+                        value={field.value}
+                        onChange={field.onChange}
+                        {...registerWithFocus("password")}
+                        data-testid="custom-input-password"
                       >
-                        Registrate
-                      </Link>
+                        <InputOTPGroup className="space-x-1">
+                          <InputOTPSlot index={0} isVisible={isVisible} />
+                          <InputOTPSlot index={1} isVisible={isVisible} />
+                        </InputOTPGroup>
+                        <InputOTPGroup className="space-x-1">
+                          <InputOTPSlot index={2} isVisible={isVisible} />
+                          <InputOTPSlot index={3} isVisible={isVisible} />
+                        </InputOTPGroup>
+                      </InputOTP>
+
+                      {field.value !== "" && (
+                        <button
+                          type="button"
+                          onClick={() => setIsVisible((prev) => !prev)}
+                          className="cursor-pointer absolute top-3 right-0 text-gray-500 hover:text-gray-700 text-sm"
+                          aria-label={
+                            isVisible ? "Ocultar código" : "Mostrar código"
+                          }
+                          title={
+                            isVisible ? "Ocultar código" : "Mostrar código"
+                          }
+                        >
+                          {isVisible ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
+                      )}
                     </div>
-                    <div>
-                      <Link
-                        to="/reset-password"
-                        className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700"
-                      >
-                        ¿Olvidaste tu contraseña?
-                      </Link>
-                    </div>
-                  </div>
-    
-              
+                  )}
+                ></Controller>
+                {errors.password && (
+                  <TextError>{errors.password.message}</TextError>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full shadow rounded-full bg-[#D4A76A] hover:bg-[#bb9765] hover:text-white/80 border-amber-800 text-amber-950 font-medium transition-all duration-200 hover:shadow-lg cursor-pointer"
+                disabled={isLoading}
+              >
+                {isLoading ? "Cargando..." : t("Ingresar")}
+              </Button>
+              <ButtonGoogle onClick={onGoogleSignIn}>
+                Iniciar sesión con Google
+              </ButtonGoogle>
+              <div className="text-center text-sm text-amber-800 space-y-2">
+                <div>
+                  ¿No tienes una cuenta?{" "}
+                  <Link
+                    to="/cuestion"
+                    data-testid="register-link"
+                    className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700 cursor-pointer"
+                  >
+                    Registrate
+                  </Link>
+                </div>
+                <div>
+                  <Link
+                    to="/reset-password"
+                    className="text-amber-600 font-medium underline underline-offset-4 hover:text-amber-700 cursor-pointer"
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </div>
+              </div>
             </div>
           </form>
 

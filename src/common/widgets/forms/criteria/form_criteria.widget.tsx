@@ -50,7 +50,7 @@ const RegisterCriteriaWidget = ({ branchId }: RegisterCriteriProps) => {
           return acc;
         }, {} as Record<string, { response_text: string; image_url?: string; other_text?: string }>);
 
-        methods.reset({ criteria: newCriteria }); // Usar reset en lugar de setValue
+        methods.reset({ criteria: newCriteria });
       }
     }
   }, [criteria]);
@@ -61,11 +61,17 @@ const RegisterCriteriaWidget = ({ branchId }: RegisterCriteriProps) => {
         branchId: Number(branchId),
         criteriaResponseData: data.criteria,
       });
+      
       toast.success(
         "¡Gracias por llenar la información!, estaremos comunicandonos por medio de tu correo eléctronico",
         { duration: 5000 }
       );
-      window.location.replace("/");
+      
+      // Esperar a que se muestre el toast antes de redirigir
+      setTimeout(() => {
+        window.location.replace("/");
+      }, 5500);
+
     } catch (err) {
       console.error("Error during submission:", err);
     }
@@ -87,7 +93,7 @@ const RegisterCriteriaWidget = ({ branchId }: RegisterCriteriProps) => {
             <FormHeader
               getGreeting={getGreeting}
               getStepTitle={"Criterios"}
-              getStepDescription={"Es tu momento"}
+              getStepDescription={"Cuéntanos un poco más sobre tu cafetería de especialidad"}
               getStepIcon={<Pen />}
               isLoaginBar={false}
               colorProccessBar={"bg-gradient-to-r from-amber-400 to-orange-400"}

@@ -220,7 +220,7 @@ export const BranchCard = memo(({
                   text="Cafetería"
                   branchId={id}
                   mapRoute="public"
-                  className={`w-full py-2.5 px-4 text-sm font-medium rounded-lg shadow-sm transition-all duration-200 
+                  className={`cursor-pointer w-full py-2.5 px-4 text-sm font-medium rounded-lg shadow-sm transition-all duration-200 
                     relative overflow-hidden hover:shadow-md active:scale-[0.98] ${
                     isOpen 
                       ? 'bg-[#6F4E37] hover:bg-[#5D4130] text-white border-0' 

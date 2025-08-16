@@ -102,7 +102,7 @@ export default function RegisterStoreBrancheStep2({ methods, criteria }: Registe
                           data-testid={`criteria-${criteriaId}-other-text`}
                           value={field.value || ""}
                           onChange={field.onChange}
-                          className="border-amber-200 focus-visible:ring-amber-400"
+                          className="border-amber-200 focus-visible:ring-amber-400 cursor-pointer"
                         />
                       </>
                     )}

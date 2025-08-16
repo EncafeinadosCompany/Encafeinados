@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Branch } from "@/api/types/branches/branches.types";
 import { ViewMode } from "@/common/atoms/view/view_toggle.atom";
 import {
@@ -7,9 +7,65 @@ import {
 } from "@/common/molecules/branch/branch_table_view.molecule";
 
 interface UseBranchListProps {
-  branches: Branch[];
+  branches: Branch[] | null | undefined;
   initialPageSize?: number;
 }
+
+// Función de filtrado optimizada y memoizada
+const createFilterFunction = (searchTerm: string) => {
+  if (!searchTerm.trim()) return () => true;
+  
+  const searchLower = searchTerm.toLowerCase();
+  return (branch: Branch) => {
+    // Optimización: verificar campos más probables primero
+    return (
+      branch.name.toLowerCase().includes(searchLower) ||
+      (branch.store?.store_name && branch.store.store_name.toLowerCase().includes(searchLower)) ||
+      (branch.address && branch.address.toLowerCase().includes(searchLower)) ||
+      (branch.phone_number && branch.phone_number.toLowerCase().includes(searchLower)) ||
+      (branch.details && branch.details.toLowerCase().includes(searchLower))
+    );
+  };
+};
+
+// Función de ordenamiento optimizada
+const createSortFunction = (sortField: SortField, sortDirection: SortDirection) => {
+  return (a: Branch, b: Branch) => {
+    let aValue: string | number = "";
+    let bValue: string | number = "";
+
+    switch (sortField) {
+      case "name":
+        aValue = a.name;
+        bValue = b.name;
+        break;
+      case "status":
+        aValue = a.status;
+        bValue = b.status;
+        break;
+      case "average_rating":
+        aValue = parseFloat(a.average_rating || "0");
+        bValue = parseFloat(b.average_rating || "0");
+        break;
+      case "store_name":
+        aValue = a.store?.store_name || "";
+        bValue = b.store?.store_name || "";
+        break;
+      default:
+        return 0;
+    }
+
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return sortDirection === "asc"
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue);
+    }
+
+    return sortDirection === "asc"
+      ? (aValue as number) - (bValue as number)
+      : (bValue as number) - (aValue as number);
+  };
+};
 
 export const useBranchList = ({
   branches,
@@ -22,86 +78,44 @@ export const useBranchList = ({
   const [sortField, setSortField] = useState<SortField>("name");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
-  // Filtrar sucursales basado en la búsqueda
-  const filteredBranches = useMemo(() => {
-    if (!searchTerm) return branches;
+  const safeBranches = useMemo(() => {
+    return Array.isArray(branches) ? branches : [];
+  }, [branches]);
 
-    const searchLower = searchTerm.toLowerCase();
-    return branches.filter(
-      (branch) =>
-        branch.name.toLowerCase().includes(searchLower) ||
-        branch.address?.toLowerCase().includes(searchLower) ||
-        branch.phone_number?.toLowerCase().includes(searchLower) ||
-        branch.store?.store_name?.toLowerCase().includes(searchLower) ||
-        branch.details?.toLowerCase().includes(searchLower)
-    );
-  }, [branches, searchTerm]);
+  const filterFn = useMemo(() => createFilterFunction(searchTerm), [searchTerm]);
+  const sortFn = useMemo(() => createSortFunction(sortField, sortDirection), [sortField, sortDirection]);
 
-  // Ordenar sucursales
-  const sortedBranches = useMemo(() => {
-    const sorted = [...filteredBranches].sort((a, b) => {
-      let aValue: string | number = "";
-      let bValue: string | number = "";
+  const processedBranches = useMemo(() => {
+    const filtered = safeBranches.filter(filterFn);
+    const sorted = filtered.length > 0 ? [...filtered].sort(sortFn) : [];
+    
+    const totalItems = sorted.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const startIndex = (currentPage - 1) * pageSize;
+    const paginated = sorted.slice(startIndex, startIndex + pageSize);
 
-      switch (sortField) {
-        case "name":
-          aValue = a.name;
-          bValue = b.name;
-          break;
-        case "status":
-          aValue = a.status;
-          bValue = b.status;
-          break;
-        case "average_rating":
-          aValue = parseFloat(a.average_rating || "0");
-          bValue = parseFloat(b.average_rating || "0");
-          break;
-        case "store_name":
-          aValue = a.store?.store_name || "";
-          bValue = b.store?.store_name || "";
-          break;
-        default:
-          return 0;
-      }
+    return {
+      branches: paginated,
+      totalBranches: totalItems,
+      totalPages,
+    };
+  }, [safeBranches, filterFn, sortFn, currentPage, pageSize]);
 
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        return sortDirection === "asc"
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-
-      return sortDirection === "asc"
-        ? (aValue as number) - (bValue as number)
-        : (bValue as number) - (aValue as number);
-    });
-
-    return sorted;
-  }, [filteredBranches, sortField, sortDirection]);
-
-  // Calcular paginación
-  const totalPages = Math.ceil(sortedBranches.length / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const paginatedBranches = sortedBranches.slice(
-    startIndex,
-    startIndex + pageSize
-  );
-
-  // Funciones de control
-  const handleSearch = (term: string) => {
+  const handleSearch = useCallback((term: string) => {
     setSearchTerm(term);
-    setCurrentPage(1); // Reset a la primera página cuando se busca
-  };
+    setCurrentPage(1); 
+  }, []);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
-  };
+  }, []);
 
-  const handlePageSizeChange = (size: number) => {
+  const handlePageSizeChange = useCallback((size: number) => {
     setPageSize(size);
-    setCurrentPage(1); // Reset a la primera página cuando cambia el tamaño
-  };
+    setCurrentPage(1);
+  }, []);
 
-  const handleSort = (field: SortField) => {
+  const handleSort = useCallback((field: SortField) => {
     if (sortField === field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
@@ -109,19 +123,17 @@ export const useBranchList = ({
       setSortDirection("asc");
     }
     setCurrentPage(1);
-  };
+  }, [sortField, sortDirection]);
 
-  const handleViewModeChange = (mode: ViewMode) => {
+  const handleViewModeChange = useCallback((mode: ViewMode) => {
     setViewMode(mode);
-  };
+  }, []);
 
   return {
-    // Data
-    branches: paginatedBranches,
-    totalBranches: sortedBranches.length,
-    totalPages,
+    branches: processedBranches.branches,
+    totalBranches: processedBranches.totalBranches,
+    totalPages: processedBranches.totalPages,
 
-    // State
     searchTerm,
     currentPage,
     pageSize,
@@ -129,7 +141,6 @@ export const useBranchList = ({
     sortField,
     sortDirection,
 
-    // Handlers
     handleSearch,
     handlePageChange,
     handlePageSizeChange,

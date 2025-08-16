@@ -92,7 +92,7 @@ export default function FormEditBranch() {
                             <Coffee className="text-white" size={24} />
                         </div>
                         <CardTitle className="text-[#020F17] font-semibold text-xl">
-                            Edita tu sucursal
+                            Editar datos
                         </CardTitle>
                     </div>
                     <div className="flex items-center space-x-1 ">

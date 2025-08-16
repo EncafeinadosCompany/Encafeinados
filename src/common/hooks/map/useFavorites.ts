@@ -1,9 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { getFavoritesFromStorage } from '@/common/utils/map/map_utils';
 
-/**
- * Hook para manejar los cafés favoritos
- */
+
 export const useFavorites = () => {
   const [favorites, setFavorites] = useState<number[]>([]);
 
@@ -12,13 +10,15 @@ export const useFavorites = () => {
   }, []);
 
   const toggleFavorite = useCallback((cafeId: number): void => {
-    const newFavorites: number[] = favorites.includes(cafeId)
-      ? favorites.filter((id: number) => id !== cafeId)
-      : [...favorites, cafeId];
+    setFavorites(currentFavorites => {
+      const newFavorites: number[] = currentFavorites.includes(cafeId)
+        ? currentFavorites.filter((id: number) => id !== cafeId)
+        : [...currentFavorites, cafeId];
 
-    setFavorites(newFavorites);
-    localStorage.setItem('favoriteCafes', JSON.stringify(newFavorites));
-  }, [favorites]);
+      localStorage.setItem('favoriteCafes', JSON.stringify(newFavorites));
+      return newFavorites;
+    });
+  }, []); 
 
   return { favorites, toggleFavorite };
 };

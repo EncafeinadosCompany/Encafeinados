@@ -132,7 +132,8 @@ export const MapTeaser = ({
 
           <motion.div className="relative h-80" variants={itemVariants}>
             <motion.div
-              className="absolute inset-0 rounded-2xl overflow-hidden shadow-xl border border-[#D4A76A]/20 bg-white"
+              onClick={handleOpenMap}
+              className="absolute inset-0 rounded-2xl overflow-hidden shadow-xl border border-[#D4A76A]/20 bg-white cursor-pointer"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >

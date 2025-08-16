@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import {
   MapPin,
   Phone,
@@ -6,30 +7,39 @@ import {
   ExternalLink,
   QrCode,
   Navigation,
+  Plus,
 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/common/ui/card";
 import { Badge } from "@/common/ui/badge";
 import { Button } from "@/common/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/common/ui/tooltip";
 import { Branch } from "@/api/types/branches/branches.types";
 import { Dispatch, SetStateAction } from "react";
 
 interface BranchCardProps {
   branch: Branch;
   onViewDetails?: (branch: Branch) => void;
+  onAssingBranch?: (branch: Branch) => void;
   onEdit?: (branch: Branch) => void;
   onQr?: Dispatch<SetStateAction<{ isOpen: boolean; code: number }>>;
   onVisit?: (branch: Branch) => void;
   showActions?: boolean;
 }
 
-export const BranchCard = ({
+export const BranchCard = memo<BranchCardProps>(({
   branch,
   onViewDetails,
+  onAssingBranch,
   onEdit,
   onQr,
   onVisit,
   showActions = true,
-}: BranchCardProps) => {
+}) => {
+  // Declarar funciones utilitarias primero
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "active":
@@ -65,12 +75,20 @@ export const BranchCard = ({
     }
   };
 
-  console.log(onVisit)
+  // Memoizar valores calculados para evitar recálculos
+  const statusConfig = useMemo(() => ({
+    color: getStatusColor(branch.status),
+    text: getStatusText(branch.status),
+  }), [branch.status]);
+
+  const openStatusConfig = useMemo(() => ({
+    color: branch.is_open !== undefined ? getOpenStatusColor(branch.is_open) : null,
+    text: branch.is_open ? "Abierto" : "Cerrado",
+  }), [branch.is_open]);
 
   return (
     <Card className="h-full bg-white border-green-100 hover:shadow-xl hover:border-green-200 transition-all duration-300 transform hover:-translate-y-1">
       <CardHeader className="pb-4 bg-gradient-to-r from-white to-white-50 rounded-t-lg">
-        <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             <h3
               className="font-bold text-xl text-gray-800 truncate mb-1"
@@ -79,57 +97,68 @@ export const BranchCard = ({
               {branch.name}
             </h3>
           </div>
+        <div className="flex justify-end">
 
           {/* Badges de estado */}
-          <div className="flex  items-end gap-2 ml-4">
+          <div className="flex items-end  gap-2 ml-4">
             <Badge
-              className={`${getStatusColor(
-                branch.status
-              )} font-medium px-3 py-1 border rounded-full`}
+              className={`${statusConfig.color} font-medium px-3 py-1 border rounded-full`}
             >
-              {getStatusText(branch.status)}
+              {statusConfig.text}
             </Badge>
-            {branch.is_open !== undefined && (
+            {branch.is_open !== undefined && openStatusConfig.color && (
               <Badge
-                className={`${getOpenStatusColor(
-                  branch.is_open
-                )} font-medium px-3 py-1 border rounded-full`}
+                className={`${openStatusConfig.color} font-medium px-3 py-1 border rounded-full`}
               >
                 <Clock className="h-3 w-3 mr-1" />
-                {branch.is_open ? "Abierto" : "Cerrado"}
+                {openStatusConfig.text}
               </Badge>
             )}
           </div>
         </div>
 
         {/* Botones de acción principales */}
-        <div className="flex gap-2 mt-4">
-          {onQr && (
-            <Button
-              onClick={() => onQr({ isOpen: true, code: branch.id })}
-              size="sm"
-              className="bg-[#4ea171] hover:bg-green-700 text-white flex-1 font-semibold py-2 shadow-md hover:shadow-lg transition-all duration-200"
-            >
-              <QrCode className="h-4 w-4 mr-2" />
-              Ver QR
-            </Button>
+        <div className={`flex gap-2 mt-4`}>
+          {onQr && branch.status === "APPROVED" && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => onQr({ isOpen: true, code: branch.id })}
+                  size="sm"
+                  className="bg-[#4ea171] hover:bg-green-700 cursor-pointer text-white flex-1 font-semibold py-2 shadow-md hover:shadow-lg transition-all duration-200"
+                >
+                  <QrCode className="h-4 w-4 mr-2" />
+                  Ver QR
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Generar código QR para que los coffeelovers registren visitas</p>
+              </TooltipContent>
+            </Tooltip>
           )}
 
-          {onVisit && (
-            <Button
-              onClick={() => onVisit(branch)}
-              size="sm"
-              variant="outline"
-              className="border-green-600 text-green-600 hover:bg-green-50 flex-1 font-semibold py-2 shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <Navigation className="h-4 w-4 mr-2" />
-              Visitar
-            </Button>
+          {onVisit  && branch.status === "APPROVED"  && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => onVisit(branch)}
+                  size="sm"
+                  variant="outline"
+                  className="border-green-600 text-green-600 hover:bg-green-50 cursor-pointer flex-1 font-semibold py-2 shadow-sm hover:shadow-md transition-all duration-200"
+                >
+                  <Navigation className="h-4 w-4 mr-2" />
+                  Entrar
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Acceder al perfil de la sucursal para administrarla</p>
+              </TooltipContent>
+            </Tooltip>
           )}
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4 p-5">
+      <CardContent className="space-y-4 p-2">
         {/* Información de contacto con iconos mejorados */}
         <div className="space-y-3">
           {/* Dirección */}
@@ -139,7 +168,7 @@ export const BranchCard = ({
                 <MapPin className="h-4 w-4 text-green-600" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-700 leading-relaxed">
+                <p className="text-sm font-medium text-gray-700  leading-relaxed">
                   {branch.address}
                 </p>
               </div>
@@ -176,28 +205,46 @@ export const BranchCard = ({
           <div className="flex gap-2 pt-3 border-t border-green-100">
            
             {onViewDetails && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onViewDetails(branch)}
-                className="flex-1 border-gray-300 text-gray-600 hover:bg-gray-50 font-medium"
-              >
-                <ExternalLink className="h-3 w-3 mr-1" />
-                Detalles
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onViewDetails(branch)}
+                    className="flex-1 border-gray-300 text-gray-600 hover:bg-gray-50 font-medium cursor-pointer"
+                  >
+                    <ExternalLink className="h-3 w-3 mr-1" />
+                    Detalles
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Ver información detallada de la sucursal</p>
+                </TooltipContent>
+              </Tooltip>
             )}
-            {onEdit && (
-              <Button
-                size="sm"
-                onClick={() => onEdit(branch)}
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium"
-              >
-                ✏️ Editar
-              </Button>
+            {onAssingBranch && branch.status === "APPROVED"  && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => onAssingBranch(branch)}
+                    className="flex-1 border-emerald-600 hover:border-emerald-700 text-green-800 font-medium cursor-pointer"
+                  >
+                    <Plus className="h-4 w-4"></Plus>
+                    Admin
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Asignar administrador a la sucursal</p>
+                </TooltipContent>
+              </Tooltip>
             )}
           </div>
         )}
       </CardContent>
     </Card>
   );
-};
+});
+
+BranchCard.displayName = "BranchCard";

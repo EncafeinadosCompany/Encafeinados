@@ -20,6 +20,7 @@ import { Card, CardContent, CardFooter } from "@/common/ui/card";
 import {
   RegisterStoreBrancheSchema,
   RegisterStoreBrancheSchemaType,
+
 } from "@/common/utils/schemas/auth/register_store_branche.schema";
 
 import RegisterStoreBrancheStep1 from "@/common/molecules/auth/stores/register_store_branche_step1.molecule";
@@ -34,7 +35,6 @@ import { useCriteria } from "@/api/queries/criteria/criteria.query";
 import { useSocialNetworksQuery } from "@/api/queries/social_networks/social_networks.query";
 import { FormHeader } from "@/common/molecules/form/form_header.molecule";
 import { getGreeting } from "@/common/utils/get_greeting.utils";
-import { ButtonSuccess } from "@/common/atoms/forms/button_success.atom";
 import { useRegisterCriteriaMutation } from "@/api/mutations/criteria/criteria.mutation";
 import StepTransition from "@/common/atoms/forms/step_transition.atom";
 import ButtonChevronUp from "@/common/atoms/forms/buttonChevronUp.atom";
@@ -57,12 +57,12 @@ export default function RegisterBranchesWidget() {
 
   const [formData, setFormData] = useState({});
 
-  const name = localStorage.getItem("store");
+  const nameStore = localStorage.getItem("store");
   const tel = localStorage.getItem("tel");
   const methods = useForm<RegisterStoreBrancheSchemaType>({
     resolver: zodResolver(RegisterStoreBrancheSchema[step] as any),
     defaultValues: {
-      name: name ? name : "",
+      name: nameStore ? nameStore : "",
       phone_number: tel ? tel : "",
 
       criteria: {},
@@ -137,7 +137,10 @@ export default function RegisterBranchesWidget() {
         criteriaResponseData: data.criteria,
       });
 
-      console.log(data, "datoss")
+      if(tel || nameStore){
+        localStorage.removeItem("tel")
+        localStorage.removeItem("store")
+      }
 
       methods.reset();
       const name = localStorage.getItem("nameStore");
@@ -212,7 +215,7 @@ export default function RegisterBranchesWidget() {
 
             {/* Contenido del formulario con altura adaptativa */}
             <div
-              className={` h-full min-h-[70vh] md:min-h-[60vh] max-h-[60vh] scrollbar-subtle pb-24 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-transparent`}
+              className={` h-full min-h-[70vh] md:min-h-[60vh] max-h-[75vh] scrollbar-subtle pb-24 overflow-y-auto scrollbar-thin scrollbar-thumb-amber-300 scrollbar-track-transparent`}
             >
               <form>
                 <CardContent className={`p-4 sm:p-4 md:p-5 rounded-2xl`}>
@@ -229,7 +232,6 @@ export default function RegisterBranchesWidget() {
                         <RegisterStoreBrancheStep1
                           register={methods.register}
                           error={methods.formState.errors}
-                          control={methods.control}
                         />
                       </StepTransition>
                     )}
@@ -237,7 +239,7 @@ export default function RegisterBranchesWidget() {
                     {step === 1 && (
                       <StepTransition
                         step="step2"
-                        className="p-3 sm:p-4  bg-amber-50/40 rounded-xl sm:rounded-2xl border border-amber-100"
+                        className="p-3 sm:p-4  bg-amber-50/40 rounded-xl sm:rounded-2xl border  border-amber-100"
                       >
                         <RegisterStoreBrancheStep2
                           methods={methods}
@@ -266,7 +268,7 @@ export default function RegisterBranchesWidget() {
                     {step === 3 && (
                       <StepTransition
                         step="step4"
-                        className="p-3 sm:p-4 bg-green-50/40 rounded-xl sm:rounded-2xl border border-green-100"
+                        className="p-3 sm:p-4  rounded-xl sm:rounded-2xl border-none"
                       >
                         <RegisterStoreBrancheStep3
                           baseAddress={baseAddress}

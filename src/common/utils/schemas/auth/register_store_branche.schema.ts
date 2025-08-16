@@ -44,4 +44,5 @@ export const RegisterStoreBrancheSchema = [
   })
 ];
 
+
 export type RegisterStoreBrancheSchemaType = z.infer<(typeof RegisterStoreBrancheSchema)[number]>;

@@ -12,9 +12,11 @@ import { lazy, Suspense } from "react";
   import RoleRoute from "@/router/role-route";
   import RouteLoadingIndicator from "./route_loading_indicador.router";
   import { ErrorBoundary } from "@/common/utils/error_boundary";
+import RegisterBranchWidget from "@/common/widgets/admin_store/branch/Register_branch.widget";
   
   //LAYOUTS
   const Layout_register = lazy(()=> import("@/modules/layouts/layout_register"));
+  const Layout_admin = lazy(() => import("@/modules/layouts/layout_admin"));
   const Layout_coffelover = lazy(() => import("@/modules/layouts/layout_coffelover"));
   const Layout_store = lazy(() => import("@/modules/layouts/layout_store"));
   const Layout_branch = lazy(() => import("@/modules/layouts/layout_branch"));
@@ -28,11 +30,10 @@ import { lazy, Suspense } from "react";
   const Register_coffeelover = lazy(()=> import("@/common/widgets/forms/auth/form_register_coffelovers.widget"));
   const Register_store = lazy(() => import("@/common/widgets/forms/auth/form_register_stores.widget"));
   const Register_branch = lazy(() => import("@/common/widgets/forms/auth/form_register_branches.widget"));
-  const Register_admin = lazy(() => import("@/modules/admin/views/finish_admin_registration_page"));
+  const Register_admin = lazy(() => import("@/modules/admin/views/register_admin.view"));
   const Register_criteria = lazy (()=> import("@/modules/auth/views/registerCriteria.views"))
   
   //ADMIN
-  const Menubar_admin = lazy(() => import("@/modules/admin/views/menubar_admin_nav"));
   const Dashboard_admin = lazy(() => import("@/modules/admin/components/manage_dasboard.view"));
   const Album_management = lazy(() => import("@/modules/admin/components/album/album_manager.component"));
   const Event_management = lazy(() => import("@/common/widgets/admin/events/event.widget"));
@@ -47,7 +48,7 @@ import { lazy, Suspense } from "react";
   
   //ADMIN BRANCHES
   const Dashboard_branch = lazy(() => import ("@/modules/admin_branches/views/manage_dashboard.view"));
-  const Details_branch = lazy(() => import("@/common/widgets/admin_branches/details_branches.widget"));
+  const Details_branch = lazy(() => import("@/modules/admin_branches/views/details_branch.view"));
   const Payment_result = lazy(() => import("@/modules/admin_branches/views/payment_result.view"));
   const Attributes_management= lazy(() => import("@/common/widgets/admin_branches/attributes.widget"));
   const Reviews_management = lazy(() => import("@/modules/admin_branches/views/branch_reviews.view"));
@@ -55,10 +56,10 @@ import { lazy, Suspense } from "react";
   
   // COFFEELOVER
   const Principal_coffeelover = lazy(() => import("@/modules/coffeelover/views/principal_coffeelover.view"));
-  const Profile_coffeelover = lazy(() => import("@/modules/coffeelover/components/profile/profile.view"));
-  const Register_visitStore = lazy(() => import("@/modules/coffeelover/components/stores/register_store_visit.component"));
+  const Profile_coffeelover = lazy(() => import("@/modules/coffeelover/views/profile/profile.view"));
+  const Register_visitStore = lazy(() => import("@/modules/coffeelover/views/stores/register_store_visit.view"));
   const Details_store = lazy( () => import("@/common/molecules/coffeelover/stores/details_stores_dialog.molecule"));
-  const Reviews = lazy(() => import("@/modules/coffeelover/components/review/review.view"));
+  const Reviews = lazy(() => import("@/modules/coffeelover/views/review/review.view"));
   const Album = lazy(() => import("@/common/widgets/prueba_album"));
 
   // ALBUMS COFFELOVER
@@ -130,10 +131,14 @@ const AuthRoutes = () => {
                 <Route element={<RoleRoute allowedRoles={[ROLES.STORE]} />}>
                   <Route path="/stores" element={<Layout_store />}>
                     <Route index element={<Branch_management_AdminStore />} />
+                    <Route path="register/branch" element={<RegisterBranchWidget></RegisterBranchWidget>}/>
                   </Route>
                 </Route>
 
-                <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL, ROLES.STORE]}/>}>
+                <Route element={
+                  <ErrorBoundary>
+                    <RoleRoute allowedRoles={[ROLES.ADMIN_SUCURSAL, ROLES.STORE]}/>
+                  </ErrorBoundary>}>
                   <Route path="/branch" element={<Layout_branch />}>
                     <Route index element={<Dashboard_branch />} />
                     <Route path="details" element={<Details_branch/>} />
@@ -146,7 +151,7 @@ const AuthRoutes = () => {
                 </Route>
 
                 <Route element={<RoleRoute allowedRoles={[ROLES.ADMIN]} />}>
-                  <Route path="/admin" element={<Menubar_admin />}>
+                  <Route path="/admin" element={<Layout_admin />}>
                     <Route path="dashboard" element={<Dashboard_admin/>} />
                     <Route index element={<Branch_Management />} />
                     <Route path="albums" element={<Album_management />} />
