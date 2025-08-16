@@ -17,8 +17,6 @@ interface RegisterStoreBranchesProps {
 
 export default function RegisterStoreBrancheStep1({ register, error, isHead=false, isImage = true}: RegisterStoreBranchesProps) {
 
-    const { focusedField, registerWithFocus } = useRegisterFocus()
-
     return (
         <div className="w-full space-y-6">
             <Card className="border-0  rounded-2xl overflow-hidden bg-white/95 backdrop-blur-sm">
@@ -84,9 +82,8 @@ export default function RegisterStoreBrancheStep1({ register, error, isHead=fals
                                 <div className="space-y-3">
                                     <Label 
                                         htmlFor="branchName"
-                                        className={`flex items-center gap-2 text-sm font-medium transition-colors ${
-                                            focusedField === "name" ? "text-[#DB8935]" : "text-gray-700"
-                                        }`}
+                                        className={`flex items-center gap-2 text-sm font-medium transition-colors text-gray-700
+                                        `}
                                     >
                                         <Store className="h-4 w-4 text-[#8B5A2B]" />
                                         Nombre de la cafetería
@@ -97,7 +94,6 @@ export default function RegisterStoreBrancheStep1({ register, error, isHead=fals
                                         <InputForm
                                             id="branchName"
                                             {...register('name')}
-                                            {...registerWithFocus('name')}
                                             className="h-12 pl-12 pr-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-[#DB8935]/10 focus:border-[#DB8935] transition-all duration-200 bg-gray-50/50 focus:bg-white"
                                             placeholder="Ej. Sucursal Centro, Café Zona Rosa..."
                                         />
@@ -113,9 +109,7 @@ export default function RegisterStoreBrancheStep1({ register, error, isHead=fals
                                 <div className="space-y-3">
                                     <Label 
                                         htmlFor="phoneNumber"
-                                        className={`flex items-center gap-2 text-sm font-medium transition-colors ${
-                                            focusedField === "phone_number" ? "text-[#DB8935]" : "text-gray-700"
-                                        }`}
+                                        className={`flex items-center gap-2 text-sm font-medium transition-colors text-gray-700`}
                                     >
                                         <Phone className="h-4 w-4 text-[#8B5A2B]" />
                                         Número de teléfono
@@ -126,7 +120,6 @@ export default function RegisterStoreBrancheStep1({ register, error, isHead=fals
                                         <InputForm
                                             id="phoneNumber"
                                             {...register('phone_number')}
-                                            {...registerWithFocus('phone_number')}
                                             placeholder="Ej. +57 300 123 4567"
                                             className="h-12 pl-12 pr-4 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-[#DB8935]/10 focus:border-[#DB8935] transition-all duration-200 bg-gray-50/50 focus:bg-white"
                                         />
