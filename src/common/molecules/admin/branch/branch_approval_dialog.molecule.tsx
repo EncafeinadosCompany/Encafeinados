@@ -5,20 +5,17 @@ import {
 } from "@/common/ui/dialog";
 import { Button } from "@/common/ui/button";
 import { Badge } from "@/common/ui/badge";
-import { Loader2, AlertCircle, Coffee, MapPin, Phone, CalendarClock, CheckCircle2, 
+import { Loader2, AlertCircle, Coffee, MapPin, Phone, CalendarClock, CheckCircle2
 } from'@/common/ui/icons';
 import { CriteriaItem } from './criteria_item.molecule';
 import { useBranchApprovalDetails } from '@/api/queries/branches/branch.query';
-import ImageViewer from '@/common/atoms/reviews/image_viewer.atom';
 
 interface CriteriaItemModernProps {
   criteriaResponse: any;
-  onImageClick: (imageUrl: string) => void;
 }
 
 const CriteriaItemModern: React.FC<CriteriaItemModernProps> = ({
-  criteriaResponse,
-  onImageClick
+  criteriaResponse
 }) => {
   const responseText = criteriaResponse?.responseText || "";
   
@@ -75,27 +72,16 @@ const CriteriaItemModern: React.FC<CriteriaItemModernProps> = ({
 
       {criteriaResponse.imageUrl && (
         <div
-          className="relative aspect-video bg-gray-50 rounded-xl overflow-hidden cursor-pointer group border border-gray-100"
-          onClick={() => onImageClick(criteriaResponse.imageUrl)}
+          className="relative aspect-video bg-gray-50 rounded-xl overflow-hidden border border-gray-100"
         >
           <img
             src={criteriaResponse.imageUrl}
             alt={criteriaResponse.criteria?.name || "Evidencia"}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover"
             onError={(e) => {
               e.currentTarget.src = "https://placehold.co/600x400?text=Imagen+No+disponible";
             }}
           />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
-              <svg className="h-6 w-6 text-[#4A3B2F]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-              </svg>
-            </div>
-          </div>
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-            <p className="text-white text-xs font-medium">Click para ampliar la imagen</p>
-          </div>
         </div>
       )}
     </div>
@@ -118,49 +104,8 @@ export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({
   onReject
 }) => {
   const { data, isLoading, error } = useBranchApprovalDetails(branchId || undefined);
-  const [imageViewer, setImageViewer] = useState<{
-    isOpen: boolean;
-    images: string[];
-    currentIndex: number;
-  }>({
-    isOpen: false,
-    images: [],
-    currentIndex: 0
-  });
 
   if (!isOpen) return null;
-
-  const allImages = data?.criteriaResponses
-    ?.filter(response => response.imageUrl)
-    .map(response => response.imageUrl)
-    .filter((url): url is string => url !== null) || [];
-
-  const openImageViewer = (imageUrl: string) => {
-    const imageIndex = allImages.indexOf(imageUrl);
-    setImageViewer({
-      isOpen: true,
-      images: allImages,
-      currentIndex: imageIndex >= 0 ? imageIndex : 0
-    });
-  };
-
-  const closeImageViewer = () => {
-    setImageViewer(prev => ({ ...prev, isOpen: false }));
-  };
-
-  const nextImage = () => {
-    setImageViewer(prev => ({
-      ...prev,
-      currentIndex: (prev.currentIndex + 1) % prev.images.length
-    }));
-  };
-
-  const prevImage = () => {
-    setImageViewer(prev => ({
-      ...prev,
-      currentIndex: prev.currentIndex === 0 ? prev.images.length - 1 : prev.currentIndex - 1
-    }));
-  };
 
   const getStatusBadge = (status: string) => {
     const statusMap: {[key: string]: { bg: string, text: string, label: string }} = {
@@ -369,7 +314,6 @@ export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({
                       <CriteriaItemModern 
                         key={index} 
                         criteriaResponse={response} 
-                        onImageClick={openImageViewer}
                       />
                     ))}
                   </div>
@@ -411,17 +355,6 @@ export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-
-    {imageViewer.isOpen && (
-      <ImageViewer
-        images={imageViewer.images}
-        currentIndex={imageViewer.currentIndex}
-        isOpen={imageViewer.isOpen}
-        onClose={closeImageViewer}
-        onNext={nextImage}
-        onPrev={prevImage}
-      />
-    )}
   </>
 );
 };
