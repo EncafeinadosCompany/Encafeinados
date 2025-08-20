@@ -4,7 +4,7 @@ export interface User {
 }
 
 export interface UserData {
-    id?: 0
+    id?: string | number
     email: string;
     name?:string;
     roles:string[];

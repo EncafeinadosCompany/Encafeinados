@@ -19,7 +19,7 @@ const reviewSchema = z.object({
 type ReviewFormValues = z.infer<typeof reviewSchema>;
 
 interface ReviewFormProps {
-  branchId: number;
+  branchId: string | number;
   branchName?: string;
   onSubmit: (data: ReviewFormValues) => void;
   isLoading: boolean;

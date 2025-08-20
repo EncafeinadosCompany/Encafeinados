@@ -14,8 +14,8 @@ export interface Reviews {
 }
 
 export interface ReviewSubmitInput {
-    branchId: number;
-    userId: number;
+    branchId: string | number;
+    userId: string | number;
     rating: number;
     comment: string;
     imageUrls: string[];

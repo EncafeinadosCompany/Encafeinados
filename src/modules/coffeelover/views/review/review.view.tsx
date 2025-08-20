@@ -28,7 +28,7 @@ export const ReviewView = () => {
       <CoffeeBackground />
       <div className="w-full max-w-md z-10">
         <ReviewWidget 
-          branchId={parseInt(branchId)} 
+          branchId={branchId} 
           branchName={branchName || undefined}
           onClose={handleClose}
           onSuccess={handleSuccess}
