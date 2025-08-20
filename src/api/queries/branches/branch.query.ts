@@ -19,14 +19,14 @@ export const useBranches = () => {
 };
 
 
-export const useBranchesID = (id?: number) => {
+export const useBranchesID = (id?: string | number) => {
   return useQuery<BrancheIDresponse>({
     queryKey: ['branches', id],
     queryFn: async () => {
       const response = await authClient.get<BrancheIDresponse>(`/branches/${id}`)
       return response
     },
-    enabled: id !== undefined && id !== null && id > 0,
+    enabled: id !== undefined && id !== null && (typeof id === 'string' ? id.length > 0 : id > 0),
   })
 }
 

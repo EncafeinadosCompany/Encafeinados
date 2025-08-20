@@ -22,7 +22,7 @@ export interface ReviewSubmitInput {
   }
   
   export interface ReviewSubmitResponse {
-    id: number;
+    id: string;
     clientName: string;
     rating: number;
     comment: string;
