@@ -110,7 +110,7 @@ export const useRejectedBranches = () => {
   })
 }
 
-export const useBranchAttributes = (branchId: number | undefined) => {
+export const useBranchAttributes = (branchId: string | number | undefined) => {
   return useQuery<BranchAttributesResponse>({
     queryKey: ['branchAttributes', branchId],
     queryFn: async () => {

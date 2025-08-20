@@ -153,10 +153,10 @@ const renderSocialIcon = (type: SocialNetworkType) => {
 
 interface CafeDetailProps {
   cafe: Cafe;
-  favorites: number[];
-  toggleFavorite: (id: number) => void;
-  navigateToCafe: (id: number) => void;
-  startRoute: (id: number) => void;
+  favorites: (string | number)[];
+  toggleFavorite: (id: string | number) => void;
+  navigateToCafe: (id: string | number) => void;
+  startRoute: (id: string | number) => void;
   onClose: () => void;
   copyToClipboard: (text: string) => void;
   copied: boolean;

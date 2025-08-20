@@ -11,17 +11,17 @@ interface MapSidebarProps {
   viewMode: 'map' | 'list';
   showSidebar: boolean;
   sortedCafes: Cafe[];
-  activeCafe: number | null;
-  favorites: number[];
+  activeCafe: string | number | null;
+  favorites: (string | number)[];
   searchTerm: string;
   filterOptions: FilterOptions; 
   totalCafeCount: number; 
   hasActiveFilters: boolean;
   setShowSidebar: (show: boolean) => void;
   setViewMode: (mode: 'map' | 'list') => void;
-  setActiveCafe: (id: number | null) => void;
-  toggleFavorite: (id: number) => void;
-  navigateToCafe: (id: number) => void;
+  setActiveCafe: (id: string | number | null) => void;
+  toggleFavorite: (id: string | number) => void;
+  navigateToCafe: (id: string | number) => void;
   resetFilters: () => void;
   updateFilterOptions: (newOptions: Partial<FilterOptions>) => void;
 }

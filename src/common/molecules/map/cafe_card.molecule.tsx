@@ -12,9 +12,9 @@ interface CafeCardProps {
   isActive: boolean;
   isFavorite: boolean;
   searchTerm: string;
-  onCardClick: (id: number) => void;
-  onFavoriteToggle: (id: number) => void;
-  onNavigate: (id: number) => void;
+  onCardClick: (id: string | number) => void;
+  onFavoriteToggle: (id: string | number) => void;
+  onNavigate: (id: string | number) => void;
 }
 
 const cardVariants = {

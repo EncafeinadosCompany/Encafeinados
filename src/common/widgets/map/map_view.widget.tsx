@@ -125,7 +125,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
     return apiCafes.length > 0 ? apiCafes : cafes;
   }, [apiCafes, cafes]);
 
-  const [activeCafe, setActiveCafe] = useState<number | null>(null);
+  const [activeCafe, setActiveCafe] = useState<string | number | null>(null);
 
   const {
     searchInputValue,
@@ -214,7 +214,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   }, [isFilterModalOpen, activeCafe, setActiveCafe]);
 
   const navigateToCafe = useCallback(
-    (cafeId: number): void => {
+    (cafeId: string | number): void => {
       const selectedCafe = sortedCafes.find((cafe) => cafe.id === cafeId);
       if (!selectedCafe) return;
 
@@ -241,7 +241,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   );
 
   const startRoute = useCallback(
-    (cafeId: number) => {
+    (cafeId: string | number) => {
       if (!userLocation) {
         toast.error("Necesitamos tu ubicación para trazar la ruta");
         getUserLocation();

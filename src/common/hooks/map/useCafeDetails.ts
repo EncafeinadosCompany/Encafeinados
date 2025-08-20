@@ -6,9 +6,9 @@ export const useCafeDetails = (
   mapInstance: L.Map | null,
   showRouteControls: boolean,
   searchParams: URLSearchParams,
-  setProcessedCafeIds: (callback: (prev: Set<number>) => Set<number>) => void,
-  activeCafe: number | null,
-  setActiveCafe: (cafe: number | null) => void
+  setProcessedCafeIds: (callback: (prev: Set<string | number>) => Set<string | number>) => void,
+  activeCafe: string | number | null,
+  setActiveCafe: (cafe: string | number | null) => void
 ) => {
   const [activeCafeData, setActiveCafeData] = useState<any | null>(null);
   const [shouldResetMapOnClose, setShouldResetMapOnClose] = useState(false);

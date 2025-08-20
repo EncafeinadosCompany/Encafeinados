@@ -7,8 +7,8 @@ import CafeMarker from './cafe_marker.molecule';
 
 interface SmartClusterGroupProps {
   cafes: Cafe[];
-  activeCafe: number | null;
-  setActiveCafe: (id: number) => void;
+  activeCafe: string | number | null;
+  setActiveCafe: (id: string | number) => void;
   setShowSidebar: (show: boolean) => void;
 }
 

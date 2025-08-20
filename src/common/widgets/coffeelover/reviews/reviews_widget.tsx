@@ -5,7 +5,7 @@ import { Skeleton } from '@/common/ui/skeleton';
 import { MessageSquareOff, AlertTriangle } from "@/common/ui/icons"
 
 interface ReviewsWidgetProps {
-  branchId: number;
+  branchId: string | number;
 }
 
 export const ReviewsWidget: React.FC<ReviewsWidgetProps> = ({ branchId }) => {
