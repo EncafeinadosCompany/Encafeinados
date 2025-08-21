@@ -4,6 +4,8 @@ import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, A
 
 import AuthClient from '@/api/client/axios'
 import { BranchAttributesResponse } from '@/api/types/branches/branch_attributes.types'
+import { defaultRetryConfig, isValidId } from '../Config/Config.Qurey'
+import { de } from 'date-fns/locale'
 
 
 const authClient = new AuthClient()
@@ -26,11 +28,12 @@ export const useBranchesID = (id?: string | number) => {
       const response = await authClient.get<BrancheIDresponse>(`/branches/${id}`)
       return response
     },
-    enabled: id !== undefined && id !== null && (typeof id === 'string' ? id.length > 0 : id > 0),
+    enabled: isValidId(id),
+    ...defaultRetryConfig
   })
 }
 
-export const useImagenBranch = (id:number) => {
+export const useImagenBranch = (id:string) => {
 
   return useQuery<image[]>({
     queryKey: ['branches_imagen'],
@@ -38,7 +41,9 @@ export const useImagenBranch = (id:number) => {
       const response = await authClient.get<BranchesImagen>(`/images/branch/${id}`);
       return response.images ?? [];
     },
-    staleTime: 1000 * 60 * 5
+    enabled: isValidId(id),
+    staleTime: 1000 * 60 * 5,
+    ...defaultRetryConfig
   });
 }
 
@@ -59,7 +64,8 @@ export const useBranch = (branchId: number | undefined) => {
       const response = await authClient.get<BranchesResponse>(`/branches/${branchId}`)
       return response
     },
-    enabled: !!branchId,
+    enabled: isValidId(branchId),
+    ...defaultRetryConfig
   })
 }
 
@@ -70,8 +76,8 @@ export const usePendingBranchesQuery = () => {
       const response = await authClient.get<PendingBranchesResponse>('/branches/status/PENDING')
       return response
     },
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    ...defaultRetryConfig
   })
 }
 
@@ -82,7 +88,7 @@ export const useBranchApprovalDetails = (branchId: number | undefined) => {
       const response = await authClient.get<BranchApprovalDetails>(`/branch-approvals/detail/${branchId}`)
       return response
     },
-     enabled: !!branchId
+     enabled:isValidId(branchId),
 
   })
 }
@@ -117,7 +123,8 @@ export const useBranchAttributes = (branchId: string | number | undefined) => {
       const response = await authClient.get<BranchAttributesResponse>(`/branch-attributes/${branchId}`);
       return response;
     },
-    enabled: !!branchId
+    enabled: isValidId(branchId),
+    ...defaultRetryConfig
   });
 };
 

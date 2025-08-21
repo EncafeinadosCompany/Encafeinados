@@ -12,14 +12,16 @@ export function EventList() {
     const { data: events } = useEventAll()
     const { mutateAsync: clientEvent, status } = useClientEventMutation();
     const [joinedEventIds, setJoinedEventIds] = useState<number[]>([]);
+    const idClient = getEncryptedItem('userId') as string | null
 
-    const idClient = getEncryptedItem('userId')
+    
+    console.log(idClient)
     if(!idClient) {
         toast.error('No se pudo obtener el id del cliente');
         return null; 
     }
 
-    const { data: event_client } = useClientEvent(Number(idClient)!, {
+    const { data: event_client } = useClientEvent(idClient, {
         queryKey: ['clientEvent', idClient],
         enabled: !!idClient
       });

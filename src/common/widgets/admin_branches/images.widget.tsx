@@ -40,10 +40,6 @@ export const formSchemaBranches = z.object({
     image_file: z.any()
         .refine((file) => file instanceof File, "La imagen es requerida")
         .refine((file) => file?.size <= 5 * 1024 * 1024, "La imagen no debe superar 5MB")
-    // .refine(
-    //     (file) => ['image/jpeg', 'image/png', 'image/gif'].includes(file?.type),
-    //     "Formato de imagen no soportado"
-    // ),
 });
 
 
@@ -60,9 +56,9 @@ export default function ImagesGallery() {
     const [previewUrl, setPreviewUrl] = useState<string>("")
     const [isModalOpen, setIsModalOpen] = useState(false);
     // const [modalMode, setModalMode] = useState<boolean>(false);
-    const { data: data_images, isLoading, isError } = useImagenBranch(Number(BranchId))
+    const { data: data_images, isLoading, isError } = useImagenBranch(BranchId)
     const [cafes, setCafes] = useState<image[]>([])
-    const { mutateAsync: useDeleteImagen, status, error } = deleteImagenBrandMutation()
+    const { mutateAsync: useDeleteImagen} = deleteImagenBrandMutation()
     const { mutateAsync: useImagen } = useUpdateImagenBrandMutation()
 
 

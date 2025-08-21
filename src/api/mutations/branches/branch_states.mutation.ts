@@ -132,8 +132,8 @@ interface response {
 
 export const useStatesIsOpen = () => {
   const queryClient = useQueryClient();
-  return useMutation<any, Error, { id: number; is_open: boolean }>({
-    mutationFn: async ({ id, is_open }: { id: number; is_open: boolean }) => {
+  return useMutation<any, Error, { id: string; is_open: boolean }>({
+    mutationFn: async ({ id, is_open }: { id: string; is_open: boolean }) => {
       const response = await authClient.patch<response>(`/branches/open-close/${id}`, { isOpen: is_open });
       return response;
     },
