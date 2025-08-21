@@ -57,7 +57,6 @@ export const useRegisterBrandMutation = () => {
 }
 
 
-
 export const useUpdateBranchMutation = () => {
   const useErrors = useError("branches");
   const queryClient = useQueryClient();
