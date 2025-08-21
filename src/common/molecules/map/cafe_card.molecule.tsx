@@ -10,10 +10,8 @@ interface CafeCardProps {
   cafe: Cafe;
   index: number;
   isActive: boolean;
-  isFavorite: boolean;
   searchTerm: string;
   onCardClick: (id: string | number) => void;
-  onFavoriteToggle: (id: string | number) => void;
   onNavigate: (id: string | number) => void;
 }
 
@@ -33,10 +31,8 @@ const CafeCard: React.FC<CafeCardProps> = ({
   cafe,
   index,
   isActive,
-  isFavorite,
   searchTerm,
   onCardClick,
-  onFavoriteToggle,
   onNavigate
 }) => {
   const { data: schedulesData } = useBranchSchedules(cafe.id);
@@ -66,13 +62,9 @@ const CafeCard: React.FC<CafeCardProps> = ({
           whileTap={{ scale: 0.9 }}
           onClick={(e) => {
             e.stopPropagation();
-            onFavoriteToggle(cafe.id);
           }}
         >
-          <Heart
-            size={16}
-            className={`${isFavorite ? 'fill-red-500 text-red-500' : 'text-[#6F4E37]'}`}
-          />
+        
         </motion.button>
       </div>
 

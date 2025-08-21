@@ -12,7 +12,6 @@ interface MapSidebarProps {
   showSidebar: boolean;
   sortedCafes: Cafe[];
   activeCafe: string | number | null;
-  favorites: (string | number)[];
   searchTerm: string;
   filterOptions: FilterOptions; 
   totalCafeCount: number; 
@@ -20,7 +19,6 @@ interface MapSidebarProps {
   setShowSidebar: (show: boolean) => void;
   setViewMode: (mode: 'map' | 'list') => void;
   setActiveCafe: (id: string | number | null) => void;
-  toggleFavorite: (id: string | number) => void;
   navigateToCafe: (id: string | number) => void;
   resetFilters: () => void;
   updateFilterOptions: (newOptions: Partial<FilterOptions>) => void;
@@ -31,7 +29,6 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   showSidebar,
   sortedCafes,
   activeCafe,
-  favorites,
   searchTerm,
   filterOptions, 
   totalCafeCount, 
@@ -39,7 +36,6 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
   setShowSidebar,
   setViewMode,
   setActiveCafe,
-  toggleFavorite,
   navigateToCafe,
   resetFilters,
   updateFilterOptions
@@ -160,10 +156,8 @@ const MapSidebar: React.FC<MapSidebarProps> = ({
                       cafe={cafe}
                       index={index}
                       isActive={activeCafe === cafe.id}
-                      isFavorite={favorites.includes(cafe.id)}
                       searchTerm={searchTerm}
                       onCardClick={setActiveCafe}
-                      onFavoriteToggle={toggleFavorite}
                       onNavigate={navigateToCafe}
                     />
                   ))}
