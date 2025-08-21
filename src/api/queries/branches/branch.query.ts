@@ -137,7 +137,6 @@ export const useValidateVisit = (coordinates: any, shopId: any) => {
   }
 }
 
-//SEARCH BRANCHES IN TE MAP AND PRINCIPAL COFFELOVER PAGE
 export interface BranchSearchParams {
   q?: string;
   minRating?: number;
