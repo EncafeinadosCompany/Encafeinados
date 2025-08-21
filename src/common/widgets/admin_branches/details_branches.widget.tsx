@@ -6,9 +6,9 @@ import { LeftCardBranch } from "@/common/molecules/admin_branch/branch/left_card
 import { MessageBranches } from "@/common/molecules/admin_branch/branch/message_branches.molecule";
 import { RightCardBranch } from "@/common/molecules/admin_branch/branch/right_card.molecule";
 import { ScheduleManagementModal } from "@/common/molecules/admin_branch/branch/schedule_management_modal.molecule";
-import { useStatesIsOpen } from "@/api/mutations/branches/branch_states.mutation";
 import {  useBranchesID, useImagenBranch} from "@/api/queries/branches/branch.query";
 import toast from "react-hot-toast";
+import { useStatesIsOpen } from "@/api/mutations/branches/branch_status.mutation";
 
 interface DetailsProp {
   BranchId:string | null

@@ -19,8 +19,9 @@ import { useBranchApprovalDetails } from '@/api/queries/branches/branch.query';
 
 import { useQueryClient } from "@tanstack/react-query";
 import toast from 'react-hot-toast';
-import { useApproveBranchMutation, useRejectBranchMutation } from "@/api/mutations/branches/branch_states.mutation";
+
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
+import { useApproveBranchMutation, useRejectBranchMutation } from "@/api/mutations/branches/branch_status.mutation";
 
 
 export const PendingBranchesWidget = () => {

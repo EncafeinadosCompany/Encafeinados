@@ -19,12 +19,12 @@ import { BranchCard } from "@/common/molecules/admin/branch/branch_card.molecule
 import { BranchDetailsModal } from "@/common/molecules/admin/branch/branch_details_enhanced_modal.molecule";
 import { BranchRejectDialog } from "@/common/molecules/admin/branch/branch_reject_dialog.molecule";
 import { useApprovedBranchesWidget } from "@/common/hooks/branches/use_approved_branches.hook";
-import { useReRejectBranchMutation } from "@/api/mutations/branches/branch_states.mutation";
+
 import { useQueryClient } from "@tanstack/react-query";
-import { useBranchApprovalDetails } from "@/api/queries/branches/branch.query";
 import AuthClient from "@/api/client/axios";
 import toast from 'react-hot-toast';
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
+import { useReRejectBranchMutation } from "@/api/mutations/branches/branch_status.mutation";
 
 export const ApprovedBranchesWidget = () => {
   const checkUserAuth = () => {
