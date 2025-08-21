@@ -58,7 +58,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   const [showSidebar, setShowSidebar] = useState<boolean>(!isMobile);
   const [showRouteControls, setShowRouteControls] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<"map" | "list">(!isMobile ? "list" : "map");
-  const [selectedStore, setSelectedStore] = useState<number | undefined>(undefined);
+  const [selectedStore, setSelectedStore] = useState<string | number | undefined>(undefined);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [localActiveCafeData, setLocalActiveCafeData] = useState<any>(null);
 
