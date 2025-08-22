@@ -1,5 +1,5 @@
 export interface InvoiceByBranchResponse {
-	branchId: number
+	branchId: string
 	branchName: string
     invoices: invoicesBranch[]
 

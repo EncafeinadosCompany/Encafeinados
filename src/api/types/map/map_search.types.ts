@@ -9,7 +9,7 @@ export type LatLngTuple = [number, number];
  * Marker position with ID
  */
 export interface MarkerPosition {
-  id: number;
+  id: string | number;
   lat: number;
   lng: number;
 }
@@ -18,8 +18,8 @@ export interface MarkerPosition {
  * Props for MapFocus component
  */
 export interface MapFocusProps {
-  cafeId: number | null;
-  positions: Array<{ id: number, lat: number, lng: number }>;
+  cafeId: string | number | null;
+  positions: Array<{ id: string | number, lat: number, lng: number }>;
   userLocation: LatLngTuple | null;
 }
 
@@ -43,7 +43,7 @@ export interface RouteLineProps {
  * Cafe data structure
  */
 export interface Cafe {
-  id: number;
+  id: string | number;
   name: string;
   rating: number;
   reviewCount: number;
@@ -58,7 +58,7 @@ export interface Cafe {
   address?: string;
   distance?: string;
   distanceValue?: number;
-  storeId: number;
+  storeId: string | number;
   storeName: string;
   socialNetworks?: SocialBranch[]; 
   attributes?: BranchAttribute[]; 

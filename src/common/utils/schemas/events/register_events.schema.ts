@@ -18,8 +18,11 @@ export const RegisterEventSchema = z
       message: "La ubicación es obligatoria",
     }),
     is_free: z.boolean().default(false),
-    branch_ids: z.array(z.number()).nonempty({message:"Debe seleccionar al menos una sucursal"}),
-    organizer: z.string()
+    branch_ids: z
+      .array(z.string())
+      .nonempty({ message: "Debe seleccionar al menos una sucursal" }),
+    organizer: z
+      .string()
       .min(3, {
         message: "El organizador es obligatorio",
       })
@@ -29,12 +32,10 @@ export const RegisterEventSchema = z
     start_time: z.string().optional(),
 
     end_time: z.string().optional(),
-
   })
   .refine((data) => data.end_date >= data.start_date, {
     message: "La fecha de fin debe ser posterior a la fecha de inicio",
     path: ["end_date"],
-  })
-
+  });
 
 export type RegisterEventSchemaType = z.infer<typeof RegisterEventSchema>; // exportar el tip

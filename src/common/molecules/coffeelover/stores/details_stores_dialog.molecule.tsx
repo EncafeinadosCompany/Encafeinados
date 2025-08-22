@@ -49,7 +49,7 @@ export default function StoreDetailsCard() {
     return null;
   }
 
-  const { data: details, isLoading, isError } = useBranchesID(Number(id));
+  const { data: details, isLoading, isError } = useBranchesID(id);
   const {
     data: attributes,
     isLoading: isLoading_attributes,
@@ -280,6 +280,7 @@ export default function StoreDetailsCard() {
                 {details.branch.social_branches.length > 0 ? (
                   details.branch.social_branches.map((social) => (
                     <a
+                      key={social.social_network_id}
                       href={social.value}
                       target="_blank"
                       rel="noopener noreferrer"

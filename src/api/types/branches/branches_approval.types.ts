@@ -54,12 +54,6 @@ export interface BranchesResponseList {
   };
 }
 
-
-
-
-
-
-
 export interface Criteria {
   name: string;
   description: string;
@@ -94,34 +88,13 @@ export interface BranchApprovalDetails {
 }
 
 export interface ApprovedBranch {
-  id: number;
+  id: string;
   name: string;
   address: string;
   status: string;
   store_logo: string;
   store_email: string;
   average_rating?: string;
-}
-
-export interface ValidateVisitInput {
-  branchId: string;
-  latitude: number;
-  longitude: number;
-}
-
-export interface StampInfo {
-  logo: string;
-  name: string;
-}
-
-export interface VisitResponseData {
-  coffeecoins_earned: number;
-  stamp: StampInfo;
-}
-
-export interface ValidateVisitResponse {
-  message: string;
-  data: VisitResponseData;
 }
 
 export interface ValidateVisitInput {

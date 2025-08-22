@@ -4,7 +4,7 @@ import { MessageSquare } from '@/common/ui/icons';
 import ReviewsWidget from '@/common/widgets/coffeelover/reviews/reviews_widget';
 
 interface ReviewsDialogProps {
-  branchId: number;
+  branchId: string | number;
   branchName: string;
   isOpen: boolean;
   onClose: () => void;

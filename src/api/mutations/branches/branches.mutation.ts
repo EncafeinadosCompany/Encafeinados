@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 const authClient = new AuthClient();
 
 export const useRegisterBrandMutation = () => {
-  // const useCriteriaMutation = useRegisterCriteriaMutation();
     const useErrors = useError("branches");
     const queryClient = useQueryClient()
   
@@ -19,14 +18,6 @@ export const useRegisterBrandMutation = () => {
       mutationFn: async (formData: BranchPost): Promise<any> => {
         try {
           const response = await authClient.post<BranchPost>('/branches', formData);
-
-      //       await useCriteriaMutation.mutateAsync({
-      //     branchId: response.branch.id,
-      //     criteriaResponseData: formData.criteria,
-      // });
-
-        //  toast.remove();
-        //  toast.success("Sucursal registrada con éxito"); 
 
           return response;
        
@@ -36,16 +27,6 @@ export const useRegisterBrandMutation = () => {
     
       },
       onSuccess: async () => {
-         
-      
-      // ✅ Navegación después del toast
-     
-//       const name = localStorage.getItem("nameStore");
-//  showSuccessToast(name);
-//         window.location.replace("/");
-
-    
-      
         queryClient.invalidateQueries({ queryKey: ['branches'] });
       },
       onError: (error: any) => {
@@ -56,15 +37,14 @@ export const useRegisterBrandMutation = () => {
 }
 
 
-
 export const useUpdateBranchMutation = () => {
   const useErrors = useError("branches");
   const queryClient = useQueryClient();
 
-  return useMutation<any, Error, {  data: Partial<BranchPost> }>({
-      mutationFn: async ({ data }): Promise<LoginResponse> => {
+  return useMutation<any, Error, { id: string; data: Partial<BranchPost> }>({
+      mutationFn: async ({ id, data }): Promise<LoginResponse> => {
           try {
-              const response = await authClient.patch<any>(`/branches/${1}`, data);
+              const response = await authClient.patch<any>(`/branches/${id}`, data);
               return response;
           } catch (error: any) {
               throw handleApiError(error);

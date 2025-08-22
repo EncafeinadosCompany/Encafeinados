@@ -39,9 +39,10 @@ export const BranchAdminSchema = z.object({
     .regex(/^\d+$/, { message: "El número de teléfono solo debe contener dígitos" }),
   
   branch_id: z
-    .number()
-    .int()
-    .positive({ message: "ID de sucursal inválido" })
+    .union([z.string(), z.number()])
+    .refine((val) => val !== null && val !== undefined && val !== "", { 
+      message: "ID de sucursal inválido" 
+    })
 });
 
 export type BranchAdminFormData = z.infer<typeof BranchAdminSchema>;

@@ -10,8 +10,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/common/ui/tabs';
 import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 
 export const ProfileWidget: React.FC = () => {
-  const id = getEncryptedItem('userId');
-  const { data: profile, isLoading, error } = useCoffeeLoverProfile(Number(id));
+  const id = getEncryptedItem<string>('userId');
+  const { data: profile, isLoading, error } = useCoffeeLoverProfile(id!);
+
   const updateProfile = useUpdateProfileMutation();
   const { height } = useWindowSize();
 

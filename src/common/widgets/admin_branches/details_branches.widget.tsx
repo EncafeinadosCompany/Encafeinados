@@ -6,8 +6,9 @@ import { LeftCardBranch } from "@/common/molecules/admin_branch/branch/left_card
 import { MessageBranches } from "@/common/molecules/admin_branch/branch/message_branches.molecule";
 import { RightCardBranch } from "@/common/molecules/admin_branch/branch/right_card.molecule";
 import { ScheduleManagementModal } from "@/common/molecules/admin_branch/branch/schedule_management_modal.molecule";
-import { useStatesIsOpen } from "@/api/mutations/branches/branch_states.mutation";
 import {  useBranchesID, useImagenBranch} from "@/api/queries/branches/branch.query";
+import toast from "react-hot-toast";
+import { useStatesIsOpen } from "@/api/mutations/branches/branch_status.mutation";
 
 interface DetailsProp {
   BranchId:string | null
@@ -15,39 +16,43 @@ interface DetailsProp {
 
 export default function DetailsBranchWidget({BranchId}:DetailsProp) {
 
-
   const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
+
   const {
     data: branches,
     error: branchError,
     isPending: isBranchLoading,
-  } = useBranchesID(Number(BranchId));
+  } = useBranchesID(BranchId!!);
   const {
     data: imagen,
     error: imageError,
     isPending: isImageLoading,
-  } = useImagenBranch(Number(BranchId));
+  } = useImagenBranch(BranchId!!);
   const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
   const [branchStatus, setBranchStatus] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const { ErrorMessageBranch, NoDataMessageBranch, LoadingMessageBranch } =
-    MessageBranches;
-
+  MessageBranches;
+  
   useEffect(() => {
     if (branches?.branch.is_open !== undefined) {
       setBranchStatus(branches.branch.is_open);
     }
   }, [branches?.branch.is_open]);
-
+  
   const handleConfirmStatusChange = () => {
     setBranchStatus(branchStatus === true ? false : true);
-    useStateOpen({
-      id: Number(BranchId),
-      is_open: branchStatus === true ? false : true,
-    });
-
+    if (BranchId) {
+      useStateOpen({
+        id: BranchId,
+        is_open: branchStatus === true ? false : true,
+      });
+    } else {
+      toast.error("Branch ID is missing.");
+    }
+    
     setTimeout(() => {
       setIsModalOpen(false);
     }, 900);
@@ -55,15 +60,16 @@ export default function DetailsBranchWidget({BranchId}:DetailsProp) {
   const handleStatusClick = () => {
     setIsModalOpen(true);
   };
-
+  
   const handleManageSchedule = () => {
     setIsScheduleModalOpen(true);
   };
-
+  
   if (isBranchLoading || isImageLoading) {
     return <LoadingMessageBranch />;
   }
-
+  console.log('brach', BranchId as string | null)
+  
   if (branchError || imageError || statusError) {
     return (
       <ErrorMessageBranch
@@ -93,7 +99,7 @@ export default function DetailsBranchWidget({BranchId}:DetailsProp) {
         {/* Left column */}
         <div className="h-full">
           <LeftCardBranch branches={branches} imagen={imagen} />
-        </div>{" "}
+        </div>
         {/* Right column */}
         <div className="h-full">
           <RightCardBranch

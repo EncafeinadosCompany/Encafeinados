@@ -4,7 +4,7 @@ import { BranchSchedule } from '@/api/types/schedules/schedule.types';
 
 const authClient = new AuthClient();
 
-export const useBranchSchedules = (branchId: number | undefined) => {
+export const useBranchSchedules = (branchId: string | number | undefined) => {
   return useQuery<BranchSchedule[]>({
     queryKey: ['branches','branch-schedules', branchId],
     queryFn: async () => {

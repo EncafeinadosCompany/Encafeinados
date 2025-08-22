@@ -18,7 +18,7 @@ export default function BranchManagementView() {
   const storeId = getEncryptedItem("storeId") as string | null;
   if (!storeId) return (window.location.href = "/");
 
-  const { data: branchesList} = useBranchByStore(Number(storeId));
+  const { data: branchesList} = useBranchByStore(storeId);
 
   const handleVisit = (branch: Branch) => {
   
