@@ -16,7 +16,6 @@ import { useBranchesByStore } from "@/api/queries/stores/stores.query";
 import { useBranches } from "@/api/queries/branches/branch.query";
 
 // Hooks personalizados
-import { useFavorites } from "@/common/hooks/map/useFavorites";
 import { useGeolocation } from "@/common/hooks/map/useGeolocation";
 import { useMapData } from "@/common/hooks/map/useMapData";
 import { useBranchSearch } from "@/common/hooks/map/useBranchSearch";
@@ -63,7 +62,6 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
   const [localActiveCafeData, setLocalActiveCafeData] = useState<any>(null);
 
   const { mapLoaded, setMapLoaded, tilesLoaded, setTilesLoaded, totalTiles, setTotalTiles, loadingProgress, setLoadingProgress } = useMapLoading();
-  const { favorites, toggleFavorite } = useFavorites();
   
   const {
     userLocation,
@@ -571,16 +569,13 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
         viewMode={viewMode}
         showSidebar={showSidebar}
         sortedCafes={sortedCafes}
-        activeCafe={activeCafe}
-        favorites={favorites}
-        searchTerm={apiSearchTerm}
+        activeCafe={activeCafe}        searchTerm={apiSearchTerm}
         filterOptions={apiFilters}
         totalCafeCount={cafes.length}
         hasActiveFilters={apiHasActiveFilters}
         setShowSidebar={setShowSidebar}
         setViewMode={setViewMode}
         setActiveCafe={setActiveCafe}
-        toggleFavorite={toggleFavorite}
         navigateToCafe={navigateToCafe}
         resetFilters={resetApiFilters}
         updateFilterOptions={updateApiFilters}
@@ -650,8 +645,7 @@ const MapView: React.FC<MapViewProps> = ({ view: showView }) => {
                   {activeCafeData && (
                     <CafeDetail
                       cafe={activeCafeData}
-                      favorites={favorites}
-                      toggleFavorite={toggleFavorite}
+                    
                       navigateToCafe={navigateToCafe}
                       startRoute={startRoute}
                       onClose={handleCloseDetails}

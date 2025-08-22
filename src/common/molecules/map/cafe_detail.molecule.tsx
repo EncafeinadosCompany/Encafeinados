@@ -153,8 +153,6 @@ const renderSocialIcon = (type: SocialNetworkType) => {
 
 interface CafeDetailProps {
   cafe: Cafe;
-  favorites: (string | number)[];
-  toggleFavorite: (id: string | number) => void;
   navigateToCafe: (id: string | number) => void;
   startRoute: (id: string | number) => void;
   onClose: () => void;
@@ -165,16 +163,8 @@ interface CafeDetailProps {
 const arePropsEqual = (prevProps: CafeDetailProps, nextProps: CafeDetailProps) => {
   if (
     prevProps.cafe.id !== nextProps.cafe.id ||
-    prevProps.copied !== nextProps.copied ||
-    prevProps.favorites.length !== nextProps.favorites.length
-  ) {
+    prevProps.copied !== nextProps.copied   ) {
     return false;
-  }
-
-  for (let i = 0; i < prevProps.favorites.length; i++) {
-    if (prevProps.favorites[i] !== nextProps.favorites[i]) {
-      return false;
-    }
   }
 
   return true;
@@ -182,8 +172,6 @@ const arePropsEqual = (prevProps: CafeDetailProps, nextProps: CafeDetailProps) =
 
 const CafeDetail: React.FC<CafeDetailProps> = React.memo(({
   cafe,
-  favorites,
-  toggleFavorite,
   navigateToCafe,
   startRoute,
   onClose,
