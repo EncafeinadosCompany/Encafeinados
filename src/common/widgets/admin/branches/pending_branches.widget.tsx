@@ -69,18 +69,18 @@ export const PendingBranchesWidget = () => {
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedBranchForAction, setSelectedBranchForAction] = useState<number | null>(null);
+  const [selectedBranchForAction, setSelectedBranchForAction] = useState<string | null>(null);
   
-  const openApproveDialog = (branchId: number) => {
+  const openApproveDialog = (branchId:string) => {
     setSelectedBranchForAction(branchId);
     setIsApproveDialogOpen(true);
   };
   
-  const openRejectDialog = (branchId: number) => {
+  const openRejectDialog = (branchId:string) => {
     setSelectedBranchForAction(branchId);
     setIsRejectDialogOpen(true);
   };
-    const confirmApprove = async (branchId: number) => {
+    const confirmApprove = async (branchId:string) => {
     if (!checkUserAuth()) return;
     
     setIsSubmitting(true);
@@ -131,7 +131,7 @@ export const PendingBranchesWidget = () => {
       setIsApproveDialogOpen(false);
     }
   };
-    const confirmReject = async (branchId: number, reason: string) => {
+    const confirmReject = async (branchId: string, reason: string) => {
     if (!checkUserAuth()) return;
     
     setIsSubmitting(true);
@@ -189,7 +189,7 @@ export const PendingBranchesWidget = () => {
     }
   };
   
-  const getBranchName = (branchId: number | null) => {
+  const getBranchName = (branchId: string | null) => {
     if (!branchId) return undefined;
     const branch = data.find(b => b.id === branchId);
     return branch?.name;

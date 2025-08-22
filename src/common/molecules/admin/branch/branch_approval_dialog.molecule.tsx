@@ -89,11 +89,11 @@ const CriteriaItemModern: React.FC<CriteriaItemModernProps> = ({
 };
 
 interface BranchApprovalDialogProps {
-  branchId: number | null;
+  branchId: string | null;
   isOpen: boolean;
   onClose: () => void;
-  onApprove: (branchId: number) => void;
-  onReject: (branchId: number) => void;
+  onApprove: (branchId: string) => void;
+  onReject: (branchId: string) => void;
 }
 
 export const BranchApprovalDialog: React.FC<BranchApprovalDialogProps> = ({

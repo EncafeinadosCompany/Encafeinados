@@ -81,7 +81,7 @@ export const usePendingBranchesQuery = () => {
   })
 }
 
-export const useBranchApprovalDetails = (branchId: number | undefined) => {
+export const useBranchApprovalDetails = (branchId: string| undefined) => {
   return useQuery<BranchApprovalDetails, Error>({
     queryKey: ['branches','branch-approvals', 'detail', branchId],
     queryFn: async () => {
