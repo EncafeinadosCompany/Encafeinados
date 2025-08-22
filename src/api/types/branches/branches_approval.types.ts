@@ -54,12 +54,6 @@ export interface BranchesResponseList {
   };
 }
 
-
-
-
-
-
-
 export interface Criteria {
   name: string;
   description: string;
@@ -94,7 +88,7 @@ export interface BranchApprovalDetails {
 }
 
 export interface ApprovedBranch {
-  id: number;
+  id: string;
   name: string;
   address: string;
   status: string;
@@ -108,9 +102,6 @@ export interface ValidateVisitInput {
   latitude: number;
   longitude: number;
 }
-
-
-
 
 export type ApprovedBranchesResponse = ApprovedBranch[];
 

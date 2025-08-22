@@ -6,13 +6,9 @@ import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
-import { useRegisterCriteriaMutation } from "../criteria/criteria.mutation";
-import { showSuccessToast } from "@/common/molecules/auth/login/card_success.molecule";
-
 const authClient = new AuthClient();
 
 export const useRegisterBrandMutation = () => {
-  // const useCriteriaMutation = useRegisterCriteriaMutation();
     const useErrors = useError("branches");
     const queryClient = useQueryClient()
   
@@ -20,14 +16,6 @@ export const useRegisterBrandMutation = () => {
       mutationFn: async (formData: BranchPost): Promise<any> => {
         try {
           const response = await authClient.post<BranchPost>('/branches', formData);
-
-      //       await useCriteriaMutation.mutateAsync({
-      //     branchId: response.branch.id,
-      //     criteriaResponseData: formData.criteria,
-      // });
-
-        //  toast.remove();
-        //  toast.success("Sucursal registrada con éxito"); 
 
           return response;
        
@@ -37,16 +25,6 @@ export const useRegisterBrandMutation = () => {
     
       },
       onSuccess: async () => {
-         
-      
-      // ✅ Navegación después del toast
-     
-//       const name = localStorage.getItem("nameStore");
-//  showSuccessToast(name);
-//         window.location.replace("/");
-
-    
-      
         queryClient.invalidateQueries({ queryKey: ['branches'] });
       },
       onError: (error: any) => {
