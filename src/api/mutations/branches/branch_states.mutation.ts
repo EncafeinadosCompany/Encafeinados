@@ -210,8 +210,6 @@ export const useUpdateImagenBrandMutation = () => {
   });
 }
 
-
-
 export const deleteImagenBrandMutation = () => {
   const queryClient = useQueryClient();
   const useErrors = useError("attributes");

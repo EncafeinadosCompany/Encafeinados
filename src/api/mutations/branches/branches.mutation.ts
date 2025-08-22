@@ -6,8 +6,7 @@ import { handleApiError } from "@/common/utils/errors/handle_api_error.utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import toast from "react-hot-toast";
-import { useRegisterCriteriaMutation } from "../criteria/criteria.mutation";
-import { showSuccessToast } from "@/common/molecules/auth/login/card_success.molecule";
+
 
 const authClient = new AuthClient();
 

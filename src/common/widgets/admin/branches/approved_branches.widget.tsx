@@ -21,7 +21,6 @@ import { BranchRejectDialog } from "@/common/molecules/admin/branch/branch_rejec
 import { useApprovedBranchesWidget } from "@/common/hooks/branches/use_approved_branches.hook";
 import { useReRejectBranchMutation } from "@/api/mutations/branches/branch_states.mutation";
 import { useQueryClient } from "@tanstack/react-query";
-import { useBranchApprovalDetails } from "@/api/queries/branches/branch.query";
 import AuthClient from "@/api/client/axios";
 import toast from 'react-hot-toast';
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
