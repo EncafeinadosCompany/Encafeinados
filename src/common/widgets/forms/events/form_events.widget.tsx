@@ -32,7 +32,7 @@ import { useApprovedBranches } from "@/api/queries/branches/branch.query";
 import Select from "react-select";
 
 export default function FormRegisterEvents() {
-  const { mutateAsync: useRegisterEvent } = useEventMutation();
+  const { mutateAsync: useRegisterEvent, status } = useEventMutation();
   const [searchParams] = useSearchParams();
   const start_time = searchParams.get("start_time");
   const { data: BranchesAll } = useApprovedBranches();
@@ -370,9 +370,14 @@ export default function FormRegisterEvents() {
               <div className="w-full flex flex-col  items-center">
                 <Button
                   type="submit"
+                  disabled={status === "pending"}
                   className="w-full md:w-2xl  bg-black text-white"
                 >
-                  Registrar Evento
+                  {
+                    status === "pending"?
+                    "Cargando...":
+                    "Registrar Evento"
+                  }
                 </Button>
               </div>
             </form>

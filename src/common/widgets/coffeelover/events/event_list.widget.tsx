@@ -1,22 +1,14 @@
 import { useClientEventMutation } from "@/api/mutations/events/events.mutation"
 import { useClientEvent, useEventAll } from "@/api/queries/events/events.query"
 import { EventCard } from "@/common/molecules/coffeelover/events/event_card.molecule"
-import { useLocalStorage } from "@/common/utils/security/auth_storage.utils";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
-
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-
 
 export function EventList() {
     const { data: events } = useEventAll()
     const { mutateAsync: clientEvent, status } = useClientEventMutation();
     const [joinedEventIds, setJoinedEventIds] = useState<number[]>([]);
     const idClient = (getEncryptedItem('userId') as string | null) ?? "";
-
-    
-    console.log(idClient)
-   
 
     const { data: event_client } = useClientEvent(idClient, {
         queryKey: ['clientEvent', idClient],

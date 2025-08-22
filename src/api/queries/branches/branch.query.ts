@@ -4,7 +4,7 @@ import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, A
 
 import AuthClient from '@/api/client/axios'
 import { BranchAttributesResponse } from '@/api/types/branches/branch_attributes.types'
-import { defaultRetryConfig, isValidId } from '../Config/Config.Qurey'
+import { defaultRetryConfig, isValidId } from '../Config/Config.Query'
 import { de } from 'date-fns/locale'
 
 
