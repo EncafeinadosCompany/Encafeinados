@@ -15,7 +15,7 @@ export const useApproveBranchMutation = () => {
 
       return await authClient.patch(`/branch-approvals/${approvalId}`, {
         status: true,
-        approvedById: Number(userId),
+        approvedById:userId,
       });
     }, onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["branches", "pending"] });
