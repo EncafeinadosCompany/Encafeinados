@@ -4,13 +4,7 @@ export const validateImageRequirements = (
   criteriaData: criteriaResponseData[],
   formCriteria: Record<string, any>
 ): string | null => {
-  // Debug: Para ver los datos que llegan
-  console.log("🔍 validateImageRequirements llamada con:", {
-    criteriaData: criteriaData?.length,
-    formCriteria: Object.keys(formCriteria).length,
-    criteriaDataFull: criteriaData,
-    formCriteriaFull: formCriteria,
-  });
+   
 
   if (
     !criteriaData ||
@@ -34,13 +28,6 @@ export const validateImageRequirements = (
     const criterion = criteriaData.find((c) => c.id === Number(key));
     const response = formCriteria[key];
 
-    console.log(`🔍 Validando criterio ${key}:`, {
-      criterion: criterion?.name,
-      requires_image: criterion?.requires_image,
-      response_text: response?.response_text,
-      image_url: response?.image_url,
-      hasImage: !!response?.image_url,
-    });
 
     if (
       criterion?.requires_image &&

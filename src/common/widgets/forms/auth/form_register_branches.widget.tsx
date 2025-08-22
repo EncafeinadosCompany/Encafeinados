@@ -59,6 +59,17 @@ export default function RegisterBranchesWidget() {
 
   const nameStore = localStorage.getItem("store");
   const tel = localStorage.getItem("tel");
+
+
+  useEffect(() => {
+    const nameStore = localStorage.getItem("store");
+    const tel = localStorage.getItem("tel");
+    
+    if (nameStore && tel) {
+      setStep(1);
+    }
+  }, []); 
+  
   const methods = useForm<RegisterStoreBrancheSchemaType>({
     resolver: zodResolver(RegisterStoreBrancheSchema[step] as any),
     defaultValues: {

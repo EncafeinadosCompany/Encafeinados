@@ -36,7 +36,7 @@ export const CardSuccessToast = ({
         </div>
         <div className="w-full flex item-center justify-center">
           <Button className="bg-amber-500 w-fit" onClick={() => toast.remove()}>
-            <p>!Entendido¡</p>
+            <p>¡Entendido!</p>
           </Button>
         </div>
       </div>
