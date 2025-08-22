@@ -117,7 +117,7 @@ export default function RegisterBranchesWidget() {
       const details = detailsParts.join(" | ");
 
       const submitData = {
-        store_id: Number(storeId),
+        store_id: storeId,
         name: data.name,
         phone_number: data.phone_number,
         latitude: data.latitude,

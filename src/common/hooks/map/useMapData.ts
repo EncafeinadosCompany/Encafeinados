@@ -8,7 +8,7 @@ export const useMapData = (
   branchesData: BranchesResponse | undefined,
   filteredBranchesData: BranchesResponse | undefined,
   userLocation: LatLngTuple | null,
-  activeCafe: number | null,
+  activeCafe: string | number | null,
   storesData: StoresResponse | undefined
 ) => {
   const defaultCenter: LatLngTuple = [6.2476, -75.5658];

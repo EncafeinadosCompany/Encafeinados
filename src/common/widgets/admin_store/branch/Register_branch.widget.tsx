@@ -71,7 +71,6 @@ export default function RegisterBranchWidget() {
     try {
       console.log("🚀 Iniciando envío del formulario con data:", data);
 
-      // Validación previa al envío
       const imageValidationError = validateImageRequirements(
         Array.isArray(criteria) ? criteria : [],
         data.criteria
@@ -106,7 +105,7 @@ export default function RegisterBranchWidget() {
       const details = detailsParts.join(" | ");
 
       const submitData = {
-        store_id: Number(storeId),
+        store_id: String(storeId),
         name: data.name,
         phone_number: data.phone_number,
         latitude: data.latitude,

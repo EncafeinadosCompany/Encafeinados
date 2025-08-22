@@ -12,7 +12,7 @@ import { Eye, MapPin, CheckCircle2, XCircle } from '@/common/ui/icons';
 
 interface BranchCardProps {
   branch: {
-    id: number;
+    id: string;
     name: string;
     address?: string;
     status: string;
@@ -27,8 +27,8 @@ interface BranchCardProps {
   };
   index: number;
   onView: (branch: any) => void;
-  onApprove?: (branchId: number) => void;
-  onReject?: (branchId: number) => void;
+  onApprove?: (branchId: string) => void;
+  onReject?: (branchId: string) => void;
   type: "pending" | "approved" | "rejected";
 }
 export const BranchCard = ({

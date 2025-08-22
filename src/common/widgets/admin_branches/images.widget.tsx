@@ -13,12 +13,14 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/common/ui/form"
 import {  image } from "@/api/types/branches/branches.types"
-import { deleteImagenBrandMutation, useUpdateImagenBrandMutation } from "@/api/mutations/branches/branch_states.mutation"
+
 import { Card, CardDescription, CardHeader, CardTitle } from "@/common/ui/card"
 import toast from "react-hot-toast"
 import { Badge } from "@/common/ui/badge"
 
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
+import { useDeleteImagenBranchMutation, useUpdateImagenBranchMutation } from "@/api/mutations/branches/branch_images.mutation"
+import { BranchImagesSchema } from "@/common/utils/schemas/branch/images/brach_images.schema"
 
 
 const tipo_imagen = [
@@ -29,23 +31,6 @@ const tipo_imagen = [
     { id: 5, clasification: "MENÚ" },
     { id: 6, clasification: "PROMOCIONES" }
 ] as const;
-
-
-
-
-export const formSchemaBranches = z.object({
-    image_type: z.enum(['LOGO', 'PORTADA', 'GALERÍA', 'PERFIL', 'MENÚ', 'PROMOCIONES'], {
-        required_error: "Por favor selecciona un tipo de imagen",
-    }),
-    image_file: z.any()
-        .refine((file) => file instanceof File, "La imagen es requerida")
-        .refine((file) => file?.size <= 5 * 1024 * 1024, "La imagen no debe superar 5MB")
-    // .refine(
-    //     (file) => ['image/jpeg', 'image/png', 'image/gif'].includes(file?.type),
-    //     "Formato de imagen no soportado"
-    // ),
-});
-
 
 export default function ImagesGallery() {
 
@@ -59,18 +44,18 @@ export default function ImagesGallery() {
     const [images, setImages] = useState<{ id: number; url: string; type: string }[]>([]);
     const [previewUrl, setPreviewUrl] = useState<string>("")
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [modalMode, setModalMode] = useState<boolean>(false);
-    const { data: data_images, isLoading, isError } = useImagenBranch(Number(BranchId))
+
+    const { data: data_images, isLoading, isError } = useImagenBranch(BranchId)
     const [cafes, setCafes] = useState<image[]>([])
-    const { mutateAsync: useDeleteImagen, status, error } = deleteImagenBrandMutation()
-    const { mutateAsync: useImagen } = useUpdateImagenBrandMutation()
+    const { mutateAsync: useDeleteImagen} = useDeleteImagenBranchMutation()
+    const { mutateAsync: useImagen } =  useUpdateImagenBranchMutation()
 
 
 
     // Add state for collapse
     const [isTypeInfoVisible, setIsTypeInfoVisible] = useState(false);
-    const form = useForm<z.infer<typeof formSchemaBranches>>({
-        resolver: zodResolver(formSchemaBranches),
+    const form = useForm<z.infer<typeof BranchImagesSchema>>({
+        resolver: zodResolver(BranchImagesSchema),
         defaultValues: {
             image_file: undefined
         },
@@ -84,10 +69,7 @@ export default function ImagesGallery() {
     }, [data_images, cafes])
 
 
-
-
-
-    const onSubmit = async (values: z.infer<typeof formSchemaBranches>) => {
+    const onSubmit = async (values: z.infer<typeof BranchImagesSchema>) => {
         const newImageData = {
             id: Number(crypto.randomUUID()),
             url: URL.createObjectURL(values.image_file),
@@ -96,7 +78,7 @@ export default function ImagesGallery() {
         setImages([...images, newImageData]);
         try {
             useImagen(values)
-            useUpdateImagenBrandMutation
+            useUpdateImagenBranchMutation()
             setPreviewUrl("")
             form.reset();
             setIsModalOpen(false);

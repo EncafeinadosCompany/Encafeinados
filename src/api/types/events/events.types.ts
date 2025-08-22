@@ -9,7 +9,7 @@ export interface EventDto {
     organizer: string;
     value?:number;
     status?: string;
-    branch_ids?: number[];
+    branch_ids?: string[];
 }
 
 

@@ -8,8 +8,8 @@ import { RefreshCw, CheckCircle2 } from'@/common/ui/icons';
 interface BranchApproveDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (branchId: number) => void;
-  branchId: number | null;
+  onConfirm: (branchId: string) => void;
+  branchId: string | null;
   branchName?: string;
   isSubmitting?: boolean;
 }

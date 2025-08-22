@@ -7,10 +7,14 @@ import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.util
 import { useInvoicesByBranch } from '@/api/queries/dashboard/list_invoices_by_branch.query';
 
 export default function PaymentsDashboard() {
-    const branchId = getEncryptedItem("branchId") as number | null;
+    const branchId = getEncryptedItem("branchId") as string | null;
 
     // Query para obtener datos y estadísticas
-    const { data: invoicesData, isLoading, error } = useInvoicesByBranch(branchId || 0);
+    const { data: invoicesData, isLoading, error } = useInvoicesByBranch(branchId!!);
+
+
+
+    console.log(invoicesData)
 
     // Calcular estadísticas
     const totalInvoices = invoicesData?.invoices?.length || 0;
@@ -75,7 +79,7 @@ export default function PaymentsDashboard() {
                     </div>
                 </motion.div>
 
-                {!isLoading || error ? (
+                {!!isLoading || !!error ? (
                      <Card className="border border-gray-200">
                             <CardContent className="p-8 text-center">
                                 <CreditCard className="w-12 h-12 text-gray-300 mx-auto mb-4" />

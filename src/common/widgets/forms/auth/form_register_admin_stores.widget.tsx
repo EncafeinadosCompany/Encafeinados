@@ -27,8 +27,8 @@ import { useStepMetaAdmin } from "@/common/hooks/admin/use_step_meta.hook";
 import { getGreeting } from "@/common/utils/get_greeting.utils";
 
 interface RegisteAdminProps {
-  storeId: number | 0;
-  branchId: number | 0;
+  storeId: string | number;
+  branchId: string | number;
   ref?: string;
 }
 
@@ -83,8 +83,8 @@ export default function RegisterAdminStore({
         phone_number: finalData.phone_number,
       },
       entityData: {
-        storeId: Number(storeId),
-        ...(finalData.hasMultipleBranch ? { branchId: Number(branchId) } : {}),
+        storeId: storeId,
+        ...(finalData.hasMultipleBranch ? { branchId: branchId } : {}),
       },
     };
 

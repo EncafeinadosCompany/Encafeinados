@@ -27,7 +27,7 @@ export const useEventAll= () => {
   }
 
   export const useClientEvent = (
-    id: number,
+    id: string,
     options?: UseQueryOptions<EventClienType[]> 
   ) => {
     return useQuery<EventClienType[]>({
@@ -36,6 +36,8 @@ export const useEventAll= () => {
         const response = await authClient.get<EventClienType[]>(`/event-client/${id}`);
         return response;
       },
+      retry:3,
+      retryDelay: 5000,
       ...options 
     });
   };

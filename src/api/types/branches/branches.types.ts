@@ -29,7 +29,7 @@ export interface Branch {
 }
 
 export interface BranchPost {
-  store_id: number;
+  store_id: string | number;
   name: string;
   phone_number: string;
   latitude: number;

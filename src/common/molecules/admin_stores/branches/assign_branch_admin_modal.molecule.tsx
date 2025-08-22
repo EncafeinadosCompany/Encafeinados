@@ -51,7 +51,7 @@ export const AssignBranchAdminModal: React.FC<AssignBranchAdminModalProps> = ({
       type_document: 'CC',
       number_document: '',
       phone_number: '',
-      branch_id: branch?.id || 0
+      branch_id: branch?.id || ''
     }
   });
 

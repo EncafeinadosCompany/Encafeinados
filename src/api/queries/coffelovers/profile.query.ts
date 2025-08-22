@@ -4,7 +4,7 @@ import { CoffeeLoverProfileType } from '@/api/types/coffelovers/coffelovers.type
 
 const authClient = new AuthClient();
 
-export const useCoffeeLoverProfile = (id:number) => {
+export const useCoffeeLoverProfile = (id: string | number) => {
   return useQuery<CoffeeLoverProfileType>({
     queryKey: ['coffeeLoverProfile', id],
     queryFn: async () => {

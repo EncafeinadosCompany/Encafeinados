@@ -7,7 +7,7 @@ import { MapFocusProps } from '@/api/types/map/map_search.types';
  */
 const MapFocus: React.FC<MapFocusProps> = ({ cafeId, positions, userLocation }) => {
   const map = useMap();
-  const prevCafeIdRef = useRef<number | null>(null);
+  const prevCafeIdRef = useRef<string | number | null>(null);
   
   useEffect(() => {
     // Solo hacer flyTo cuando se selecciona un nuevo café, no cuando se deselecciona

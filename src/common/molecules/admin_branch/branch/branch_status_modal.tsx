@@ -2,6 +2,7 @@
 import { Button } from "@/common/ui/button"
 import {Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle} from "@/common/ui/dialog"
 import { AlertTriangle } from'@/common/ui/icons'
+import React from "react";
 
 interface BranchStatusModalProps {
     isOpen: boolean;
@@ -11,7 +12,7 @@ interface BranchStatusModalProps {
     message?: string;
 }
 
-export default function BranchStatusModal({ isOpen, onClose, currentStatus, onConfirm, message}: BranchStatusModalProps) {
+export default React.memo(function BranchStatusModal({ isOpen, onClose, currentStatus, onConfirm, message}: BranchStatusModalProps) {
     const newStatus = currentStatus === true ? "cerrada" : "abierta"
 
     return (
@@ -55,4 +56,4 @@ export default function BranchStatusModal({ isOpen, onClose, currentStatus, onCo
         </DialogContent>
     </Dialog>
     )
-}
+});

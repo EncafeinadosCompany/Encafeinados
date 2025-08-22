@@ -19,12 +19,12 @@ import { BranchCard } from "@/common/molecules/admin/branch/branch_card.molecule
 import { BranchDetailsModal } from "@/common/molecules/admin/branch/branch_details_enhanced_modal.molecule";
 import { BranchRejectDialog } from "@/common/molecules/admin/branch/branch_reject_dialog.molecule";
 import { useApprovedBranchesWidget } from "@/common/hooks/branches/use_approved_branches.hook";
-import { useReRejectBranchMutation } from "@/api/mutations/branches/branch_states.mutation";
+
 import { useQueryClient } from "@tanstack/react-query";
-import { useBranchApprovalDetails } from "@/api/queries/branches/branch.query";
 import AuthClient from "@/api/client/axios";
 import toast from 'react-hot-toast';
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
+import { useReRejectBranchMutation } from "@/api/mutations/branches/branch_status.mutation";
 
 export const ApprovedBranchesWidget = () => {
   const checkUserAuth = () => {
@@ -67,13 +67,13 @@ export const ApprovedBranchesWidget = () => {
   
   const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedBranchForAction, setSelectedBranchForAction] = useState<number | null>(null);
+  const [selectedBranchForAction, setSelectedBranchForAction] = useState<string | null>(null);
 
-  const openRejectDialog = (branchId: number) => {
+  const openRejectDialog = (branchId: string) => {
     setSelectedBranchForAction(branchId);
     setIsRejectDialogOpen(true);
   };
-  const confirmReject = async (branchId: number, reason: string) => {
+  const confirmReject = async (branchId: string, reason: string) => {
     if (!checkUserAuth()) return;
     
     setIsSubmitting(true);
@@ -112,7 +112,7 @@ export const ApprovedBranchesWidget = () => {
     }
   };
 
-  const getBranchName = (branchId: number | null) => {
+  const getBranchName = (branchId: string | null) => {
     if (!branchId) return undefined;
     const branch = originalBranches.find(b => b.id === branchId);
     return branch?.name;

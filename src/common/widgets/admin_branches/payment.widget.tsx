@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import AuthClient from '@/api/client/axios';
 
 interface PaymentsByBranchWidgetProps {
-  branchId: number;
+  branchId: string | null;
   onPaymentSuccess?: (invoiceId: number) => void;
 }
 
@@ -28,7 +28,7 @@ export const PaymentsByBranchWidget: React.FC<PaymentsByBranchWidgetProps> = ({
     isLoading,
     error,
     refetch
-  } = useInvoicesByBranch(branchId);
+  } = useInvoicesByBranch(branchId!!);
 
   const handlePayment = async (invoice: invoicesBranch) => {
     try {

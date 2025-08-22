@@ -58,11 +58,11 @@ const GoogleCallback = () => {
         setAuthStorageGoogle(tokenResponse);
 
         saveEncryptedItem("user", {
-          id: tokenData?.sub,
+          id: String(tokenData?.sub),
           email: tokenData?.email,
           roles: tokenData?.roles || []
         })
-        saveEncryptedItem("userId", tokenData?.sub );
+        saveEncryptedItem("userId", String(tokenData?.sub) );
         toast.success("Inicio de sesión exitoso, ¡Bienvenido!");
 
         GetCoffeeLoverData(String(tokenData?.sub));
