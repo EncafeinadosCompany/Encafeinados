@@ -25,7 +25,7 @@ export interface Branch {
 }
 
 export interface PendingBranch {
-  id: number;
+  id: string;
   name: string;
   address?: string;
   status: string;
@@ -66,7 +66,7 @@ export interface CriteriaResponse {
 }
 
 export interface BranchInApproval {
-  id: number;
+  id: string;
   name: string;
   phoneNumber: string;
   latitude: number;
@@ -106,7 +106,7 @@ export interface ValidateVisitInput {
 export type ApprovedBranchesResponse = ApprovedBranch[];
 
 export interface RejectedBranch {
-  id: number;
+  id: string;
   name: string;
   address: string;
   status: string;

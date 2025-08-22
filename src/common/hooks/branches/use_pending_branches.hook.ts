@@ -24,7 +24,7 @@ export const usePendingBranchesWidget = () => {
   const [confirmationDialog, setConfirmationDialog] = useState({
     isOpen: false,
     action: '',
-    branchId: 0
+    branchId: ''
   })
 
   // Estado para el diálogo de detalles
@@ -107,7 +107,7 @@ export const usePendingBranchesWidget = () => {
     setConfirmationDialog({
       isOpen: true,
       action: 'reject',
-      branchId: selectedBranch?.id || 0
+      branchId: selectedBranch?.id || ''
     })
   }
   

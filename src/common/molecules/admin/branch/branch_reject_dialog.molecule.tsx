@@ -10,8 +10,8 @@ import { XCircle, RefreshCw } from'@/common/ui/icons'
 interface BranchRejectDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (branchId: number, reason: string) => void;
-  branchId: number | null;
+  onConfirm: (branchId: string, reason: string) => void;
+  branchId: string | null;
   branchName?: string;
   isSubmitting?: boolean;
 }
