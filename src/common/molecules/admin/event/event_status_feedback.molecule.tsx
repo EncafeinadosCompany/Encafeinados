@@ -1,9 +1,10 @@
 import { Button } from "@/common/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/common/ui/card";
-import { Ghost, Loader2, Plus, RefreshCw, X } from'@/common/ui/icons';
+import { Ghost, Loader2, Plus, RefreshCw, X } from '@/common/ui/icons';
 import { format } from "date-fns";
 
 import { es } from "date-fns/locale";
+import { useNavigate } from "react-router-dom";
 
 type StatusFeedbackProps = {
     status: "loading" | "error" | "empty";
@@ -16,6 +17,7 @@ type StatusFeedbackProps = {
 };
 
 export const StatusFeedbackEvent = ({ status, message, refetch, selectedDay, currentMonth, searchTerm, viewAll }: StatusFeedbackProps) => {
+    const navigate = useNavigate()
     if (status === "loading") {
         return (
             <div className="flex flex-col items-center justify-center h-64 w-full">
@@ -66,7 +68,7 @@ export const StatusFeedbackEvent = ({ status, message, refetch, selectedDay, cur
                     }
                 </p>
                 <Button className="mt-6 bg-[#6F4E37] hover:bg-[#5C4130] text-white">
-                    <a href={`/admin/form-event?start_time=${selectedDay ? format(selectedDay, 'dd MMMM yyyy', { locale: es }) : format(new Date(), 'dd MMMM yyyy', { locale: es })}`} className="flex items-center">
+                    <a onClick={() => navigate(`/admin/form-event?start_time=${selectedDay ? format(selectedDay, 'dd MMMM yyyy', { locale: es }) : format(new Date(), 'dd MMMM yyyy')}`)} className="flex items-center">
                         <Plus className="h-4 w-4 mr-2" />
                         <span className="me-2">Crear Evento</span>
                     </a>
