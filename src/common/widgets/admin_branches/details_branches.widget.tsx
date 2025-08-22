@@ -18,10 +18,6 @@ export default function DetailsBranchWidget({BranchId}:DetailsProp) {
 
   const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
 
-  if(!BranchId){
-    return toast.error("El Id es inválido")
-  }
-
   const {
     data: branches,
     error: branchError,
@@ -48,10 +44,14 @@ export default function DetailsBranchWidget({BranchId}:DetailsProp) {
   
   const handleConfirmStatusChange = () => {
     setBranchStatus(branchStatus === true ? false : true);
-    useStateOpen({
-      id: BranchId,
-      is_open: branchStatus === true ? false : true,
-    });
+    if (BranchId) {
+      useStateOpen({
+        id: BranchId,
+        is_open: branchStatus === true ? false : true,
+      });
+    } else {
+      toast.error("Branch ID is missing.");
+    }
     
     setTimeout(() => {
       setIsModalOpen(false);
