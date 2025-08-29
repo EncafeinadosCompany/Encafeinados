@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 interface GoToButtonProps extends Omit<React.ComponentProps<typeof Button>, 'onClick'> {
   text: string;
-  branchId?: number;
+  branchId?: string | number;
   mapRoute?: 'public' | 'private'; 
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }

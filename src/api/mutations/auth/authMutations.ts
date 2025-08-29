@@ -141,7 +141,7 @@ function saveUserData(data: LoginResponse) {
 
   data.storeId && saveEncryptedItem('storeId', data.storeId.toString());
 
-  data.user.id && saveEncryptedItem('userId', data.user.id);
+  data.user.id && saveEncryptedItem('userId', String(data.user.id));
 
   data.personData?.full_name && localStorage.setItem('fullName', data.personData.full_name);
 

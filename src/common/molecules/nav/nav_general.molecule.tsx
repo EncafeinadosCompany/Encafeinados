@@ -9,7 +9,9 @@ import { ROLES } from "@/common/utils/lists/roles.utils";
 import { useState, memo, useMemo, useCallback } from "react";
 import { AdminBranchesItems } from "@/common/utils/lists/nav/admin_branches.utils";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
-
+import { UserData } from "@/api/types/auth/auth.types";
+import { divIcon } from "leaflet";
+import { DoorOpen } from "lucide-react";
 
 interface NavGeneralProps {
   isMobile: boolean;
@@ -40,8 +42,8 @@ const NavGeneralComponent = ({
 }: NavGeneralProps) => {
   const location = useLocation();
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);
+  const user = getEncryptedItem("user") as UserData | null;
 
-  
   // Obtener el nombre completo del usuario
   const fullName = useMemo(() => {
     const storedFullName = localStorage.getItem("userFullName");
@@ -50,34 +52,42 @@ const NavGeneralComponent = ({
 
   const firstName = useMemo(() => {
     if (fullName === "Usuario") return fullName;
-    return fullName.split(' ')[0];
+    return fullName.split(" ")[0];
   }, [fullName]);
 
-  const isRouteActive = useCallback((href: string) => {
-    if (href === '/coffeelover' && location.pathname === '/coffeelover') {
-      return true;
-    }
+  const isRouteActive = useCallback(
+    (href: string) => {
+      if (href === "/coffeelover" && location.pathname === "/coffeelover") {
+        return true;
+      }
 
-    if (location.pathname.startsWith(href + '/') || location.pathname === href) {
-      const moreSpecificMatch = navItems.some(item =>
-        item.href !== href &&
-        location.pathname.startsWith(item.href) &&
-        item.href.startsWith(href) &&
-        item.href.length > href.length
-      );
+      if (
+        location.pathname.startsWith(href + "/") ||
+        location.pathname === href
+      ) {
+        const moreSpecificMatch = navItems.some(
+          (item) =>
+            item.href !== href &&
+            location.pathname.startsWith(item.href) &&
+            item.href.startsWith(href) &&
+            item.href.length > href.length
+        );
 
-      return !moreSpecificMatch;
-    }
+        return !moreSpecificMatch;
+      }
 
-    return false;
-  }, [location.pathname, navItems]);
-
-
-  const isCoffeeLover = useMemo(() => 
-    role?.includes(ROLES.COFFEE_LOVER), [role]
+      return false;
+    },
+    [location.pathname, navItems]
   );
-  const isAdminBranch = useMemo(() => 
-    role?.includes(ROLES.ADMIN_SUCURSAL) && role.includes(ROLES.STORE), [role]
+
+  const isCoffeeLover = useMemo(
+    () => role?.includes(ROLES.COFFEE_LOVER),
+    [role]
+  );
+  const isAdminBranch = useMemo(
+    () => role?.includes(ROLES.ADMIN_SUCURSAL) && role.includes(ROLES.STORE),
+    [role]
   );
 
   return (
@@ -134,7 +144,7 @@ const NavGeneralComponent = ({
                 <div className="flex-grow min-w-0 overflow-hidden">
                   <h1 className="font-medium text-[#6F4E37] leading-tight truncate max-w-[120px]">
                     <span className="text-sm">
-                      {firstName ? `¡Hola, ${firstName}!` : 'Encafeinados'}
+                      {firstName ? `${firstName}` : "Encafeinados"}
                     </span>
                   </h1>
                 </div>
@@ -159,12 +169,20 @@ const NavGeneralComponent = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="relative">
-                      <img className="w-6 h-6 drop-shadow-sm" src="/coins.png" alt="Coffee Coins" />
+                      <img
+                        className="w-6 h-6 drop-shadow-sm"
+                        src="/coins.png"
+                        alt="Coffee Coins"
+                      />
                       <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full animate-pulse"></div>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-sm font-bold text-amber-800 leading-none">{coffeecoins}</span>
-                      <span className="text-xs text-amber-600 font-medium leading-none">CoffeeCoins</span>
+                      <span className="text-sm font-bold text-amber-800 leading-none">
+                        {coffeecoins}
+                      </span>
+                      <span className="text-xs text-amber-600 font-medium leading-none">
+                        CoffeeCoins
+                      </span>
                     </div>
                   </div>
                   <div className="text-amber-500">
@@ -226,8 +244,45 @@ const NavGeneralComponent = ({
                 )}
               </Link>
             ))}
+{/* 
+            {user?.roles.includes(ROLES.STORE) && (
+              <Link
+                key={"volver"}
+                to={"/stores"}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 relative",
+                  isRouteActive("/stores")
+                    ? "bg-gradient-to-r from-amber-50 to-amber-100/70 text-amber-800 font-medium"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                  isExpanded ? "" : "justify-center"
+                )}
+              >
+                     <div
+                  className={cn(
+                    "flex-shrink-0",
+                    isRouteActive("/stores")
+                      ? "text-amber-600"
+                      : "text-gray-500"
+                  )}
+                >
+                  <DoorOpen></DoorOpen>
+                </div>
+                <span
+                  className={cn(
+                    "font-medium whitespace-nowrap transition-opacity duration-300",
+                    isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+                  )}
+                >
+                  volver
+                </span>
 
-            {isAdminBranch && (
+                {isRouteActive("/stores") && !isExpanded && (
+                  <div className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full"></div>
+                )}
+              </Link>
+            )} */}
+            
+            {/* {isAdminBranch &&
               AdminBranchesItems.map((item) => (
                 <Link
                   key={item.href}
@@ -253,7 +308,9 @@ const NavGeneralComponent = ({
                   <span
                     className={cn(
                       "font-medium whitespace-nowrap transition-opacity duration-300",
-                      isExpanded ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+                      isExpanded
+                        ? "opacity-100"
+                        : "opacity-0 w-0 overflow-hidden"
                     )}
                   >
                     {item.title}
@@ -263,8 +320,8 @@ const NavGeneralComponent = ({
                     <div className="absolute left-0 w-1 h-6 bg-amber-500 rounded-r-full"></div>
                   )}
                 </Link>
-              ))
-            )}
+              ))} */}
+               
           </nav>
 
           <div className="mt-auto border-t border-gray-100">
@@ -296,7 +353,11 @@ const NavGeneralComponent = ({
       )}
 
       <div className="flex-1 flex flex-col h-full mx-auto item-center justify-center min-w-0 overflow-hidden">
-        <main className={`flex-1 w-full h-full relative  ${isMobile ? 'has-mobile-nav' : ''}`}>
+        <main
+          className={`flex-1 w-full h-full relative  ${
+            isMobile ? "has-mobile-nav" : ""
+          }`}
+        >
           <Outlet />
         </main>
 
@@ -317,10 +378,12 @@ const NavGeneralComponent = ({
                       )}
                       onClick={() => setIsMenuExpanded(false)}
                     >
-                      <div className={cn(
-                        "p-1 rounded-lg",
-                        isRouteActive(item.href) ? "bg-amber-100" : ""
-                      )}>
+                      <div
+                        className={cn(
+                          "p-1 rounded-lg",
+                          isRouteActive(item.href) ? "bg-amber-100" : ""
+                        )}
+                      >
                         {item.icon}
                       </div>
                       <span className="text-[10px] font-medium mt-0.5 truncate max-w-[60px] text-center">
@@ -336,7 +399,9 @@ const NavGeneralComponent = ({
                     <div className="p-1">
                       <LogOutIcon className="h-4 w-4" />
                     </div>
-                    <span className="text-[10px] font-medium mt-0.5">Salir</span>
+                    <span className="text-[10px] font-medium mt-0.5">
+                      Salir
+                    </span>
                   </Link>
                 </nav>
               </div>
@@ -350,8 +415,12 @@ const NavGeneralComponent = ({
                 >
                   <div className="relative p-1">
                     <div className="relative bg-gradient-to-br from-amber-100 to-orange-100 rounded-full p-1.5 shadow-sm group-hover:shadow-md transition-shadow">
-                      <img className="h-5 w-5 drop-shadow-sm" src="/coins.png" alt="Coffee Coins" />
-                      <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></div>
+                      <img
+                        className="h-5 w-5 drop-shadow-sm"
+                        src="/coins.png"
+                        alt="Coffee Coins"
+                      />
+                      <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-100 rounded-full animate-pulse"></div>
                     </div>
                     <span className="absolute -top-1 -right-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] flex items-center justify-center shadow-sm">
                       {coffeecoins || 0}
@@ -363,35 +432,66 @@ const NavGeneralComponent = ({
                 </Link>
               )}
 
-              {navItems.slice(0, 3).map((item) => (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  className={cn(
-                    "flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 relative",
-                    isRouteActive(item.href)
-                      ? "text-amber-800 bg-amber-50"
-                      : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
-                  )}
-                >
-                  <div className={cn(
-                    "p-1 rounded-lg",
-                    isRouteActive(item.href) ? "bg-amber-100" : ""
-                  )}>
-                    {item.icon}
-                  </div>
-                  <span className="text-[10px] font-medium mt-0.5 truncate max-w-[60px] text-center">
-                    {item.title}
-                  </span>
-                </Link>
-              ))}
+              {navItems.slice(0, 3).map((item) =>
+                item.focus ? (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={cn(
+                      "flex flex-col items-center justify-center px-8 py-6 rounded-full transition-all duration-300 relative",
+                      isRouteActive(item.href)
+                        ? "text-gray-500 bg-white"
+                        : "text-gray-500  hover:text-amber-600 bg-white hover:bg-amber-50/30"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "p-1 rounded-full h-10 w-10",
+                        isRouteActive(item.href)
+                          ? "bg-green-100 text-green-600"
+                          : "bg-amber-100 text-amber-600"
+                      )}
+                    >
+                      <div className="[&>svg]:h-8 [&>svg]:w-8">{item.icon}</div>
+                    </div>
+                    <span className="text-[10px] font-medium mt-0.5 truncate max-w-[60px] text-center">
+                      {item.title}
+                    </span>
+                  </Link>
+                ) : (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={cn(
+                      "flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300 relative",
+                      isRouteActive(item.href)
+                        ? "text-amber-950 "
+                        : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "p-1 rounded-full",
+                        isRouteActive(item.href) ? "bg-amber-100" : ""
+                      )}
+                    >
+                      {item.icon}
+                    </div>
+                    <span className="text-[10px] font-medium mt-0.5 truncate max-w-[60px] text-center">
+                      {item.title}
+                    </span>
+                  </Link>
+                )
+              )}
 
               {navItems.length > 3 ? (
                 <button
                   onClick={() => setIsMenuExpanded(!isMenuExpanded)}
                   className={cn(
                     "flex flex-col items-center justify-center px-2 py-1.5 rounded-xl transition-all duration-300",
-                    isMenuExpanded ? "text-amber-800 bg-amber-50" : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
+                    isMenuExpanded
+                      ? "text-amber-800 bg-amber-50"
+                      : "text-gray-500 hover:text-amber-600 hover:bg-amber-50/30"
                   )}
                 >
                   <div className="p-1 rounded-lg">

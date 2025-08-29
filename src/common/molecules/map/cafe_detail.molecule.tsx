@@ -153,19 +153,25 @@ const renderSocialIcon = (type: SocialNetworkType) => {
 
 interface CafeDetailProps {
   cafe: Cafe;
-  favorites: number[];
-  toggleFavorite: (id: number) => void;
-  navigateToCafe: (id: number) => void;
-  startRoute: (id: number) => void;
+  navigateToCafe: (id: string | number) => void;
+  startRoute: (id: string | number) => void;
   onClose: () => void;
   copyToClipboard: (text: string) => void;
   copied: boolean;
 }
 
-const CafeDetail: React.FC<CafeDetailProps> = ({
+const arePropsEqual = (prevProps: CafeDetailProps, nextProps: CafeDetailProps) => {
+  if (
+    prevProps.cafe.id !== nextProps.cafe.id ||
+    prevProps.copied !== nextProps.copied   ) {
+    return false;
+  }
+
+  return true;
+};
+
+const CafeDetail: React.FC<CafeDetailProps> = React.memo(({
   cafe,
-  favorites,
-  toggleFavorite,
   navigateToCafe,
   startRoute,
   onClose,
@@ -178,6 +184,14 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
   const [showScrollIndicator, setShowScrollIndicator] = useState(true);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleOpenReviews = React.useCallback(() => {
+    setIsReviewsOpen(true);
+  }, []);
+
+  const handleCloseReviews = React.useCallback(() => {
+    setIsReviewsOpen(false);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -407,7 +421,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                       />
                     </span>
                     <button
-                      onClick={() => setIsReviewsOpen(true)}
+                      onClick={handleOpenReviews}
                       className="md:hidden ml-1 bg-white/20 backdrop-blur-sm rounded-full px-1.5 py-0.5 text-[10px] text-white/90 hover:bg-white/30 transition-colors flex items-center gap-0.5"
                     >
                       <MessageSquare size={10} />
@@ -601,7 +615,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
     flex items-center justify-center gap-1.5"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setIsReviewsOpen(true)}
+                  onClick={handleOpenReviews}
                 >
                   <MessageSquare size={16} className="h-5 w-5" />
                   <span>
@@ -688,10 +702,12 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
         branchId={cafe.id}
         branchName={cafe.name}
         isOpen={isReviewsOpen}
-        onClose={() => setIsReviewsOpen(false)}
+        onClose={handleCloseReviews}
       />
     </>
   );
-};
+}, arePropsEqual);
+
+CafeDetail.displayName = 'CafeDetail';
 
 export default CafeDetail;

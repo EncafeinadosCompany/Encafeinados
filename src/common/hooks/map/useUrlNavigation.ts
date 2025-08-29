@@ -7,14 +7,14 @@ export const useUrlNavigation = (
   mapLoaded: boolean,
   cafes: any[],
   mapInstance: L.Map | null,
-  activeCafe: number | null,
-  setActiveCafe: (id: number | null) => void,
+  activeCafe: string | number | null,
+  setActiveCafe: (id: string | number | null) => void,
   apiHasActiveFilters: boolean,
   apiCafes: any[],
   clearFiltersForNavigation: () => void
 ) => {
   const [searchParams] = useSearchParams();
-  const [processedCafeIds, setProcessedCafeIds] = useState<Set<number>>(new Set());
+  const [processedCafeIds, setProcessedCafeIds] = useState<Set<string | number>>(new Set());
   
   const removeCafeIdParam = useCallback(() => {
     const currentParams = new URLSearchParams(window.location.search);
@@ -31,11 +31,12 @@ export const useUrlNavigation = (
     const cafeId = searchParams.get("cafeId");
     if (!cafeId) return;
 
-    const cafeIdNumber = parseInt(cafeId, 10);
-    if (isNaN(cafeIdNumber)) return;
+    // Check if it's a pure number (legacy ID) or a UID string
+    const isNumericId = /^\d+$/.test(cafeId);
+    const actualCafeId = isNumericId ? parseInt(cafeId, 10) : cafeId;
 
-    if (activeCafe === cafeIdNumber || processedCafeIds.has(cafeIdNumber)) {
-      if (processedCafeIds.has(cafeIdNumber)) {
+    if (activeCafe === actualCafeId || processedCafeIds.has(actualCafeId)) {
+      if (processedCafeIds.has(actualCafeId)) {
         const currentParams = new URLSearchParams(searchParams);
         currentParams.delete("cafeId");
         const newUrl = `${window.location.pathname}${
@@ -46,7 +47,7 @@ export const useUrlNavigation = (
       return;
     }
 
-    const selectedCafe = cafes.find((cafe) => cafe.id === cafeIdNumber);
+    const selectedCafe = cafes.find((cafe) => cafe.id === actualCafeId);
     if (!selectedCafe) {
       toast.error("La cafetería seleccionada no se encuentra disponible");
       return;
@@ -55,7 +56,7 @@ export const useUrlNavigation = (
     let needsFilterClear = false;
     if (
       apiHasActiveFilters &&
-      !apiCafes.find((cafe) => cafe.id === cafeIdNumber)
+      !apiCafes.find((cafe) => cafe.id === actualCafeId)
     ) {
       needsFilterClear = true;
 
@@ -70,7 +71,7 @@ export const useUrlNavigation = (
       );
     }
     const showCafe = () => {
-      setActiveCafe(cafeIdNumber);
+      setActiveCafe(actualCafeId);
 
       mapInstance.flyTo([selectedCafe.latitude, selectedCafe.longitude], 16, {
         duration: 1.5,

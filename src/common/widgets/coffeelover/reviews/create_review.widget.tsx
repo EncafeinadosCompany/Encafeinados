@@ -9,7 +9,7 @@ import { Button } from "@/common/ui/button";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 
 interface ReviewWidgetProps {
-  branchId: number;
+  branchId: string | number;
   branchName?: string;
   onClose?: () => void;
   onSuccess?: () => void;
@@ -25,7 +25,7 @@ export const ReviewWidget: React.FC<ReviewWidgetProps> = ({
   const [showSuccess, setShowSuccess] = useState(false);
   const submitReview = useSubmitReviewMutation();
   const encryptedUserId = getEncryptedItem<string>("userId");
-  const userId = encryptedUserId ? parseInt(encryptedUserId) : null;
+  const userId = encryptedUserId;
 
   const handleSubmitReview = (data: {
     rating: number;

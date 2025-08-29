@@ -4,6 +4,8 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import istanbul from "vite-plugin-istanbul";
 
+const port = Number(process.env.PORT || 4173)
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -26,6 +28,10 @@ export default defineConfig({
     host: true,
     port: 5173,
   },
+  preview: {
+      host: '0.0.0.0',
+      allowedHosts: ['filtrando.encafeinados.club', 'encafeinados.club'],
+    },
   build: {
     rollupOptions: {
       output: {

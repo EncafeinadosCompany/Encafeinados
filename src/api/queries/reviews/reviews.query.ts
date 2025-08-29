@@ -4,7 +4,7 @@ import { Reviews, SingleReview, ClientWithReviews} from '@/api/types/reviews/rev
 
 const authClient = new AuthClient()
 
-export const useReviewsByIdBranches = (id:number) => {
+export const useReviewsByIdBranches = (id: string | number) => {
   return useQuery<SingleReview[]>({
     queryKey: ['reviews', id], 
     queryFn: async () => {

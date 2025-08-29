@@ -26,7 +26,7 @@ export const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2
  * Get saved cafe IDs from localStorage
  * @returns Array of favorite cafe IDs
  */
-export const getFavoritesFromStorage = (): number[] => {
+export const getFavoritesFromStorage = (): (string | number)[] => {
   const favorites = localStorage.getItem('favoriteCafes');
   return favorites ? JSON.parse(favorites) : [];
 };

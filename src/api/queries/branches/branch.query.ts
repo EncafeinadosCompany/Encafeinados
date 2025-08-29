@@ -4,6 +4,8 @@ import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, A
 
 import AuthClient from '@/api/client/axios'
 import { BranchAttributesResponse } from '@/api/types/branches/branch_attributes.types'
+import { defaultRetryConfig, isValidId } from '../Config/Config.Query'
+import { de } from 'date-fns/locale'
 
 
 const authClient = new AuthClient()
@@ -19,18 +21,19 @@ export const useBranches = () => {
 };
 
 
-export const useBranchesID = (id?: number) => {
+export const useBranchesID = (id?: string | number) => {
   return useQuery<BrancheIDresponse>({
     queryKey: ['branches', id],
     queryFn: async () => {
       const response = await authClient.get<BrancheIDresponse>(`/branches/${id}`)
       return response
     },
-    enabled: id !== undefined && id !== null && id > 0,
+    enabled: isValidId(id),
+    ...defaultRetryConfig
   })
 }
 
-export const useImagenBranch = (id:number) => {
+export const useImagenBranch = (id:string) => {
 
   return useQuery<image[]>({
     queryKey: ['branches_imagen'],
@@ -38,7 +41,9 @@ export const useImagenBranch = (id:number) => {
       const response = await authClient.get<BranchesImagen>(`/images/branch/${id}`);
       return response.images ?? [];
     },
-    staleTime: 1000 * 60 * 5
+    enabled: isValidId(id),
+    staleTime: 1000 * 60 * 5,
+    ...defaultRetryConfig
   });
 }
 
@@ -59,7 +64,8 @@ export const useBranch = (branchId: number | undefined) => {
       const response = await authClient.get<BranchesResponse>(`/branches/${branchId}`)
       return response
     },
-    enabled: !!branchId,
+    enabled: isValidId(branchId),
+    ...defaultRetryConfig
   })
 }
 
@@ -70,19 +76,19 @@ export const usePendingBranchesQuery = () => {
       const response = await authClient.get<PendingBranchesResponse>('/branches/status/PENDING')
       return response
     },
-    staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    ...defaultRetryConfig
   })
 }
 
-export const useBranchApprovalDetails = (branchId: number | undefined) => {
+export const useBranchApprovalDetails = (branchId: string| undefined) => {
   return useQuery<BranchApprovalDetails, Error>({
     queryKey: ['branches','branch-approvals', 'detail', branchId],
     queryFn: async () => {
       const response = await authClient.get<BranchApprovalDetails>(`/branch-approvals/detail/${branchId}`)
       return response
     },
-     enabled: !!branchId
+     enabled:isValidId(branchId),
 
   })
 }
@@ -110,14 +116,15 @@ export const useRejectedBranches = () => {
   })
 }
 
-export const useBranchAttributes = (branchId: number | undefined) => {
+export const useBranchAttributes = (branchId: string | number | undefined) => {
   return useQuery<BranchAttributesResponse>({
     queryKey: ['branchAttributes', branchId],
     queryFn: async () => {
       const response = await authClient.get<BranchAttributesResponse>(`/branch-attributes/${branchId}`);
       return response;
     },
-    enabled: !!branchId
+    enabled: isValidId(branchId),
+    ...defaultRetryConfig
   });
 };
 
@@ -130,7 +137,6 @@ export const useValidateVisit = (coordinates: any, shopId: any) => {
   }
 }
 
-//SEARCH BRANCHES IN TE MAP AND PRINCIPAL COFFELOVER PAGE
 export interface BranchSearchParams {
   q?: string;
   minRating?: number;
@@ -138,7 +144,7 @@ export interface BranchSearchParams {
   lat?: number;
   lng?: number;
   sortBy?: 'distance' | 'rating';
-  attributes?: string; // Lista de IDs separados por comas
+  attributes?: string; 
 }
 
 export const useSearchBranches = (params: BranchSearchParams) => {

@@ -214,8 +214,9 @@ export function BranchDetails({ isOpen, onClose, branch }: DetailsBranchModalPro
                         title="Branch Location"
                         width="100%"
                         height="100%"
-                        src={`https://www.openstreetmap.org/export/embed.html?bbox=${branch.longitude - 0.002}%2C${branch.latitude - 0.002}%2C${branch.longitude + 0.002}%2C${branch.latitude + 0.002}&layer=mapnik&marker=${branch.latitude}%2C${branch.longitude}`}
+                        src={`https://www.openstreetmap.org/export/embed.html?bbox=${branch.longitude - 0.01}%2C${branch.latitude - 0.01}%2C${branch.longitude + 0.01}%2C${branch.latitude + 0.01}&layer=mapnik&marker=${branch.latitude}%2C${branch.longitude}&zoom=12`}
                         allowFullScreen
+                        style={{ border: 'none', filter: 'contrast(0.9) saturate(0.6) brightness(1.1)' }}
                       ></iframe>
                     </div>
 

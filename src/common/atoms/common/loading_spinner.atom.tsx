@@ -69,7 +69,7 @@ const LoadingSpinner = ({
   const primaryColor = "#8B4513";
   const accentColor = "#C87137";
   const highlightColor = "#D2B48C";
-  const emptyColor = "#F5E6D3"; 
+  const emptyColor = "#F5E6D3";
   return (
     <div
       className={cn("flex flex-col items-center justify-center", className)}
@@ -94,19 +94,19 @@ const LoadingSpinner = ({
             >
               <stop
                 offset="0%"
-                style={{ stopColor: primaryColor, stopOpacity: 1 }}
-              />
+                style={{ stopColor:primaryColor , stopOpacity: 1 }}
+                />
               <stop
                 offset={`${loadingProgress}%`}
                 style={{ stopColor: primaryColor, stopOpacity: 1 }}
-              />
+                />
               <stop
                 offset={`${loadingProgress + 0.1}%`}
                 style={{ stopColor: emptyColor, stopOpacity: 1 }}
-              />
+                />
               <stop
                 offset="100%"
-                style={{ stopColor: emptyColor, stopOpacity: 1 }}
+                style={{ stopColor:emptyColor, stopOpacity: 1 }}
               />
             </linearGradient>
 
@@ -118,20 +118,20 @@ const LoadingSpinner = ({
               y2="0%"
             >
               <stop
-                offset="0%"
-                style={{ stopColor: accentColor, stopOpacity: 1 }}
-              />
-              <stop
-                offset={`${loadingProgress}%`}
-                style={{ stopColor: accentColor, stopOpacity: 1 }}
-              />
-              <stop
-                offset={`${loadingProgress + 0.1}%`}
-                style={{ stopColor: emptyColor, stopOpacity: 1 }}
-              />
-              <stop
                 offset="100%"
                 style={{ stopColor: emptyColor, stopOpacity: 1 }}
+                />
+              <stop
+                offset={`${loadingProgress}%`}
+                style={{ stopColor: emptyColor, stopOpacity: 1 }}
+                />
+              <stop
+                offset={`${loadingProgress + 0.1}%`}
+                style={{ stopColor:accentColor , stopOpacity: 1 }}
+                />
+              <stop
+                offset="0%"
+                style={{ stopColor:accentColor , stopOpacity: 1 }}
               />
             </linearGradient>
 
@@ -143,7 +143,7 @@ const LoadingSpinner = ({
               y2="0%"
             >
               <stop
-                offset="0%"
+                offset="100%"
                 style={{ stopColor: highlightColor, stopOpacity: 1 }}
               />
               <stop
@@ -155,7 +155,7 @@ const LoadingSpinner = ({
                 style={{ stopColor: emptyColor, stopOpacity: 1 }}
               />
               <stop
-                offset="100%"
+                offset="0%"
                 style={{ stopColor: emptyColor, stopOpacity: 1 }}
               />
             </linearGradient>
@@ -199,7 +199,7 @@ const LoadingSpinner = ({
             <path
               d="M400,100 Q420,30 440,100"
               fill="none"
-              stroke={loadingProgress > 80 ? "#E8E8E8" : "transparent"}
+              stroke={loadingProgress > 80 ? "transparent" : "#E8E8E8"}
               strokeWidth="4"
               strokeLinecap="round"
               opacity={loadingProgress > 80 ? "0.8" : "0"}
@@ -216,7 +216,7 @@ const LoadingSpinner = ({
             <path
               d="M460,100 Q480,40 500,100"
               fill="none"
-              stroke={loadingProgress > 90 ? "#E8E8E8" : "transparent"}
+              stroke={loadingProgress > 90 ? "transparent" : "#E8E8E8"}
               strokeWidth="4"
               strokeLinecap="round"
               opacity={loadingProgress > 90 ? "0.7" : "0"}
@@ -239,7 +239,7 @@ const LoadingSpinner = ({
             style={{
               width: `${loadingProgress}%`,
               background: `linear-gradient(90deg, ${primaryColor} 0%, ${accentColor} 100%)`,
-              boxShadow: `0 0 8px ${primaryColor}80`
+              boxShadow: `0 0 8px ${primaryColor}80`,
             }}
           />
         </div>
@@ -252,15 +252,16 @@ const LoadingSpinner = ({
       )}
 
       <span className="sr-only" aria-live="polite">
-        {isComplete
-          ? "Carga completa"
-          : <SafeNumericDisplay 
-              value={Math.round(loadingProgress)} 
-              prefix="Cargando, " 
-              suffix="% completado" 
-              defaultValue="Cargando..." 
-            />
-        }
+        {isComplete ? (
+          "Carga completa"
+        ) : (
+          <SafeNumericDisplay
+            value={Math.round(loadingProgress)}
+            prefix="Cargando, "
+            suffix="% completado"
+            defaultValue="Cargando..."
+          />
+        )}
       </span>
     </div>
   );

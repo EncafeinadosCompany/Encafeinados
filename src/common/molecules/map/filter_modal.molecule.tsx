@@ -113,7 +113,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
           />
           
           <motion.div
-            className="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl z-50 max-h-[80vh] overflow-auto"
+            className="fixed bottom-0 inset-x-0 bg-white rounded-t-2xl z-50 min-h-[80vh] overflow-auto"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}

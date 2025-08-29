@@ -14,15 +14,21 @@ import { Label } from "@/common/ui/label";
 import { useUpdateBranchMutation } from "@/api/mutations/branches/branches.mutation";
 import { InputForm } from "@/common/atoms/forms/input_form.atom";
 
+
 //MAP
 import MapSearch from "@/common/widgets/map/map_search.widget";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
+import toast from "react-hot-toast";
 
 export default function FormEditBranch() {
 
-    const id = getEncryptedItem("branchId")
+    const id = getEncryptedItem("branchId") as string | null 
+    
+    if(!id){
+        return toast.error("No se encuentra el ID")
+    }
 
-    const { data: useBranches, isLoading, isError } = useBranchesID(Number(id));
+    const { data: useBranches, isLoading, isError } = useBranchesID(id);
     const { mutateAsync: useUpdateBranches } = useUpdateBranchMutation()
     const [baseAddress, setBaseAddress] = useState("");
 
@@ -67,7 +73,7 @@ export default function FormEditBranch() {
 
     const onSubmit = async (data: EditBrancheType) => {
         try {
-            useUpdateBranches({ data })
+            useUpdateBranches({ id, data })
         } catch (error) {
             console.error("Error submitting form:", error);
         }
@@ -92,7 +98,7 @@ export default function FormEditBranch() {
                             <Coffee className="text-white" size={24} />
                         </div>
                         <CardTitle className="text-[#020F17] font-semibold text-xl">
-                            Edita tu sucursal
+                            Editar datos
                         </CardTitle>
                     </div>
                     <div className="flex items-center space-x-1 ">
@@ -122,9 +128,7 @@ export default function FormEditBranch() {
                     </div>
                     <div className="grid gap-6 md:grid-cols-1">
 
-                        <form onSubmit={handleSubmit(onSubmit, (errors) => {
-                          
-                        })} className="space-y-6">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <Label className="mb-2">Nombre de la sucursal</Label>

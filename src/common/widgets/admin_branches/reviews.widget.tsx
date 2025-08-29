@@ -20,8 +20,8 @@ const BranchReviewsWidget: React.FC = () => {
   const ITEMS_PER_PAGE = 12; 
   const branchId = getEncryptedItem("branchId") as string | null;
   
-  const { data: branchData, isLoading: isBranchLoading } = useBranchesID(Number(branchId));
-  const { data: reviewsData, isLoading: isReviewsLoading, error } = useReviewsByIdBranches(Number(branchId));
+  const { data: branchData, isLoading: isBranchLoading } = useBranchesID(branchId!!);
+  const { data: reviewsData, isLoading: isReviewsLoading, error } = useReviewsByIdBranches(branchId!!);
 
   const filteredAndSortedReviews = React.useMemo(() => {
     if (!reviewsData) return [];

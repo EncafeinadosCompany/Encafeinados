@@ -21,8 +21,7 @@ export interface RegisterAdminData {
     phone_number: string
   },
   entityData?: {
-    branchId?: number
-    storeId?: number
-
+    branchId?: string | number
+    storeId?: string | number
   }
 }

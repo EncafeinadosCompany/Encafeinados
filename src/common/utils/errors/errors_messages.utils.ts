@@ -34,8 +34,8 @@ export const errorMessages: Record<number, string> = {
     images:{
         409: "La imagen ya se encuentra registrada"
     },
-    criteria:{
-        409: "El criterio ya se encuentra registrado"
+    ReviewCriteria:{
+        409:"La sucursal ya aprobada"
     },
     createAlbum: {
         409: "El álbum ya se encuentra registrado"

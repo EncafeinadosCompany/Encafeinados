@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "vite preview --host 0.0.0.0 --port $PORT",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
@@ -129,7 +130,8 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
-    "vite-plugin-istanbul": "^7.0.0"
+    "vite-plugin-istanbul": "^7.0.0",
+    "wait-on": "^8.0.4"
   },
   "nyc": {
     "extends": "@istanbuljs/nyc-config-babel",

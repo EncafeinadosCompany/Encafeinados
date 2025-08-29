@@ -25,7 +25,7 @@ export interface Branch {
 }
 
 export interface PendingBranch {
-  id: number;
+  id: string;
   name: string;
   address?: string;
   status: string;
@@ -54,12 +54,6 @@ export interface BranchesResponseList {
   };
 }
 
-
-
-
-
-
-
 export interface Criteria {
   name: string;
   description: string;
@@ -72,12 +66,15 @@ export interface CriteriaResponse {
 }
 
 export interface BranchInApproval {
-  id: number;
+  id: string;
   name: string;
   phoneNumber: string;
   latitude: number;
   longitude: number;
   address: string;
+  store_name?: string;
+  store_logo?: string;
+  store_email?: string;
 }
 
 export interface BranchApprovalDetails {
@@ -91,33 +88,13 @@ export interface BranchApprovalDetails {
 }
 
 export interface ApprovedBranch {
-  id: number;
+  id: string;
   name: string;
   address: string;
   status: string;
   store_logo: string;
   store_email: string;
-}
-
-export interface ValidateVisitInput {
-  branchId: string;
-  latitude: number;
-  longitude: number;
-}
-
-export interface StampInfo {
-  logo: string;
-  name: string;
-}
-
-export interface VisitResponseData {
-  coffeecoins_earned: number;
-  stamp: StampInfo;
-}
-
-export interface ValidateVisitResponse {
-  message: string;
-  data: VisitResponseData;
+  average_rating?: string;
 }
 
 export interface ValidateVisitInput {
@@ -129,7 +106,7 @@ export interface ValidateVisitInput {
 export type ApprovedBranchesResponse = ApprovedBranch[];
 
 export interface RejectedBranch {
-  id: number;
+  id: string;
   name: string;
   address: string;
   status: string;

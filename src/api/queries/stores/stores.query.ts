@@ -18,7 +18,7 @@ export const useStores = () => {
 }
 
 
-export const useBranchesByStore = (storeId: number | undefined) => {
+export const useBranchesByStore = (storeId: string | number | undefined) => {
   return useQuery<BranchesResponse>({
     queryKey: ['stores', storeId, 'branches'],
     queryFn: async () => {
@@ -29,14 +29,14 @@ export const useBranchesByStore = (storeId: number | undefined) => {
   })
 }
 
-export const useBranchByStore = (branchId: number | undefined) => {
+export const useBranchByStore = (storeId: string | number | undefined) => {
   return useQuery<BranchesResponseStore, Error>({
-    queryKey: ['branches', branchId],
+    queryKey: ['branches', storeId],
     queryFn: async () => {
-      const response = await authClient.get<BranchesResponseStore>(`/branches/store/${branchId}`)
+      const response = await authClient.get<BranchesResponseStore>(`/branches/store/${storeId}`)
       return response
     },
-    enabled: !!branchId,
+    enabled: !!storeId,
   })
 }
 
