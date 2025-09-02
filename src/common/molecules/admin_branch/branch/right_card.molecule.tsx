@@ -72,12 +72,14 @@ export const RightCardBranch = ({branches, branchStatus, handleStatusClick, EXPO
                 <div className="flex items-center gap-3 mt-auto pt-3">
                   <Switch
                     id="branch-status"
+                    role="checkbox"
+                    title="estado sucursal"
                     checked={branchStatus}
                     onCheckedChange={handleStatusClick}
                   />
-                  <span className="text-xs sm:text-sm font-medium">
+                  <label htmlFor="branch-status" className="text-xs sm:text-sm font-medium">
                     {branchStatus ? "Abierta" : "Cerrada"}
-                  </span>
+                  </label>
                 </div>
               </div>
             </div>

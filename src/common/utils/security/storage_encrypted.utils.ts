@@ -11,7 +11,10 @@ export function saveEncryptedItem<T>(key: string, value: T): void {
 
 export function getEncryptedItem<T>(key: string): T | null {
   const encrypted = localStorage.getItem(key);
-  if (!encrypted) return null;
+
+  if (!encrypted || encrypted.trim() === '') {
+    return null;
+  }
 
   try {
     const bytes = CryptoJS.AES.decrypt(encrypted, secret);

@@ -3,19 +3,18 @@ import { Branch } from "@/api/types/branches/branches.types";
 import { AssignBranchAdminModal } from "@/common/molecules/admin_stores/branches/assign_branch_admin_modal.molecule";
 import { BranchDetails } from "@/common/molecules/admin_stores/branches/branch_details.molecule";
 import { QRCodeBranchModal } from "@/common/molecules/admin_stores/branches/qr_code_branches_modal.molecule";
-import { Button } from "@/common/ui/button";
 import { Card, CardContent } from "@/common/ui/card";
 import { getEncryptedItem, saveEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 import { BranchListWidget } from "@/common/widgets/branch/branch_list.widget";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function BranchManagementView() {
-  const [isQrCode, setIsQrCode] = useState({ isOpen: false, code: 0 });
+  const [isQrCode, setIsQrCode] = useState({ isOpen: false, code: "" });
   const [onViewDetails, setViewDetails] = useState<Branch>();
   const [onAssingBranch, setOnAssingBranch] = useState<Branch>();
   const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
   
-  const storeId = getEncryptedItem("storeId") as string | null;
+  const storeId = useMemo(()=>  getEncryptedItem("storeId") as string | null , []);
   if (!storeId) return (window.location.href = "/");
 
   const { data: branchesList} = useBranchByStore(storeId);
@@ -47,7 +46,7 @@ export default function BranchManagementView() {
         {isQrCode && (
           <QRCodeBranchModal
             isOpen={isQrCode.isOpen}
-            onClose={() => setIsQrCode({ isOpen: false, code: 0 })}
+            onClose={() => setIsQrCode({ isOpen: false, code: ""})}
             qrCodeUrl={`${EXPOSED_URL}/coffeelover/register-branch-visit?branch_id=${isQrCode.code}`}
           />
         )}

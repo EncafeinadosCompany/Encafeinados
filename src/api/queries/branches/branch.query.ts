@@ -15,8 +15,7 @@ export const useBranches = () => {
     queryFn: async () => {
       const response = await authClient.get<BranchesResponseList>('/branches');
       return response;
-    },
-    
+    }
   });
 };
 
@@ -29,6 +28,7 @@ export const useBranchesID = (id?: string | number) => {
       return response
     },
     enabled: isValidId(id),
+    
     ...defaultRetryConfig
   })
 }
