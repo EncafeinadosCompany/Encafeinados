@@ -88,23 +88,19 @@ export default function ImagesGallery() {
   >([]);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { selectedBranchId } = useBranchContext();
 
   const {
     data: data_images,
     isLoading,
     isError,
     refetch,
-  } = useImagenBranch(BranchId);
+  } = useImagenBranch(selectedBranchId!!);
   const [cafes, setCafes] = useState<image[]>([]);
   const { mutateAsync: useDeleteImagen } = useDeleteImagenBranchMutation();
   const { mutateAsync: useImagen } = useUpdateImagenBranchMutation();
-  const { selectedBranchId } = useBranchContext();
 
-  useEffect(() => {
-    if (selectedBranchId) {
-      refetch();
-    }
-  }, [selectedBranchId, refetch]);
+  
 
   // Add state for collapse
   const [isTypeInfoVisible, setIsTypeInfoVisible] = useState(false);

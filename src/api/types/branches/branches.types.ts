@@ -100,7 +100,7 @@ export interface SearchBranchesResponse {
 }
 
 export interface SearchBranch {
-  id: number;
+  id: string;
   name: string;
   average_rating: string;
   isOpen: boolean;

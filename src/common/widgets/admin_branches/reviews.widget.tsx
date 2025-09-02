@@ -1,37 +1,34 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Search, Star, ChevronLeft, ChevronRight } from '@/common/ui/icons';
+import React, { useState, useRef} from 'react';
+import { MessageSquare, Search, ChevronLeft, ChevronRight } from '@/common/ui/icons';
 import { Input } from '@/common/ui/input';
 import { Button } from '@/common/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/ui/select';
 import { useReviewsByIdBranches } from '@/api/queries/reviews/reviews.query';
 import { useBranchesID } from '@/api/queries/branches/branch.query';
-import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
+
 import { BranchReviewCard } from '@/common/molecules/admin_branch/reviews/branch_review_card.molecule';
 import StarsRating from '@/common/atoms/reviews/stars_rating.atom';
 import { useBranchContext } from '@/common/context/branch_context';
 
-const BranchReviewsWidget: React.FC = () => {
+
+interface reviewsProps{
+  branchId: string | ""
+}
+export const BranchReviewsWidget = ({branchId}: reviewsProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<string>('newest');
   const [showAll, setShowAll] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const {selectedBranchId} = useBranchContext()
-  
-  const ITEMS_PER_PAGE = 12; 
-  const branchId = getEncryptedItem("branchId") as string | null;
 
   
-  const { data: branchData, isLoading: isBranchLoading, refetch } = useBranchesID(branchId!!);
+  const ITEMS_PER_PAGE = 12; 
+  
+  const { data: branchData, isLoading: isBranchLoading } = useBranchesID(branchId!!);
   const { data: reviewsData, isLoading: isReviewsLoading, error } = useReviewsByIdBranches(branchId!!);
 
 
-  useEffect(() => {
-    if (selectedBranchId) {
-      refetch();
-    }
-  }, [selectedBranchId, refetch]);
 
   const filteredAndSortedReviews = React.useMemo(() => {
     if (!reviewsData) return [];
@@ -327,5 +324,3 @@ const BranchReviewsWidget: React.FC = () => {
   );
 };
 
-export { BranchReviewsWidget };
-export default BranchReviewsWidget;

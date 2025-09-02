@@ -1,5 +1,4 @@
 import { useBranches } from "@/api/queries/branches/branch.query";
-import { Branch } from "@/api/types/branches/branches.types";
 import { useBranchContext } from "@/common/context/branch_context";
 import {
   Select,
@@ -10,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/common/ui/select";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 interface SelectProps {
   isAdminStore: boolean;
@@ -18,35 +17,22 @@ interface SelectProps {
 
 export default function SelectBranchesWidget({ isAdminStore }: SelectProps) {
   const { data, isLoading, isError } = useBranches();
-
-  const [filterBranch, setFilterBranch] = useState<Branch[]>([]);
+  const { selectedBranchId, setSelectedBranchId } = useBranchContext();
 
   const ApprovedBranches = useMemo(
     () => data?.branches.branches.filter((e) => e.status === "APPROVED") || [],
     [data]
   );
 
-  const { selectedBranchId, setSelectedBranchId, isActive } =
-    useBranchContext();
-
-  useEffect(() => {
-    if (isAdminStore && ApprovedBranches) {
-      if (ApprovedBranches.length > 0) {
-        setSelectedBranchId(ApprovedBranches[0].id);
-      }
-      setFilterBranch(ApprovedBranches);
-    }
-  }, [isAdminStore, ApprovedBranches]);
-
   return (
-    <div className={` absolute top-1 right-4 ${isActive ? "block" : "hidden"}`}>
-      {isActive && (
+    <div>
+      {isAdminStore && (
         <Select
-          value={selectedBranchId ?? ""}
+          value={selectedBranchId ? selectedBranchId : ApprovedBranches[0].id}
           onValueChange={setSelectedBranchId}
         >
           <SelectTrigger
-            className={`w-[200px] bg-white border border-gray-100`}
+            className={`w-[200px] border border-amber-600 shadow focus:none bg-white text-amber-950 `}
             aria-label="seleccionar sucursal"
           >
             <SelectValue placeholder={"Seleccionar sucursal"} />
@@ -64,7 +50,7 @@ export default function SelectBranchesWidget({ isAdminStore }: SelectProps) {
                   Error al cargar
                 </SelectItem>
               )}
-              {filterBranch.map((branch) => (
+              {ApprovedBranches.map((branch) => (
                 <SelectItem key={branch.id} value={branch.id}>
                   {branch.name}
                 </SelectItem>

@@ -5,11 +5,11 @@ import { Skeleton } from '@/common/ui/skeleton';
 import { MessageSquareOff, AlertTriangle } from "@/common/ui/icons"
 
 interface ReviewsWidgetProps {
-  branchId: string | number;
+  branchId: string | "";
 }
 
-export const ReviewsWidget: React.FC<ReviewsWidgetProps> = ({ branchId }) => {
-  const { data: reviews, isLoading, error } = useReviewsByIdBranches(branchId);
+export const ReviewsWidget: React.FC<ReviewsWidgetProps> = ({ branchId }: ReviewsWidgetProps) => {
+  const { data: reviews, isLoading, error } = useReviewsByIdBranches(branchId!!);
 
   if (isLoading) {
     return (

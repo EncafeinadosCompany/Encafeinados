@@ -3,17 +3,15 @@ import { Card, CardContent } from "@/common/ui/card";
 import { motion } from "framer-motion";
 import { CreditCard, Clock, CheckCircle, DollarSign } from "lucide-react";
 import { PaymentsByBranchWidget } from '@/common/widgets/admin_branches/payment.widget';
-import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
 import { useInvoicesByBranch } from '@/api/queries/dashboard/list_invoices_by_branch.query';
-import { useEffect } from "react";
 import { useBranchContext } from "@/common/context/branch_context";
 
 export default function PaymentsDashboard() {
-    const branchId = getEncryptedItem("branchId") as string | null;
+
     const {selectedBranchId} = useBranchContext()
 
     // Query para obtener datos y estadísticas
-    const { data: invoicesData, isLoading, error, refetch } = useInvoicesByBranch(branchId!!);
+    const { data: invoicesData, isLoading, error, refetch } = useInvoicesByBranch(selectedBranchId!!);
 
 
     // Calcular estadísticas
@@ -32,11 +30,6 @@ export default function PaymentsDashboard() {
     };
 
 
-       useEffect(() => {
-        if (selectedBranchId) {
-          refetch();
-        }
-      }, [selectedBranchId, refetch]);
     // Componente de tarjeta de estadística minimalista
     const StatCard = ({ title, value, icon: Icon, color = "orange", loading = false }: any) => (
         <motion.div
@@ -140,9 +133,9 @@ export default function PaymentsDashboard() {
                     transition={{ delay: 0.2 }}
                     className="w-full"
                 >
-                    {branchId ? (
+                    {selectedBranchId ? (
                         <PaymentsByBranchWidget 
-                            branchId={branchId}
+                            branchId={selectedBranchId}
                             onPaymentSuccess={(invoiceId) => {
                             }}
                         />

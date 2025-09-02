@@ -1,28 +1,36 @@
-import { useQuery } from '@tanstack/react-query'
-import AuthClient from '@/api/client/axios'
-import { Attribute, AttributeByID, Attributes } from '@/api/types/attributes/attributes.type'
+import { useQuery } from "@tanstack/react-query";
+import AuthClient from "@/api/client/axios";
+import {
+  Attribute,
+  AttributeByID,
+  Attributes,
+} from "@/api/types/attributes/attributes.type";
+import { defaultRetryConfig, isValidId } from "../Config/Config.Query";
 
-const authClient = new AuthClient()
+const authClient = new AuthClient();
 
 export const useAttributes = () => {
   return useQuery<Attribute[]>({
-    queryKey: ['attributes'],
+    queryKey: ["attributes"],
     queryFn: async () => {
-      const response = await authClient.get<Attributes>('/attributes')
-      return response.attributes
+      const response = await authClient.get<Attributes>("/attributes");
+      return response.attributes;
     },
-    staleTime: 5 * 60 * 1000
+    staleTime: 5 * 60 * 1000,
+  });
+};
 
-  })
-}
-
-export const useBranchAttributes = (branchId: string) => {
+export const useBranchAttributes = (id: string) => {
   return useQuery<AttributeByID, Error>({
-    queryKey: ["branch-attributes", branchId],
+    queryKey: ["branch-attributes", id],
     queryFn: async (): Promise<AttributeByID> => {
-      const response = await authClient.get<AttributeByID>(`/branch-attributes/${branchId}`)
-      return response
+      const response = await authClient.get<AttributeByID>(
+        `/branch-attributes/${id}`
+      );
+      return response;
     },
-    enabled: !!branchId
-  })
-}
+    enabled: isValidId(id),
+
+    ...defaultRetryConfig,
+  });
+};

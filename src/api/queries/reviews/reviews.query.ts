@@ -1,17 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
 import AuthClient from '@/api/client/axios'
 import { Reviews, SingleReview, ClientWithReviews} from '@/api/types/reviews/review.type'
+import { defaultRetryConfig, isValidId } from '../Config/Config.Query'
 
 const authClient = new AuthClient()
 
-export const useReviewsByIdBranches = (id: string | number) => {
+export const useReviewsByIdBranches = (id: string) => {
   return useQuery<SingleReview[]>({
     queryKey: ['reviews', id], 
     queryFn: async () => {
       const response = await authClient.get<Reviews>(`/reviews/branch/${id}`)
       return response.reviews
     },
-    staleTime: 1000 * 60 * 5
+    staleTime: 1000 * 60 * 5,
+    enabled: isValidId(id),
+    ...defaultRetryConfig
   })
 }
 
@@ -23,6 +26,7 @@ export const useClientReviews = (id: number) => {
       return response
     },
     staleTime: 1000 * 60 * 5,
-    retry: false
+    enabled: isValidId(id),    
+    ...defaultRetryConfig
   })
 }

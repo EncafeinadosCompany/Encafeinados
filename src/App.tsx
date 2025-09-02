@@ -4,13 +4,12 @@ import { RecoilRoot } from 'recoil'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AuthRoutes from './router';
 import { AppDataProvider } from './common/context/app_data.context';
-import { BranchProvider } from './common/context/branch_context';
 import { StrictMode } from 'react';
 const queryClient = new QueryClient();
 
 function App() {
   return (
-
+      <StrictMode>
       <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <AppDataProvider>
@@ -18,6 +17,7 @@ function App() {
         </AppDataProvider>
       </QueryClientProvider>
     </RecoilRoot>
+      </StrictMode>
 
   )
 }
