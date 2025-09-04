@@ -94,7 +94,7 @@ export default function AttributesWidget({branchId}:AttributeProps) {
             if (existingAttr) {
                 await useUpdateMutation({ data: data.values[0] });
             } else {
-                await useAttribute(data.values);
+                await useAttribute({id:branchId, data:data.values});
             }
             
             setIsDialogOpen(false);

@@ -40,11 +40,11 @@ export const CardAttributes = ({ containerRef, canvasRef, badges, selectedBadges
             )}
 
             <div className="absolute inset-0 p-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {badges.map((badge) => (
                         <motion.div
                             key={badge.id}
-                            className={`relative p-4 rounded-xl transition-all duration-300 h-full  min-h-[10vh] ${selectedBadges.includes(badge.id)
+                            className={`relative p-4 rounded-xl transition-all duration-300 h-full min-h-[5vh] ${selectedBadges.includes(badge.id)
                                 ? "bg-[#FAF3E0] ring-2 ring-[#D4A76A]"
                                 : "bg-white hover:bg-[#FAF3E0]/50"
                                 } shadow-lg hover:shadow-xl cursor-pointer transform hover:-translate-y-1 flex flex-col`}

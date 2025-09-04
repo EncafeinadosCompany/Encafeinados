@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { Coffee, CalendarDays } from "@/common/ui/icons";
 import { Label } from "@/common/ui/label";
 import { useQuantityStampByPeriod } from "@/api/queries/dashboard/stapms_by_period.query";
-import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 import { StampIcon } from "lucide-react";
 import { useBranchContext } from "@/common/context/branch_context";
 
@@ -14,17 +13,14 @@ export default function Dashboard_Branch() {
   const today = new Date();
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const [startDate, setStartDate] = useState<Date>(firstDayOfMonth);
-const {selectedBranchId} = useBranchContext()
+  const {selectedBranchId} = useBranchContext()
   const [endDate, setEndDate] = useState<Date>(new Date());
-  const branchId = getEncryptedItem("branchId") as string | null;
 
   const { data: stampsByPeriodData, isLoading: stampsLoading, refetch } =
-  useQuantityStampByPeriod(startDate, endDate, branchId || "");
+  useQuantityStampByPeriod(startDate, endDate, selectedBranchId || "");
   const branchData = stampsByPeriodData?.[0];
 
-
-
-
+  
     useEffect(() => {
     if (selectedBranchId) {
       refetch();

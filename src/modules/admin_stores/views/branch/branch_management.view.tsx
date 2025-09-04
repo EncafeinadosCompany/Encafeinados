@@ -15,6 +15,7 @@ export default function BranchManagementView() {
   const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
   
   const storeId = useMemo(()=>  getEncryptedItem("storeId") as string | null , []);
+
   if (!storeId) return (window.location.href = "/");
 
   const { data: branchesList} = useBranchByStore(storeId);
@@ -29,8 +30,8 @@ export default function BranchManagementView() {
 };
 
   return (
-    <Card className="h-full overflow-y-auto border-none bg-gray-50/90">
-      <CardContent className="relative p-5">
+    <Card className="h-full overflow-y-auto  overflow-x-hidden scrollbar-thin  border-none bg-gray-50/90">
+      <CardContent className="relative pt-2">
         {branchesList && (
           <BranchListWidget
             branches={branchesList.branches}
@@ -59,7 +60,6 @@ export default function BranchManagementView() {
           />
         )}
 
-
         {
           onAssingBranch && (
             <AssignBranchAdminModal
@@ -71,9 +71,6 @@ export default function BranchManagementView() {
           )
         }
 
-        
-
-        
       </CardContent>
     </Card>
   );
