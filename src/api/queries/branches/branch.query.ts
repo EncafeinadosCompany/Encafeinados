@@ -5,7 +5,7 @@ import { BranchesResponseList, PendingBranchesResponse, BranchApprovalDetails, A
 import AuthClient from '@/api/client/axios'
 import { BranchAttributesResponse } from '@/api/types/branches/branch_attributes.types'
 import { defaultRetryConfig, isValidId } from '../Config/Config.Query'
-import { de } from 'date-fns/locale'
+
 
 
 const authClient = new AuthClient()
@@ -15,13 +15,12 @@ export const useBranches = () => {
     queryFn: async () => {
       const response = await authClient.get<BranchesResponseList>('/branches');
       return response;
-    },
-    
+    }
   });
 };
 
 
-export const useBranchesID = (id?: string | number) => {
+export const useBranchesID = (id: string ) => {
   return useQuery<BrancheIDresponse>({
     queryKey: ['branches', id],
     queryFn: async () => {
@@ -36,7 +35,7 @@ export const useBranchesID = (id?: string | number) => {
 export const useImagenBranch = (id:string) => {
 
   return useQuery<image[]>({
-    queryKey: ['branches_imagen'],
+    queryKey: ['branches_imagen', id],
     queryFn: async (): Promise<image[]> => {
       const response = await authClient.get<BranchesImagen>(`/images/branch/${id}`);
       return response.images ?? [];

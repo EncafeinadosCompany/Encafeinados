@@ -3,7 +3,7 @@ export interface BranchSchedule {
   day: string; 
   open_time: string;
   close_time: string;
-  branch_id?: number;
+  branch_id?: string;
   is_closed?: boolean;
   created_at?: string;
   updated_at?: string;

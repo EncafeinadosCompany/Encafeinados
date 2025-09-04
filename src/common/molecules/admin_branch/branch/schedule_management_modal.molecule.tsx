@@ -47,7 +47,8 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
     data: currentSchedules, 
     isLoading: isLoadingSchedules,
     refetch: refetchSchedules
-  } = useBranchSchedules(branch?.id);  const updateSingleScheduleMutation = useUpdateSingleBranchScheduleMutation();
+  } = useBranchSchedules(branch?.id);  
+  const updateSingleScheduleMutation = useUpdateSingleBranchScheduleMutation();
   const bulkUpdateScheduleMutation = useUpdateBranchScheduleMutation();
   const bulkCreateMutation = useBulkUpdateBranchSchedulesMutation();
   const createScheduleMutation = useCreateBranchScheduleMutation();
@@ -319,6 +320,8 @@ export const ScheduleManagementModal: React.FC<ScheduleManagementModalProps> = (
                           onClick={() => handleSaveSingleDay(day)}
                           disabled={isUpdating || !!hasValidationError}
                           variant="outline"
+                          role='button'
+                          aria-label='Guardar'
                           size="sm"
                           className="border-[#DB8935] text-[#DB8935] hover:bg-[#DB8935] hover:text-white text-xs sm:text-sm h-9 cursor-pointer"
                         >

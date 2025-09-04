@@ -43,7 +43,7 @@ export interface RouteLineProps {
  * Cafe data structure
  */
 export interface Cafe {
-  id: string | number;
+  id: string | "";
   name: string;
   rating: number;
   reviewCount: number;

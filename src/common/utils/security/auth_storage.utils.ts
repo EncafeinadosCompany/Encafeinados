@@ -17,6 +17,7 @@ export const clearAuthStorage = () => {
   localStorage.removeItem('userFullName');
   localStorage.removeItem('userEmail');
   localStorage.removeItem('isVerified');
+  localStorage.removeItem('IsActive');
 }
 
 export const getAuthStorage = () => {

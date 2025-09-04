@@ -23,7 +23,7 @@ interface BranchListWidgetProps {
   onAssingBranch?: (branch: Branch) => void;
   onVisit?: (branch: Branch) => void;
   onEdit?: (branch: Branch) => void;
-  onQR?: Dispatch<SetStateAction<{ isOpen: boolean; code: number }>>;
+  onQR?: Dispatch<SetStateAction<{ isOpen: boolean; code: string }>>;
   showActions?: boolean;
   title?: string;
   subtitle?: string;

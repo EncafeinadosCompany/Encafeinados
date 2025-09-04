@@ -9,7 +9,7 @@ import { Coffee } from "@/common/ui/icons";
 import { useSearchBranches, BranchSearchParams, useBranchAttributes } from "@/api/queries/branches/branch.query";
 
 interface BranchCardProps {
-  id: number;
+  id: string;
   name: string;
   imageUrl: string;
   address: string;

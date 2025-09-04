@@ -1,5 +1,5 @@
 export interface RecommendationType {
-   	branch_id:number,
+   	branch_id:string,
 	message:string
 }
  

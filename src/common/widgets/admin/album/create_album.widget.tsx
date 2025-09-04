@@ -63,32 +63,32 @@ export const CreateAlbumWidget: React.FC<CreateAlbumWidgetProps> = ({
     today.setHours(0, 0, 0, 0); // Resetear horas para comparar solo fechas
 
     if (data.start_date) {
-      const startDate = new Date(data.start_date);
+      const startDate = new Date(data.start_date + 'T00:00:00');
       startDate.setHours(0, 0, 0, 0);
       
       if (startDate < today) {
         return {
           isValid: false,
-          errorMessage: `La fecha de inicio (${new Date(data.start_date).toLocaleDateString('es-ES')}) no puede ser anterior a hoy (${today.toLocaleDateString('es-ES')})`
+          errorMessage: `La fecha de inicio (${startDate.toLocaleDateString('es-ES')}) no puede ser anterior a hoy (${today.toLocaleDateString('es-ES')})`
         };
       }
     }
 
     if (data.end_date) {
-      const endDate = new Date(data.end_date);
+      const endDate = new Date(data.end_date + 'T00:00:00');
       endDate.setHours(0, 0, 0, 0);
       
       if (endDate < today) {
         return {
           isValid: false,
-          errorMessage: `La fecha de fin (${new Date(data.end_date).toLocaleDateString('es-ES')}) no puede ser anterior a hoy (${today.toLocaleDateString('es-ES')})`
+          errorMessage: `La fecha de fin (${endDate.toLocaleDateString('es-ES')}) no puede ser anterior a hoy (${today.toLocaleDateString('es-ES')})`
         };
       }
     }
 
     if (data.start_date && data.end_date) {
-      const startDate = new Date(data.start_date);
-      const endDate = new Date(data.end_date);
+      const startDate = new Date(data.start_date + 'T00:00:00');
+      const endDate = new Date(data.end_date + 'T00:00:00');
       
       if (startDate > endDate) {
         return {

@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 const authClient = new AuthClient();
 
 export interface ScheduleCreateData {
-  branch_id: number;
+  branch_id: string;
   day: string;
   open_time: string;
   close_time: string;
@@ -86,7 +86,7 @@ export const useBulkUpdateBranchSchedulesMutation = () => {
   const queryClient = useQueryClient();
   const useErrors = useError("bulkUpdateBranchSchedules");
 
-  return useMutation<BranchSchedule[], Error, { branchId: number; schedules: ScheduleCreateData[] }>({
+  return useMutation<BranchSchedule[], Error, { branchId: string; schedules: ScheduleCreateData[] }>({
     mutationFn: async ({ schedules }): Promise<BranchSchedule[]> => {
       try {
         // For bulk operations, we'll use multiple POST requests for creation

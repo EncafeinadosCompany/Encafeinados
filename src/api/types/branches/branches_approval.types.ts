@@ -5,7 +5,7 @@ export interface SocialBranch {
 }
 
 export interface Branch {
-  id: number;
+  id: string;
   name: string;
   phone_number?: string;
   average_rating?: string;
