@@ -1,25 +1,38 @@
-import React from "react";
+import React, { memo } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Coffee, Navigation } from "@/common/ui/icons";
 import { useNavigate } from "react-router-dom";
 import { useCoffeloversCount } from "@/api/queries/coffelovers/coffelovers_count.query";
 import SafeNumericDisplay from "@/common/atoms/common/safe_numeric_display.atom";
+import { useApprovedBranches } from "@/api/queries/branches/branch.query";
+import { useCityCurrency } from "@/common/utils/map/map_utils";
 
-interface MapTeaserProps {
-  totalCafes: number;
-  city: string;
-}
-
-export const MapTeaser = ({
-  totalCafes,
-  city = "Medellín",
-}: MapTeaserProps) => {
+export const MapTeaser = () => {
   const navigate = useNavigate();
   const { data: coffeloversData } = useCoffeloversCount();
 
   const handleOpenMap = () => {
     navigate("/map");
   };
+
+  const { data: totalCafes, isLoading, error:errorBranch } = useApprovedBranches();
+  const { city, loading, error, requestLocation } = useCityCurrency();
+
+  if (isLoading) {
+    return (
+      <div>
+        <span>Cargando...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <span>ah ocurrído un error</span>
+      </div>
+    );
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -89,13 +102,16 @@ export const MapTeaser = ({
               <span>Encuentra tu café ideal</span>
             </motion.div>
 
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold mb-4 text-[#2C1810]"
-              variants={itemVariants}
-            >
-              Explora {totalCafes}+ cafeterías en tu ciudad
-            </motion.h2>
-
+            {!isLoading && !errorBranch && totalCafes ? (
+              <motion.h2
+                className="text-3xl md:text-4xl font-bold mb-4 text-[#2C1810]"
+                variants={itemVariants}
+              >
+                Explora {totalCafes.length}+ cafeterías en tu ciudad 
+              </motion.h2>
+            ) : (
+              <div></div>
+            )}
             <motion.p
               className="text-[#6F4E37] mb-6 max-w-md"
               variants={itemVariants}
@@ -103,7 +119,12 @@ export const MapTeaser = ({
               Descubre las mejores cafeterías cercanas, lee reseñas y encuentra
               tu próxima parada para un café excepcional.{" "}
               <span className="text-[#2C1810] font-semibold">
-                Únete a nuestra comunidad de más de <SafeNumericDisplay value={coffeloversData?.totalClients} defaultValue="1,000" /> coffelovers 
+                Únete a nuestra comunidad de más de{" "}
+                <SafeNumericDisplay
+                  value={coffeloversData?.totalClients}
+                  defaultValue="1,000"
+                />{" "}
+                coffelovers
               </span>{" "}
               que comparten la pasión por el buen café.
             </motion.p>
@@ -132,7 +153,7 @@ export const MapTeaser = ({
 
           <motion.div className="relative h-80" variants={itemVariants}>
             <motion.div
-              onClick={handleOpenMap}
+            
               className="absolute inset-0 rounded-2xl overflow-hidden shadow-xl border border-[#D4A76A]/20 bg-white cursor-pointer"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -207,8 +228,9 @@ export const MapTeaser = ({
                   </div>
                 </motion.div>
 
-                <div className="absolute top-4 right-4 bg-white/80 w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+                <div className="absolute top-4 z-10 right-4 bg-white/80 w-12 h-12 rounded-full flex items-center justify-center shadow-md">
                   <motion.div
+                   onClick={requestLocation}
                     animate={{ rotate: 360 }}
                     transition={{
                       duration: 20,
@@ -243,7 +265,9 @@ export const MapTeaser = ({
                   className="flex items-center justify-center gap-2"
                 >
                   <MapPin size={14} />
-                  <span>Explora cafeterías en {city}</span>
+                  <span>
+                    {loading ? <span>Obteniendo ubicación...</span>:  <p>  Explora cafeterías en {city}</p>}
+                  </span>
                 </motion.div>
               </div>
 
@@ -268,3 +292,6 @@ export const MapTeaser = ({
     </section>
   );
 };
+
+
+export default memo(MapTeaser)
