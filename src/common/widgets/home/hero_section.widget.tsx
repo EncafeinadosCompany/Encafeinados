@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, memo } from "react";
 import { Text } from "@/common/atoms/common/text.atom";
 import { motion } from "framer-motion";
 import { ArrowRightIcon, ChevronDownIcon } from "@/common/ui/icons";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useScrollNavigation } from "@/common/hooks/useScrollNavigation";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 import { UserData } from "@/api/types/auth/auth.types";
@@ -10,11 +10,12 @@ import { useAuth } from "@/common/hooks/auth/use_auth.hook";
 
 export const HeroSection: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
-  const user = getEncryptedItem("user") as UserData;
-  const fullName = localStorage.getItem("userFullName");
+  const user = useMemo(()=> getEncryptedItem("user") as UserData, [])
+  const fullName = useMemo(()=> localStorage.getItem("userFullName"),[]);
   const navigate = useNavigate();
   const { scrollToSection } = useScrollNavigation(["map"]);
   const { pagesPermissions } = useAuth();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -163,3 +164,5 @@ export const HeroSection: React.FC = () => {
     </section>
   );
 };
+
+memo(HeroSection);

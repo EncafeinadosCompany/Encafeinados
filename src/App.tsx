@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-      <StrictMode>
+      // <StrictMode>
       <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <AppDataProvider>
@@ -17,7 +17,7 @@ function App() {
         </AppDataProvider>
       </QueryClientProvider>
     </RecoilRoot>
-      </StrictMode>
+      // </StrictMode>
 
   )
 }
