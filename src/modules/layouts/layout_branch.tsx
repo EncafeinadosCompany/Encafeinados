@@ -4,7 +4,7 @@ import { AdminBranchesItems } from "@/common/utils/lists/nav/admin_branches.util
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
 import NavbarGeneral from "@/common/widgets/nav/nav.widget";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { StoresItems } from "@/common/utils/lists/nav/admin_stores_Item.utils";
 import SelectBranchesWidget from "@/common/widgets/admin_store/branch/select_branches.widget";
 import { BranchProvider } from "@/common/context/branch_context";
@@ -20,13 +20,15 @@ export default function LayoutBranch() {
     [user, StoresItems, AdminBranchesItems]
   );
 
+  
+
   return (
     <BranchProvider>
       <div className="min-h-screen relative bg-gray-50  flex flex-col justify-center  overflow-x-hidden">
         <NavbarGeneral navItems={Router}></NavbarGeneral>
 
         {user?.roles.includes(ROLES.STORE) && (
-          <div className="absolute top-1 right-4">
+          <div className="absolute top-2 right-4">
             <SelectBranchesWidget
               isAdminStore={true}
             />

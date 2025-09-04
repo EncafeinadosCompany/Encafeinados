@@ -1,4 +1,5 @@
 import { useBranches } from "@/api/queries/branches/branch.query";
+import { Branch } from "@/api/types/branches/branches.types";
 import { useBranchContext } from "@/common/context/branch_context";
 import {
   Select,
@@ -9,7 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/common/ui/select";
-import { useMemo } from "react";
+import { Coffee } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 interface SelectProps {
   isAdminStore: boolean;
@@ -17,29 +19,44 @@ interface SelectProps {
 
 export default function SelectBranchesWidget({ isAdminStore }: SelectProps) {
   const { data, isLoading, isError } = useBranches();
-  const { selectedBranchId, setSelectedBranchId } = useBranchContext();
+
+  const [filterBranch, setFilterBranch] = useState<Branch[]>([]);
 
   const ApprovedBranches = useMemo(
     () => data?.branches.branches.filter((e) => e.status === "APPROVED") || [],
     [data]
   );
 
+  const { selectedBranchId, setSelectedBranchId, isActive } =
+    useBranchContext();
+
+  useEffect(() => {
+    if (isAdminStore && ApprovedBranches) {
+      if (ApprovedBranches.length > 0) {
+        setSelectedBranchId(ApprovedBranches[0].id);
+      }
+      setFilterBranch(ApprovedBranches);
+    }
+  }, [isAdminStore, ApprovedBranches]);
+
   return (
-    <div>
-      {isAdminStore && (
+    <div >
         <Select
-          value={selectedBranchId ? selectedBranchId : ApprovedBranches[0].id}
+          value={selectedBranchId ?? ""}
           onValueChange={setSelectedBranchId}
         >
           <SelectTrigger
-            className={`w-[200px] border border-amber-600 shadow focus:none bg-white text-amber-950 `}
+            className={`w-[200px] bg-white text-amber-900 border shadow border-gray-200`}
             aria-label="seleccionar sucursal"
           >
-            <SelectValue placeholder={"Seleccionar sucursal"} />
+            <SelectValue  placeholder={"Seleccionar sucursal"} />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Surcursales</SelectLabel>
+              <SelectLabel><span className="flex justify-between">
+                Surcursales
+                <Coffee className="h-4 text-amber-500"></Coffee>
+                </span></SelectLabel>
               {isLoading && (
                 <SelectItem value="loading" disabled>
                   Cargando...
@@ -50,15 +67,14 @@ export default function SelectBranchesWidget({ isAdminStore }: SelectProps) {
                   Error al cargar
                 </SelectItem>
               )}
-              {ApprovedBranches.map((branch) => (
-                <SelectItem key={branch.id} value={branch.id}>
+              {filterBranch.map((branch) => (
+                <SelectItem className="hover:text-amber-600" key={branch.id} value={branch.id}>
                   {branch.name}
                 </SelectItem>
               ))}
             </SelectGroup>
           </SelectContent>
         </Select>
-      )}
     </div>
   );
 }
