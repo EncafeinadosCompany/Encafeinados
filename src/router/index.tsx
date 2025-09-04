@@ -44,10 +44,10 @@ import RegisterBranchWidget from "@/common/widgets/admin_store/branch/Register_b
   // ADMIN STORES
   const Branch_management_AdminStore = lazy(()=> import ("@/modules/admin_stores/views/branch/branch_management.view"));
   const Images_gallery = lazy(() => import("@/common/widgets/admin_branches/images.widget"));
-  const Form_edit_branch = lazy(() => import("@/common/widgets/forms/branch/form_edit_branches_widget"));
   
   //ADMIN BRANCHES
   const Dashboard_branch = lazy(() => import ("@/modules/admin_branches/views/manage_dashboard.view"));
+  const Edit_branch= lazy(() => import("@/modules/admin_branches/views/edit_branch-view"));
   const Details_branch = lazy(() => import("@/modules/admin_branches/views/details_branch.view"));
   const Payment_result = lazy(() => import("@/modules/admin_branches/views/payment_result.view"));
   const Attributes_management= lazy(() => import("@/modules/admin_branches/views/attributes_branch.view"));
@@ -143,7 +143,7 @@ const AuthRoutes = () => {
                     <Route index element={<Dashboard_branch />} />
                     <Route path="details" element={<Details_branch/>} />
                     <Route path="images" element={<Images_gallery/>} />
-                    <Route path="profile" element={<Form_edit_branch />} />
+                    <Route path="profile" element={<Edit_branch/>} />
                     <Route path="raitings" element={<Reviews_management/>}/>
                     <Route path="attributes" element={<Attributes_management/>}/>
                     <Route path="payments" element={<Payments_management/>} />
