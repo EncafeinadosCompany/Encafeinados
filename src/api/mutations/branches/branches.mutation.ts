@@ -41,7 +41,7 @@ export const useUpdateBranchMutation = () => {
   const useErrors = useError("branches");
   const queryClient = useQueryClient();
 
-  return useMutation<any, Error, { id: string; data: Partial<BranchPost> }>({
+  return useMutation<any, Error, { id:string; data: Partial<BranchPost> }>({
       mutationFn: async ({ id, data }): Promise<LoginResponse> => {
           try {
               const response = await authClient.patch<any>(`/branches/${id}`, data);

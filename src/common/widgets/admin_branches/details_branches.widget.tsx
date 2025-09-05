@@ -9,6 +9,7 @@ import { ScheduleManagementModal } from "@/common/molecules/admin_branch/branch/
 import {  useBranchesID, useImagenBranch} from "@/api/queries/branches/branch.query";
 import toast from "react-hot-toast";
 import { useStatesIsOpen } from "@/api/mutations/branches/branch_status.mutation";
+import { useBranchContext } from "@/common/context/branch_context";
 
 interface DetailsProp {
   BranchId:string | null
@@ -17,24 +18,24 @@ interface DetailsProp {
 export default function DetailsBranchWidget({BranchId}:DetailsProp) {
 
   const EXPOSED_URL = import.meta.env.VITE_EXPOSED_URL;
+  const {selectedBranchId} = useBranchContext();
 
   const {
     data: branches,
     error: branchError,
     isPending: isBranchLoading,
-  } = useBranchesID(BranchId!!);
+  } = useBranchesID(selectedBranchId!!);
   const {
     data: imagen,
     error: imageError,
     isPending: isImageLoading,
-  } = useImagenBranch(BranchId!!);
+  } = useImagenBranch(selectedBranchId!!);
   const { mutateAsync: useStateOpen, error: statusError } = useStatesIsOpen();
   const [branchStatus, setBranchStatus] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const { ErrorMessageBranch, NoDataMessageBranch, LoadingMessageBranch } =
-  MessageBranches;
+  const { ErrorMessageBranch, NoDataMessageBranch, LoadingMessageBranch } =MessageBranches;
   
   useEffect(() => {
     if (branches?.branch.is_open !== undefined) {
@@ -68,7 +69,6 @@ export default function DetailsBranchWidget({BranchId}:DetailsProp) {
   if (isBranchLoading || isImageLoading) {
     return <LoadingMessageBranch />;
   }
-  console.log('brach', BranchId as string | null)
   
   if (branchError || imageError || statusError) {
     return (
@@ -121,7 +121,7 @@ export default function DetailsBranchWidget({BranchId}:DetailsProp) {
       <ScheduleManagementModal
         isOpen={isScheduleModalOpen}
         onClose={() => setIsScheduleModalOpen(false)}
-        branch={branches?.branch || null}
+        branch={branches?.branch || ""}
       />
     </div>
   );

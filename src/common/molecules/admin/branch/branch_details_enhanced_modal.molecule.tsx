@@ -41,7 +41,7 @@ interface BranchDetailsModalProps {
 export const BranchDetailsModal: React.FC<BranchDetailsModalProps> = ({ branch, onClose }) => {
   const { data: approvalDetails, isLoading: loadingApproval } = useBranchApprovalDetails(branch?.id);
   const { data: attributes, isLoading: loadingAttributes } = useBranchAttributes(branch?.id);
-  const { data: branchDetails, isLoading: loadingBranchDetails } = useBranchesID(branch?.id || 0);
+  const { data: branchDetails, isLoading: loadingBranchDetails } = useBranchesID(branch?.id!!);
 
   if (!branch) return null;
 

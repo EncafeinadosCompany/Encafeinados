@@ -11,7 +11,7 @@ const authClient = new AuthClient();
 
 
 interface CreateAttributes {
-    branchId:number,
+    branchId:string,
     attributes: {
         attributeId: number;
         value: string;
@@ -23,15 +23,15 @@ export const useCreateAttributeMutation = () => {
     const queryClient = useQueryClient();
     const useErrors = useError("attributes");
 
-    return useMutation<CreateAttributes,Error, any>({
-        mutationFn: async (data: RegisterAttibute[]): Promise<CreateAttributes> => {
+    return useMutation<CreateAttributes,Error, {id: string, data: RegisterAttibute[]}>({
+        mutationFn: async ({id, data}): Promise<CreateAttributes> => {
             try {
 
-                const id_branch = getEncryptedItem("branchId");
-                if(!id_branch) throw new Error("No se encontró el id de la sucursal");
+                
+                if(!id) throw new Error("No se encontró el id de la sucursal");
 
                 const lis_data = {
-                    branchId: Number(id_branch),
+                    branchId: id,
                     attributes: data.map((item) => {
                         return {
                             attributeId: item.attributeId,

@@ -4,9 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 
 const authClient = new AuthClient();
 
-export const useQuantityStampByPeriod = ( startDate:Date, endDate:Date, id?: number) => {
+export const useQuantityStampByPeriod = ( startDate:Date, endDate:Date, id?: string) => {
     return useQuery<StampByPeriod[], Error>({
-        queryKey: ['stamps_by_period', startDate.toISOString(), endDate.toISOString()],
+        queryKey: ['stamps_by_period'],
         queryFn: async () => {
 
             const params = new URLSearchParams({

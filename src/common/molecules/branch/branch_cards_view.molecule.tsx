@@ -7,7 +7,7 @@ interface BranchCardsViewProps {
   branches: Branch[];
   onViewDetails?: (branch: Branch) => void;
   onAssingBranch?: (branch: Branch) => void;
-  onQr?: Dispatch<SetStateAction<{ isOpen: boolean; code: number }>>;
+  onQr?: Dispatch<SetStateAction<{ isOpen: boolean; code: string }>>;
   onVisit?: (branch: Branch) => void;
   showActions?: boolean;
   isLoading?: boolean;

@@ -9,7 +9,7 @@ import { GoToButton } from '@/common/atoms/map/GoToButton';
 import { generateBranchDescription, generateFallbackDescription, getLoadingDescription } from '@/common/utils/branches/description_generator.utils';
 
 interface BranchCardProps {
-  id: number;
+  id: string;
   name: string;
   imageUrl: string;
   address: string;

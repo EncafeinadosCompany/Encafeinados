@@ -50,7 +50,7 @@ export const SearchInput = ({
     <div className={`relative group ${className}`}>
       <div className={`
         absolute left-3 top-1/2 transform -translate-y-1/2 transition-all duration-200
-        ${isFocused || localValue ? 'text-[#8B5A2B]' : 'text-gray-400'}
+        ${isFocused || localValue ? 'text-[#8B5A2B]' : 'text-gray-700'}
       `}>
         <Search className="h-4 w-4" />
       </div>

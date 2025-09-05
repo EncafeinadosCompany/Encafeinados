@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { NavItemType } from "@/api/types/nav/nav.types"
 import { NavGeneral } from "@/common/molecules/nav/nav_general.molecule"
 
 import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
 import {  UserData } from "@/api/types/auth/auth.types"
+import { memo } from "react";
 
 
 export type NavItem = {
@@ -12,11 +13,10 @@ export type NavItem = {
   isloading?: boolean | null
 }
 
-export default function NavbarGeneral({ navItems, coffeecoins, isloading}: NavItem) {
+function NavbarGeneral({ navItems, coffeecoins, isloading}: NavItem) {
   const [isExpanded, setIsExpanded] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
-  const user = getEncryptedItem("user") as UserData| null;
-  
+  const user = useMemo(()=> getEncryptedItem("user") as UserData| null,[])
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -50,3 +50,5 @@ export default function NavbarGeneral({ navItems, coffeecoins, isloading}: NavIt
    
   )
 }
+
+export default memo(NavbarGeneral)

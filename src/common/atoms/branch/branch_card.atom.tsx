@@ -25,7 +25,7 @@ interface BranchCardProps {
   onViewDetails?: (branch: Branch) => void;
   onAssingBranch?: (branch: Branch) => void;
   onEdit?: (branch: Branch) => void;
-  onQr?: Dispatch<SetStateAction<{ isOpen: boolean; code: number }>>;
+  onQr?: Dispatch<SetStateAction<{ isOpen: boolean; code:string }>>;
   onVisit?: (branch: Branch) => void;
   showActions?: boolean;
 }
@@ -133,25 +133,6 @@ export const BranchCard = memo<BranchCardProps>(({
               </TooltipTrigger>
               <TooltipContent>
                 <p>Generar código QR para que los coffeelovers registren visitas</p>
-              </TooltipContent>
-            </Tooltip>
-          )}
-
-          {onVisit  && branch.status === "APPROVED"  && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={() => onVisit(branch)}
-                  size="sm"
-                  variant="outline"
-                  className="border-green-600 text-green-600 hover:bg-green-50 cursor-pointer flex-1 font-semibold py-2 shadow-sm hover:shadow-md transition-all duration-200"
-                >
-                  <Navigation className="h-4 w-4 mr-2" />
-                  Entrar
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Acceder al perfil de la sucursal para administrarla</p>
               </TooltipContent>
             </Tooltip>
           )}

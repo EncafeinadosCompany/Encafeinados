@@ -1,35 +1,37 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight } from'@/common/ui/icons'
-import { Button } from "@/common/ui/button"
-import { image } from "@/api/types/branches/branches.types"
-
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "@/common/ui/icons";
+import { Button } from "@/common/ui/button";
+import { image } from "@/api/types/branches/branches.types";
 
 interface ImageCarouselProps {
-  images:  image[]
-  alt: string
+  images: image[];
+  alt: string;
 }
 
 export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   // Auto-advance the carousel every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
-    }, 5000)
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
 
-    return () => clearInterval(interval)
-  }, [images.length])
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   const goToPrevious = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
-  }
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length
+    );
+  };
 
   const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
-  }
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+  
 
   return (
     <div className="relative w-full h-80 mb-6">
@@ -39,15 +41,21 @@ export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
-              index === currentIndex ? "opacity-100" : "opacity-0 pointer-events-none"
+              index === currentIndex
+                ? "opacity-100"
+                : "opacity-0 pointer-events-none"
             }`}
           >
             <img
-               src={src.image_url || "/placeholder.svg"}
-               alt={`${alt} - View ${index + 1}`}
-               className="object-contain w-full h-full"
-               loading={index === 0 ? "eager" : "lazy"}
-               style={{ objectFit: "contain" }}
+              src={`${src.image_url}?v=1.2`|| "/placeholder.svg"}
+              alt={`${alt} - View ${index + 1}`}
+              className="object-contain w-full h-full"
+              loading={"eager"}
+              style={{ objectFit: "contain", opacity: 0 }}
+              onLoad={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.opacity = "1";
+              }}
             />
           </div>
         ))}
@@ -88,5 +96,5 @@ export default function ImageCarousel({ images, alt }: ImageCarouselProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }
