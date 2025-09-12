@@ -71,7 +71,7 @@ export const HeroSection: React.FC = () => {
           >
             <Text
               variant="h1"
-              className="text-white font-black tracking-tight leading-tight mb-2 
+              className="text-white font-black tracking-tight leading-tight mb-2 pt-16
     text-[calc(theme(fontSize.5xl)-4px)] 
     md:text-[calc(theme(fontSize.5xl)-8px)]"
             >
@@ -103,11 +103,7 @@ export const HeroSection: React.FC = () => {
                 shadow-lg shadow-[#D4A76A]/20 hover:shadow-[#D4A76A]/30 overflow-hidden cursor-pointer"
             >
               <span className="relative z-10">
-                {!user
-                  ? "Comenzar"
-                  : user.name || fullName
-                  ? `${user.name || fullName}`
-                  : "¡Bienvenido de nuevo!"}
+                Comenzar
               </span>
               <ArrowRightIcon className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
               <span className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500" />
