@@ -40,12 +40,12 @@ export const HeroSection: React.FC = () => {
   };
 
   return (
-    <section className="relative w-full h-screen overflow-hidden bg-[#0F0F0F]">
+    <section className="relative w-full h-screen overflow-hidden ">
       <div
         className="absolute inset-0 w-full h-full"
         style={{
           backgroundImage:
-            "url(https://images.pexels.com/photos/333523/pexels-photo-333523.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)",
+            "url('/Mural gris.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           transform: `translateY(${scrollPosition * 0.15}px)`,
