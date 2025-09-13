@@ -158,77 +158,30 @@ export const MapTeaser = () => {
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <div className="w-full h-full bg-[#F8F4EA] relative">
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(to right, #6F4E37 1px, transparent 1px), linear-gradient(to bottom, #6F4E37 1px, transparent 1px)",
-                    backgroundSize: "20px 20px",
-                  }}
-                ></div>
-
-                <div className="absolute h-0.5 w-4/5 bg-[#D4A76A] top-1/3 left-0 rounded-full"></div>
-                <div className="absolute h-4/5 w-0.5 bg-[#D4A76A] top-1/4 left-1/3 rounded-full"></div>
-                <div className="absolute h-0.5 w-3/5 bg-[#D4A76A] bottom-1/4 right-0 rounded-full"></div>
-
-                <motion.div
-                  className="absolute w-1/4 h-1/4 rounded-full bg-[#A2D2FF]/50 bottom-5 left-5"
-                  animate={{ scale: [1, 1.02, 1] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                ></motion.div>
-
-                <div className="absolute w-2/5 h-2/5 rounded-lg bg-[#FAEDCD]/60 top-10 right-10"></div>
-                <div className="absolute w-2/5 h-1/4 rounded-lg bg-[#E9EDC9]/60 bottom-16 right-1/4"></div>
+              <div className="w-full h-full relative">
+                {/* Imagen de mapa en lugar de cuadrícula */}
+                <img 
+                  src="/map_teaser.jpg" 
+                  alt="Mapa de cafeterías" 
+                  className="w-full h-full object-cover" 
+                />
+                
+                {/* Superponemos un filtro de color café suave */}
+                <div className="absolute inset-0 bg-[#6F4E37]/10"></div>
 
                 <motion.div
                   className="absolute top-1/4 left-1/3 z-10"
                   variants={pinVariants}
                   whileHover="hover"
                 >
-                  <div className="relative">
-                    <MapPin
-                      size={28}
-                      className="text-[#D4584E] drop-shadow-lg"
-                    />
-                    <motion.div
-                      className="absolute -inset-1 rounded-full bg-[#D4584E]/20"
-                      animate={{ scale: [1, 1.5, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    ></motion.div>
-                  </div>
+                 
                 </motion.div>
 
-                <motion.div
-                  className="absolute top-1/2 right-1/4 z-10"
-                  variants={pinVariants}
-                  whileHover="hover"
-                >
-                  <div className="relative">
-                    <MapPin
-                      size={24}
-                      className="text-[#A67C52] drop-shadow-lg"
-                    />
-                    <motion.span className="absolute -top-6 -left-10 bg-white px-2 py-1 text-xs rounded shadow-md opacity-0 hover:opacity-100">
-                      Cafetería
-                    </motion.span>
-                  </div>
-                </motion.div>
+            
 
-                <motion.div
-                  className="absolute bottom-1/3 left-1/2 z-10"
-                  variants={pinVariants}
-                  whileHover="hover"
-                >
-                  <div className="relative">
-                    <MapPin
-                      size={32}
-                      className="text-[#D4A76A] drop-shadow-lg"
-                    />
-                  </div>
-                </motion.div>
+              
 
-                <div className="absolute top-4 z-10 right-4 bg-white/80 w-12 h-12 rounded-full flex items-center justify-center shadow-md">
+                <div className="absolute top-4 z-10 right-4 bg-white/90 w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-white cursor-pointer transition-colors">
                   <motion.div
                    onClick={requestLocation}
                     animate={{ rotate: 360 }}
@@ -242,45 +195,36 @@ export const MapTeaser = () => {
                   </motion.div>
                 </div>
 
-                <div className="absolute bottom-1/4 right-1/3 flex items-center justify-center z-10">
-                  <motion.div
-                    className="w-12 h-12 rounded-full bg-[#4285F4]/20 absolute"
-                    variants={pulseVariants}
-                    animate="pulse"
-                  ></motion.div>
-                  <motion.div
-                    className="w-8 h-8 rounded-full bg-[#4285F4]/30 absolute"
-                    variants={pulseVariants}
-                    animate="pulse"
-                    transition={{ delay: 0.5 }}
-                  ></motion.div>
-                  <motion.div className="w-4 h-4 rounded-full bg-[#4285F4] relative"></motion.div>
-                </div>
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 bg-white/90 py-2 px-4 text-center text-sm font-medium text-[#6F4E37]">
+              <div className="absolute bottom-0 left-0 right-0 bg-[#3C2A21]/80 backdrop-blur-sm py-3 px-4 text-center text-sm font-medium text-white border-t border-[#E8C99B]/30">
                 <motion.div
-                  initial={{ opacity: 0.8 }}
+                  initial={{ opacity: 0.9 }}
                   whileHover={{ opacity: 1 }}
                   className="flex items-center justify-center gap-2"
                 >
-                  <MapPin size={14} />
+                  <MapPin size={16} className="text-[#E8C99B]" />
                   <span>
-                    {loading ? <span>Obteniendo ubicación...</span>:  <p>  Explora cafeterías en {city}</p>}
+                    {loading ? 
+                      <span className="text-[#F5E6D0]/80">Obteniendo ubicación...</span> : 
+                      <p className="text-[#F5E6D0]">Explora cafeterías en {city}</p>
+                    }
                   </span>
                 </motion.div>
               </div>
 
+              {/* Overlay que cubre toda el área del mapa y muestra el botón al hacer hover */}
               <motion.div
-                className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/20 transition-colors"
-                whileHover={{ opacity: 1 }}
-                initial={{ opacity: 0 }}
+                className="absolute inset-0 flex items-center justify-center transition-colors cursor-pointer"
+                initial={{ backgroundColor: "rgba(0,0,0,0)" }}
+                whileHover={{ backgroundColor: "rgba(60,42,33,0.4)" }}
+                onClick={handleOpenMap}
               >
                 <motion.span
-                  onClick={handleOpenMap}
-                  className="bg-[#6F4E37] text-white px-4 py-2 rounded-full font-medium shadow-lg cursor-pointer"
+                  className="bg-[#E8C99B] text-[#3C2A21] px-5 py-3 rounded-full font-medium shadow-lg border border-[#E8C99B]/30"
                   initial={{ opacity: 0, scale: 0.8 }}
-                  whileHover={{ opacity: 1, scale: 1 }}
+                  whileHover={{ scale: 1.05, opacity: 1 }}
+                  whileInView={{ opacity: 0 }}
                 >
                   Abrir mapa interactivo
                 </motion.span>
