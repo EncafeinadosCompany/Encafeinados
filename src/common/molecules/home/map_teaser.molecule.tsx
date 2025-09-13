@@ -159,14 +159,12 @@ export const MapTeaser = () => {
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <div className="w-full h-full relative">
-                {/* Imagen de mapa en lugar de cuadrícula */}
                 <img 
                   src="/map_teaser.jpg" 
                   alt="Mapa de cafeterías" 
                   className="w-full h-full object-cover" 
                 />
                 
-                {/* Superponemos un filtro de color café suave */}
                 <div className="absolute inset-0 bg-[#6F4E37]/10"></div>
 
                 <motion.div
@@ -213,22 +211,20 @@ export const MapTeaser = () => {
                 </motion.div>
               </div>
 
-              {/* Overlay que cubre toda el área del mapa y muestra el botón al hacer hover */}
-              <motion.div
-                className="absolute inset-0 flex items-center justify-center transition-colors cursor-pointer"
-                initial={{ backgroundColor: "rgba(0,0,0,0)" }}
-                whileHover={{ backgroundColor: "rgba(60,42,33,0.4)" }}
+              <div 
+                className="absolute inset-0 cursor-pointer group"
                 onClick={handleOpenMap}
               >
-                <motion.span
-                  className="bg-[#E8C99B] text-[#3C2A21] px-5 py-3 rounded-full font-medium shadow-lg border border-[#E8C99B]/30"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileHover={{ scale: 1.05, opacity: 1 }}
-                  whileInView={{ opacity: 0 }}
-                >
-                  Abrir mapa interactivo
-                </motion.span>
-              </motion.div>
+                <div className="absolute inset-0 bg-transparent group-hover:bg-[#3C2A21]/40 transition-all duration-300"></div>
+                
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <motion.span
+                    className="bg-[#E8C99B] text-[#3C2A21] px-5 py-3 rounded-full font-medium shadow-lg border border-[#E8C99B]/30 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300"
+                  >
+                    Abrir mapa interactivo
+                  </motion.span>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         </div>
