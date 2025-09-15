@@ -20,6 +20,9 @@ export const Navbar: React.FC = () => {
   const fullName = localStorage.getItem("userFullName");
   const navigate = useNavigate();
   const { pagesPermissions } = useAuth();
+  
+  // Usamos un ref para el observador
+  const topSentinelRef = React.useRef<HTMLDivElement>(null);
 
   const handleUserNavigation = () => {
     if (user && user.roles) {
@@ -85,38 +88,66 @@ export const Navbar: React.FC = () => {
     visible: { opacity: 1, x: 0 },
   };
 
+  // Utilizamos Intersection Observer en lugar de detectar scroll
   useEffect(() => {
-    const handleScroll = () => {
-      // Use a smaller threshold to ensure the effect triggers more reliably
-      const scrollPosition = window.scrollY;
-      if (scrollPosition > 10) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+    // Elemento para observar - cuando este elemento ya no es visible, significa que hemos scrolleado
+    if (!topSentinelRef.current) return;
+    
+    const observerOptions = {
+      rootMargin: "-1px 0px 0px 0px", // Activar inmediatamente con el mínimo scroll
+      threshold: 0 // Activar tan pronto como el elemento deje de ser visible
     };
-
-    // Call handleScroll immediately to set initial state
-    handleScroll();
-
-    // Add event listener
-    window.addEventListener("scroll", handleScroll);
-
+    
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      // Si el elemento ya no es visible (scrolled hacia arriba), activamos el efecto
+      setScrolled(!entry.isIntersecting);
+      
+      // Debugging
+      console.log("Scroll change detected:", !entry.isIntersecting, "at:", new Date().toISOString());
+    };
+    
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    observer.observe(topSentinelRef.current);
+    
+    // Establecer el estado inicial correctamente al montar el componente
+    // Si ya hemos scrolleado un poco antes de montar el componente
+    if (window.scrollY > 10) {
+      setScrolled(true);
+    }
+    
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      if (topSentinelRef.current) {
+        observer.unobserve(topSentinelRef.current);
+      }
     };
   }, []);
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out
-      ${
-        scrolled
-          ? "bg-[#2C1810]/90 backdrop-blur-md shadow-lg"
-          : "bg-[#2C1810]/90"
-      }`}
-    >
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+    <>
+      {/* Elemento invisible que sirve como punto de referencia para el Intersection Observer */}
+      <div 
+        ref={topSentinelRef}
+        style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0,
+          height: '2px', 
+          width: '100%', 
+          zIndex: -100,
+          pointerEvents: 'none'
+        }} 
+      />
+      
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out
+        ${
+          scrolled
+            ? "bg-gradient-to-b from-[#382a22] to-[#433b2f] shadow-lg  border-transparent py-1 transform-gpu" 
+            : "bg-transparent border-b border-transparent py-3 transform-gpu" 
+        }`}
+      >
+      <div className="container mx-auto px-4 flex justify-between items-center">
         <Link to="/" className="flex items-center space-x-3 group">
           <motion.img
             src={logoIcon}
@@ -130,8 +161,8 @@ export const Navbar: React.FC = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-white font-bold text-2xl tracking-wider 
-            group-hover:text-[#D4A76A] transition-colors"
+            className="text-[#F5E6D0] font-bold text-2xl tracking-wider 
+            group-hover:text-[#E8C99B] transition-colors"
           >
             Encafeinados
           </motion.span>
@@ -152,9 +183,13 @@ export const Navbar: React.FC = () => {
                       link.action();
                     }
                   }}
-                  className="text-white/80 hover:text-[#D4A76A] 
-                  transition-colors flex items-center space-x-2 
-                  group relative overflow-hidden py-1"
+                  className={`hover:text-[#E8C99B] 
+                  transition-all duration-300 flex items-center space-x-2 
+                  group relative overflow-hidden py-1 px-3 rounded-md
+                  ${scrolled 
+                    ? "text-[#F5E6D0]/90 font-medium" 
+                    : "text-[#F5E6D0] font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] bg-[#5A3921]/30 backdrop-blur-sm"
+                  }`}
                 >
                   <motion.span
                     className="absolute bottom-0 left-0 w-full h-0.5 bg-[#D4A76A]"
@@ -163,16 +198,20 @@ export const Navbar: React.FC = () => {
                     transition={{ duration: 0.3 }}
                   />
                   {link.icon}
-                  <span className="group-hover:text-[#D4A76A] transition-colors">
+                  <span className="group-hover:text-[#E8C99B] transition-colors">
                     {link.label}
                   </span>
                 </button>
               ) : (
                 <Link
                   to={link.href}
-                  className="text-white/80 hover:text-[#D4A76A] 
-                  transition-colors flex items-center space-x-2 
-                  group relative overflow-hidden py-1"
+                  className={`hover:text-[#E8C99B] 
+                  transition-all duration-300 flex items-center space-x-2 
+                  group relative overflow-hidden py-1 px-3 rounded-md
+                  ${scrolled 
+                    ? "text-[#F5E6D0]/90 font-medium" 
+                    : "text-[#F5E6D0] font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] bg-[#5A3921]/30 backdrop-blur-sm"
+                  }`}
                 >
                   <motion.span
                     className="absolute bottom-0 left-0 w-full h-0.5 bg-[#D4A76A]"
@@ -181,7 +220,7 @@ export const Navbar: React.FC = () => {
                     transition={{ duration: 0.3 }}
                   />
                   {link.icon}
-                  <span className="group-hover:text-[#D4A76A] transition-colors">
+                  <span className="group-hover:text-[#E8C99B] transition-colors">
                     {link.label}
                   </span>
                 </Link>
@@ -227,8 +266,8 @@ export const Navbar: React.FC = () => {
             exit="hidden"
             variants={mobileMenuVariants}
             className="md:hidden absolute top-full left-0 right-0 
-            bg-gradient-to-br from-[#2C1810] to-[#6F4E37] 
-            backdrop-blur-lg shadow-lg"
+            bg-gradient-to-br from-[#3C2A21] to-[#1A1207] 
+            backdrop-blur-lg shadow-lg border-t border-[#D4A76A]/20"
           >
             <div className="flex flex-col items-center py-6 space-y-4">
               {navLinks.map((link) => (
@@ -281,5 +320,6 @@ export const Navbar: React.FC = () => {
         )}
       </AnimatePresence>
     </nav>
+    </>
   );
 };
