@@ -4,7 +4,7 @@ import { BenefitsSection } from "@/common/widgets/home/benefits_section.widget";
 import { Footer } from "@/common/widgets/home/footer.widget";
 import { MapTeaser } from "@/common/molecules/home/map_teaser.molecule";
 import { Navbar } from "@/common/molecules/home/navbar.molecule";
-import { useApprovedBranches } from "@/api/queries/branches/branch.query";
+import { useCityCurrency } from "@/common/utils/map/map_utils";
 
 
 const HomePage = () => {
@@ -16,14 +16,10 @@ const HomePage = () => {
   ];
 
 
-  const { data, isLoading, error } = useApprovedBranches();
 
-  if (isLoading || error || !data) {
-    return null;
-  }
 
   return (
-    <main className="h-full bg-[#FAF3E0] relative overflow-x-hidden scrollbar-subtle ">
+    <main className="min-h-screen bg-[#FAF3E0] relative overflow-x-hidden scrollbar-subtle">
       <Navbar />
       <div className="relative">
         <section id="home" className="scroll-mt-20 min-h-screen">
@@ -31,7 +27,7 @@ const HomePage = () => {
         </section>
 
         <section id="map" className="scroll-mt-20 min-h-[50vh]">
-          <MapTeaser totalCafes={data?.length|| 0} city="Medellín" />
+          <MapTeaser/>
         </section>
 
         <section id="stores" className="scroll-mt-20 min-h-[50vh]">

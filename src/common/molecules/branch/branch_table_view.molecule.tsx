@@ -37,7 +37,7 @@ interface BranchTableViewProps {
   onViewDetails?: (branch: Branch) => void;
   onAssingBranch?: (branch: Branch) => void;
   onVisit?: (branch: Branch) => void;
-  onQr?: Dispatch<SetStateAction<{ isOpen: boolean; code: number }>>;
+  onQr?: Dispatch<SetStateAction<{ isOpen: boolean; code: string }>>;
   showActions?: boolean;
   isLoading?: boolean;
   sortField?: SortField;

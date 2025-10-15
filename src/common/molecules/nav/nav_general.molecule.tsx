@@ -7,11 +7,6 @@ import { LogOutIcon, Coffee, ChevronDown, ChevronUp } from "@/common/ui/icons";
 import logoImage from "@/assets/images/logonav.jpg";
 import { ROLES } from "@/common/utils/lists/roles.utils";
 import { useState, memo, useMemo, useCallback } from "react";
-import { AdminBranchesItems } from "@/common/utils/lists/nav/admin_branches.utils";
-import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils";
-import { UserData } from "@/api/types/auth/auth.types";
-import { divIcon } from "leaflet";
-import { DoorOpen } from "lucide-react";
 
 interface NavGeneralProps {
   isMobile: boolean;
@@ -42,7 +37,6 @@ const NavGeneralComponent = ({
 }: NavGeneralProps) => {
   const location = useLocation();
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);
-  const user = getEncryptedItem("user") as UserData | null;
 
   // Obtener el nombre completo del usuario
   const fullName = useMemo(() => {
@@ -83,10 +77,6 @@ const NavGeneralComponent = ({
 
   const isCoffeeLover = useMemo(
     () => role?.includes(ROLES.COFFEE_LOVER),
-    [role]
-  );
-  const isAdminBranch = useMemo(
-    () => role?.includes(ROLES.ADMIN_SUCURSAL) && role.includes(ROLES.STORE),
     [role]
   );
 

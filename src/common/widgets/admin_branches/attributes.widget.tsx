@@ -20,10 +20,12 @@ import { AttributeFormType, RegisterAttributeSchema } from "@/common/utils/schem
 import { useCreateAttributeMutation, useUpdateAttributeMutation } from "@/api/mutations/attributes/attributes.mutation"
 import { ChevronDown, Coffee }  from "@/common/ui/icons";
 import { ScrollIndicator } from "@/common/atoms/common/indicator.atom"
-import { getEncryptedItem } from "@/common/utils/security/storage_encrypted.utils"
 
+interface AttributeProps {
+branchId: string | ""
+}
 
-export default function AttributesDashboard() {
+export default function AttributesWidget({branchId}:AttributeProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [selectedBadges, setSelectedBadges] = useState<string[]>([])
     const [isDragging, setIsDragging] = useState(false)
@@ -33,11 +35,8 @@ export default function AttributesDashboard() {
     
     const [attributes, setAttributes] = useState<Attribute[]>([])
     const [selectedAttributes, setSelectedAttributes] = useState<RegisterAttibute[]>([])
-    
-    const idBranch = getEncryptedItem("branchId") as string | null;
-    if (!idBranch) return null
 
-    const { data: attributesByID } = useBranchAttributes(idBranch)
+    const { data: attributesByID } = useBranchAttributes(branchId)
     const { data: attribute } = useAttributes()
     
     const { mutateAsync: useAttribute } = useCreateAttributeMutation()
@@ -95,7 +94,7 @@ export default function AttributesDashboard() {
             if (existingAttr) {
                 await useUpdateMutation({ data: data.values[0] });
             } else {
-                await useAttribute(data.values);
+                await useAttribute({id:branchId, data:data.values});
             }
             
             setIsDialogOpen(false);

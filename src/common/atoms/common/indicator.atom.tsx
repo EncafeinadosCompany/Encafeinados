@@ -47,6 +47,8 @@ export const ScrollIndicator = ({ containerRef, className }: ScrollIndicatorProp
                 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
+                aria-label='button'
+                role='button'
                 className={`p-2 rounded-full shadow-md transition-all duration-300 ${className}`}
             >
                 <ChevronDown className="h-4 w-4 text-[#6F4E37]" />

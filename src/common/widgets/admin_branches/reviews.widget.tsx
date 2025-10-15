@@ -1,27 +1,34 @@
-import React, { useState, useRef } from 'react';
-import { MessageSquare, Search, Star, ChevronLeft, ChevronRight } from '@/common/ui/icons';
+import React, { useState, useRef} from 'react';
+import { MessageSquare, Search, ChevronLeft, ChevronRight } from '@/common/ui/icons';
 import { Input } from '@/common/ui/input';
 import { Button } from '@/common/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/common/ui/select';
 import { useReviewsByIdBranches } from '@/api/queries/reviews/reviews.query';
 import { useBranchesID } from '@/api/queries/branches/branch.query';
-import { getEncryptedItem } from '@/common/utils/security/storage_encrypted.utils';
+
 import { BranchReviewCard } from '@/common/molecules/admin_branch/reviews/branch_review_card.molecule';
 import StarsRating from '@/common/atoms/reviews/stars_rating.atom';
+import { useBranchContext } from '@/common/context/branch_context';
 
-const BranchReviewsWidget: React.FC = () => {
+
+interface reviewsProps{
+  branchId: string | ""
+}
+export const BranchReviewsWidget = ({branchId}: reviewsProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<string>('newest');
   const [showAll, setShowAll] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   
   const ITEMS_PER_PAGE = 12; 
-  const branchId = getEncryptedItem("branchId") as string | null;
   
   const { data: branchData, isLoading: isBranchLoading } = useBranchesID(branchId!!);
   const { data: reviewsData, isLoading: isReviewsLoading, error } = useReviewsByIdBranches(branchId!!);
+
+
 
   const filteredAndSortedReviews = React.useMemo(() => {
     if (!reviewsData) return [];
@@ -81,7 +88,7 @@ const BranchReviewsWidget: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 p-4">
+      <div className="min-h-screen bg-gradient-to-br bg-gray-100 p-4">
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-xl shadow-sm border border-amber-200 p-8">
             <div className="flex items-center justify-center">
@@ -96,7 +103,7 @@ const BranchReviewsWidget: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 p-4">
+      <div className="min-h-screen bg-gradient-to-br bg-gray-100  p-4">
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-xl shadow-sm border border-red-200 p-8">
             <div className="text-center">
@@ -115,11 +122,11 @@ const BranchReviewsWidget: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 p-4">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="min-h-screen bg-gradient-to-br  p-4">
+      <div className="w-full mx-auto space-y-6">
         
         {branchData && (
-          <div className="bg-white rounded-xl shadow-sm border border-amber-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-[#5F4B32] mb-2">
@@ -137,14 +144,14 @@ const BranchReviewsWidget: React.FC = () => {
                   </span>
                 </div>
               </div>
-              <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
-                <MessageSquare className="h-8 w-8 text-amber-600" />
+              <div className="w-14 h-14 bg-amber-100 rounded-full flex items-center justify-center">
+                <MessageSquare className="h-5 w-5 text-amber-600" />
               </div>
             </div>
           </div>
         )}
 
-        <div className="bg-white rounded-xl shadow-sm border border-amber-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100  p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-medium text-[#5F4B32] flex items-center">
               <MessageSquare className="h-4 w-4 mr-2 text-[#DB8935]" />
@@ -317,5 +324,3 @@ const BranchReviewsWidget: React.FC = () => {
   );
 };
 
-export { BranchReviewsWidget };
-export default BranchReviewsWidget;
